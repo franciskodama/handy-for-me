@@ -1,12 +1,15 @@
 import Link from 'next/link';
 import {
+  Bot,
   Dices,
+  Grid3x3,
   Home,
   LifeBuoy,
   LineChart,
   Package,
   Package2,
   PanelLeft,
+  PictureInPicture,
   Settings,
   ShoppingCart,
   Users2
@@ -81,16 +84,16 @@ function DesktopNav() {
           <Dices className="h-5 w-5" />
         </NavItem>
 
-        <NavItem href="/" label="Products">
-          <Package className="h-5 w-5" />
-        </NavItem>
-
         <NavItem href="/customers" label="Customers">
           <Users2 className="h-5 w-5" />
         </NavItem>
 
-        <NavItem href="#" label="Analytics">
-          <LineChart className="h-5 w-5" />
+        <NavItem href="/affirmation" label="Affirmation">
+          <Grid3x3 className="h-5 w-5" />
+        </NavItem>
+
+        <NavItem href="/ai" label="Artificial Intelligence">
+          <Bot className="h-5 w-5" />
         </NavItem>
       </nav>
       <nav className="mt-auto flex flex-col items-center gap-4 px-2 sm:py-5">

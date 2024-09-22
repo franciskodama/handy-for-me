@@ -6,14 +6,13 @@ import {
   CardTitle
 } from '@/components/ui/card';
 
-export default function LuckyPage() {
+export default function AffirmationPage() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Lucky</CardTitle>
+        <CardTitle>Affirmation</CardTitle>
         <CardDescription>
-          A fun, random decision-maker that spins the wheel to pick your next
-          adventure!
+          Bla bla bla bla bla bla bla bla bla bla bla bla bla
         </CardDescription>
       </CardHeader>
       <CardContent></CardContent>
