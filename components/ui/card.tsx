@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 import { cn } from '@/lib/utils';
+import { kumbh_sans } from 'app/ui/fonts';
 
 const Card = React.forwardRef<
   HTMLDivElement,
@@ -8,10 +9,7 @@ const Card = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn(
-      'rounded-lg border bg-card text-card-foreground shadow-sm',
-      className
-    )}
+    className={cn('border bg-card text-card-foreground shadow-sm', className)}
     {...props}
   />
 ));
@@ -36,7 +34,7 @@ const CardTitle = React.forwardRef<
   <h3
     ref={ref}
     className={cn(
-      'text-2xl font-semibold leading-none tracking-tight mb-2',
+      `${kumbh_sans.className} uppercase font-bold text-3xl leading-none mb-2`,
       className
     )}
     {...props}

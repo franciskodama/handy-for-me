@@ -11,11 +11,7 @@ export default function LuckyPage() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle
-          className={`${jost.className} uppercase font-semibold text-3xl`}
-        >
-          Your Bag is Empty
-        </CardTitle>
+        <CardTitle>Your Bag is Empty</CardTitle>
         <CardDescription>
           A fun, random decision-maker that spins the wheel to pick your next
           adventure!
