@@ -21,7 +21,7 @@ export default function RootLayout({
       >
         {children}
       </body>
-      <Analytics />
+      {/* <Analytics /> */}
     </html>
   );
 }

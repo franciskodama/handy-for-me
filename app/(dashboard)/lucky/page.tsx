@@ -11,7 +11,7 @@ export default function LuckyPage() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Your Bag is Empty</CardTitle>
+        <CardTitle>Hard to choose?</CardTitle>
         <CardDescription>
           A fun, random decision-maker that spins the wheel to pick your next
           adventure!
