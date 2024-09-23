@@ -5,16 +5,15 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/card';
-import { josefin_sans, jost } from 'app/ui/fonts';
+import { lexend } from 'app/ui/fonts';
 
-export default function LuckyPage() {
+export default function AIPage() {
   return (
     <Card>
       <CardHeader>
         <CardTitle>Your Bag is Empty</CardTitle>
         <CardDescription>
-          A fun, random decision-maker that spins the wheel to pick your next
-          adventure!
+          Bla bla bla bla bla bla bla bla bla bla bla bla bla
         </CardDescription>
       </CardHeader>
       <CardContent></CardContent>

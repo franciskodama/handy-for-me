@@ -1,12 +1,15 @@
 import Link from 'next/link';
 import {
+  Bot,
   Dices,
+  Grid3x3,
   Home,
   LifeBuoy,
   LineChart,
   Package,
   Package2,
   PanelLeft,
+  PictureInPicture,
   Settings,
   ShoppingCart,
   Users2
@@ -66,11 +69,9 @@ function DesktopNav() {
       <nav className="flex flex-col items-center gap-4 px-2 sm:py-5">
         <Link
           href="/"
-          className="group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base"
+          className="bg-primary group flex h-9 w-9 shrink-0 items-center justify-center gap-2 text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base"
         >
-          {/* <LifeBuoy className="h-5 w-5" strokeWidth={1.4} /> */}
-          <p className="text-[8px]">Juvoo</p>
-          <span className="sr-only">Juvoo</span>
+          <p className="text-[10px] skew-y-[-12deg]">Juvoo</p>
         </Link>
 
         <NavItem href="#" label="Dashboard">
@@ -81,16 +82,12 @@ function DesktopNav() {
           <Dices className="h-5 w-5" />
         </NavItem>
 
-        <NavItem href="/" label="Products">
-          <Package className="h-5 w-5" />
+        <NavItem href="/affirmation" label="Affirmation">
+          <Grid3x3 className="h-5 w-5" />
         </NavItem>
 
-        <NavItem href="/customers" label="Customers">
-          <Users2 className="h-5 w-5" />
-        </NavItem>
-
-        <NavItem href="#" label="Analytics">
-          <LineChart className="h-5 w-5" />
+        <NavItem href="/ai" label="Artificial Intelligence">
+          <Bot className="h-5 w-5" />
         </NavItem>
       </nav>
       <nav className="mt-auto flex flex-col items-center gap-4 px-2 sm:py-5">
@@ -98,7 +95,7 @@ function DesktopNav() {
           <TooltipTrigger asChild>
             <Link
               href="#"
-              className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
+              className="flex h-9 w-9 items-center justify-center text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
             >
               <Settings className="h-5 w-5" />
               <span className="sr-only">Settings</span>
@@ -124,7 +121,7 @@ function MobileNav() {
         <nav className="grid gap-6 text-lg font-medium">
           <Link
             href="#"
-            className="group flex h-10 w-10 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:text-base"
+            className="group flex h-10 w-10 shrink-0 items-center justify-center gap-2 bg-primary text-lg font-semibold text-primary-foreground md:text-base"
           >
             <Package2 className="h-5 w-5 transition-all group-hover:scale-110" />
             <span className="sr-only">Vercel</span>
