@@ -84,10 +84,6 @@ function DesktopNav() {
           <Dices className="h-5 w-5" />
         </NavItem>
 
-        <NavItem href="/customers" label="Customers">
-          <Users2 className="h-5 w-5" />
-        </NavItem>
-
         <NavItem href="/affirmation" label="Affirmation">
           <Grid3x3 className="h-5 w-5" />
         </NavItem>
