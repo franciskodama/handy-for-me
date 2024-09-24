@@ -29,7 +29,7 @@
     "next": "15.0.0-canary.75",
     "next-auth": "5.0.0-beta.19",
     "postcss": "^8.4.39",
-    "prettier": "^3.3.2",
+    "prettier": "^3.3.3",
     "prisma": "^5.19.1",
     "prop-types": "^15.8.1",
     "react": "19.0.0-rc.0",
@@ -51,6 +51,8 @@
     "@eslint/js": "^9.11.1",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-next": "14.2.13",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
     "eslint-plugin-react": "^7.36.1",
     "globals": "^15.9.0",
     "typescript-eslint": "^8.7.0"
