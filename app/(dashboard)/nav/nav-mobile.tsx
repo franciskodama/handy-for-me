@@ -1,54 +1,18 @@
-import Link from 'next/link';
-import { Analytics } from '@vercel/analytics/react';
-
+import { Button } from '@/components/ui/button';
+import { SheetTrigger, SheetContent } from '@/components/ui/sheet';
 import {
-  Home,
-  LineChart,
-  Package,
-  Package2,
+  Sheet,
   PanelLeft,
+  Link,
+  Package2,
+  Home,
   ShoppingCart,
-  Users2
+  Package,
+  Users2,
+  LineChart
 } from 'lucide-react';
 
-import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { User } from './header/user';
-import Providers from './providers';
-import PencilBanner from './header/pencil-banner';
-import { DesktopNav } from './nav/nav-desktop';
-import { DashboardBreadcrumb } from './header/breadcrumb';
-import { SearchInput } from './header/search';
-import { MobileNav } from './nav/nav-mobile';
-
-export default function DashboardLayout({
-  children
-}: {
-  children: React.ReactNode;
-}) {
-  return (
-    <Providers>
-      <main className="flex min-h-screen w-full flex-col">
-        <PencilBanner />
-        <DesktopNav />
-        <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
-          <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
-            <WrongMobileNav />
-            <DashboardBreadcrumb />
-            <SearchInput />
-            <User />
-          </header>
-          <main className="grid flex-1 items-start gap-2 p-4 sm:px-6 sm:py-0 md:gap-4">
-            {children}
-          </main>
-        </div>
-        <Analytics />
-      </main>
-    </Providers>
-  );
-}
-
-function WrongMobileNav() {
+export function MobileNav() {
   return (
     <Sheet>
       <SheetTrigger asChild>
