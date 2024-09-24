@@ -24,6 +24,7 @@
     "drizzle-kit": "^0.22.8",
     "drizzle-orm": "^0.31.2",
     "drizzle-zod": "^0.5.1",
+    "eslint": "^9.11.1",
     "lucide-react": "^0.400.0",
     "next": "15.0.0-canary.75",
     "next-auth": "5.0.0-beta.19",
@@ -45,5 +46,13 @@
     "singleQuote": true,
     "tabWidth": 2,
     "trailingComma": "none"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.11.1",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-config-next": "14.2.13",
+    "eslint-plugin-react": "^7.36.1",
+    "globals": "^15.9.0",
+    "typescript-eslint": "^8.7.0"
   }
 }
