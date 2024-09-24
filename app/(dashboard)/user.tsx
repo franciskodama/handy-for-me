@@ -10,6 +10,7 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import Link from 'next/link';
+import { User2, UserIcon } from 'lucide-react';
 
 export async function User() {
   let session = await auth();
@@ -18,14 +19,18 @@ export async function User() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="icon" className="overflow-hidden">
-          <Image
-            src={user?.image ?? '/placeholder-user.jpg'}
-            width={36}
-            height={36}
-            alt="Avatar"
-            className="overflow-hidden"
-          />
+        <Button variant="ghost" size="icon" className="overflow-hidden">
+          {user?.image ? (
+            <Image
+              src={user.image}
+              width={36}
+              height={36}
+              alt="Avatar"
+              className="overflow-hidden"
+            />
+          ) : (
+            <UserIcon className="h-5 w-5" />
+          )}
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
