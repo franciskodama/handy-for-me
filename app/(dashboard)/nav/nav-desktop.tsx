@@ -23,7 +23,7 @@ export function DesktopNav() {
           <Home className="h-5 w-5" />
         </NavItem>
 
-        <NavItem href="/lucky" label="Lucky">
+        <NavItem href="/spin" label="Spin Magic">
           <Dices className="h-5 w-5" />
         </NavItem>
 

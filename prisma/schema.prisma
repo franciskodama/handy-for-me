@@ -7,17 +7,24 @@ datasource db {
   url      = env("POSTGRES_URL")
 }
 
-model users {
+model User {
   id       Int     @id @default(autoincrement())
   email    String  @db.VarChar(255)
   name     String? @db.VarChar(255)
-  username String? @db.VarChar(255)
+  userName String? @db.VarChar(255)
 }
 
-model draw {
-  id         String   @db.VarChar(255) @default(uuid()) @id
-  uid        String   @db.VarChar(255)
-  list       String   @db.VarChar(255)
-  item       String   @db.VarChar(255)
-  created_at DateTime @db.Date
+model SpinItem {
+  id        String   @id @default(uuid()) @db.VarChar(255)
+  createdAt DateTime @db.Date
+  uid       String   @db.VarChar(255)
+  list      String   @db.VarChar(255)
+  item      String   @db.VarChar(255)
+}
+
+model SpinList {
+  id        String   @id @default(uuid()) @db.VarChar(255)
+  createdAt DateTime @default(now()) @db.Timestamp(6)
+  uid       String   @db.VarChar(255)
+  list      String   @db.VarChar(255)
 }

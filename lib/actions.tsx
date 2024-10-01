@@ -3,15 +3,15 @@
 import { v4 } from 'uuid';
 import { prisma } from './prisma';
 
-export async function addDrawItem(uid: string, list: string, item: string) {
+export async function addSpinItem(uid: string, list: string, item: string) {
   try {
-    await prisma.draw.create({
+    await prisma.spinItem.create({
       data: {
         id: v4(),
+        createdAt: new Date(),
         uid,
         list,
-        item,
-        created_at: new Date()
+        item
       }
     });
     return true;
@@ -21,13 +21,40 @@ export async function addDrawItem(uid: string, list: string, item: string) {
   }
 }
 
-export async function getDrawLists(uid: string) {
+export async function addSpinList(uid: string, list: string) {
   try {
-    const data = await prisma.draw.findMany({
+    await prisma.spinList.create({
+      data: {
+        id: v4(),
+        createdAt: new Date(),
+        uid,
+        list
+      }
+    });
+    return true;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+}
+
+export async function getSpinLists(uid: string) {
+  try {
+    const data = await prisma.spinList.findMany({
       where: {
         uid
       }
     });
+    return data;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+}
+
+export async function getUsers() {
+  try {
+    const data = await prisma.user.findMany();
     return data;
   } catch (error) {
     console.log(error);
