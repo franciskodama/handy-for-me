@@ -13,3 +13,10 @@ model users {
   name     String? @db.VarChar(255)
   username String? @db.VarChar(255)
 }
+
+model draw {
+  id         String   @db.VarChar(255) @default(uuid()) @id
+  uid        String   @db.VarChar(255)
+  item       String   @db.VarChar(255)
+  created_at DateTime @db.Date
+}

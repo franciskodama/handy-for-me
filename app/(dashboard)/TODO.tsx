@@ -3,6 +3,7 @@
 // TODO: FEATURES
 // Edit your photos by chatting with a generative AI model: https://vercel.com/templates/next.js/paint-by-text
 // Emoji Generator: https://vercel.com/templates/next.js/ai-emoji-generator
+// Galery for Affirmation: https://codepen.io/cbolson/pen/GRbzyGJ
 
 //TODO: TODOS
 // Middleware: create a About page and include it in the middleware (matcher)
