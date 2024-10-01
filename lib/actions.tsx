@@ -3,32 +3,43 @@
 import { v4 } from 'uuid';
 import { prisma } from './prisma';
 
-export async function addSpinItem(uid: string, list: string, item: string) {
-  try {
-    await prisma.spinItem.create({
-      data: {
-        id: v4(),
-        createdAt: new Date(),
-        uid,
-        list,
-        item
-      }
-    });
-    return true;
-  } catch (error) {
-    console.log(error);
-    return false;
-  }
-}
+// export async function addSpinItem(uid: string, list: string, item: string) {
+//   try {
+//     await prisma.spinItem.create({
+//       data: {
+//         id: v4(),
+//         createdAt: new Date(),
+//         uid,
+//         list,
+//         item,
+//         selected: true
+//       }
+//     });
+//     return true;
+//   } catch (error) {
+//     console.log(error);
+//     return false;
+//   }
+// }
 
-export async function addSpinList(uid: string, list: string) {
+// model SpinItem {
+//   id        String   @id @default(uuid()) @db.VarChar(255)
+//   createdAt DateTime @db.Date
+//   uid       String   @db.VarChar(255)
+//   list      SpinList @relation(fields: [listId], references: [id])
+//   item      String   @db.VarChar(255)
+//   selected Boolean   @default(true)
+//   listId   String
+// }
+
+export async function addSpinList(uid: string, name: string) {
   try {
     await prisma.spinList.create({
       data: {
         id: v4(),
         createdAt: new Date(),
         uid,
-        list
+        name
       }
     });
     return true;

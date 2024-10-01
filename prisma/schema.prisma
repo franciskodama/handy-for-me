@@ -14,17 +14,20 @@ model User {
   userName String? @db.VarChar(255)
 }
 
-model SpinItem {
-  id        String   @id @default(uuid()) @db.VarChar(255)
-  createdAt DateTime @db.Date
-  uid       String   @db.VarChar(255)
-  list      String   @db.VarChar(255)
-  item      String   @db.VarChar(255)
-}
-
 model SpinList {
   id        String   @id @default(uuid()) @db.VarChar(255)
   createdAt DateTime @default(now()) @db.Timestamp(6)
   uid       String   @db.VarChar(255)
-  list      String   @db.VarChar(255)
+  name      String   @db.VarChar(255)
+  items     SpinItem[]
+}
+
+model SpinItem {
+  id        String   @id @default(uuid()) @db.VarChar(255)
+  createdAt DateTime @db.Date
+  uid       String   @db.VarChar(255)
+  list      SpinList @relation(fields: [listId], references: [id])
+  item      String   @db.VarChar(255)
+  selected Boolean   @default(true)
+  listId   String
 }
