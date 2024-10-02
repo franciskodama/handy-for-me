@@ -8,9 +8,13 @@ import {
   CardTitle
 } from '@/components/ui/card';
 import { SignIn } from './sign-in';
-import { signIn } from '@/lib/auth';
+import { auth, signIn } from '@/lib/auth';
 
-export default function LoginPage() {
+export default async function LoginPage() {
+  const session = await auth();
+  const user = session?.user;
+  console.log('---  🚀 ---> | user:', user);
+
   return (
     <div className="min-h-screen flex justify-center items-start md:items-center p-8">
       <Card className="w-full max-w-sm">
@@ -25,7 +29,9 @@ export default function LoginPage() {
           <form
             action={async () => {
               'use server';
-              await signIn('google');
+              await signIn('google', {
+                redirectTo: '/'
+              });
             }}
             className="w-full"
           >
@@ -43,7 +49,9 @@ export default function LoginPage() {
             }}
             className="w-full"
           >
-            <Button className="w-full">Sign in with GitHub</Button>
+            <Button type="submit" className="w-full">
+              Sign in with GitHub
+            </Button>
           </form>
         </CardContent>
 
@@ -52,9 +60,9 @@ export default function LoginPage() {
             <p className="font-semibold">Not a member yet?</p>
             Don’t worry, life gets better from here!
             <span>
-              <Button variant={'link'} className="" href={'/login/signup'}>
+              {/* <Button variant={'link'} className="" href={'/login/signup'}>
                 Sign up
-              </Button>
+              </Button> */}
             </span>
           </div>
         </CardFooter>
