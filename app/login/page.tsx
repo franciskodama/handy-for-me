@@ -7,10 +7,9 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/card';
-import { SignIn } from './sign-in';
 import { auth, signIn } from '@/lib/auth';
 
-export default async function LoginPage() {
+export default async function Login() {
   const session = await auth();
   const user = session?.user;
 
