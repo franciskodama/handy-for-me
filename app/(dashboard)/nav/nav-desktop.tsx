@@ -7,6 +7,7 @@ import {
 } from '@radix-ui/react-tooltip';
 import { NavItem } from './nav-item';
 import { Home, Dices, Grid3x3, Bot, Settings } from 'lucide-react';
+import Image from 'next/image';
 
 export function DesktopNav() {
   return (
@@ -14,16 +15,21 @@ export function DesktopNav() {
       <nav className="flex flex-col items-center gap-4 px-2 sm:py-5">
         <Link
           href="/"
-          className="bg-primary group flex h-9 w-9 shrink-0 items-center justify-center gap-2 text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base"
+          className="group flex h-9 w-9 shrink-0 items-center justify-center gap-2 text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base"
         >
-          <p className="text-[10px] skew-y-[-12deg]">Juvoo</p>
+          <Image
+            src="/logos/HandyForMe_Square200x200.png"
+            alt="HandyFor.Me Logo"
+            width={50}
+            height={50}
+          />
         </Link>
 
         <NavItem href="/" label="Dashboard">
           <Home className="h-5 w-5" />
         </NavItem>
 
-        <NavItem href="/lucky" label="Lucky">
+        <NavItem href="/spin" label="Spin Magic">
           <Dices className="h-5 w-5" />
         </NavItem>
 
