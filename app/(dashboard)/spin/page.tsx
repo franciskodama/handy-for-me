@@ -2,8 +2,10 @@ import { auth } from '@/lib/auth';
 import Spin from './spin';
 
 export default async function SpinPage() {
-  // const user = auth();
-  // console.log('---  🚀 ---> | user:', user);
+  const session = await auth();
+  const user = session?.user;
+  const firstName = user?.name?.split(' ')[0];
+  const uid = user?.email;
 
-  return <Spin />;
+  return <>{firstName && uid && <Spin firstName={firstName} uid={uid} />}</>;
 }

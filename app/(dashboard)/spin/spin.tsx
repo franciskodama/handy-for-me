@@ -16,13 +16,13 @@ import { getSpinLists, getUsers } from '@/lib/actions';
 
 // https://react.dev/reference/react/use#use
 
-export default function Spin() {
-  //   const data = use(getUsers());
-  //   console.log('---  🚀 ---> | data:', data);
-
-  //   const listsData = use(getSpinLists('fk@fkodama.com'));
-  //   console.log('---  🚀 ---> | listsData:', listsData);
-
+export default function Spin({
+  firstName,
+  uid
+}: {
+  firstName: string;
+  uid: string;
+}) {
   return (
     <Card>
       <CardHeader className="mb-4">

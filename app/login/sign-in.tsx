@@ -2,6 +2,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { signIn } from '@/lib/auth';
 
+// Not using this for now
 export function SignIn() {
   return (
     <form

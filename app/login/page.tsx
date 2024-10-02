@@ -13,19 +13,24 @@ import { auth, signIn } from '@/lib/auth';
 export default async function LoginPage() {
   const session = await auth();
   const user = session?.user;
-  console.log('---  🚀 ---> | user:', user);
 
   return (
-    <div className="min-h-screen flex justify-center items-start md:items-center p-8">
-      <Card className="w-full max-w-sm">
+    <div
+      className="min-h-screen flex justify-center items-start md:items-center p-8 bg-[#ffffff] opacity-80"
+      style={{
+        backgroundSize: '10px 10px',
+        backgroundImage:
+          'repeating-linear-gradient(45deg, #000000 0, #030303 1px, #ffffff 0, #ffffff 50%)'
+      }}
+    >
+      <Card className="w-full max-w-sm border border-primary shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
         <CardHeader>
-          <CardTitle className="text-2xl">Login</CardTitle>
+          <CardTitle className="text-4xl">Login</CardTitle>
           <CardDescription>
             Life’s better when it’s handy – Let’s sign in!
           </CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col items-center my-12">
-          {/* <SignIn /> */}
           <form
             action={async () => {
               'use server';

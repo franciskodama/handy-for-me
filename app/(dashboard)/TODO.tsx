@@ -4,6 +4,7 @@
 // domain to vercel: https://porkbun.com/
 // use() instead of useEffect and useState: https://www.youtube.com/watch?v=oMvW3A_IRsY>>
 // Create the page Draw
+// Create the page Dashboard
 // Prisma get auth from github: https://authjs.dev/getting-started/adapters/prisma
 
 // TODO: FEATURES
@@ -17,3 +18,5 @@
 // Button: https://medium.com/@dewamadewira25/how-to-make-a-neo-brutalism-button-using-tailwindcss-91d3faf2b269
 
 //TODO: DONE
+// Auth Google
+// Auth GitHub
