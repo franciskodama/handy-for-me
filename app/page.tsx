@@ -5,5 +5,5 @@ export default async function HomePage() {
   const session = await auth();
   const user = session?.user;
 
-  return <div>{user ? redirect('/ai') : redirect('/login')}</div>;
+  return <div>{user ? redirect('/spin') : redirect('/login')}</div>;
 }

@@ -1,11 +1,19 @@
 import { auth } from '@/lib/auth';
 import Spin from './spin';
+import { getSpinLists } from '@/lib/actions';
+import { SpinList } from '@/lib/types';
 
 export default async function SpinPage() {
   const session = await auth();
-  const user = session?.user;
-  const firstName = user?.name?.split(' ')[0];
-  const uid = user?.email;
+  const uid = session?.user?.email;
 
-  return <>{firstName && uid && <Spin firstName={firstName} uid={uid} />}</>;
+  let lists: SpinList[] = [];
+  if (uid) {
+    const fetchedLists = await getSpinLists(uid);
+    if (Array.isArray(fetchedLists)) {
+      lists = fetchedLists;
+    }
+  }
+
+  return <>{uid && <Spin uid={uid} lists={lists} />}</>;
 }

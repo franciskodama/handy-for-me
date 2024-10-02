@@ -3,24 +3,24 @@
 import { v4 } from 'uuid';
 import { prisma } from './prisma';
 
-// export async function addSpinItem(uid: string, list: string, item: string) {
-//   try {
-//     await prisma.spinItem.create({
-//       data: {
-//         id: v4(),
-//         createdAt: new Date(),
-//         uid,
-//         list,
-//         item,
-//         selected: true
-//       }
-//     });
-//     return true;
-//   } catch (error) {
-//     console.log(error);
-//     return false;
-//   }
-// }
+export async function addSpinItem(uid: string, listId: string, item: string) {
+  try {
+    await prisma.spinItem.create({
+      data: {
+        id: v4(),
+        createdAt: new Date(),
+        uid,
+        listId,
+        item,
+        selected: true
+      }
+    });
+    return true;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+}
 
 // model SpinItem {
 //   id        String   @id @default(uuid()) @db.VarChar(255)

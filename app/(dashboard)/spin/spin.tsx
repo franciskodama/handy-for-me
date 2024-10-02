@@ -1,8 +1,8 @@
 'use client';
 
-import { use, useEffect, useState } from 'react';
+import { LoaderPinwheelIcon } from 'lucide-react';
+import { useState } from 'react';
 
-import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
@@ -10,43 +10,28 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/card';
+import { SpinList } from '@/lib/types';
+import { addSpinList } from '@/lib/actions';
 import { Input } from '@/components/ui/input';
-import { LoaderPinwheelIcon } from 'lucide-react';
-import { addSpinList, getSpinLists, getUsers } from '@/lib/actions';
-
-// https://react.dev/reference/react/use#use
+import { Button } from '@/components/ui/button';
 
 export default function Spin({
-  firstName,
-  uid
+  uid,
+  lists
 }: {
-  firstName: string;
   uid: string;
+  lists: SpinList[];
 }) {
-  const [list, setList] = useState('');
-  const [lists, setLists] = useState([]);
-  const [pending, setPending] = useState(false);
+  const [list, setList] = useState<string>('');
+  const [pending, setPending] = useState<boolean>(false);
 
-  const handleAddList = async () => {
+  const handleCreateNewList = async () => {
     setPending(true);
-    await addSpinList(uid, list);
-    setPending(false);
+    const success = await addSpinList(uid, list);
+    if (success) {
+      setPending(false);
+    }
   };
-
-  // const lists = use(getSpinLists(uid));
-  // console.log('---  🚀 ---> | lists:', lists);
-
-  useEffect(() => {
-    // Define an async function inside useEffect
-    const fetchData = async () => {
-      const data = await getSpinLists(uid); // Fetch data with the current uid
-      // setLists(data); // Update state with the fetched data
-    };
-
-    fetchData(); // Call the async function
-
-    // Optional: You could add cleanup logic here if necessary
-  }, [uid]);
 
   return (
     <Card>
@@ -54,7 +39,6 @@ export default function Spin({
         <CardTitle className="flex items-center gap-2">
           Spin Magic
           <LoaderPinwheelIcon className="h-6 w-6" />
-          {/* animate-spin */}
         </CardTitle>
         <CardDescription>
           A fun, random decision-maker that spins the wheel to pick your next
@@ -66,30 +50,33 @@ export default function Spin({
           <div className="flex w-full">
             <div className="flex w-1/2 items-center gap-2">
               <p className="text-sm font-semibold w-[18ch]">Choose a List:</p>
-              <Input placeholder="List's Name" />
+              <Input placeholder="xxxxx" />
             </div>
+
             <div className="flex w-1/2 items-center gap-2">
               <Input
                 placeholder="List's Name"
                 value={list}
                 onChange={(e) => setList(e.target.value)}
               />
+              {/* <p>{list}</p> */}
               <Button
                 className={pending ? 'bg-orange-500' : ''}
-                onClick={handleAddList}
+                onClick={handleCreateNewList}
+                disabled={pending || list.trim() === ''}
               >
-                Create a New List
+                {pending ? 'Creating...' : 'Create a New List'}
               </Button>
             </div>
           </div>
           <div className="flex w-full">
             <div className="flex items-center w-1/2">
               <p className="text-sm font-semibold w-[18ch]">Chosen List:</p>
-              {/* {lists?.map((list: string) => (
-                <p key={list.name} className="text-sm font-semibold w-[18ch]">
-                  {list.name}
+              {lists.map((item: SpinList) => (
+                <p key={item.id} className="text-sm font-semibold w-[18ch]">
+                  {item.name}
                 </p>
-              ))} */}
+              ))}
             </div>
             <div className="flex w-1/2 items-center gap-2">
               <Input placeholder="Enter an Item" />
