@@ -7,12 +7,9 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/card';
-import { auth, signIn } from '@/lib/auth';
+import { signIn } from '@/lib/auth';
 
 export default async function Login() {
-  const session = await auth();
-  const user = session?.user;
-
   return (
     <div
       className="min-h-screen flex justify-center items-start md:items-center p-8 bg-[#ffffff] opacity-80"
