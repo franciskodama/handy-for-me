@@ -40,7 +40,7 @@ export default function Spin({
     // Define an async function inside useEffect
     const fetchData = async () => {
       const data = await getSpinLists(uid); // Fetch data with the current uid
-      setLists(data); // Update state with the fetched data
+      // setLists(data); // Update state with the fetched data
     };
 
     fetchData(); // Call the async function
@@ -85,11 +85,11 @@ export default function Spin({
           <div className="flex w-full">
             <div className="flex items-center w-1/2">
               <p className="text-sm font-semibold w-[18ch]">Chosen List:</p>
-              {lists?.map((list: string) => (
+              {/* {lists?.map((list: string) => (
                 <p key={list.name} className="text-sm font-semibold w-[18ch]">
                   {list.name}
                 </p>
-              ))}
+              ))} */}
             </div>
             <div className="flex w-1/2 items-center gap-2">
               <Input placeholder="Enter an Item" />
