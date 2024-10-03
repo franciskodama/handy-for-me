@@ -1,6 +1,6 @@
 import { auth } from '@/lib/auth';
 import Spin from './spin';
-import { getAllSpinItemsFromList, getSpinLists } from '@/lib/actions';
+import { getAllSpinItems, getSpinLists } from '@/lib/actions';
 import { SpinItem, SpinList } from '@/lib/types';
 
 export default async function SpinPage() {
@@ -14,7 +14,7 @@ export default async function SpinPage() {
     if (Array.isArray(fetchedLists)) {
       lists = fetchedLists;
     }
-    const fetchedItems = await getAllSpinItemsFromList(uid);
+    const fetchedItems = await getAllSpinItems(uid);
     if (Array.isArray(fetchedItems)) {
       items = fetchedItems;
     }

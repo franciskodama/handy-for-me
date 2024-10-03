@@ -53,7 +53,7 @@ export async function addSpinItem(uid: string, listId: string, name: string) {
   }
 }
 
-export async function getAllSpinItemsFromList(uid: string) {
+export async function getAllSpinItems(uid: string) {
   try {
     const data = await prisma.spinItem.findMany({
       where: {
