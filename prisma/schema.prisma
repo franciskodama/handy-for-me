@@ -9,7 +9,7 @@ datasource db {
 
 model User {
   id       Int     @id @default(autoincrement())
-  email    String  @unique
+  email    String  @unique 
   name     String? 
   avatar   String? 
   createAt DateTime @default(now())
@@ -29,7 +29,7 @@ model SpinItem {
   createdAt DateTime @db.Date
   uid       String   
   list      SpinList @relation(fields: [listId], references: [id])
-  item      String   
+  name      String   
   selected Boolean   @default(true)
   listId   String
 }
