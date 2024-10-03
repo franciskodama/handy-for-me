@@ -247,22 +247,30 @@ export default function Spin({
           >
             {items.length > 0 ? (
               <>
-                <div className="flex flex-col items-center">
-                  <svg viewBox="0 0 500 500">
-                    <path
-                      id="curve"
-                      fill="transparent"
-                      d="M73.2,148.6c4-6.1,65.5-96.8,178.6-95.6c111.3,1.2,170.8,90.3,175.1,97"
-                    />
-                    <text width="500">
-                      <textPath
-                        className="text-6xl font-normal"
-                        xlinkHref="#curve"
-                      >
-                        {spinning ? 'Spinning...' : 'Spin the Wheel!'}
-                      </textPath>
-                    </text>
-                  </svg>
+                <div className="flex flex-col">
+                  <p className="text-3xl mb-8">
+                    {spinning ? 'Spinning...' : 'Spin the Wheel!'}
+                  </p>
+                  {/* <div className="relative">
+                    <svg
+                      viewBox="0 0 500 500"
+                      className="border absolute top-0 "
+                    >
+                      <path
+                        id="curve"
+                        fill="transparent"
+                        d="M73.2,148.6c4-6.1,65.5-96.8,178.6-95.6c111.3,1.2,170.8,90.3,175.1,97"
+                      />
+                      <text width="500">
+                        <textPath
+                          className="text-6xl font-normal"
+                          xlinkHref="#curve"
+                        >
+                          {spinning ? 'Spinning...' : 'Spin the Wheel!'}
+                        </textPath>
+                      </text>
+                    </svg>
+                  </div> */}
                   <Button
                     className="rounded-full w-[15em] h-[15em] p-0"
                     onClick={handleSpin}
@@ -285,10 +293,10 @@ export default function Spin({
 
             {result && (
               <>
-                <p className="text-5xl text-white p-4 text-center border bg-orange-500 animate-pulse w-full mt-8">
+                <p className="text-5xl text-white p-4 text-center bg-primary animate-pulse w-full my-8">
                   {result}
                 </p>
-                <Button variant="ghost" onClick={() => setResult('')}>
+                <Button variant="link" onClick={() => setResult('')}>
                   clear
                 </Button>
               </>
