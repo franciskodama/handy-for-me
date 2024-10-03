@@ -1,7 +1,6 @@
 'use client';
 
-import { LoaderPinwheelIcon } from 'lucide-react';
-import { use, useState } from 'react';
+import { useState } from 'react';
 
 import {
   Card,
@@ -17,57 +16,68 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
-import { SpinList, SpinListItem } from '@/lib/types';
-import { addSpinItem, addSpinList, getSpinItemsFromList } from '@/lib/actions';
+import { SpinList, SpinItem } from '@/lib/types';
+import { addSpinItem, addSpinList } from '@/lib/actions';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { LoaderPinwheel, SplineIcon } from 'lucide-react';
 
 export default function Spin({
   uid,
-  lists
+  initialLists,
+  initialItems
 }: {
   uid: string;
-  lists: SpinList[];
+  initialLists: SpinList[];
+  initialItems: SpinItem[];
 }) {
-  const [newList, setNewList] = useState<string>('');
-  const [selectedListName, setSelectedListName] = useState<string>('');
-  const [itemList, setItemList] = useState<string>('');
+  const [lists, setLists] = useState<SpinList[]>(initialLists);
+  const [items, setItems] = useState<SpinItem[]>(initialItems);
+  const [listId, setListId] = useState<string>('');
+  const [listInput, setListInput] = useState<string>('');
+  const [itemInput, setItemInput] = useState<string>('');
   const [pendingNewList, setPendingNewList] = useState<boolean>(false);
   const [pendingNewItem, setPendingNewItem] = useState<boolean>(false);
+  const [spinning, setSpinning] = useState<boolean>(false);
+  const [result, setResult] = useState<boolean>(false);
 
-  const selectedList = lists.find((list) => list.name === selectedListName);
-  const listId = selectedList?.id;
-
-  const handleCreateNewList = async () => {
+  const handleCreateList = async () => {
     setPendingNewList(true);
-    const success = await addSpinList(uid, newList);
-    if (success) {
+    const list = await addSpinList(uid, listInput);
+    if (list) {
+      setLists([...lists, list as SpinList]);
       setPendingNewList(false);
-      setNewList('');
+      setListInput('');
     }
   };
 
-  const handleCreateNewItemList = async () => {
+  const handleCreateItem = async () => {
     setPendingNewItem(true);
-    const success = listId && (await addSpinItem(uid, listId, itemList));
-    if (success) {
+    const item = await addSpinItem(uid, listId, itemInput);
+    if (item) {
+      setItems([...items, item as SpinItem]);
       setPendingNewItem(false);
-      setItemList('');
+      setItemInput('');
     }
   };
+  const itemsOfSelectedList = items.filter((item) => item.listId === listId);
+  const itemsStrings = itemsOfSelectedList.reduce<string[]>(
+    (acc, item: SpinItem) => {
+      acc.push(item.name);
+      return acc;
+    },
+    []
+  );
 
-  const itemsObjects = listId && use(getSpinItemsFromList(uid, listId) || []);
-  console.log('---  🚀 ---> | itemsObjects:', itemsObjects);
-  // const itemsOfSelectedList: string[] = itemsObjects?.data?.reduce(
-  //   (acc: any[], item: any) => {
-  //     if (!acc.includes(item.name) {
-  //       acc.push(item.name);
-  //     }
-  //     return acc;
-  //   }
-  // );
-
-  // console.log('---  🚀 ---> | itemsOfSelectedList:', itemsOfSelectedList);
+  const handleSpin = () => {
+    setSpinning(true);
+    const randomIndex = Math.floor(Math.random() * itemsStrings.length);
+    const randomItem = itemsStrings[randomIndex];
+    setTimeout(() => {
+      setResult(randomItem);
+    }, 2000);
+    setSpinning(false);
+  };
 
   return (
     <Card>
@@ -82,7 +92,7 @@ export default function Spin({
         <div className="flex items-center justify-between gap-8 mb-4 w-full">
           <div className="flex w-1/2 flex-col">
             <div className="flex flex-col w-[25em] gap-2">
-              <Select onValueChange={(value) => setSelectedListName(value)}>
+              <Select onValueChange={(value) => setListId(value)}>
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Choose a List" />
                 </SelectTrigger>
@@ -90,7 +100,7 @@ export default function Spin({
                   {lists.map((item: SpinList) => (
                     <div key={item.id}>
                       {item.name && (
-                        <SelectItem value={item.name}>{item.name}</SelectItem>
+                        <SelectItem value={item.id}>{item.name}</SelectItem>
                       )}
                     </div>
                   ))}
@@ -100,15 +110,15 @@ export default function Spin({
                 <Input
                   className="w-full"
                   placeholder="Enter a new Item for this list"
-                  value={itemList}
-                  onChange={(e) => setItemList(e.target.value)}
+                  value={itemInput}
+                  onChange={(e) => setItemInput(e.target.value)}
                 />
                 <Button
-                  className="w-[10ch]"
-                  onClick={handleCreateNewItemList}
-                  disabled={pendingNewItem || itemList.trim() === ''}
+                  className={`w-[10ch] ${pendingNewItem ? 'bg-orange-500' : ''}`}
+                  onClick={handleCreateItem}
+                  disabled={pendingNewItem || itemInput.trim() === ''}
                 >
-                  {pendingNewList ? 'Adding...' : 'Add'}
+                  {pendingNewItem ? 'Adding...' : 'Add'}
                 </Button>
               </div>
             </div>
@@ -121,13 +131,13 @@ export default function Spin({
             <div className="flex items-center gap-2">
               <Input
                 placeholder="List's Name"
-                value={newList}
-                onChange={(e) => setNewList(e.target.value)}
+                value={listInput}
+                onChange={(e) => setListInput(e.target.value)}
               />
               <Button
                 className={pendingNewList ? 'bg-orange-500' : ''}
-                onClick={handleCreateNewList}
-                disabled={pendingNewList || newList.trim() === ''}
+                onClick={handleCreateList}
+                disabled={pendingNewList || listInput.trim() === ''}
               >
                 {pendingNewList ? 'Creating...' : 'Create a New List'}
               </Button>
@@ -135,15 +145,34 @@ export default function Spin({
           </div>
         </div>
 
-        <div className="flex flex-col gap-2">
-          <p className="text-sm font-semibold">Items:</p>
-          {/* {itemsOfSelectedList &&
-            itemsOfSelectedList.map((item: string) => (
-              <p key={item} className="text-sm w-[18ch]">
+        <div className="flex flex-col gap-2 w-[25em]">
+          <p className="text-sm font-semibold mt-4">Items:</p>
+          {itemsStrings &&
+            itemsStrings.map((item: string) => (
+              <p key={item} className="text-sm w-full border p-2">
                 {item}
               </p>
-            ))} */}
+            ))}
+          <Button
+            onClick={handleSpin}
+            // disabled={Boolean(listId)}
+          >
+            {spinning ? 'Spinning...' : 'Spin Magic'}
+            <LoaderPinwheel
+              className={`w-4 h-4 ml-2 ${spinning ? 'animate-spin' : null}`}
+            />
+          </Button>
         </div>
+        {result && (
+          <>
+            <p className="text-5xl text-white p-4 text-center border bg-orange-500 animate-pulse w-full mt-8">
+              {result}
+            </p>
+            <Button variant="ghost" onClick={() => setResult(false)}>
+              clear
+            </Button>
+          </>
+        )}
       </CardContent>
     </Card>
   );

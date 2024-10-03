@@ -3,10 +3,10 @@ export type SpinList = {
   uid: string;
   name: string;
   createdAt: Date;
-  items: SpinListItem[];
+  items: SpinItem[];
 };
 
-export type SpinListItem = {
+export type SpinItem = {
   id: string;
   uid: string;
   createdAt: Date;

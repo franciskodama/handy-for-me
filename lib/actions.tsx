@@ -5,7 +5,7 @@ import { prisma } from './prisma';
 
 export async function addSpinList(uid: string, name: string) {
   try {
-    await prisma.spinList.create({
+    const list = await prisma.spinList.create({
       data: {
         id: v4(),
         createdAt: new Date(),
@@ -13,7 +13,7 @@ export async function addSpinList(uid: string, name: string) {
         name
       }
     });
-    return true;
+    return list;
   } catch (error) {
     console.log(error);
     return false;
@@ -36,20 +36,34 @@ export async function getSpinLists(uid: string) {
 
 export async function addSpinItem(uid: string, listId: string, name: string) {
   try {
-    await prisma.spinItem.create({
+    const item = await prisma.spinItem.create({
       data: {
         id: v4(),
-        createdAt: new Date(),
         uid,
+        createdAt: new Date(),
         listId,
         name,
         selected: true
       }
     });
-    return true;
+    return item;
   } catch (error) {
     console.log(error);
     return false;
+  }
+}
+
+export async function getAllSpinItemsFromList(uid: string) {
+  try {
+    const data = await prisma.spinItem.findMany({
+      where: {
+        uid
+      }
+    });
+    return data;
+  } catch (error) {
+    console.log(error);
+    return [];
   }
 }
 
