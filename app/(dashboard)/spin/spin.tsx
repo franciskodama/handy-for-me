@@ -2,13 +2,7 @@
 
 import { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import {
-  BellRing,
-  CircleHelp,
-  LoaderPinwheel,
-  MessageCircleQuestion,
-  SplineIcon
-} from 'lucide-react';
+import { CircleHelp, LoaderPinwheel, Trash2 } from 'lucide-react';
 
 import {
   Card,
@@ -33,8 +27,14 @@ import {
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { SpinList, SpinItem } from '@/lib/types';
-import { addSpinItem, addSpinList } from '@/lib/actions';
+import {
+  addSpinItem,
+  addSpinList,
+  deleteSpinItem,
+  selectionSpinItem
+} from '@/lib/actions';
 import Explanation from '@/components/Explanation';
+import { Checkbox } from '@/components/ui/checkbox';
 
 export default function Spin({
   uid,
@@ -46,7 +46,7 @@ export default function Spin({
   initialItems: SpinItem[];
 }) {
   const [lists, setLists] = useState<SpinList[]>(initialLists);
-  const [items, setItems] = useState<SpinItem[]>(initialItems);
+  const [allItems, setAllItems] = useState<SpinItem[]>(initialItems);
   const [listId, setListId] = useState<string>('');
   const [listInput, setListInput] = useState<string>('');
   const [itemInput, setItemInput] = useState<string>('');
@@ -55,6 +55,9 @@ export default function Spin({
   const [spinning, setSpinning] = useState<boolean>(false);
   const [result, setResult] = useState<string>('');
   const [openAction, setOpenAction] = useState(false);
+
+  const items = allItems.filter((item) => item.listId === listId);
+  const itemsSelected = items.filter((item) => item.selected === true);
 
   const handleCreateList = async () => {
     setPendingNewList(true);
@@ -70,55 +73,59 @@ export default function Spin({
     setPendingNewItem(true);
     const item = await addSpinItem(uid, listId, itemInput);
     if (item) {
-      setItems([...items, item as SpinItem]);
+      setAllItems([...allItems, item as SpinItem]);
       setPendingNewItem(false);
       setItemInput('');
     }
   };
-  const itemsOfSelectedList = items.filter((item) => item.listId === listId);
-  const itemsStrings = itemsOfSelectedList.reduce<string[]>(
-    (acc, item: SpinItem) => {
-      acc.push(item.name);
-      return acc;
-    },
-    []
-  );
+
+  const handleItemSelection = async (id: string) => {
+    const success = await selectionSpinItem(id);
+    if (success) {
+      setAllItems(
+        allItems.map((item) => {
+          if (item.id === id) {
+            return { ...item, selected: !item.selected };
+          }
+          return item;
+        })
+      );
+    }
+  };
+
+  const handleDeleteItem = async (id: string) => {
+    const success = await deleteSpinItem(id);
+    if (success) {
+      setAllItems(allItems.filter((item) => item.id !== id));
+    }
+  };
 
   const handleSpin = () => {
     setSpinning(true);
-    const randomIndex = Math.floor(Math.random() * itemsStrings.length);
-    const randomItem = itemsStrings[randomIndex];
+    const randomIndex = Math.floor(Math.random() * itemsSelected.length);
+    const randomItem = itemsSelected[randomIndex].name;
     setTimeout(() => {
       setResult(randomItem);
-    }, 2000);
-    setSpinning(false);
+      setSpinning(false);
+    }, 5000);
   };
 
   return (
     <Card>
       <CardHeader className="mb-4">
         <CardTitle className="flex justify-between items-center gap-2">
-          <h1>Spin Magic</h1>
-
+          <p>Spin Magic</p>
           {!openAction ? (
             <>
               <TooltipProvider>
                 <Tooltip>
-                  <TooltipTrigger>
-                    <motion.button
-                      whileHover={{ scale: 1.1 }}
-                      whileTap={{ scale: 0.9 }}
-                    >
-                      <Button
-                        className="text-sm"
-                        variant="link"
-                        onClick={() => {
-                          setOpenAction(true);
-                        }}
-                      >
-                        <CircleHelp className="h-6 w-6" strokeWidth={1.6} />
-                      </Button>
-                    </motion.button>
+                  <TooltipTrigger
+                    className="text-sm"
+                    onClick={() => {
+                      setOpenAction(true);
+                    }}
+                  >
+                    <CircleHelp size={22} strokeWidth={1.6} />
                   </TooltipTrigger>
                   <TooltipContent>
                     <p className="text-primary ml-2 lowercase font-light">
@@ -152,11 +159,18 @@ export default function Spin({
             </motion.div>
           ) : null}
         </AnimatePresence>
+
         {/* ----------------------- First Column ----------------------- */}
+
         <div className="flex justify-between gap-8 mb-4 w-full">
           <div className="flex w-1/3 flex-col">
             <div className="flex flex-col gap-2">
-              <Select onValueChange={(value) => setListId(value)}>
+              <Select
+                onValueChange={(value) => {
+                  setResult('');
+                  setListId(value);
+                }}
+              >
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Choose a List" />
                 </SelectTrigger>
@@ -186,34 +200,87 @@ export default function Spin({
                 </Button>
               </div>
             </div>
-
-            {/* ----------------------- Second Column ----------------------- */}
-
-            {itemsStrings.length > 0 && (
-              <div className="flex flex-col gap-2 w-[25em]">
+            {items.length > 0 && (
+              <div className="flex flex-col gap-2">
                 <p className="text-sm font-semibold mt-4">Items:</p>
-                {itemsStrings.map((item: string) => (
-                  <p key={item} className="text-sm w-full border p-2">
-                    {item}
-                  </p>
+                {items.map((item: SpinItem) => (
+                  <div
+                    key={item.id}
+                    className="flex gap-2 items-center justify-between text-sm w-full border px-2"
+                  >
+                    <p>{item.name}</p>
+                    <div className="flex items-center gap-4 pr-2">
+                      <Checkbox
+                        checked={item.selected}
+                        onCheckedChange={() => handleItemSelection(item.id)}
+                      />
+                      <Button
+                        variant={'link'}
+                        onClick={() => handleDeleteItem(item.id)}
+                      >
+                        <Trash2 size={18} strokeWidth={1.6} />
+                      </Button>
+                    </div>
+                  </div>
                 ))}
               </div>
             )}
           </div>
 
-          {/* ----------------------- Third Column ----------------------- */}
+          {/* ----------------------- Second Column ----------------------- */}
 
-          <div className="flex flex-col w-1/3 border h-[10em]">
-            {itemsStrings.length > 0 && (
-              <Button
-                onClick={handleSpin}
-                // disabled={Boolean(listId)}
-              >
-                {spinning ? 'Spinning...' : 'Spin Magic'}
-                <LoaderPinwheel
-                  className={`w-4 h-4 ml-2 ${spinning ? 'animate-spin' : null}`}
-                />
-              </Button>
+          <div
+            className="flex flex-col w-1/3 items-center p-12"
+            style={{
+              borderImage: `repeating-linear-gradient(
+                  45deg,
+                  transparent,
+                  transparent 2.5px,
+                  black 3px,
+                  black 3px,
+                  transparent 3px,
+                  transparent 3px
+                ) 15 / 0.75rem`,
+              borderStyle: 'solid',
+              borderWidth: '1em'
+            }}
+          >
+            {items.length > 0 ? (
+              <>
+                <div className="flex flex-col items-center">
+                  <svg viewBox="0 0 500 500">
+                    <path
+                      id="curve"
+                      fill="transparent"
+                      d="M73.2,148.6c4-6.1,65.5-96.8,178.6-95.6c111.3,1.2,170.8,90.3,175.1,97"
+                    />
+                    <text width="500">
+                      <textPath
+                        className="text-6xl font-normal"
+                        xlinkHref="#curve"
+                      >
+                        {spinning ? 'Spinning...' : 'Spin the Wheel!'}
+                      </textPath>
+                    </text>
+                  </svg>
+                  <Button
+                    className="rounded-full w-[15em] h-[15em] p-0"
+                    onClick={handleSpin}
+                  >
+                    <LoaderPinwheel
+                      size={300}
+                      strokeWidth={0.25}
+                      className={`${spinning ? 'animate-spin' : null}`}
+                    />
+                  </Button>
+                </div>
+              </>
+            ) : (
+              <>
+                <p className="text-3xl text-slate-300 p-4 text-center animate-pulse w-full">
+                  waiting for items...
+                </p>
+              </>
             )}
 
             {result && (
@@ -228,6 +295,8 @@ export default function Spin({
             )}
           </div>
 
+          {/* ----------------------- Third Column ----------------------- */}
+
           <div className="flex flex-col w-1/3">
             <div className="w-[25em]">
               <p className="text-sm h-10 py-2">
@@ -240,7 +309,7 @@ export default function Spin({
                   onChange={(e) => setListInput(e.target.value)}
                 />
                 <Button
-                  className={pendingNewList ? 'bg-orange-500' : ''}
+                  className={pendingNewList ? 'bg-primary' : ''}
                   onClick={handleCreateList}
                   disabled={pendingNewList || listInput.trim() === ''}
                 >

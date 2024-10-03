@@ -60,10 +60,10 @@ export default function Explanation({
               <Bomb size={24} color="black" strokeWidth={1.8} />
               <p className="font-bold text-lg ml-2">Ops...</p>
             </div>
-            <h3 className="text-primary text-xs w-[26ch]">
+            <p className="text-primary text-xs w-[26ch]">
               Looks like we’re missing
               <br />
-            </h3>
+            </p>
           </div>
 
           <div className="flex flex-wrap justify-between">

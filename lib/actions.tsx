@@ -67,20 +67,35 @@ export async function getAllSpinItemsFromList(uid: string) {
   }
 }
 
-export async function getSpinItemsFromList(uid: string, listId: string) {
+export async function deleteSpinItem(id: string) {
   try {
-    const data = await prisma.spinItem.findMany({
+    await prisma.spinItem.delete({
       where: {
-        uid,
-        AND: {
-          listId
-        }
+        id
       }
     });
-    return data;
+    return true;
   } catch (error) {
     console.log(error);
-    return [];
+    return false;
+  }
+}
+
+export async function selectionSpinItem(id: string) {
+  try {
+    const item = await prisma.spinItem.findUnique({ where: { id } });
+    await prisma.spinItem.update({
+      where: {
+        id
+      },
+      data: {
+        selected: !item?.selected
+      }
+    });
+    return true;
+  } catch (error) {
+    console.log(error);
+    return false;
   }
 }
 
