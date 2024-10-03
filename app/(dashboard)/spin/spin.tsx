@@ -39,7 +39,7 @@ export default function Spin({
   const [pendingNewList, setPendingNewList] = useState<boolean>(false);
   const [pendingNewItem, setPendingNewItem] = useState<boolean>(false);
   const [spinning, setSpinning] = useState<boolean>(false);
-  const [result, setResult] = useState<boolean>(false);
+  const [result, setResult] = useState<string>('');
 
   const handleCreateList = async () => {
     setPendingNewList(true);
@@ -168,7 +168,7 @@ export default function Spin({
             <p className="text-5xl text-white p-4 text-center border bg-orange-500 animate-pulse w-full mt-8">
               {result}
             </p>
-            <Button variant="ghost" onClick={() => setResult(false)}>
+            <Button variant="ghost" onClick={() => setResult('')}>
               clear
             </Button>
           </>
