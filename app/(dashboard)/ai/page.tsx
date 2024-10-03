@@ -38,6 +38,10 @@ export default function AIPage() {
             </svg>
           </button>
         </div>
+
+        <div className="flex items-center justify-center text-primary h-24 w-48 bg-accent my-8 p-8">
+          Accent Color
+        </div>
       </CardContent>
     </Card>
   );
