@@ -3,6 +3,24 @@
 import { v4 } from 'uuid';
 import { prisma } from './prisma';
 
+export async function addUser(uid: string, name: string, avatar: string) {
+  try {
+    const data = await prisma.user.create({
+      data: {
+        id: v4(),
+        uid,
+        name,
+        avatar,
+        createdAt: new Date()
+      }
+    });
+    return data;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+}
+
 export async function addSpinList(uid: string, name: string) {
   try {
     const list = await prisma.spinList.create({
@@ -30,7 +48,7 @@ export async function getSpinLists(uid: string) {
     return data;
   } catch (error) {
     console.log(error);
-    return error;
+    return { error: 'Failed to retrieve spin lists.' };
   }
 }
 
@@ -55,6 +73,10 @@ export async function addSpinItem(uid: string, listId: string, name: string) {
 
 export async function getAllSpinItems(uid: string) {
   try {
+    // const user = await prisma.user.findUnique({ where: { id: uid } });
+    // if (!user) {
+    //   return { error: 'User not found.' };
+    // }
     const data = await prisma.spinItem.findMany({
       where: {
         uid

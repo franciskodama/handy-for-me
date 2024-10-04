@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { CircleHelp, LoaderPinwheel, Trash2 } from 'lucide-react';
+import { CircleHelp, RefreshCw, Trash2 } from 'lucide-react';
 
 import {
   Card,
@@ -33,7 +33,7 @@ import {
   deleteSpinItem,
   selectionSpinItem
 } from '@/lib/actions';
-import Explanation from '@/components/Explanation';
+import ExplanationBox from '@/components/ExplanationBox';
 import { Checkbox } from '@/components/ui/checkbox';
 
 export default function Spin({
@@ -154,7 +154,7 @@ export default function Spin({
               exit={{ opacity: 0, scale: 0.5, transition: { duration: 0.2 } }}
             >
               <div className="mb-12">
-                <Explanation setOpenAction={setOpenAction} />
+                <ExplanationBox setOpenAction={setOpenAction} />
               </div>
             </motion.div>
           ) : null}
@@ -274,9 +274,11 @@ export default function Spin({
                   <Button
                     className="rounded-full w-[15em] h-[15em] p-0"
                     onClick={handleSpin}
+                    variant={'outline'}
                   >
-                    <LoaderPinwheel
-                      size={300}
+                    <RefreshCw
+                      color={'black'}
+                      size={150}
                       strokeWidth={0.25}
                       className={`${spinning ? 'animate-spin' : null}`}
                     />

@@ -1,52 +1,15 @@
 'use client';
 
-import {
-  Bomb,
-  Lamp,
-  Lightbulb,
-  MessageCircle,
-  Settings,
-  Snail,
-  Trash2,
-  X
-} from 'lucide-react';
+import { Lightbulb, Settings, Snail, Trash2, X } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from './ui/checkbox';
 
-export default function Explanation({
+export default function ExplanationBox({
   setOpenAction
 }: {
   setOpenAction: (value: boolean) => void;
 }) {
-  const handleClickMessageButton = () => {
-    const email = process.env.NEXT_PUBLIC_MY_UID;
-
-    if (!email) {
-      console.error('Email environment variable not set');
-      return;
-    }
-
-    const subject = encodeURIComponent(
-      '[HANDYFOR.ME] I have something to tell you!'
-    );
-    const body = encodeURIComponent(`
-      Hey Handy For Me Team, 👋
-      
-      I would like to share something about your app:
-      
-      
-
-
-      Cheers! 🍻
-      `);
-
-    window.open(
-      `https://mail.google.com/mail/?view=cm&fs=1&to=${email}&su=${subject}&body=${body}`,
-      '_blank'
-    );
-  };
-
   return (
     <div className="relative">
       <Alert

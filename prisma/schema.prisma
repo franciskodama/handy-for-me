@@ -8,12 +8,11 @@ datasource db {
 }
 
 model User {
-  id       Int     @id @default(autoincrement())
-  email    String  @unique 
+  id       String   @id @default(uuid()) @db.VarChar(255)
+  uid      String  @unique 
   name     String? 
   avatar   String? 
-  createAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now()) @db.Timestamp(6)
 }
 
 model SpinList {
@@ -29,7 +28,7 @@ model SpinItem {
   createdAt DateTime @default(now()) @db.Timestamp(6)
   uid       String   
   name      String   
-  selected Boolean   @default(true)
+  selected  Boolean   @default(true)
   list      SpinList @relation(fields: [listId], references: [id])
-  listId   String
+  listId    String
 }
