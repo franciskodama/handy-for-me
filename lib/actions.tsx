@@ -34,6 +34,9 @@ export async function addSpinList(uid: string, name: string) {
         createdAt: new Date(),
         uid,
         name
+      },
+      include: {
+        items: true
       }
     });
     return list;
