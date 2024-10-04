@@ -5,8 +5,13 @@ import { prisma } from './prisma';
 
 export async function addUser(uid: string, name: string, avatar: string) {
   try {
-    const data = await prisma.user.create({
-      data: {
+    const user = await prisma.user.upsert({
+      where: { uid },
+      update: {
+        name,
+        avatar
+      },
+      create: {
         id: v4(),
         uid,
         name,
@@ -14,10 +19,10 @@ export async function addUser(uid: string, name: string, avatar: string) {
         createdAt: new Date()
       }
     });
-    return data;
+    return user;
   } catch (error) {
-    console.log(error);
-    return false;
+    console.error('Error adding user:', error);
+    return null;
   }
 }
 
@@ -73,10 +78,10 @@ export async function addSpinItem(uid: string, listId: string, name: string) {
 
 export async function getAllSpinItems(uid: string) {
   try {
-    // const user = await prisma.user.findUnique({ where: { id: uid } });
-    // if (!user) {
-    //   return { error: 'User not found.' };
-    // }
+    const user = await prisma.user.findUnique({ where: { uid } });
+    if (!user) {
+      return { error: 'User not found.' };
+    }
     const data = await prisma.spinItem.findMany({
       where: {
         uid
@@ -105,12 +110,18 @@ export async function deleteSpinItem(id: string) {
 
 export async function selectionSpinItem(id: string) {
   try {
+    const item = await prisma.spinItem.findUnique({ where: { id } });
+
+    if (!item) {
+      return false;
+    }
+
     await prisma.spinItem.update({
       where: {
         id
       },
       data: {
-        selected: !prisma.spinItem.findUnique({ where: { id } })
+        selected: !item.selected
       }
     });
     return true;
@@ -119,31 +130,3 @@ export async function selectionSpinItem(id: string) {
     return false;
   }
 }
-
-// export type SpinListItem = {
-//   id: string;
-//   createdAt: Date;
-//   uid: string;
-//   listId: string;
-//   name: string;
-//   selected: boolean;
-// };
-
-// model SpinItem {
-//   id        String   @id @default(uuid()) @db.VarChar(255)
-//   createdAt DateTime @db.Date
-//   uid       String
-//   list      SpinList @relation(fields: [listId], references: [id])
-//   item      String
-//   selected Boolean   @default(true)
-//   listId   String
-// }
-// export async function getUsers() {
-//   try {
-//     const data = await prisma.user.findMany();
-//     return data;
-//   } catch (error) {
-//     console.log(error);
-//     return error;
-//   }
-// }
