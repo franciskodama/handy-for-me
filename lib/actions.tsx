@@ -105,13 +105,12 @@ export async function deleteSpinItem(id: string) {
 
 export async function selectionSpinItem(id: string) {
   try {
-    const item = await prisma.spinItem.findUnique({ where: { id } });
     await prisma.spinItem.update({
       where: {
         id
       },
       data: {
-        selected: !item?.selected
+        selected: !prisma.spinItem.findUnique({ where: { id } })
       }
     });
     return true;
