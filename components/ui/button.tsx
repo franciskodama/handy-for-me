@@ -14,7 +14,7 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          'text-white border border-red-500 bg-primary transition-all duration-200 ease-in-out hover:translate-x-[5px] hover:-translate-y-[5px] hover:shadow-[0_0px_0px_0px_inset,#FFF_-5px_5px_0_-1px,#000_-5px_5px]',
+          'text-white bg-primary transition-all duration-200 ease-in-out hover:translate-x-[5px] hover:-translate-y-[5px] hover:shadow-[0_0px_0px_0px_inset,#FFF_-5px_5px_0_-1px,#000_-5px_5px]',
         destructive:
           'bg-destructive text-destructive-foreground hover:bg-destructive/90',
         outline:

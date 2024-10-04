@@ -1,6 +1,11 @@
 // Our template: https://vercel.com/templates/next.js/admin-dashboard-tailwind-postgres-react-nextjs
 
 // TODO: WORKING ON
+// Breadcrumb
+// Spin: How to delete a list?
+// Spin: Do something if a list has only one item (and the item must be selected or message the user)
+// Component MessageTeam
+// Confetti for Spin Page: https://classic.yarnpkg.com/en/package/canvas-confetti or https://www.youtube.com/watch?v=5YTK7Mor-wM
 // domain to vercel: https://porkbun.com/
 // use() instead of useEffect and useState: https://www.youtube.com/watch?v=oMvW3A_IRsY>>
 // Create the page Draw
@@ -20,3 +25,4 @@
 //TODO: DONE
 // Auth Google
 // Auth GitHub
+// Fix deployment error on vercel

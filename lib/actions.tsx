@@ -2,44 +2,112 @@
 
 import { v4 } from 'uuid';
 import { prisma } from './prisma';
+import { SpinItem, SpinList } from './types';
 
-// export async function addSpinItem(uid: string, list: string, item: string) {
-//   try {
-//     await prisma.spinItem.create({
-//       data: {
-//         id: v4(),
-//         createdAt: new Date(),
-//         uid,
-//         list,
-//         item,
-//         selected: true
-//       }
-//     });
-//     return true;
-//   } catch (error) {
-//     console.log(error);
-//     return false;
-//   }
-// }
-
-// model SpinItem {
-//   id        String   @id @default(uuid()) @db.VarChar(255)
-//   createdAt DateTime @db.Date
-//   uid       String   @db.VarChar(255)
-//   list      SpinList @relation(fields: [listId], references: [id])
-//   item      String   @db.VarChar(255)
-//   selected Boolean   @default(true)
-//   listId   String
-// }
+export async function addUser(uid: string, name: string, avatar: string) {
+  try {
+    const user = await prisma.user.upsert({
+      where: { uid },
+      update: {
+        name,
+        avatar
+      },
+      create: {
+        id: v4(),
+        uid,
+        name,
+        avatar,
+        createdAt: new Date()
+      }
+    });
+    return user;
+  } catch (error) {
+    console.error('Error adding user:', error);
+    return null;
+  }
+}
 
 export async function addSpinList(uid: string, name: string) {
   try {
-    await prisma.spinList.create({
+    const list = await prisma.spinList.create({
       data: {
         id: v4(),
         createdAt: new Date(),
         uid,
         name
+      },
+      include: {
+        items: true
+      }
+    });
+    return list;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+}
+
+export async function getSpinLists(
+  uid: string
+): Promise<SpinList[] | { error: string }> {
+  try {
+    const data = await prisma.spinList.findMany({
+      where: { uid },
+      include: { items: true }
+    });
+    return data;
+  } catch (error) {
+    console.error('Error retrieving spin lists:', error);
+    return { error: 'Failed to retrieve spin lists.' };
+  }
+}
+
+export async function addSpinItem(
+  uid: string,
+  listId: string,
+  name: string
+): Promise<SpinItem | false> {
+  try {
+    const item = await prisma.spinItem.create({
+      data: {
+        id: v4(),
+        uid,
+        createdAt: new Date(),
+        listId,
+        name,
+        selected: true
+      }
+    });
+    return item;
+  } catch (error) {
+    console.error('Error adding spin item:', error);
+    return false;
+  }
+}
+
+export async function getAllSpinItems(uid: string) {
+  try {
+    const user = await prisma.user.findUnique({ where: { uid } });
+    if (!user) {
+      return { error: 'User not found.' };
+    }
+    const data = await prisma.spinItem.findMany({
+      where: {
+        uid
+      }
+    });
+    return data;
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function deleteSpinItem(id: string) {
+  try {
+    await prisma.spinItem.delete({
+      where: {
+        id
       }
     });
     return true;
@@ -49,26 +117,25 @@ export async function addSpinList(uid: string, name: string) {
   }
 }
 
-export async function getSpinLists(uid: string) {
+export async function selectionSpinItem(id: string) {
   try {
-    const data = await prisma.spinList.findMany({
+    const item = await prisma.spinItem.findUnique({ where: { id } });
+
+    if (!item) {
+      return false;
+    }
+
+    await prisma.spinItem.update({
       where: {
-        uid
+        id
+      },
+      data: {
+        selected: !item.selected
       }
     });
-    return data;
+    return true;
   } catch (error) {
     console.log(error);
-    return error;
-  }
-}
-
-export async function getUsers() {
-  try {
-    const data = await prisma.user.findMany();
-    return data;
-  } catch (error) {
-    console.log(error);
-    return error;
+    return false;
   }
 }
