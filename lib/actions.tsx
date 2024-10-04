@@ -2,6 +2,7 @@
 
 import { v4 } from 'uuid';
 import { prisma } from './prisma';
+import { SpinItem, SpinList } from './types';
 
 export async function addUser(uid: string, name: string, avatar: string) {
   try {
@@ -46,21 +47,26 @@ export async function addSpinList(uid: string, name: string) {
   }
 }
 
-export async function getSpinLists(uid: string) {
+export async function getSpinLists(
+  uid: string
+): Promise<SpinList[] | { error: string }> {
   try {
     const data = await prisma.spinList.findMany({
-      where: {
-        uid
-      }
+      where: { uid },
+      include: { items: true }
     });
     return data;
   } catch (error) {
-    console.log(error);
+    console.error('Error retrieving spin lists:', error);
     return { error: 'Failed to retrieve spin lists.' };
   }
 }
 
-export async function addSpinItem(uid: string, listId: string, name: string) {
+export async function addSpinItem(
+  uid: string,
+  listId: string,
+  name: string
+): Promise<SpinItem | false> {
   try {
     const item = await prisma.spinItem.create({
       data: {
@@ -74,7 +80,7 @@ export async function addSpinItem(uid: string, listId: string, name: string) {
     });
     return item;
   } catch (error) {
-    console.log(error);
+    console.error('Error adding spin item:', error);
     return false;
   }
 }
