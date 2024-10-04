@@ -140,14 +140,14 @@ export default function MessageTeam() {
             <Button
               variant={'outline'}
               className="capitalize mt-6 w-[26ch]"
-              onClick={() => setOpenAction(false)}
+              // onClick={() => setOpenAction(false)}
             >
               Start spinning today!
             </Button>
           </div>
           <button
             className="absolute right-2 top-2"
-            onClick={() => setOpenAction(false)}
+            // onClick={() => setOpenAction(false)}
           >
             <X size={24} color="black" strokeWidth={1.8} />
           </button>
