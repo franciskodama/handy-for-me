@@ -24,11 +24,14 @@ import {
   TooltipProvider,
   TooltipTrigger
 } from '@/components/ui/tooltip';
-import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import ExplanationRandomQuestion from './explanation-random-question';
-import { topicsRandomQuestions, getQuestions } from './questions';
-import Image from 'next/image';
+import {
+  topicsRandomQuestions,
+  getQuestions,
+  getLuckyChoice
+} from './questions';
+import { Stopwatch } from './stopwatch';
 
 type Topic = {
   id: string;
@@ -41,6 +44,8 @@ export default function RandomQuestion({ name }: { name: string }) {
   const [spinning, setSpinning] = useState<boolean>(false);
   const [result, setResult] = useState<string>('');
   const [openAction, setOpenAction] = useState(false);
+  const [startStopwatch, setStartStopwatch] = useState(false);
+  const [resetStopwatch, setResetStopwatch] = useState(false);
 
   useEffect(() => {
     const arrayOfQuestions = getQuestions(topic);
@@ -54,6 +59,17 @@ export default function RandomQuestion({ name }: { name: string }) {
     setTimeout(() => {
       setResult(randomItem);
       setSpinning(false);
+      setStartStopwatch(true);
+    }, 1000);
+  };
+
+  const handleFeelingLucky = () => {
+    setSpinning(true);
+    const luckyChoice = getLuckyChoice();
+    setTimeout(() => {
+      setResult(luckyChoice);
+      setSpinning(false);
+      setStartStopwatch(true);
     }, 1000);
   };
 
@@ -109,9 +125,8 @@ export default function RandomQuestion({ name }: { name: string }) {
         {/* ----------------------- First Column ----------------------- */}
 
         <div className="flex justify-between gap-8 mb-4 w-full">
-          <div className="flex w-1/3 flex-col gap-4">
+          <div className="flex w-1/5 flex-col gap-4">
             <p className="text-lg font-semibold">
-              {' '}
               {`${name.split(' ')[0]}, let's get started! 👋 `}
             </p>
             <div className="flex flex-col gap-2">
@@ -144,12 +159,25 @@ export default function RandomQuestion({ name }: { name: string }) {
             >
               {!topic ? 'Waiting for topic...' : 'Spin!'}
             </Button>
+            <div className="flex flex-col items-center gap-2 w-full">
+              <p className="text-xs mb-2">or</p>
+              <Button
+                className="capitalize w-full"
+                variant="outline"
+                onClick={handleFeelingLucky}
+              >
+                {`I'm feeling lucky!`}
+              </Button>
+              <p className="text-xs">
+                Let fate decide your next topic and question
+              </p>
+            </div>
           </div>
 
           {/* ----------------------- Second Column ----------------------- */}
 
           <div
-            className={`flex flex-col w-1/3 items-center ${!result ? 'gap-12' : ''}`}
+            className={`flex flex-col w-3/5 items-center ${!result ? 'gap-12' : ''}`}
             style={{
               borderImage: `repeating-linear-gradient(
                   45deg,
@@ -166,50 +194,56 @@ export default function RandomQuestion({ name }: { name: string }) {
           >
             {result ? (
               <>
-                <p className="text-5xl text-primary leading-tight p-4 text-center animate-pulse w-full my-8">
+                <p className="text-5xl text-primary leading-tight p-12 text-center w-full my-8">
                   {result}
                 </p>
-                <Button variant="link" onClick={() => setResult('')}>
-                  clear
+                <Button
+                  variant="outline"
+                  className="capitalize mb-12"
+                  onClick={() => {
+                    setResult(''), setResetStopwatch(true);
+                  }}
+                >
+                  restart
                 </Button>
               </>
             ) : (
               <>
-                <Image
+                {/* <Image
                   src={'/waiting.webp'}
                   alt="logo"
                   width={800}
                   height={800}
-                />
-                {/* <p className="text-5xl text-primary leading-tight p-4 text-center animate-pulse w-full my-8">
-                  Waiting...
-                </p> */}
+                /> */}
+                <div className="flex flex-col text-xl text-primary leading-tight p-4 text-center animate-pulse w-full my-8 gap-4">
+                  <p className="font-semibold text-2xl">
+                    Ready for a challenge? 🔥
+                  </p>
+                  <p>
+                    Choose a Topic, hit Spin and let curiosity choose your next
+                    question!
+                  </p>
+                </div>
               </>
             )}
           </div>
 
           {/* ----------------------- Third Column ----------------------- */}
 
-          <div className="flex flex-col w-1/3">
-            <div className="w-[25em]">
-              <p className="text-sm h-10 py-2">
-                Do you want to start a new list?
-              </p>
-              <div className="flex items-center gap-2">
-                <Input
-                  placeholder="List's Name"
-                  //   value={listInput}
-                  //   onChange={(e) => setListInput(e.target.value)}
-                />
-                <Button
-                //   className={pendingNewList ? 'bg-primary' : ''}
-                //   onClick={handleCreateList}
-                //   disabled={pendingNewList || listInput.trim() === ''}
-                >
-                  {/* {pendingNewList ? 'Creating...' : 'Create a New List'} */}
-                </Button>
-              </div>
-            </div>
+          <div className="flex flex-col w-1/5 gap-4">
+            <p className="text-lg font-semibold">Answer Clock ⏱️</p>
+
+            <p className="text-sm">
+              Your language journey starts now.
+              <br />
+              Set the timer and let's go!
+            </p>
+            <Stopwatch
+              setStartStopwatch={setStartStopwatch}
+              startStopwatch={startStopwatch}
+              setResetStopwatch={setResetStopwatch}
+              resetStopwatch={resetStopwatch}
+            />
           </div>
         </div>
       </CardContent>
