@@ -1,6 +1,8 @@
 // Our template: https://vercel.com/templates/next.js/admin-dashboard-tailwind-postgres-react-nextjs
+// Google Cloud Credentials: https://console.cloud.google.com/apis/credentials
 
 // TODO: WORKING ON
+// Questions feature
 // Breadcrumb
 // Spin: How to delete a list?
 // Spin: Do something if a list has only one item (and the item must be selected or message the user)
