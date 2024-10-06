@@ -13,7 +13,8 @@ import {
   Bot,
   Settings,
   MessageCircleQuestion,
-  RefreshCw
+  RefreshCw,
+  BookA
 } from 'lucide-react';
 import Image from 'next/image';
 
@@ -43,6 +44,10 @@ export function DesktopNav() {
 
         <NavItem href="/random-question" label="Random Questions">
           <MessageCircleQuestion className="h-5 w-5" />
+        </NavItem>
+
+        <NavItem href="/letter-leap" label="Letter Leap">
+          <BookA className="h-5 w-5" />
         </NavItem>
 
         <NavItem href="/affirmation" label="Affirmation">

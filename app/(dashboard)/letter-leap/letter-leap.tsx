@@ -25,59 +25,22 @@ import {
   TooltipTrigger
 } from '@/components/ui/tooltip';
 import { Button } from '@/components/ui/button';
-import ExplanationRandomQuestion from './explanation-random-question';
-import {
-  topicsRandomQuestions,
-  getQuestions,
-  getLuckyChoice
-} from './questions';
-import Countdown from './countdown';
+import ExplanationLetterLeap from './explanation-letter-leap';
 
-export default function RandomQuestion({ name }: { name: string }) {
-  const [topic, setTopic] = useState<string>('');
-  const [questions, setQuestions] = useState<string[]>([]);
+export default function LetterLeap() {
+  // const [topic, setTopic] = useState<string>('');
+  // const [questions, setQuestions] = useState<string[]>([]);
   const [spinning, setSpinning] = useState<boolean>(false);
   const [result, setResult] = useState<string>('');
   const [openAction, setOpenAction] = useState(false);
-  const [startCountdown, setStartCountdown] = useState(false);
-  const [resetAll, setResetAll] = useState(false);
-
-  useEffect(() => {
-    const arrayOfQuestions = getQuestions(topic);
-    setQuestions(arrayOfQuestions);
-  }, [topic]);
-
-  const handleSpin = () => {
-    setSpinning(true);
-    const randomIndex = Math.floor(Math.random() * questions.length);
-    const randomItem = questions[randomIndex];
-    setTimeout(() => {
-      setResult(randomItem);
-      setSpinning(false);
-      setStartCountdown(true);
-    }, 1000);
-  };
-
-  const handleFeelingLucky = () => {
-    setSpinning(true);
-    const luckyChoice = getLuckyChoice();
-    setTimeout(() => {
-      setResult(luckyChoice);
-      setSpinning(false);
-      setStartCountdown(true);
-    }, 1000);
-  };
-
-  const handleResetAll = () => {
-    setResetAll(true);
-    setResult('');
-  };
+  // const [startCountdown, setStartCountdown] = useState(false);
+  // const [resetAll, setResetAll] = useState(false);
 
   return (
     <Card>
       <CardHeader className="mb-12">
         <CardTitle className="flex justify-between items-center gap-2">
-          <p>Random Questions</p>
+          <p>Letter Leap</p>
           {!openAction ? (
             <>
               <TooltipProvider>
@@ -103,7 +66,7 @@ export default function RandomQuestion({ name }: { name: string }) {
           )}
         </CardTitle>
         <CardDescription>
-          Boost your English with fun, random prompts!
+          Master conversations, one letter at a time!
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -116,7 +79,7 @@ export default function RandomQuestion({ name }: { name: string }) {
               exit={{ opacity: 0, scale: 0.5, transition: { duration: 0.2 } }}
             >
               <div className="mb-12">
-                <ExplanationRandomQuestion setOpenAction={setOpenAction} />
+                <ExplanationLetterLeap setOpenAction={setOpenAction} />
               </div>
             </motion.div>
           ) : null}
@@ -127,20 +90,20 @@ export default function RandomQuestion({ name }: { name: string }) {
         <div className="flex justify-between gap-8 mb-4 w-full">
           <div className="flex w-1/5 flex-col gap-4">
             <p className="text-lg font-semibold">
-              {`${name.split(' ')[0]}, let's get started! 👋 `}
+              {/* {`${name.split(' ')[0]}, let's get started! 👋 `} */}
             </p>
             <div className="flex flex-col gap-2">
               <Select
                 onValueChange={(value) => {
                   setResult('');
-                  setTopic(value);
+                  // setTopic(value);
                 }}
               >
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Pick a Topic" />
                 </SelectTrigger>
                 <SelectContent>
-                  {topicsRandomQuestions.map(
+                  {/* {topicsRandomQuestions.map(
                     (topic: { id: string; name: string }) => (
                       <div key={topic.id}>
                         {topic && (
@@ -150,23 +113,24 @@ export default function RandomQuestion({ name }: { name: string }) {
                         )}
                       </div>
                     )
-                  )}
+                  )} */}
                 </SelectContent>
               </Select>
             </div>
             <Button
               className="capitalize"
-              onClick={handleSpin}
-              disabled={topic.trim() === ''}
+              //   onClick={handleSpin}
+              // disabled={topic.trim() === ''}
             >
-              {!topic ? 'Waiting for topic...' : 'Spin!'}
+              Spin for a new letter!
+              {/* {!topic ? 'Waiting for topic...' : 'Spin!'} */}
             </Button>
             <div className="flex flex-col items-center gap-2 w-full">
               <p className="text-xs mb-2">or</p>
               <Button
                 className="capitalize w-full"
                 variant="outline"
-                onClick={handleFeelingLucky}
+                // onClick={handleFeelingLucky}
               >
                 {`I'm feeling lucky!`}
               </Button>
@@ -202,7 +166,7 @@ export default function RandomQuestion({ name }: { name: string }) {
                 <Button
                   variant="outline"
                   className="capitalize mb-12"
-                  onClick={handleResetAll}
+                  //   onClick={handleResetAll}
                 >
                   restart
                 </Button>
@@ -222,12 +186,12 @@ export default function RandomQuestion({ name }: { name: string }) {
           {/* ----------------------- Third Column ----------------------- */}
 
           <div className="flex flex-col w-1/5">
-            <Countdown
+            {/* <Countdown
               resetAll={resetAll}
               result={result}
               setStartCountdown={setStartCountdown}
               startCountdown={startCountdown}
-            />
+            /> */}
           </div>
         </div>
       </CardContent>

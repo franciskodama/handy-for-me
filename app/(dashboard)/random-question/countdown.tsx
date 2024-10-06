@@ -7,7 +7,6 @@ import {
   SelectValue
 } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
 
 export default function Countdown({
   resetAll,
@@ -24,12 +23,11 @@ export default function Countdown({
   const [timeRemaining, setTimeRemaining] = useState(0);
   const [selectedValue, setSelectedValue] = useState('');
   const [lastSelectedTime, setLastSelectedTime] = useState(0);
-  const [autoStartEnabled, setAutoStartEnabled] = useState(true);
   const [isPaused, setIsPaused] = useState(false);
 
   useEffect(() => {
     let timerInterval: NodeJS.Timeout;
-    if (startCountdown && timeRemaining > 0 && !isPaused) {
+    if (startCountdown && result && timeRemaining > 0 && !isPaused) {
       timerInterval = setInterval(() => {
         setTimeRemaining((prevTime) => {
           if (prevTime <= 1) {
@@ -43,7 +41,7 @@ export default function Countdown({
       }, 1000);
     }
     return () => clearInterval(timerInterval);
-  }, [startCountdown, timeRemaining, isPaused, setStartCountdown]);
+  }, [startCountdown, result, timeRemaining, isPaused, setStartCountdown]);
 
   useEffect(() => {
     if (resetAll) {
@@ -51,16 +49,11 @@ export default function Countdown({
     }
   }, [resetAll]);
 
-  // This effect now only prepares the timer when a new result comes in
   useEffect(() => {
-    if (result && lastSelectedTime > 0) {
-      setTimeRemaining(lastSelectedTime);
-      // Only start the countdown if auto-start is enabled
-      if (autoStartEnabled) {
-        setStartCountdown(true);
-      }
+    if (result) {
+      setStartCountdown(true);
     }
-  }, [result, autoStartEnabled, lastSelectedTime, setStartCountdown]);
+  }, [result, setStartCountdown]);
 
   const minutes = Math.floor(timeRemaining / 60);
   const seconds = timeRemaining % 60;
@@ -93,6 +86,9 @@ export default function Countdown({
 
   return (
     <div>
+      <p className="text-lg font-semibold mb-2">Answer Clock ⏱️</p>
+      <p className="text-sm my-2">Set the timer and let's go!</p>
+      {/* <p className="text-sm">Customize your countdown:</p> */}
       <div className="flex flex-col gap-2">
         <div className="flex flex-col gap-2">
           <Select value={selectedValue} onValueChange={handleValueChange}>
@@ -108,28 +104,12 @@ export default function Countdown({
               ))}
             </SelectContent>
           </Select>
-          <div className="flex items-center gap-2 text-xs mt-2">
-            <Checkbox
-              checked={autoStartEnabled}
-              onCheckedChange={() => setAutoStartEnabled(!autoStartEnabled)}
-            />
-            <p>Starts automatically after spinning</p>
-          </div>
         </div>
 
         <div className="text-5xl my-2">
           <p>{`${minutes.toString().padStart(2, '0')}m ${seconds.toString().padStart(2, '0')}s`}</p>
         </div>
         <div className="flex gap-2 mt-4">
-          <Button
-            className="w-[10ch]"
-            variant="outline"
-            onClick={() => setStartCountdown(true)}
-            disabled={timeRemaining === 0 || startCountdown || isPaused}
-          >
-            Start
-          </Button>
-
           <Button
             className="w-[10ch]"
             variant="outline"
