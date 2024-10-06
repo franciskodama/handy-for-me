@@ -40,7 +40,7 @@ export default function RandomQuestion({ name }: { name: string }) {
   const [result, setResult] = useState<string>('');
   const [openAction, setOpenAction] = useState(false);
   const [startCountdown, setStartCountdown] = useState(false);
-  const [resetCountdown, setResetCountdown] = useState(false);
+  const [resetAll, setResetAll] = useState(false);
 
   useEffect(() => {
     const arrayOfQuestions = getQuestions(topic);
@@ -66,6 +66,11 @@ export default function RandomQuestion({ name }: { name: string }) {
       setSpinning(false);
       setStartCountdown(true);
     }, 1000);
+  };
+
+  const handleResetAll = () => {
+    setResetAll(true);
+    setResult('');
   };
 
   return (
@@ -197,29 +202,18 @@ export default function RandomQuestion({ name }: { name: string }) {
                 <Button
                   variant="outline"
                   className="capitalize mb-12"
-                  onClick={() => {
-                    setResult(''), setResetCountdown(true);
-                  }}
+                  onClick={handleResetAll}
                 >
                   restart
                 </Button>
               </>
             ) : (
               <>
-                {/* <Image
-                  src={'/waiting.webp'}
-                  alt="logo"
-                  width={800}
-                  height={800}
-                /> */}
                 <div className="flex flex-col text-xl text-primary leading-tight p-4 text-center w-full my-8 gap-4">
                   <p className="font-semibold text-2xl">
                     Ready for a challenge? 🔥
                   </p>
-                  <p>
-                    Choose a Topic, hit Spin and let curiosity choose your next
-                    question!
-                  </p>
+                  <p>Set the timer, choose a topic, spin, and answer.</p>
                 </div>
               </>
             )}
@@ -229,14 +223,12 @@ export default function RandomQuestion({ name }: { name: string }) {
 
           <div className="flex flex-col w-1/5 gap-4">
             <p className="text-lg font-semibold">Answer Clock ⏱️</p>
-
             <p className="text-sm">Set the timer and let's go!</p>
             <Countdown
+              resetAll={resetAll}
               result={result}
               setStartCountdown={setStartCountdown}
               startCountdown={startCountdown}
-              setResetCountdown={setResetCountdown}
-              resetCountdown={resetCountdown}
             />
           </div>
         </div>

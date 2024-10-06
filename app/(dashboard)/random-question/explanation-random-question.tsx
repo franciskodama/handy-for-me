@@ -65,17 +65,16 @@ export default function ExplanationRandomQuestion({
             </div>
             <ul className="flex flex-wrap gap-4">
               <li>
+                - Set a Timer to ensure everyone has equal time to share their
+                responses.
+              </li>
+              <li>
                 - Choose Your Topic: Pick a subject you want to focus on, from
                 daily life topics to more advanced discussions.
               </li>
               <li>
                 - Get Random Questions: Receive random, engaging questions
                 related to your chosen topic to answer aloud.
-              </li>
-              <li>
-                - Practice Alone or in Groups: Answer the questions by yourself,
-                or invite friends to answer the same question and practice
-                together.
               </li>
             </ul>
           </div>
@@ -86,8 +85,9 @@ export default function ExplanationRandomQuestion({
             </div>
             <ul className="flex flex-wrap gap-4">
               <li>
-                - Set a Timer: Use the 3-minute timer to ensure everyone has
-                equal time to share their responses.
+                - Practice Alone or in Groups: Answer the questions by yourself,
+                or invite friends to answer the same question and practice
+                together.
               </li>
               <li>
                 - Build Confidence: Use the entire time to talk and develop your

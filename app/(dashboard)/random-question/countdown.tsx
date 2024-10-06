@@ -11,29 +11,27 @@ import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 
 export default function Countdown({
+  resetAll,
   result,
   startCountdown,
-  setStartCountdown,
-  resetCountdown,
-  setResetCountdown
+  setStartCountdown
 }: {
+  resetAll: boolean;
   result: string;
   startCountdown: boolean;
   setStartCountdown: (value: boolean) => void;
-  resetCountdown: boolean;
-  setResetCountdown: (value: boolean) => void;
 }) {
-  const initialTime = 60 * 3;
   const minutesOptions = [1, 2, 3, 4, 5];
-  const [timeRemaining, setTimeRemaining] = useState(initialTime);
+  const [timeRemaining, setTimeRemaining] = useState(0);
+  const [selectedValue, setSelectedValue] = useState('');
+  const [checkboxValue, setCheckboxValue] = useState(true);
 
   useEffect(() => {
-    if (startCountdown) {
+    if (startCountdown && result) {
       const timerInterval = setInterval(() => {
         setTimeRemaining((prevTime) => {
           if (prevTime === 0) {
             clearInterval(timerInterval);
-            alert('Countdown complete!');
             return 0;
           } else {
             return prevTime - 1;
@@ -42,30 +40,32 @@ export default function Countdown({
       }, 1000);
       return () => clearInterval(timerInterval);
     }
-  }, [startCountdown]);
+  }, [startCountdown, result]);
 
   useEffect(() => {
-    if (resetCountdown) {
-      setTimeRemaining(0);
+    if (resetAll) {
+      handleRestartButton();
     }
-  }, [resetCountdown]);
+  }, [resetAll]);
 
-  // Convert seconds to hours, minutes, and seconds
   const minutes = Math.floor((timeRemaining % 3600) / 60);
   const seconds = timeRemaining % 60;
 
-  const handleReset = () => {
-    setTimeRemaining(0);
+  const handleValueChange = (value: string) => {
+    setSelectedValue(value);
+    setTimeRemaining(+value * 60);
   };
+
+  const handleRestartButton = () => {
+    setSelectedValue('');
+    setTimeRemaining(+selectedValue * 60);
+  };
+
   return (
     <div>
       <div className="flex flex-col gap-2">
         <div className="flex flex-col gap-2">
-          <Select
-            onValueChange={(value) => {
-              setTimeRemaining(+value * 60);
-            }}
-          >
+          <Select value={selectedValue} onValueChange={handleValueChange}>
             <SelectTrigger className="w-full">
               <SelectValue placeholder="Minutes to answer" />
             </SelectTrigger>
@@ -79,11 +79,10 @@ export default function Countdown({
           </Select>
           <div className="flex items-center gap-2 text-xs mt-2">
             <Checkbox
-              checked={true}
-              // onCheckedChange={(value) => {
-              // }}
+              checked={checkboxValue}
+              onCheckedChange={() => setCheckboxValue(!checkboxValue)}
             />
-            <p>Starts after spinning</p>
+            <p>Starts automatically after spinning</p>
           </div>
         </div>
 
@@ -92,21 +91,40 @@ export default function Countdown({
         </div>
         <div className="flex gap-2 mt-4">
           <Button
+            className="w-[10ch]"
             variant="outline"
-            // onClick={onStart}
+            onClick={() => setStartCountdown(true)}
+            disabled={checkboxValue}
           >
             Start
           </Button>
-          <Button
+          {/* <Button
             variant="outline"
-            // onClick={onStop}
+            onClick={handlePause}
+            disabled={!result}
+          >
+            Pause
+          </Button> */}
+          {/* <Button
+            variant="outline"
+            onClick={handleStop}
+            disabled={!result}
           >
             Stop
-          </Button>
-          <Button variant="outline" onClick={handleReset}>
-            Reset
+          </Button> */}
+          <Button
+            className="w-[10ch]"
+            variant="outline"
+            onClick={handleRestartButton}
+          >
+            Restart
           </Button>
         </div>
+        {timeRemaining === 0 && result && (
+          <p className="text-5xl font-semibold text-white uppercase text-center bg-red-500 px-2 py-4 mt-8">
+            Time over
+          </p>
+        )}
       </div>
     </div>
   );
