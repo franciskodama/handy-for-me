@@ -31,12 +31,7 @@ import {
   getQuestions,
   getLuckyChoice
 } from './questions';
-import { Stopwatch } from './stopwatch';
-
-type Topic = {
-  id: string;
-  name: string;
-};
+import Countdown from './countdown';
 
 export default function RandomQuestion({ name }: { name: string }) {
   const [topic, setTopic] = useState<string>('');
@@ -44,8 +39,8 @@ export default function RandomQuestion({ name }: { name: string }) {
   const [spinning, setSpinning] = useState<boolean>(false);
   const [result, setResult] = useState<string>('');
   const [openAction, setOpenAction] = useState(false);
-  const [startStopwatch, setStartStopwatch] = useState(false);
-  const [resetStopwatch, setResetStopwatch] = useState(false);
+  const [startCountdown, setStartCountdown] = useState(false);
+  const [resetCountdown, setResetCountdown] = useState(false);
 
   useEffect(() => {
     const arrayOfQuestions = getQuestions(topic);
@@ -59,7 +54,7 @@ export default function RandomQuestion({ name }: { name: string }) {
     setTimeout(() => {
       setResult(randomItem);
       setSpinning(false);
-      setStartStopwatch(true);
+      setStartCountdown(true);
     }, 1000);
   };
 
@@ -69,7 +64,7 @@ export default function RandomQuestion({ name }: { name: string }) {
     setTimeout(() => {
       setResult(luckyChoice);
       setSpinning(false);
-      setStartStopwatch(true);
+      setStartCountdown(true);
     }, 1000);
   };
 
@@ -140,15 +135,17 @@ export default function RandomQuestion({ name }: { name: string }) {
                   <SelectValue placeholder="Pick a Topic, Start the Fun!" />
                 </SelectTrigger>
                 <SelectContent>
-                  {topicsRandomQuestions.map((topic: Topic) => (
-                    <div key={topic.id}>
-                      {topic && (
-                        <SelectItem value={topic.id} className="capitalize">
-                          {topic.name}
-                        </SelectItem>
-                      )}
-                    </div>
-                  ))}
+                  {topicsRandomQuestions.map(
+                    (topic: { id: string; name: string }) => (
+                      <div key={topic.id}>
+                        {topic && (
+                          <SelectItem value={topic.id} className="capitalize">
+                            {topic.name}
+                          </SelectItem>
+                        )}
+                      </div>
+                    )
+                  )}
                 </SelectContent>
               </Select>
             </div>
@@ -201,7 +198,7 @@ export default function RandomQuestion({ name }: { name: string }) {
                   variant="outline"
                   className="capitalize mb-12"
                   onClick={() => {
-                    setResult(''), setResetStopwatch(true);
+                    setResult(''), setResetCountdown(true);
                   }}
                 >
                   restart
@@ -215,7 +212,7 @@ export default function RandomQuestion({ name }: { name: string }) {
                   width={800}
                   height={800}
                 /> */}
-                <div className="flex flex-col text-xl text-primary leading-tight p-4 text-center animate-pulse w-full my-8 gap-4">
+                <div className="flex flex-col text-xl text-primary leading-tight p-4 text-center w-full my-8 gap-4">
                   <p className="font-semibold text-2xl">
                     Ready for a challenge? 🔥
                   </p>
@@ -233,16 +230,13 @@ export default function RandomQuestion({ name }: { name: string }) {
           <div className="flex flex-col w-1/5 gap-4">
             <p className="text-lg font-semibold">Answer Clock ⏱️</p>
 
-            <p className="text-sm">
-              Your language journey starts now.
-              <br />
-              Set the timer and let's go!
-            </p>
-            <Stopwatch
-              setStartStopwatch={setStartStopwatch}
-              startStopwatch={startStopwatch}
-              setResetStopwatch={setResetStopwatch}
-              resetStopwatch={resetStopwatch}
+            <p className="text-sm">Set the timer and let's go!</p>
+            <Countdown
+              result={result}
+              setStartCountdown={setStartCountdown}
+              startCountdown={startCountdown}
+              setResetCountdown={setResetCountdown}
+              resetCountdown={resetCountdown}
             />
           </div>
         </div>

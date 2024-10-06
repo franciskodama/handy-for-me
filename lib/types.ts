@@ -14,17 +14,3 @@ export type SpinItem = {
   name: string;
   selected: boolean;
 };
-
-// export type RandomQuestionList = {
-//   id: string;
-//   name: string;
-//   createdAt: Date;
-//   questions: RandomQuestions[];
-// }
-
-// export type RandomQuestions = {
-// id: string;
-// question: string;
-// listId: string;
-// createdAt: Date;
-// }
