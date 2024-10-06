@@ -9,11 +9,13 @@ import {
 import { Button } from '@/components/ui/button';
 
 export default function Countdown({
+  name,
   resetAll,
   result,
   startCountdown,
   setStartCountdown
 }: {
+  name: string;
   resetAll: boolean;
   result: string;
   startCountdown: boolean;
@@ -129,11 +131,50 @@ export default function Countdown({
           </Button>
         </div>
         {timeRemaining === 0 && result && (
-          <p className="text-5xl font-semibold text-white uppercase text-center bg-red-500 px-2 py-4 mt-8">
-            Time over
+          <p className="text-xl font-semibold text-white capitalize text-center bg-red-500 px-2 py-4 mt-8">
+            {getKudos(name.split(' ')[0])}
           </p>
         )}
       </div>
     </div>
   );
 }
+
+const kudos = [
+  "You did it! You're a speaking superstar! ⭐️",
+  "Wow, you're a verbal virtuoso! 👏",
+  'Great job! Your tongue is a tornado of words! 🌪️',
+  "Incredible! You're a wordsmith extraordinaire! 🖋️",
+  'You’re a language ninja! 🥷 Your skills are sharp and impressive.',
+  'Well done!Your eloquence is electrifying!⚡',
+  "Fantastic job! You're a linguistic legend! 👑",
+  "You've mastered the art of conversation! 🎨",
+  "Amazing! You're a speaking sensation! 🔥",
+  "Time's up! Your words are a symphony! 🎶"
+];
+
+const getKudos = (name: string) => {
+  const chosen = Math.random();
+  switch (true) {
+    case chosen > 1 / 2:
+      return `${name}, ${kudos[0]}`;
+    case chosen > 1 / 4:
+      return `${name}, ${kudos[1]}`;
+    case chosen > 1 / 8:
+      return `${name}, ${kudos[2]}`;
+    case chosen > 1 / 16:
+      return `${name}, ${kudos[3]}`;
+    case chosen > 1 / 32:
+      return `${name}, ${kudos[4]}`;
+    case chosen > 1 / 64:
+      return `${name}, ${kudos[5]}`;
+    case chosen > 1 / 128:
+      return `${name}, ${kudos[6]}`;
+    case chosen > 1 / 256:
+      return `${name}, ${kudos[7]}`;
+    case chosen > 1 / 512:
+      return `${name}, ${kudos[8]}`;
+    default:
+      return `${name}, ${kudos[9]}`;
+  }
+};

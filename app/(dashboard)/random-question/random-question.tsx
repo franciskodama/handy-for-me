@@ -223,6 +223,7 @@ export default function RandomQuestion({ name }: { name: string }) {
 
           <div className="flex flex-col w-1/5">
             <Countdown
+              name={name}
               resetAll={resetAll}
               result={result}
               setStartCountdown={setStartCountdown}

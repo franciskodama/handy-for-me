@@ -1,8 +1,31 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { CircleHelp } from 'lucide-react';
+import { Bungee, Foldit, Honk, Nabla } from 'next/font/google';
+import { kumbh_sans } from 'app/ui/fonts';
+
+export const bungee = Bungee({
+  weight: ['400'],
+  style: ['normal'],
+  subsets: ['latin'],
+  display: 'swap'
+});
+
+export const foldit = Foldit({
+  weight: ['700'],
+  style: ['normal'],
+  subsets: ['latin'],
+  display: 'swap'
+});
+
+export const nabla = Nabla({
+  weight: ['400'],
+  style: ['normal'],
+  subsets: ['latin'],
+  display: 'swap'
+});
 
 import {
   Card,
@@ -12,13 +35,6 @@ import {
   CardTitle
 } from '@/components/ui/card';
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue
-} from '@/components/ui/select';
-import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
@@ -27,14 +43,26 @@ import {
 import { Button } from '@/components/ui/button';
 import ExplanationLetterLeap from './explanation-letter-leap';
 
-export default function LetterLeap() {
-  // const [topic, setTopic] = useState<string>('');
-  // const [questions, setQuestions] = useState<string[]>([]);
+export default function LetterLeap({ name }: { name: string }) {
   const [spinning, setSpinning] = useState<boolean>(false);
   const [result, setResult] = useState<string>('');
   const [openAction, setOpenAction] = useState(false);
-  // const [startCountdown, setStartCountdown] = useState(false);
-  // const [resetAll, setResetAll] = useState(false);
+  const [showInspirations, setShowInspirations] = useState(false);
+
+  const handleSpin = () => {
+    setSpinning(true);
+    setShowInspirations(false);
+    const randomIndex = Math.floor(Math.random() * alphabet.length);
+    const randomLetter = alphabet[randomIndex];
+    setTimeout(() => {
+      setResult(randomLetter);
+      setSpinning(false);
+    }, 1000);
+  };
+
+  const handleShowInspirations = () => {
+    setShowInspirations(true);
+  };
 
   return (
     <Card>
@@ -90,54 +118,11 @@ export default function LetterLeap() {
         <div className="flex justify-between gap-8 mb-4 w-full">
           <div className="flex w-1/5 flex-col gap-4">
             <p className="text-lg font-semibold">
-              {/* {`${name.split(' ')[0]}, let's get started! 👋 `} */}
+              Let the letter lead your thoughts. 🎯
             </p>
-            <div className="flex flex-col gap-2">
-              <Select
-                onValueChange={(value) => {
-                  setResult('');
-                  // setTopic(value);
-                }}
-              >
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Pick a Topic" />
-                </SelectTrigger>
-                <SelectContent>
-                  {/* {topicsRandomQuestions.map(
-                    (topic: { id: string; name: string }) => (
-                      <div key={topic.id}>
-                        {topic && (
-                          <SelectItem value={topic.id} className="capitalize">
-                            {topic.name}
-                          </SelectItem>
-                        )}
-                      </div>
-                    )
-                  )} */}
-                </SelectContent>
-              </Select>
-            </div>
-            <Button
-              className="capitalize"
-              //   onClick={handleSpin}
-              // disabled={topic.trim() === ''}
-            >
-              Spin for a new letter!
-              {/* {!topic ? 'Waiting for topic...' : 'Spin!'} */}
+            <Button className="capitalize" onClick={handleSpin}>
+              Spin & Start!
             </Button>
-            <div className="flex flex-col items-center gap-2 w-full">
-              <p className="text-xs mb-2">or</p>
-              <Button
-                className="capitalize w-full"
-                variant="outline"
-                // onClick={handleFeelingLucky}
-              >
-                {`I'm feeling lucky!`}
-              </Button>
-              <p className="text-xs">
-                Let fate decide your next topic and question
-              </p>
-            </div>
           </div>
 
           {/* ----------------------- Second Column ----------------------- */}
@@ -160,24 +145,24 @@ export default function LetterLeap() {
           >
             {result ? (
               <>
-                <p className="text-5xl text-primary leading-tight p-12 text-center w-full my-8">
+                {/* kumbh_sans */}
+                <p
+                  className={`${foldit.className} text-[14rem] uppercase p-8 text-center w-full font-bold`}
+                  // className={`${nabla.className} text-[14rem] uppercase p-8 text-center w-full font-bold`}
+                >
                   {result}
                 </p>
-                <Button
-                  variant="outline"
-                  className="capitalize mb-12"
-                  //   onClick={handleResetAll}
-                >
-                  restart
-                </Button>
+                <p className={`text-xl lowercase text-center p-8`}>
+                  ({result})
+                </p>
               </>
             ) : (
               <>
-                <div className="flex flex-col text-xl text-primary leading-tight p-4 text-center w-full my-8 gap-4">
+                <div className="flex flex-col text-xl text-primary leading-tight p-4 text-center w-full my-24 gap-4">
                   <p className="font-semibold text-2xl">
-                    Ready for a challenge? 🔥
+                    Ready to spin and spark your creativity? 🍀
                   </p>
-                  <p>Set the timer, choose a topic, spin, and answer.</p>
+                  <p>Let’s see where your next letter takes you!</p>
                 </div>
               </>
             )}
@@ -186,15 +171,382 @@ export default function LetterLeap() {
           {/* ----------------------- Third Column ----------------------- */}
 
           <div className="flex flex-col w-1/5">
-            {/* <Countdown
-              resetAll={resetAll}
-              result={result}
-              setStartCountdown={setStartCountdown}
-              startCountdown={startCountdown}
-            /> */}
+            <p className="text-lg font-semibold mb-4">
+              {`${name.split(' ')[0]}, need a little inspiration? 💡`}
+            </p>
+            <Button
+              variant={'outline'}
+              className="capitalize mb-2"
+              onClick={handleShowInspirations}
+            >
+              Show me some words!
+            </Button>
+            <div className="">
+              {result &&
+                showInspirations &&
+                startWords[result.toUpperCase() as keyof typeof startWords].map(
+                  (word: string) => (
+                    <p
+                      key={word}
+                      className="border text-center w-full mt-1 py-2 text-base"
+                    >
+                      {word}
+                    </p>
+                  )
+                )}
+              {!result && showInspirations && (
+                <p className="bg-red-500 text-white w-full py-2 text-base font-semibold text-center">
+                  C'mon! At least, Spin First...
+                </p>
+              )}
+            </div>
           </div>
         </div>
       </CardContent>
     </Card>
   );
 }
+
+const startWords = {
+  A: [
+    'Although',
+    'After',
+    'As',
+    'Also',
+    'Anyone',
+    'Anything',
+    'Around',
+    'Always',
+    'Another',
+    'All'
+  ],
+  B: [
+    'Besides',
+    'Before',
+    'Because',
+    'Between',
+    'Beyond',
+    'By',
+    'Both',
+    'But',
+    'Better',
+    'Being'
+  ],
+  C: [
+    'Considering',
+    'Currently',
+    'Certainly',
+    'Consequently',
+    'Clearly',
+    'Could',
+    'Can',
+    'Coming',
+    'Closer',
+    'Creating'
+  ],
+  D: [
+    'Despite',
+    'During',
+    'Due',
+    'Definitely',
+    'Deciding',
+    'Doing',
+    'Driving',
+    'Directly',
+    'Don’t',
+    'Does'
+  ],
+  E: [
+    'Even',
+    'Especially',
+    'Each',
+    'Every',
+    'Ever',
+    'Eventually',
+    'Everyone',
+    'Everything',
+    'Entering',
+    'Enjoying'
+  ],
+  F: [
+    'Following',
+    'For',
+    'Finally',
+    'From',
+    'Further',
+    'Feeling',
+    'Facing',
+    'Finding',
+    'Focusing',
+    'Forming'
+  ],
+  G: [
+    'Given',
+    'Going',
+    'Gradually',
+    'Growing',
+    'Gaining',
+    'Getting',
+    'Giving',
+    'Generally',
+    'Guiding',
+    'Granted'
+  ],
+  H: [
+    'However',
+    'Having',
+    'Here',
+    'Hence',
+    'Helping',
+    'Hopefully',
+    'Holding',
+    'Hearing',
+    'Handling',
+    'Heading'
+  ],
+  I: [
+    'In',
+    'If',
+    'Interestingly',
+    'Initially',
+    'Including',
+    'Instead',
+    'It’s',
+    'I’ve',
+    'Involving',
+    'Imagine'
+  ],
+  J: [
+    'Just',
+    'Judging',
+    'Joining',
+    'Jumping',
+    'Juggling',
+    'Journeying',
+    'Joyfully',
+    'Jokingly',
+    'Joking',
+    'Juxtaposing'
+  ],
+  K: [
+    'Knowing',
+    'Keeping',
+    'Kindly',
+    'Kicking',
+    'Knocking',
+    'Keenly',
+    'Kids',
+    'Keeping',
+    'Key',
+    'Keen'
+  ],
+  L: [
+    'Looking',
+    'Learning',
+    'Luckily',
+    'Later',
+    'Letting',
+    'Living',
+    'Leading',
+    'Largely',
+    'Likewise',
+    'Longing'
+  ],
+  M: [
+    'Meanwhile',
+    'Moreover',
+    'Making',
+    'Moving',
+    'Managing',
+    'Mostly',
+    'May',
+    'Must',
+    'Mentioning',
+    'Maintaining'
+  ],
+  N: [
+    'Nevertheless',
+    'Next',
+    'Naturally',
+    'Noticing',
+    'Never',
+    'Nothing',
+    'Not',
+    'Needing',
+    'Now',
+    'Notably'
+  ],
+  O: [
+    'Once',
+    'Obviously',
+    'Only',
+    'Often',
+    'Over',
+    'Outside',
+    'Otherwise',
+    'Offering',
+    'Opening',
+    'Observing'
+  ],
+  P: [
+    'Perhaps',
+    'Particularly',
+    'Possibly',
+    'Putting',
+    'Prior',
+    'Providing',
+    'Pursuing',
+    'Personally',
+    'Planning',
+    'Passing'
+  ],
+  Q: [
+    'Quite',
+    'Quickly',
+    'Questioning',
+    'Quietly',
+    'Quoting',
+    'Qualifying',
+    'Questionably',
+    'Quaintly',
+    'Quirking',
+    'Quintessentially'
+  ],
+  R: [
+    'Rather',
+    'Regarding',
+    'Recently',
+    'Reaching',
+    'Realizing',
+    'Relating',
+    'Running',
+    'Returning',
+    'Reading',
+    'Referring'
+  ],
+  S: [
+    'Since',
+    'So',
+    'Specifically',
+    'Still',
+    'Starting',
+    'Sometimes',
+    'Seeing',
+    'Showing',
+    'Suggesting',
+    'Speaking'
+  ],
+  T: [
+    'Therefore',
+    'Thus',
+    'Taking',
+    'Trying',
+    'Thinking',
+    'Talking',
+    'Turning',
+    'Telling',
+    'Thanking',
+    'Though'
+  ],
+  U: [
+    'Usually',
+    'Under',
+    'Unless',
+    'Until',
+    'Ultimately',
+    'Understanding',
+    'Using',
+    'Up',
+    'Urging',
+    'Upon'
+  ],
+  V: [
+    'Very',
+    'Various',
+    'Viewing',
+    'Visiting',
+    'Valuing',
+    'Verifying',
+    'Vividly',
+    'Venturing',
+    'Vacating',
+    'Voicing'
+  ],
+  W: [
+    'While',
+    'When',
+    'With',
+    'Where',
+    'Which',
+    'Whenever',
+    'Whether',
+    'Willing',
+    'Waiting',
+    'Working'
+  ],
+  X: [
+    'Xenophobically',
+    'Xeroxing',
+    'X-raying',
+    'Xylophones',
+    'X-rayed',
+    'X-treme',
+    'X-factors',
+    'Xenon',
+    'X-tra',
+    'Xenial'
+  ],
+  Y: [
+    'Yes',
+    'Yet',
+    'You’re',
+    'Your',
+    'Yielding',
+    'Yearning',
+    'Yelling',
+    'Yours',
+    'Yelling',
+    'Yard'
+  ],
+  Z: [
+    'Zooming',
+    'Zealously',
+    'Zipping',
+    'Zoning',
+    'Zeroing',
+    'Zestfully',
+    'Zigzagging',
+    'Zipping',
+    'Zookeeping',
+    'Zapping'
+  ]
+};
+
+const alphabet = [
+  'a',
+  'b',
+  'c',
+  'd',
+  'e',
+  'f',
+  'g',
+  'h',
+  'i',
+  'j',
+  'k',
+  'l',
+  'm',
+  'n',
+  'o',
+  'p',
+  'q',
+  'r',
+  's',
+  't',
+  'u',
+  'v',
+  'w',
+  'x',
+  'y',
+  'z'
+];
