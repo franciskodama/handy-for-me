@@ -33,8 +33,8 @@ import {
   deleteSpinItem,
   selectionSpinItem
 } from '@/lib/actions';
-import ExplanationBox from '@/components/ExplanationBox';
 import { Checkbox } from '@/components/ui/checkbox';
+import ExplanationSpin from './explanation-spin';
 
 export default function Spin({
   uid,
@@ -154,7 +154,7 @@ export default function Spin({
               exit={{ opacity: 0, scale: 0.5, transition: { duration: 0.2 } }}
             >
               <div className="mb-12">
-                <ExplanationBox setOpenAction={setOpenAction} />
+                <ExplanationSpin setOpenAction={setOpenAction} />
               </div>
             </motion.div>
           ) : null}
@@ -251,26 +251,6 @@ export default function Spin({
                   <p className="text-3xl mb-8">
                     {spinning ? 'Spinning...' : 'Spin the Wheel!'}
                   </p>
-                  {/* <div className="relative">
-                    <svg
-                      viewBox="0 0 500 500"
-                      className="border absolute top-0 "
-                    >
-                      <path
-                        id="curve"
-                        fill="transparent"
-                        d="M73.2,148.6c4-6.1,65.5-96.8,178.6-95.6c111.3,1.2,170.8,90.3,175.1,97"
-                      />
-                      <text width="500">
-                        <textPath
-                          className="text-6xl font-normal"
-                          xlinkHref="#curve"
-                        >
-                          {spinning ? 'Spinning...' : 'Spin the Wheel!'}
-                        </textPath>
-                      </text>
-                    </svg>
-                  </div> */}
                   <Button
                     className="rounded-full w-[15em] h-[15em] p-0"
                     onClick={handleSpin}

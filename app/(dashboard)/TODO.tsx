@@ -1,8 +1,16 @@
 // Our template: https://vercel.com/templates/next.js/admin-dashboard-tailwind-postgres-react-nextjs
+// Google Cloud Credentials: https://console.cloud.google.com/apis/credentials
+
+// TODO: WORKING ON + FAST
+// Spin: How to delete a list?
+// Random Quotes pencial banner
+// Countdown: fixes
+// Spin: Titles and emojis
+// ABC feature
 
 // TODO: WORKING ON
+// Questions feature
 // Breadcrumb
-// Spin: How to delete a list?
 // Spin: Do something if a list has only one item (and the item must be selected or message the user)
 // Component MessageTeam
 // Confetti for Spin Page: https://classic.yarnpkg.com/en/package/canvas-confetti or https://www.youtube.com/watch?v=5YTK7Mor-wM

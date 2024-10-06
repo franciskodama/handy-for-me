@@ -1,14 +1,14 @@
 export type SpinList = {
-  id: string;
   uid: string;
+  id: string;
   name: string;
   createdAt: Date;
   items: SpinItem[];
 };
 
 export type SpinItem = {
-  id: string;
   uid: string;
+  id: string;
   createdAt: Date;
   listId: string;
   name: string;

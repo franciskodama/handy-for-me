@@ -6,7 +6,16 @@ import {
   TooltipContent
 } from '@radix-ui/react-tooltip';
 import { NavItem } from './nav-item';
-import { Home, Dices, Grid3x3, Bot, Settings } from 'lucide-react';
+import {
+  Home,
+  Dices,
+  Grid3x3,
+  Bot,
+  Settings,
+  MessageCircleQuestion,
+  RefreshCw,
+  BookA
+} from 'lucide-react';
 import Image from 'next/image';
 
 export function DesktopNav() {
@@ -30,7 +39,15 @@ export function DesktopNav() {
         </NavItem>
 
         <NavItem href="/spin" label="Spin Magic">
-          <Dices className="h-5 w-5" />
+          <RefreshCw className="h-5 w-5" />
+        </NavItem>
+
+        <NavItem href="/random-question" label="Random Questions">
+          <MessageCircleQuestion className="h-5 w-5" />
+        </NavItem>
+
+        <NavItem href="/letter-leap" label="Letter Leap">
+          <BookA className="h-5 w-5" />
         </NavItem>
 
         <NavItem href="/affirmation" label="Affirmation">
