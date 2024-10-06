@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-
 import {
   Select,
   SelectContent,
@@ -24,23 +23,27 @@ export default function Countdown({
   const minutesOptions = [1, 2, 3, 4, 5];
   const [timeRemaining, setTimeRemaining] = useState(0);
   const [selectedValue, setSelectedValue] = useState('');
-  const [checkboxValue, setCheckboxValue] = useState(true);
+  const [lastSelectedTime, setLastSelectedTime] = useState(0);
+  const [autoStartEnabled, setAutoStartEnabled] = useState(true);
+  const [isPaused, setIsPaused] = useState(false);
 
   useEffect(() => {
-    if (startCountdown && result) {
-      const timerInterval = setInterval(() => {
+    let timerInterval: NodeJS.Timeout;
+    if (startCountdown && timeRemaining > 0 && !isPaused) {
+      timerInterval = setInterval(() => {
         setTimeRemaining((prevTime) => {
-          if (prevTime === 0) {
+          if (prevTime <= 1) {
             clearInterval(timerInterval);
+            setStartCountdown(false);
             return 0;
           } else {
             return prevTime - 1;
           }
         });
       }, 1000);
-      return () => clearInterval(timerInterval);
     }
-  }, [startCountdown, result]);
+    return () => clearInterval(timerInterval);
+  }, [startCountdown, timeRemaining, isPaused, setStartCountdown]);
 
   useEffect(() => {
     if (resetAll) {
@@ -48,17 +51,44 @@ export default function Countdown({
     }
   }, [resetAll]);
 
-  const minutes = Math.floor((timeRemaining % 3600) / 60);
+  // This effect now only prepares the timer when a new result comes in
+  useEffect(() => {
+    if (result && lastSelectedTime > 0) {
+      setTimeRemaining(lastSelectedTime);
+      // Only start the countdown if auto-start is enabled
+      if (autoStartEnabled) {
+        setStartCountdown(true);
+      }
+    }
+  }, [result, autoStartEnabled, lastSelectedTime, setStartCountdown]);
+
+  const minutes = Math.floor(timeRemaining / 60);
   const seconds = timeRemaining % 60;
 
   const handleValueChange = (value: string) => {
+    const timeInSeconds = +value * 60;
     setSelectedValue(value);
-    setTimeRemaining(+value * 60);
+    setTimeRemaining(timeInSeconds);
+    setLastSelectedTime(timeInSeconds);
   };
 
   const handleRestartButton = () => {
-    setSelectedValue('');
-    setTimeRemaining(+selectedValue * 60);
+    if (lastSelectedTime > 0) {
+      setTimeRemaining(lastSelectedTime);
+      setStartCountdown(true);
+      setIsPaused(false);
+    } else {
+      setSelectedValue('');
+      setTimeRemaining(0);
+      setStartCountdown(false);
+    }
+  };
+
+  const handlePauseResumeButton = () => {
+    setIsPaused(!isPaused);
+    if (isPaused) {
+      setStartCountdown(true);
+    }
   };
 
   return (
@@ -71,51 +101,49 @@ export default function Countdown({
             </SelectTrigger>
             <SelectContent>
               {minutesOptions.map((min: number) => (
-                <div key={min}>
-                  <SelectItem value={min.toString()}>{`${min} min`}</SelectItem>
-                </div>
+                <SelectItem
+                  key={min}
+                  value={min.toString()}
+                >{`${min} min`}</SelectItem>
               ))}
             </SelectContent>
           </Select>
           <div className="flex items-center gap-2 text-xs mt-2">
             <Checkbox
-              checked={checkboxValue}
-              onCheckedChange={() => setCheckboxValue(!checkboxValue)}
+              checked={autoStartEnabled}
+              onCheckedChange={() => setAutoStartEnabled(!autoStartEnabled)}
             />
             <p>Starts automatically after spinning</p>
           </div>
         </div>
 
         <div className="text-5xl my-2">
-          <p>{`${minutes}m ${seconds}s`}</p>
+          <p>{`${minutes.toString().padStart(2, '0')}m ${seconds.toString().padStart(2, '0')}s`}</p>
         </div>
         <div className="flex gap-2 mt-4">
           <Button
             className="w-[10ch]"
             variant="outline"
             onClick={() => setStartCountdown(true)}
-            disabled={checkboxValue}
+            disabled={timeRemaining === 0 || startCountdown || isPaused}
           >
             Start
           </Button>
-          {/* <Button
+
+          <Button
+            className="w-[10ch]"
             variant="outline"
-            onClick={handlePause}
-            disabled={!result}
+            onClick={handlePauseResumeButton}
+            disabled={timeRemaining === 0 || (!startCountdown && !isPaused)}
           >
-            Pause
-          </Button> */}
-          {/* <Button
-            variant="outline"
-            onClick={handleStop}
-            disabled={!result}
-          >
-            Stop
-          </Button> */}
+            {isPaused ? 'Resume' : 'Pause'}
+          </Button>
+
           <Button
             className="w-[10ch]"
             variant="outline"
             onClick={handleRestartButton}
+            disabled={lastSelectedTime === 0}
           >
             Restart
           </Button>
@@ -129,81 +157,3 @@ export default function Countdown({
     </div>
   );
 }
-
-// type intervalRef = {
-//   current: any | undefined;
-// };
-// export function Countdown({
-//   startCountdown,
-//   setStartCountdown,
-//   resetCountdown,
-//   setResetCountdown
-// }: {
-//   startCountdown: boolean;
-//   setStartCountdown: (value: boolean) => void;
-//   resetCountdown: boolean;
-//   setResetCountdown: (value: boolean) => void;
-// }) {
-//   const [currentState, setCurrentState] = useState('');
-//   const [currentTime, setCurrentTime] = useState(0);
-//   const intervalRef: intervalRef = useRef();
-
-//   // https://codepen.io/putraaryotama/embed/wgwqBB?
-
-//   useEffect(() => {
-//     if (startCountdown) {
-//       onStart();
-//     } else {
-//       onStop();
-//     }
-//   }, [startCountdown]);
-
-//   const onStart = () => {
-//     if (currentState === 'START') return;
-//     setCurrentState('START');
-//     intervalRef.current = setInterval(() => {
-//       setCurrentTime((currentTime) => currentTime + 50);
-//     }, 50);
-//   };
-
-//   const onStop = () => {
-//     if (currentState === 'STOP') return;
-//     setCurrentState('STOP');
-//     clearInterval(intervalRef.current);
-//     setStartCountdown(false);
-//   };
-
-//   const onReset = () => {
-//     if (currentState === 'RESET') return;
-//     setCurrentTime(0);
-//     setStartCountdown(false);
-//   };
-
-//   const sec = Math.floor(currentTime / 1000);
-//   const min = Math.floor(sec / 60);
-//   const hour = Math.floor(min / 60);
-//   //   const millis = (currentTime % 1000).toString().padStart(2, '0');
-//   const seconds = (sec % 60).toString().padStart(2, '0');
-//   const minutes = (min % 60).toString().padStart(2, '0');
-//   const hours = (hour % 24).toString().padStart(2, '0');
-
-//   return (
-//     <div className="flex flex-col gap-2">
-//       <div className="text-5xl my-2">
-//         <span>{hours}</span>:<span>{minutes}</span>:<span>{seconds}</span>
-//         {/* <span>{millis}</span> */}
-//       </div>
-//       <div className="flex gap-2 mt-4">
-//         <Button variant="outline" onClick={onStart}>
-//           Start
-//         </Button>
-//         <Button variant="outline" onClick={onStop}>
-//           Stop
-//         </Button>
-//         <Button variant="outline" onClick={onReset}>
-//           Reset
-//         </Button>
-//       </div>
-//     </div>
-//   );
-// }
