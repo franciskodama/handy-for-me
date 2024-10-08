@@ -20,6 +20,7 @@ import { DesktopNav } from './nav/nav-desktop';
 import { DashboardBreadcrumb } from './header/breadcrumb';
 import { SearchInput } from './header/search';
 import { MobileNav } from './nav/nav-mobile';
+import Greeting from './header/greeting';
 
 export default function DashboardLayout({
   children
@@ -32,12 +33,15 @@ export default function DashboardLayout({
         <PencilBanner />
         <DesktopNav />
         <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
-          <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
+          <header className="sticky top-0 z-30 flex h-14 items-center justify-between gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
             {/* Wrong Mobile Nav because we want to have a separed file for it. */}
             <WrongMobileNav />
             <DashboardBreadcrumb />
-            <SearchInput />
-            <User />
+            {/* <SearchInput /> */}
+            <div className="flex items-center gap-8">
+              <Greeting />
+              <User />
+            </div>
           </header>
           <main className="grid flex-1 items-start gap-2 p-4 sm:px-6 sm:py-0 md:gap-4">
             {children}

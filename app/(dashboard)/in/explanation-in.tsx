@@ -69,12 +69,6 @@ export default function ExplanationIn({
                 You can also permanently delete items whenever you no longer
                 need them.
               </p>
-              {/* <p>
-                Make decisions easier and more exciting with Spin Magic—the tool
-                you never knew you needed to simplify your life and add a touch
-                of fun to every choice.{' '}
-                <span className="font-bold"> Start spinning today!</span>
-              </p> */}
             </div>
           </div>
 
