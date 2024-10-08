@@ -210,7 +210,7 @@ export default function RandomQuestion({ name }: { name: string }) {
             ) : (
               <>
                 <div className="flex flex-col text-xl text-primary leading-tight p-4 text-center w-full my-8 gap-4">
-                  <p className="font-semibold text-2xl">
+                  <p className="font-semibold text-2xl pt-[4em]">
                     Ready for a challenge? 🔥
                   </p>
                   <p>Set the timer, choose a topic, spin, and answer.</p>

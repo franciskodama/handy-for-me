@@ -3,24 +3,10 @@
 import { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { CircleHelp, SquareX } from 'lucide-react';
-import { Bungee, Foldit, Honk, Nabla } from 'next/font/google';
-
-export const bungee = Bungee({
-  weight: ['400'],
-  style: ['normal'],
-  subsets: ['latin'],
-  display: 'swap'
-});
+import { Foldit } from 'next/font/google';
 
 export const foldit = Foldit({
   weight: ['700'],
-  style: ['normal'],
-  subsets: ['latin'],
-  display: 'swap'
-});
-
-export const nabla = Nabla({
-  weight: ['400'],
   style: ['normal'],
   subsets: ['latin'],
   display: 'swap'
