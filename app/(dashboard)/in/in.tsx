@@ -72,7 +72,7 @@ export default function In({ name }: { name: string }) {
       </CardHeader>
       <CardContent>
         <AnimatePresence>
-          {name ? (
+          {openAction ? (
             <motion.div
               layout
               initial={{ opacity: 0, y: 50, scale: 0.3 }}
