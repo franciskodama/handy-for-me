@@ -169,13 +169,16 @@ export default function LetterLeap({ name }: { name: string }) {
             <p className="text-lg font-semibold mb-2">
               {`${name.split(' ')[0]}, Out of ideas? 🚨`}
             </p>
-            <p className="mb-4">Emergency Break Glass for Words!</p>
+            <p className="mb-4">
+              Hit only in case of brain block!
+              {/* Break Glass for Words! But only as a last resort. */}
+            </p>
             <Button
               variant={'outline'}
               className="capitalize mb-2"
               onClick={handleShowInspirations}
             >
-              Last resort, show me
+              Emergency Helper
             </Button>
             <div className="">
               {result &&
