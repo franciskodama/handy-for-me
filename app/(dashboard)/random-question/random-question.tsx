@@ -91,7 +91,7 @@ export default function RandomQuestion({ name }: { name: string }) {
                     <CircleHelp size={22} strokeWidth={1.6} />
                   </TooltipTrigger>
                   <TooltipContent>
-                    <p className="text-primary ml-2 lowercase font-light">
+                    <p className="text-primary ml-2 capitalize font-light">
                       learn more
                     </p>
                   </TooltipContent>

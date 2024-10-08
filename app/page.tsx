@@ -13,5 +13,5 @@ export default async function HomePage() {
     await addUser(email, name, image);
   }
 
-  return <div>{user ? redirect('/spin') : redirect('/login')}</div>;
+  return <div>{user ? redirect('/in') : redirect('/login')}</div>;
 }
