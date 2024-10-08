@@ -2,26 +2,11 @@
 
 import { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { CircleHelp } from 'lucide-react';
-import { Bungee, Foldit, Honk, Nabla } from 'next/font/google';
-import { kumbh_sans } from 'app/ui/fonts';
-
-export const bungee = Bungee({
-  weight: ['400'],
-  style: ['normal'],
-  subsets: ['latin'],
-  display: 'swap'
-});
+import { CircleHelp, SquareX } from 'lucide-react';
+import { Foldit } from 'next/font/google';
 
 export const foldit = Foldit({
   weight: ['700'],
-  style: ['normal'],
-  subsets: ['latin'],
-  display: 'swap'
-});
-
-export const nabla = Nabla({
-  weight: ['400'],
   style: ['normal'],
   subsets: ['latin'],
   display: 'swap'
@@ -61,7 +46,7 @@ export default function LetterLeap({ name }: { name: string }) {
   };
 
   const handleShowInspirations = () => {
-    setShowInspirations(true);
+    setShowInspirations(!showInspirations);
   };
 
   return (
@@ -128,7 +113,7 @@ export default function LetterLeap({ name }: { name: string }) {
           {/* ----------------------- Second Column ----------------------- */}
 
           <div
-            className={`flex flex-col w-3/5 items-center ${!result ? 'gap-12' : ''}`}
+            className={`flex flex-col w-3/5 items-center h-[40em]`}
             style={{
               borderImage: `repeating-linear-gradient(
                   45deg,
@@ -145,20 +130,16 @@ export default function LetterLeap({ name }: { name: string }) {
           >
             {result ? (
               <>
-                {/* kumbh_sans */}
                 <p
-                  className={`${foldit.className} text-[14rem] uppercase p-8 text-center w-full font-bold`}
-                  // className={`${nabla.className} text-[14rem] uppercase p-8 text-center w-full font-bold`}
+                  className={`${foldit.className} text-[20rem] uppercase p-8 text-center w-full font-bold`}
                 >
                   {result}
                 </p>
-                <p className={`text-xl lowercase text-center p-8`}>
-                  ({result})
-                </p>
+                <p className={`text-xl lowercase text-center`}>({result})</p>
               </>
             ) : (
               <>
-                <div className="flex flex-col text-xl text-primary leading-tight p-4 text-center w-full my-24 gap-4">
+                <div className="flex flex-col text-xl text-primary leading-tight p-4 text-center w-full mt-[10em] gap-4">
                   <p className="font-semibold text-2xl">
                     Ready to spin and spark your creativity? 🍀
                   </p>
@@ -171,15 +152,19 @@ export default function LetterLeap({ name }: { name: string }) {
           {/* ----------------------- Third Column ----------------------- */}
 
           <div className="flex flex-col w-1/5">
-            <p className="text-lg font-semibold mb-4">
-              {`${name.split(' ')[0]}, need a little inspiration? 💡`}
+            <p className="text-lg font-semibold mb-2">
+              {`${name.split(' ')[0]}, Out of ideas? 🚨`}
+            </p>
+            <p className="mb-4">
+              Hit only in case of brain block!
+              {/* Break Glass for Words! But only as a last resort. */}
             </p>
             <Button
               variant={'outline'}
               className="capitalize mb-2"
               onClick={handleShowInspirations}
             >
-              Show me some words!
+              Emergency Helper
             </Button>
             <div className="">
               {result &&
@@ -194,11 +179,28 @@ export default function LetterLeap({ name }: { name: string }) {
                     </p>
                   )
                 )}
+              {result && showInspirations && (
+                <div>
+                  <Button
+                    variant={'link'}
+                    className="flex items-center w-full text-center mt-4"
+                    onClick={handleShowInspirations}
+                  >
+                    <SquareX
+                      size={18}
+                      strokeWidth={1.6}
+                      onClick={handleShowInspirations}
+                    />
+                    <p className="ml-2 text-xs">Close</p>
+                  </Button>
+                </div>
+              )}
               {!result && showInspirations && (
                 <p className="bg-red-500 text-white w-full py-2 text-base font-semibold text-center">
                   C'mon! At least, Spin First...
                 </p>
               )}
+              {}
             </div>
           </div>
         </div>

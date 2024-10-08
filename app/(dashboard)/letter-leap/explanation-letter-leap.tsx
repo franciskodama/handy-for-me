@@ -1,6 +1,18 @@
 'use client';
 
-import { Lightbulb, Settings, Snail, Trash2, X } from 'lucide-react';
+import {
+  AArrowUp,
+  Laugh,
+  LifeBuoy,
+  Lightbulb,
+  LucideTextCursor,
+  MapPin,
+  Settings,
+  Snail,
+  Sparkles,
+  Trash2,
+  X
+} from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -27,23 +39,26 @@ export default function ExplanationLetterLeap({
           borderWidth: '1em'
         }}
       >
-        <AlertDescription className="relative text-sm flex items-start justify-between p-2">
+        <AlertDescription className="relative text-sm flex items-start justify-between p-2 leading-relaxed">
           <div className="flex flex-col w-1/3 py-2 px-12">
             <div className="flex items-center gap-2 mb-4">
-              <Snail size={24} strokeWidth={1.6} />
+              <AArrowUp size={24} strokeWidth={1.6} />
               <p className="text-lg font-bold">
-                Master conversations, one letter at a time.
+                Let the letter lead your thoughts.
               </p>
             </div>
             <div className="flex flex-col gap-4 mb-4">
               <p>
-                With Spin Magic, you can turn any list into a fun, random
-                selection!
+                The Letter Leap will help you think on your feet, improve
+                sentence structure, and expand your vocabulary — all while
+                having fun!
               </p>
-              <p>
-                Whether it’s picking a family activity, deciding on what to cook
-                for dinner, or choosing the next movie for movie night — Spin
-                Magic has you covered.
+              <p className="mt-4">
+                <span className="underline mr-2">
+                  Great for Solo or Group Practice:
+                </span>
+                You can play this game alone or with friends for a fun and
+                interactive learning experience.
               </p>
             </div>
           </div>
@@ -53,60 +68,56 @@ export default function ExplanationLetterLeap({
               <Settings size={24} strokeWidth={1.6} />
               <p className="text-lg font-bold">How to use</p>
             </div>
-            <div className="flex flex-col gap-4">
-              <p>
-                Create lists. Then, simply add your favorite items to each list,
-                and when it’s time to make a decision, spin the wheel for a
-                surprise choice!
-              </p>
-              <p className="flex items-center gap-4">
-                <Checkbox checked={true} />
-                Easily manage items by unselecting them to skip the next draw
-                without deleting them.
-              </p>
-              <p className="flex items-center gap-4">
-                <Trash2 size={24} strokeWidth={1.6} />
-                You can also permanently delete items whenever you no longer
-                need them.
-              </p>
-              {/* <p>
-                Make decisions easier and more exciting with Spin Magic—the tool
-                you never knew you needed to simplify your life and add a touch
-                of fun to every choice.{' '}
-                <span className="font-bold"> Start spinning today!</span>
-              </p> */}
-            </div>
+            <ul className="flex flex-col gap-4">
+              <li>
+                - Click the
+                <span className="border border-primary py-1 px-2 mx-2">
+                  Spin & Start
+                </span>
+                to randomly generate a letter.
+              </li>
+              <li>
+                - Start a sentence or phrase with this letter — the more
+                creative, the better! For example, if the letter is “B,” you
+                could say: “Before the sun rises…”
+              </li>
+              <li>
+                <span className="font-semibold mr-2">- Stuck for ideas?</span>
+                Hit the
+                <span className="border border-primary py-1 px-2 mx-2">
+                  Emergency Helper
+                </span>
+                button for a boost! But only in case of emergency! It’s better
+                to try on your own to grow your vocabulary!
+              </li>
+            </ul>
           </div>
 
           <div className="flex flex-col justify-between w-1/3 py-2 px-12">
             <div className="flex items-center gap-2 mb-4">
-              <Lightbulb size={24} strokeWidth={1.6} />
-              <p className="text-lg font-bold">Some Ideas:</p>
+              <Laugh size={24} strokeWidth={1.6} />
+              <p className="text-lg font-bold">Benefits</p>
             </div>
             <ul className="flex flex-wrap gap-4">
               <li>
-                - Family Activities:{' '}
-                <span className="font-normal">
-                  From board games to outdoor adventures.
+                <span className="font-semibold mr-1">
+                  - Boost Your Fluency:
                 </span>
+                By thinking of phrases quickly, you improve your conversational
+                speed and natural fluency.
+              </li>
+
+              <li>
+                <span className="font-semibold mr-1">- Get Creative:</span>
+                This is a playful way to push your imagination and make language
+                learning more enjoyable.
               </li>
               <li>
-                - Date Night Ideas:{' '}
-                <span className="font-normal">
-                  Pick the perfect plan without the hassle.
+                <span className="font-semibold mr-1">
+                  - Expand Your Vocabulary:
                 </span>
-              </li>
-              <li>
-                - Weekly Chores:{' '}
-                <span className="font-normal">
-                  Make it fun by spinning for who does what!
-                </span>
-              </li>
-              <li>
-                - Fitness Challenges:{' '}
-                <span className="font-normal">
-                  Choose a workout at random to keep things exciting!
-                </span>
+                Use the helper button to discover new words, and challenge
+                yourself to use them in conversation.
               </li>
             </ul>
             <Button
@@ -114,7 +125,7 @@ export default function ExplanationLetterLeap({
               className="capitalize mt-6 w-[26ch]"
               onClick={() => setOpenAction(false)}
             >
-              Start spinning today!
+              Start spinning now!
             </Button>
           </div>
           <button

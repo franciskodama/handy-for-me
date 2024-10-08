@@ -131,7 +131,7 @@ export default function Countdown({
           </Button>
         </div>
         {timeRemaining === 0 && result && (
-          <p className="text-xl font-semibold text-white capitalize text-center bg-red-500 px-2 py-4 mt-8">
+          <p className="text-xl font-semibold text-center p-8 mt-8 animate-pulse bg-yellow-500">
             {getKudos(name.split(' ')[0])}
           </p>
         )}

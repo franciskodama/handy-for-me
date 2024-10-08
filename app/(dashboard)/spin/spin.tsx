@@ -35,6 +35,14 @@ import {
 } from '@/lib/actions';
 import { Checkbox } from '@/components/ui/checkbox';
 import ExplanationSpin from './explanation-spin';
+import { Foldit } from 'next/font/google';
+
+export const foldit = Foldit({
+  weight: ['700'],
+  style: ['normal'],
+  subsets: ['latin'],
+  display: 'swap'
+});
 
 export default function Spin({
   uid,
@@ -248,7 +256,7 @@ export default function Spin({
             {items.length > 0 ? (
               <>
                 <div className="flex flex-col">
-                  <p className="text-3xl mb-8">
+                  <p className="text-3xl text-center mb-8">
                     {spinning ? 'Spinning...' : 'Spin the Wheel!'}
                   </p>
                   <Button
@@ -275,11 +283,14 @@ export default function Spin({
 
             {result && (
               <>
-                <p className="text-5xl text-white p-4 text-center bg-primary animate-pulse w-full my-8">
+                {/* <p className={`${foldit.className} text-5xl text-white p-4 text-center bg-primary animate-pulse w-full my-8`}> */}
+                <p
+                  className={`text-5xl text-white p-4 text-center bg-primary animate-pulse w-full my-8`}
+                >
                   {result}
                 </p>
                 <Button variant="link" onClick={() => setResult('')}>
-                  clear
+                  Clear
                 </Button>
               </>
             )}
