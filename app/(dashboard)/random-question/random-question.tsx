@@ -179,7 +179,7 @@ export default function RandomQuestion({ name }: { name: string }) {
           {/* ----------------------- Second Column ----------------------- */}
 
           <div
-            className={`flex flex-col w-3/5 items-center ${!result ? 'gap-12' : ''}`}
+            className={`flex flex-col w-3/5 items-center h-[30em]`}
             style={{
               borderImage: `repeating-linear-gradient(
                   45deg,
@@ -196,7 +196,7 @@ export default function RandomQuestion({ name }: { name: string }) {
           >
             {result ? (
               <>
-                <p className="text-5xl text-primary leading-tight p-12 text-center w-full my-8">
+                <p className="text-5xl text-primary leading-tight p-16 text-center w-full my-8">
                   {result}
                 </p>
                 <Button
