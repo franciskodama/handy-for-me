@@ -53,29 +53,26 @@ export default function ExplanationLetterLeap({
               <Settings size={24} strokeWidth={1.6} />
               <p className="text-lg font-bold">How to use</p>
             </div>
-            <div className="flex flex-col gap-4">
-              <p>
-                Create lists. Then, simply add your favorite items to each list,
-                and when it’s time to make a decision, spin the wheel for a
-                surprise choice!
-              </p>
-              <p className="flex items-center gap-4">
-                <Checkbox checked={true} />
-                Easily manage items by unselecting them to skip the next draw
-                without deleting them.
-              </p>
-              <p className="flex items-center gap-4">
-                <Trash2 size={24} strokeWidth={1.6} />
-                You can also permanently delete items whenever you no longer
-                need them.
-              </p>
-              {/* <p>
-                Make decisions easier and more exciting with Spin Magic—the tool
-                you never knew you needed to simplify your life and add a touch
-                of fun to every choice.{' '}
-                <span className="font-bold"> Start spinning today!</span>
-              </p> */}
-            </div>
+            <ul className="flex flex-col gap-4">
+              <li>
+                - Click the “Spin & Start” button to randomly generate a letter.
+              </li>
+              <li className="flex items-center gap-4">
+                - Start a sentence or phrase with this letter — the more
+                creative, the better! For example, if the letter is “B,” you
+                could say: “Before the sun rises…”
+              </li>
+              <li className="flex items-center gap-4">
+                {/* <Trash2 size={24} strokeWidth={1.6} /> */}- Stuck for ideas?
+                Hit the Helper button for a boost! But only in case of
+                emergency—it’s better to try on your own to grow your
+                vocabulary!
+              </li>
+              <li className="flex items-center gap-4">
+                - This feature is perfect for practicing your English speaking
+                skills and expanding your vocabulary in a fun, low-pressure way!
+              </li>
+            </ul>
           </div>
 
           <div className="flex flex-col justify-between w-1/3 py-2 px-12">
