@@ -3,7 +3,7 @@ export default function PencilBanner() {
 
   return (
     <>
-      <div className="flex flex-col items-center px-12 py-2 bg-primary">
+      <div className="flex flex-col items-center px-12 py-2 bg-primary border-0">
         <div className="flex tracking-wide text-xs text-white uppercase font-semibold">
           <p>"{quotes[randomIndex].quote}"</p>
           <p className="mx-2">—</p>

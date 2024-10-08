@@ -29,7 +29,7 @@ export default function DashboardLayout({
 }) {
   return (
     <Providers>
-      <main className="flex min-h-screen w-full flex-col">
+      <main className="flex flex-col min-h-screen w-full">
         <PencilBanner />
         <DesktopNav />
         <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">

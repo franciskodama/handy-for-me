@@ -22,6 +22,7 @@ import Image from 'next/image';
 export function DesktopNav() {
   return (
     <aside className="fixed inset-y-0 left-0 z-10 hidden w-[3.4em] flex-col border-r bg-background sm:flex">
+      <div className="bg-primary py-[4px] border-0">.</div>
       <nav className="flex flex-col items-center gap-4 px-[5px] sm:py-5">
         <Link
           href="/"
