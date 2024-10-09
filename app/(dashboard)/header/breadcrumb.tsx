@@ -16,19 +16,23 @@ export function DashboardBreadcrumb() {
   return (
     <Breadcrumb className="hidden md:flex">
       <BreadcrumbList>
-        <BreadcrumbItem>
-          <BreadcrumbLink asChild>
-            <Link href="/">Dashboard</Link>
-          </BreadcrumbLink>
-        </BreadcrumbItem>
-        <BreadcrumbSeparator />
-        <BreadcrumbItem>
-          <BreadcrumbLink asChild>
-            <Link className="capitalize" href={pathname}>
-              {pathname.slice(1).replace('-', ' ')}
-            </Link>
-          </BreadcrumbLink>
-        </BreadcrumbItem>
+        {pathname !== '/in' ? (
+          <>
+            <BreadcrumbItem>
+              <BreadcrumbLink asChild>
+                <Link href="/">Dashboard</Link>
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbLink asChild>
+                <Link className="capitalize" href={pathname}>
+                  {pathname.slice(1).replace('-', ' ')}
+                </Link>
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+          </>
+        ) : null}
       </BreadcrumbList>
     </Breadcrumb>
   );

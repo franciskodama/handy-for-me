@@ -20,3 +20,11 @@ export type SpinItem = {
   name: string;
   selected: boolean;
 };
+
+export type AffirmationProps = {
+  id: string;
+  createdAt: Date;
+  uid: string;
+  name: string;
+  url: string;
+};
