@@ -1,14 +1,18 @@
+'use client';
+
 import {
   Breadcrumb,
   BreadcrumbList,
   BreadcrumbItem,
   BreadcrumbLink,
-  BreadcrumbSeparator,
-  BreadcrumbPage
+  BreadcrumbSeparator
 } from '@/components/ui/breadcrumb';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 export function DashboardBreadcrumb() {
+  const pathname = usePathname();
+
   return (
     <Breadcrumb className="hidden md:flex">
       <BreadcrumbList>
@@ -20,12 +24,10 @@ export function DashboardBreadcrumb() {
         <BreadcrumbSeparator />
         <BreadcrumbItem>
           <BreadcrumbLink asChild>
-            <Link href="#">Products</Link>
+            <Link className="capitalize" href={pathname}>
+              {pathname.slice(1).replace('-', ' ')}
+            </Link>
           </BreadcrumbLink>
-        </BreadcrumbItem>
-        <BreadcrumbSeparator />
-        <BreadcrumbItem>
-          <BreadcrumbPage>All Products</BreadcrumbPage>
         </BreadcrumbItem>
       </BreadcrumbList>
     </Breadcrumb>
