@@ -35,11 +35,11 @@ export async function User() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuLabel>My Account</DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem>Settings</DropdownMenuItem>
-        <DropdownMenuItem>Support</DropdownMenuItem>
-        <DropdownMenuSeparator />
+        {/* <DropdownMenuLabel>My Account</DropdownMenuLabel> */}
+        {/* <DropdownMenuSeparator /> */}
+        {/* <DropdownMenuItem>Settings</DropdownMenuItem>
+        <DropdownMenuItem>Support</DropdownMenuItem> */}
+        {/* <DropdownMenuSeparator /> */}
         {user ? (
           <DropdownMenuItem>
             <form

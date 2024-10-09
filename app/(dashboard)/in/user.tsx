@@ -4,7 +4,8 @@ import Image from 'next/image';
 
 export default function UserCard({ user }: { user: User | undefined }) {
   return (
-    <div className="flex flex-col items-center gap-2">
+    <div className="flex flex-col items-center gap-2 relative">
+      {/* <div className="absolute -top-1 -left-50 rounded-full w-[110px] h-[110px] bg-red-500 -z-1" /> */}
       {user?.image ? (
         <>
           <Image
@@ -13,7 +14,7 @@ export default function UserCard({ user }: { user: User | undefined }) {
             width={100}
             height={100}
             alt="Avatar"
-            className="overflow-hidden rounded-full"
+            className="overflow-hidden rounded-full z-0"
           />
           <p className="text-2xl font-bold">
             Hi,

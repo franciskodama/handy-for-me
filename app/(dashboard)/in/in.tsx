@@ -110,25 +110,25 @@ export default function In({ user }: { user: User | undefined }) {
               >
                 Affirmation
               </h3>
-              <p className="">Happy, Loved, and Rich</p>
+              <p className="">Donec sapien mi, fermentum et</p>
               <ChevronsUpDown size={24} strokeWidth={1.8} />
             </div>
             <div className="flex items-center justify-between w-1/3 border border-dashed border-slate-300 p-4">
               <h3
                 className={`${kumbh_sans.className} uppercase font-bold text-lg leading-none`}
               >
-                Affirmation
+                Pellentesque
               </h3>
-              <p className="">Happy, Loved, and Rich</p>
+              <p className="">Mauris tristique sem consequat</p>
               <ChevronsUpDown size={24} strokeWidth={1.8} />
             </div>
             <div className="flex items-center justify-between w-1/3 border border-dashed border-slate-300 p-4">
               <h3
                 className={`${kumbh_sans.className} uppercase font-bold text-lg leading-none`}
               >
-                Affirmation
+                Donec
               </h3>
-              <p className="">Happy, Loved, and Rich</p>
+              <p className="">Pellentesque est ante, porttitor</p>
               <ChevronsUpDown size={24} strokeWidth={1.8} />
             </div>
           </div>
@@ -137,7 +137,7 @@ export default function In({ user }: { user: User | undefined }) {
           <p
             className={`${kumbh_sans.className} uppercase font-bold text-xl leading-none mt-4`}
           >
-            Title
+            fermentum
           </p>
           <div className="flex w-full justify-between gap-8">
             <div
@@ -156,7 +156,11 @@ export default function In({ user }: { user: User | undefined }) {
                 borderWidth: '1em'
               }}
             >
-              <p>Box</p>
+              <p>
+                Pellentesque est ante, porttitor at enim vel, finibus dictum
+                tellus. Donec sapien mi, fermentum et dignissim at, ultricies
+                nec quam.
+              </p>
             </div>
             <div
               className={`flex flex-col w-1/3 items-center h-[10em] p-4`}
@@ -174,7 +178,10 @@ export default function In({ user }: { user: User | undefined }) {
                 borderWidth: '1em'
               }}
             >
-              <p>Box</p>
+              <p>
+                Etiam nec mi non felis dapibus aliquam. Nullam tempus odio eget
+                euismod semper.{' '}
+              </p>
             </div>
             <div
               className={`flex flex-col w-1/3 items-center h-[10em] p-4`}
@@ -192,7 +199,11 @@ export default function In({ user }: { user: User | undefined }) {
                 borderWidth: '1em'
               }}
             >
-              <p>Box</p>
+              <p>
+                Praesent ante est, facilisis at commodo sit amet, efficitur id
+                diam. Mauris tristique sem consequat, aliquam est eu, sodales
+                nisi. Vivamus elementum, eros quis varius fermentum.{' '}
+              </p>
             </div>
           </div>
 
@@ -200,7 +211,7 @@ export default function In({ user }: { user: User | undefined }) {
           <p
             className={`${kumbh_sans.className} uppercase font-bold text-xl leading-none mt-4`}
           >
-            Title
+            ultricies
           </p>
           <div className="flex w-full justify-between gap-8">
             <div className="flex items-start justify-between w-1/3 border border-dashed border-slate-300 p-4 h-[10em]">
@@ -217,12 +228,17 @@ export default function In({ user }: { user: User | undefined }) {
                 Title
               </h3>
             </div>
-            <div className="flex items-start justify-between w-1/3 border border-dashed border-slate-300 p-4 h-[10em]">
+            <div className="flex flex-col items-start gap-4 w-1/3 border border-dashed border-slate-300 p-4 h-[10em]">
               <h3
                 className={`${kumbh_sans.className} uppercase font-bold text-lg leading-none`}
               >
                 Title
               </h3>
+              <p>
+                Praesent ante est, facilisis at commodo sit amet, efficitur id
+                diam. Mauris tristique sem consequat, aliquam est eu, sodales
+                nisi. Vivamus elementum, eros quis varius fermentum.{' '}
+              </p>
             </div>
           </div>
 
@@ -230,7 +246,7 @@ export default function In({ user }: { user: User | undefined }) {
           <p
             className={`${kumbh_sans.className} uppercase font-bold text-xl leading-none mt-4`}
           >
-            Title
+            aliquam
           </p>
           <div className="flex w-full justify-between gap-8">
             <div className="flex items-start justify-between w-1/3 border border-dashed border-slate-300 p-4 h-[10em]">
@@ -261,7 +277,7 @@ export default function In({ user }: { user: User | undefined }) {
           <p
             className={`${kumbh_sans.className} uppercase font-bold text-xl leading-none mt-4`}
           >
-            Title
+            elementum
           </p>
           <div className="flex w-full justify-between gap-8">
             <div

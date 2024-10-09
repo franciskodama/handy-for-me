@@ -115,7 +115,7 @@ export default function Spin({
     setTimeout(() => {
       setResult(randomItem);
       setSpinning(false);
-    }, 5000);
+    }, 2000);
   };
 
   return (
