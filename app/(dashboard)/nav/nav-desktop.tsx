@@ -8,13 +8,13 @@ import {
 import { NavItem } from './nav-item';
 import {
   Home,
-  Dices,
   Grid3x3,
   Bot,
   Settings,
   MessageCircleQuestion,
   RefreshCw,
   BookA,
+  Dices,
   Ghost
 } from 'lucide-react';
 import Image from 'next/image';
@@ -22,6 +22,7 @@ import Image from 'next/image';
 export function DesktopNav() {
   return (
     <aside className="fixed inset-y-0 left-0 z-10 hidden w-[3.4em] flex-col border-r bg-background sm:flex">
+      <div className="bg-primary py-[4px] border-0">.</div>
       <nav className="flex flex-col items-center gap-4 px-[5px] sm:py-5">
         <Link
           href="/"
@@ -55,9 +56,9 @@ export function DesktopNav() {
           <Grid3x3 className="h-5 w-5" />
         </NavItem>
 
-        <NavItem href="/ai" label="Artificial Intelligence">
+        {/* <NavItem href="/ai" label="Artificial Intelligence">
           <Bot className="h-5 w-5" />
-        </NavItem>
+        </NavItem> */}
 
         {/* <NavItem href="/products" label="Products">
           <Ghost className="h-5 w-5" />

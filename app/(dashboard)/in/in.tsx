@@ -25,9 +25,13 @@ import {
 import { Button } from '@/components/ui/button';
 import ExplanationIn from './explanation-in';
 import { useState } from 'react';
-import { CircleHelp } from 'lucide-react';
+import { ChevronsUpDown, CircleHelp, UnfoldVertical } from 'lucide-react';
+import UserCard from './user';
+import { User } from '@/lib/types';
+import { kumbh_sans } from '@/app/ui/fonts';
 
-export default function In({ name }: { name: string }) {
+export default function In({ user }: { user: User | undefined }) {
+  // { user }: { user: UserProps }
   // const [listId, setListId] = useState<string>('');
   // const [listInput, setListInput] = useState<string>('');
   // const [itemInput, setItemInput] = useState<string>('');
@@ -72,7 +76,7 @@ export default function In({ name }: { name: string }) {
       </CardHeader>
       <CardContent>
         <AnimatePresence>
-          {name ? (
+          {openAction ? (
             <motion.div
               layout
               initial={{ opacity: 0, y: 50, scale: 0.3 }}
@@ -86,32 +90,60 @@ export default function In({ name }: { name: string }) {
           ) : null}
         </AnimatePresence>
 
-        {/* ----------------------- First Column ----------------------- */}
+        {/* ----------------------- Main Container ----------------------- */}
+        <div className="flex flex-col gap-4">
+          {/* ----------------------- First Row ----------------------- */}
 
-        <div className="flex justify-between gap-8 mb-4 w-full">
-          <div className="flex w-1/5 flex-col gap-4">
-            <p className="text-lg font-semibold">
-              {`${name.split(' ')[0]}, let's get started! 👋 `}
-            </p>
-            <div className="flex flex-col gap-2"></div>
-            <Button className="capitalize">Hello World!</Button>
-            <div className="flex flex-col items-center gap-2 w-full">
-              <p className="text-xs mb-2">or</p>
-              <Button className="capitalize w-full" variant="outline">
-                {`I'm feeling lucky!`}
-              </Button>
-              <p className="text-xs">
-                Let fate decide your next topic and question
-              </p>
+          <div className="flex w-full justify-between gap-8 mb-12">
+            <div className="w-1/3">
+              <UserCard user={user} />
             </div>
+            <div className="w-1/3 border border-dashed border-slate-300 p-4"></div>
+            <div className="w-1/3 border border-dashed border-slate-300 p-4"></div>
           </div>
 
-          {/* ----------------------- Second Column ----------------------- */}
+          {/* ----------------------- Second Row ----------------------- */}
+          <div className="flex w-full justify-between gap-8">
+            <div className="flex items-center justify-between w-1/3 border border-dashed border-slate-300 p-4">
+              <h3
+                className={`${kumbh_sans.className} uppercase font-bold text-lg leading-none`}
+              >
+                Affirmation
+              </h3>
+              <p className="">Donec sapien mi, fermentum et</p>
+              <ChevronsUpDown size={24} strokeWidth={1.8} />
+            </div>
+            <div className="flex items-center justify-between w-1/3 border border-dashed border-slate-300 p-4">
+              <h3
+                className={`${kumbh_sans.className} uppercase font-bold text-lg leading-none`}
+              >
+                Pellentesque
+              </h3>
+              <p className="">Mauris tristique sem consequat</p>
+              <ChevronsUpDown size={24} strokeWidth={1.8} />
+            </div>
+            <div className="flex items-center justify-between w-1/3 border border-dashed border-slate-300 p-4">
+              <h3
+                className={`${kumbh_sans.className} uppercase font-bold text-lg leading-none`}
+              >
+                Donec
+              </h3>
+              <p className="">Pellentesque est ante, porttitor</p>
+              <ChevronsUpDown size={24} strokeWidth={1.8} />
+            </div>
+          </div>
+          {/* ----------------------- Third Row ----------------------- */}
 
-          <div
-            className={`flex flex-col w-3/5 items-center h-[30em]`}
-            style={{
-              borderImage: `repeating-linear-gradient(
+          <p
+            className={`${kumbh_sans.className} uppercase font-bold text-xl leading-none mt-4`}
+          >
+            fermentum
+          </p>
+          <div className="flex w-full justify-between gap-8">
+            <div
+              className={`flex flex-col w-1/3 items-center h-[10em] p-4`}
+              style={{
+                borderImage: `repeating-linear-gradient(
                   45deg,
                   transparent,
                   transparent 2.5px,
@@ -120,17 +152,188 @@ export default function In({ name }: { name: string }) {
                   transparent 3px,
                   transparent 3px
                 ) 15 / 0.75rem`,
-              borderStyle: 'solid',
-              borderWidth: '1em'
-            }}
-          >
-            <p>Set the timer, choose a topic, spin, and answer.</p>
+                borderStyle: 'solid',
+                borderWidth: '1em'
+              }}
+            >
+              <p>
+                Pellentesque est ante, porttitor at enim vel, finibus dictum
+                tellus. Donec sapien mi, fermentum et dignissim at, ultricies
+                nec quam.
+              </p>
+            </div>
+            <div
+              className={`flex flex-col w-1/3 items-center h-[10em] p-4`}
+              style={{
+                borderImage: `repeating-linear-gradient(
+                  45deg,
+                  transparent,
+                  transparent 2.5px,
+                  black 3px,
+                  black 3px,
+                  transparent 3px,
+                  transparent 3px
+                ) 15 / 0.75rem`,
+                borderStyle: 'solid',
+                borderWidth: '1em'
+              }}
+            >
+              <p>
+                Etiam nec mi non felis dapibus aliquam. Nullam tempus odio eget
+                euismod semper.{' '}
+              </p>
+            </div>
+            <div
+              className={`flex flex-col w-1/3 items-center h-[10em] p-4`}
+              style={{
+                borderImage: `repeating-linear-gradient(
+                  45deg,
+                  transparent,
+                  transparent 2.5px,
+                  black 3px,
+                  black 3px,
+                  transparent 3px,
+                  transparent 3px
+                ) 15 / 0.75rem`,
+                borderStyle: 'solid',
+                borderWidth: '1em'
+              }}
+            >
+              <p>
+                Praesent ante est, facilisis at commodo sit amet, efficitur id
+                diam. Mauris tristique sem consequat, aliquam est eu, sodales
+                nisi. Vivamus elementum, eros quis varius fermentum.{' '}
+              </p>
+            </div>
           </div>
 
-          {/* ----------------------- Third Column ----------------------- */}
+          {/* ----------------------- Fourth Row ----------------------- */}
+          <p
+            className={`${kumbh_sans.className} uppercase font-bold text-xl leading-none mt-4`}
+          >
+            ultricies
+          </p>
+          <div className="flex w-full justify-between gap-8">
+            <div className="flex items-start justify-between w-1/3 border border-dashed border-slate-300 p-4 h-[10em]">
+              <h3
+                className={`${kumbh_sans.className} uppercase font-bold text-lg leading-none`}
+              >
+                Title
+              </h3>
+            </div>
+            <div className="flex items-start justify-between w-1/3 border border-dashed border-slate-300 p-4 h-[10em]">
+              <h3
+                className={`${kumbh_sans.className} uppercase font-bold text-lg leading-none`}
+              >
+                Title
+              </h3>
+            </div>
+            <div className="flex flex-col items-start gap-4 w-1/3 border border-dashed border-slate-300 p-4 h-[10em]">
+              <h3
+                className={`${kumbh_sans.className} uppercase font-bold text-lg leading-none`}
+              >
+                Title
+              </h3>
+              <p>
+                Praesent ante est, facilisis at commodo sit amet, efficitur id
+                diam. Mauris tristique sem consequat, aliquam est eu, sodales
+                nisi. Vivamus elementum, eros quis varius fermentum.{' '}
+              </p>
+            </div>
+          </div>
 
-          <div className="flex flex-col w-1/5">
-            <p>Set the timer, choose a topic, spin, and answer.</p>
+          {/* ----------------------- Fiveth Row ----------------------- */}
+          <p
+            className={`${kumbh_sans.className} uppercase font-bold text-xl leading-none mt-4`}
+          >
+            aliquam
+          </p>
+          <div className="flex w-full justify-between gap-8">
+            <div className="flex items-start justify-between w-1/3 border border-dashed border-slate-300 p-4 h-[10em]">
+              <h3
+                className={`${kumbh_sans.className} uppercase font-bold text-lg leading-none`}
+              >
+                Title
+              </h3>
+            </div>
+            <div className="flex items-start justify-between w-1/3 border border-dashed border-slate-300 p-4 h-[10em]">
+              <h3
+                className={`${kumbh_sans.className} uppercase font-bold text-lg leading-none`}
+              >
+                Title
+              </h3>
+            </div>
+            <div className="flex items-start justify-between w-1/3 border border-dashed border-slate-300 p-4 h-[10em]">
+              <h3
+                className={`${kumbh_sans.className} uppercase font-bold text-lg leading-none`}
+              >
+                Title
+              </h3>
+            </div>
+          </div>
+
+          {/* ----------------------- Sixth Row ----------------------- */}
+
+          <p
+            className={`${kumbh_sans.className} uppercase font-bold text-xl leading-none mt-4`}
+          >
+            elementum
+          </p>
+          <div className="flex w-full justify-between gap-8">
+            <div
+              className={`flex flex-col w-1/3 items-center h-[10em] p-4`}
+              style={{
+                borderImage: `repeating-linear-gradient(
+                  45deg,
+                  transparent,
+                  transparent 2.5px,
+                  black 3px,
+                  black 3px,
+                  transparent 3px,
+                  transparent 3px
+                ) 15 / 0.75rem`,
+                borderStyle: 'solid',
+                borderWidth: '1em'
+              }}
+            >
+              <p>Box</p>
+            </div>
+            <div
+              className={`flex flex-col w-1/3 items-center h-[10em] p-4`}
+              style={{
+                borderImage: `repeating-linear-gradient(
+                  45deg,
+                  transparent,
+                  transparent 2.5px,
+                  black 3px,
+                  black 3px,
+                  transparent 3px,
+                  transparent 3px
+                ) 15 / 0.75rem`,
+                borderStyle: 'solid',
+                borderWidth: '1em'
+              }}
+            >
+              <p>Box</p>
+            </div>
+            <div
+              className={`flex flex-col w-1/3 items-center h-[10em] p-4`}
+              style={{
+                borderImage: `repeating-linear-gradient(
+                  45deg,
+                  transparent,
+                  transparent 2.5px,
+                  black 3px,
+                  black 3px,
+                  transparent 3px,
+                  transparent 3px
+                ) 15 / 0.75rem`,
+                borderStyle: 'solid',
+                borderWidth: '1em'
+              }}
+            >
+              <p>Box</p>
+            </div>
           </div>
         </div>
       </CardContent>

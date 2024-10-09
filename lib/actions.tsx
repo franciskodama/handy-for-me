@@ -2,7 +2,7 @@
 
 import { v4 } from 'uuid';
 import { prisma } from './prisma';
-import { SpinItem, SpinList } from './types';
+import { AffirmationProps, SpinItem, SpinList } from './types';
 
 export async function addUser(uid: string, name: string, avatar: string) {
   try {
@@ -131,6 +131,58 @@ export async function selectionSpinItem(id: string) {
       },
       data: {
         selected: !item.selected
+      }
+    });
+    return true;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+}
+
+export async function addAffirmation(
+  uid: string,
+  name: string,
+  url: string
+): Promise<AffirmationProps | false> {
+  try {
+    const item = await prisma.affirmation.create({
+      data: {
+        id: v4(),
+        createdAt: new Date(),
+        uid,
+        name,
+        url
+      }
+    });
+    return item;
+  } catch (error) {
+    console.error('Error adding Affirmation item:', error);
+    return false;
+  }
+}
+
+export async function getAffirmations(
+  uid: string
+): Promise<AffirmationProps[] | false> {
+  try {
+    const item = await prisma.affirmation.findMany({
+      where: {
+        uid
+      }
+    });
+    return item;
+  } catch (error) {
+    console.error('Error getting Affirmations Array:', error);
+    return false;
+  }
+}
+
+export async function deleteAffirmations(id: string) {
+  try {
+    await prisma.affirmation.delete({
+      where: {
+        id
       }
     });
     return true;

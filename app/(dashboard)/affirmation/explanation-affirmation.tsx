@@ -1,18 +1,11 @@
 'use client';
 
-import {
-  Lightbulb,
-  PartyPopper,
-  Settings,
-  Snail,
-  Trash2,
-  X
-} from 'lucide-react';
+import { Lightbulb, Settings, Snail, Trash2, X } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 
-export default function ExplanationIn({
+export default function ExplanationAffirmation({
   setOpenAction
 }: {
   setOpenAction: (value: boolean) => void;
@@ -37,18 +30,20 @@ export default function ExplanationIn({
         <AlertDescription className="relative text-sm flex items-start justify-between p-2">
           <div className="flex flex-col w-1/3 py-2 px-12">
             <div className="flex items-center gap-2 mb-4">
-              <PartyPopper size={24} strokeWidth={1.6} />
-              <p className="text-lg font-bold">Proin dignissim orci vel?</p>
+              <Snail size={24} strokeWidth={1.6} />
+              <p className="text-lg font-bold">
+                Tired of wasting time on decisions?
+              </p>
             </div>
             <div className="flex flex-col gap-4 mb-4">
               <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin
-                dignissim orci vel efficitur sodales.
+                With Spin Magic, you can turn any list into a fun, random
+                selection!
               </p>
               <p>
-                Quisque dictum nec nisl vitae semper. Vestibulum venenatis,
-                turpis ac ultricies congue, nisi lorem euismod lectus, sed
-                condimentum nisi nisl quis nibh.
+                Whether it’s picking a family activity, deciding on what to cook
+                for dinner, or choosing the next movie for movie night — Spin
+                Magic has you covered.
               </p>
             </div>
           </div>
@@ -60,18 +55,19 @@ export default function ExplanationIn({
             </div>
             <div className="flex flex-col gap-4">
               <p>
-                Pellentesque est ante, porttitor at enim vel, finibus dictum
-                tellus. Donec sapien mi, fermentum et dignissim at, ultricies
-                nec quam.
+                Create lists. Then, simply add your favorite items to each list,
+                and when it’s time to make a decision, spin the wheel for a
+                surprise choice!
               </p>
               <p className="flex items-center gap-4">
                 <Checkbox checked={true} />
-                Donec sapien mi, fermentum et dignissim at
+                Easily manage items by unselecting them to skip the next draw
+                without deleting them.
               </p>
               <p className="flex items-center gap-4">
                 <Trash2 size={24} strokeWidth={1.6} />
-                Pellentesque est ante, porttitor at enim vel, finibus dictum
-                tellus.
+                You can also permanently delete items whenever you no longer
+                need them.
               </p>
             </div>
           </div>
@@ -112,7 +108,7 @@ export default function ExplanationIn({
               className="capitalize mt-6 w-[26ch]"
               onClick={() => setOpenAction(false)}
             >
-              Start Exploring Now!
+              Start spinning today!
             </Button>
           </div>
           <button

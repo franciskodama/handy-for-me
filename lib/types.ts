@@ -1,3 +1,9 @@
+export type User = {
+  name?: string | null;
+  email?: string | null;
+  image?: string | null;
+};
+
 export type SpinList = {
   uid: string;
   id: string;
@@ -13,4 +19,12 @@ export type SpinItem = {
   listId: string;
   name: string;
   selected: boolean;
+};
+
+export type AffirmationProps = {
+  id: string;
+  createdAt: Date;
+  uid: string;
+  name: string;
+  url: string;
 };

@@ -32,3 +32,11 @@ model SpinItem {
   list      SpinList @relation(fields: [listId], references: [id])
   listId    String
 }
+
+model Affirmation {
+  id        String   @id @default(uuid()) @db.VarChar(255)
+  createdAt DateTime @default(now()) @db.Timestamp(6)
+  uid       String   
+  name      String   
+  url       String
+}

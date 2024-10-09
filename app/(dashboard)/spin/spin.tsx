@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { CircleHelp, RefreshCw, Trash2 } from 'lucide-react';
+import { CircleHelp, RefreshCw, SquareX, Trash2 } from 'lucide-react';
 
 import {
   Card,
@@ -36,6 +36,7 @@ import {
 import { Checkbox } from '@/components/ui/checkbox';
 import ExplanationSpin from './explanation-spin';
 import { Foldit } from 'next/font/google';
+import { kumbh_sans } from '@/app/ui/fonts';
 
 export const foldit = Foldit({
   weight: ['700'],
@@ -115,7 +116,7 @@ export default function Spin({
     setTimeout(() => {
       setResult(randomItem);
       setSpinning(false);
-    }, 5000);
+    }, 2000);
   };
 
   return (
@@ -256,8 +257,10 @@ export default function Spin({
             {items.length > 0 ? (
               <>
                 <div className="flex flex-col">
-                  <p className="text-3xl text-center mb-8">
-                    {spinning ? 'Spinning...' : 'Spin the Wheel!'}
+                  <p
+                    className={`${kumbh_sans.className} uppercase font-bold text-xl leading-none text-center mb-8`}
+                  >
+                    {spinning ? 'Spinning...' : 'Spin the Wheel'}
                   </p>
                   <Button
                     className="rounded-full w-[15em] h-[15em] p-0"
@@ -283,14 +286,18 @@ export default function Spin({
 
             {result && (
               <>
-                {/* <p className={`${foldit.className} text-5xl text-white p-4 text-center bg-primary animate-pulse w-full my-8`}> */}
                 <p
-                  className={`text-5xl text-white p-4 text-center bg-primary animate-pulse w-full my-8`}
+                  className={`${kumbh_sans.className} uppercase font-bold text-3xl leading-none text-center animate-pulse w-full my-8`}
                 >
                   {result}
                 </p>
                 <Button variant="link" onClick={() => setResult('')}>
-                  Clear
+                  <SquareX
+                    size={18}
+                    strokeWidth={1.6}
+                    onClick={() => setResult('')}
+                  />
+                  <p className="ml-2 text-xs">Clear</p>
                 </Button>
               </>
             )}

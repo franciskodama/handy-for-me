@@ -1,0 +1,132 @@
+'use client';
+
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle
+} from '@/components/ui/card';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger
+} from '@/components/ui/tooltip';
+import { AffirmationProps } from '@/lib/types';
+import { useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
+import { CircleHelp, RefreshCw, SquareX, Trash2 } from 'lucide-react';
+import ExplanationAffirmation from './explanation-affirmation';
+
+export default function Affirmation({
+  affirmations
+}: {
+  affirmations: AffirmationProps[];
+}) {
+  // const [lists, setLists] = useState<SpinList[]>(initialLists);
+  // const [allItems, setAllItems] = useState<SpinItem[]>(initialItems);
+  // const [listId, setListId] = useState<string>('');
+  // const [listInput, setListInput] = useState<string>('');
+  // const [itemInput, setItemInput] = useState<string>('');
+  // const [pendingNewList, setPendingNewList] = useState<boolean>(false);
+  // const [pendingNewItem, setPendingNewItem] = useState<boolean>(false);
+  // const [spinning, setSpinning] = useState<boolean>(false);
+  // const [result, setResult] = useState<string>('');
+  const [openAction, setOpenAction] = useState(false);
+  console.log('---  🚀 ---> | affirmations:', affirmations);
+
+  //   const handleCreateList = async () => {
+  //     setPendingNewList(true);
+  //     const list = await addSpinList(uid, listInput);
+  //     if (list) {
+  //       setLists([...lists, list as SpinList]);
+  //       setPendingNewList(false);
+  //       setListInput('');
+  //     }
+  //   };
+
+  //   const handleCreateItem = async () => {
+  //     setPendingNewItem(true);
+  //     const item = await addSpinItem(uid, listId, itemInput);
+  //     if (item) {
+  //       setAllItems([...allItems, item as SpinItem]);
+  //       setPendingNewItem(false);
+  //       setItemInput('');
+  //     }
+  //   };
+
+  //   const handleDeleteItem = async (id: string) => {
+  //     const success = await deleteAffirmations(id);
+  //     if (success) {
+  //       setAllItems(allItems.filter((item) => item.id !== id));
+  //     }
+  //   };
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>
+          Affirmation
+          {!openAction ? (
+            <>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger
+                    className="text-sm"
+                    onClick={() => {
+                      setOpenAction(true);
+                    }}
+                  >
+                    <CircleHelp size={22} strokeWidth={1.6} />
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p className="text-primary ml-2 capitalize font-light">
+                      learn more
+                    </p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </>
+          ) : (
+            <div />
+          )}
+        </CardTitle>
+        <CardDescription>
+          You are the captain of your soul and the master of your fate.
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <AnimatePresence>
+          {openAction ? (
+            <motion.div
+              layout
+              initial={{ opacity: 0, y: 50, scale: 0.3 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.5, transition: { duration: 0.2 } }}
+            >
+              <div className="mb-12">
+                <ExplanationAffirmation setOpenAction={setOpenAction} />
+              </div>
+            </motion.div>
+          ) : null}
+        </AnimatePresence>
+        {/* ----------------------- First Column ----------------------- */}
+        The conscious mind is like the navigator or captain at the bridge of a
+        ship. He directs the ship and signals orders to men in the engine room,
+        who in turn control all the boilers, instruments, gauges, etc. The men
+        in the engine room do not know where they are going; they follow orders.
+        They would go on the rocks if the man on the bridge issued faulty or
+        wrong instructions based on his findings with the compass, sextant, or
+        other instruments. The men in the engine room obey him because he is in
+        charge and issues orders, which are automatically obeyed. Members of the
+        crew do not talk back to the captain; they simply carry out orders. The
+        captain is the master of his ship, and his decrees are carried out.
+        Likewise, your conscious mind is the captain and the master of your
+        ship, which represents your body, environment, and all your affairs.
+        Your subconscious mind takes the orders you give it based upon what your
+        conscious mind believes and accepts as true.
+      </CardContent>
+    </Card>
+  );
+}
