@@ -1,15 +1,6 @@
 'use client';
 
-import {
-  Goal,
-  Lightbulb,
-  Settings,
-  Snail,
-  Speech,
-  ThumbsUp,
-  Trash2,
-  X
-} from 'lucide-react';
+import { Goal, Settings, Speech, X } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 

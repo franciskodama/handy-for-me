@@ -21,7 +21,11 @@ export default function Error({
         </h1>
         {error && (
           <pre className="my-4 px-3 py-6 bg-black text-white max-w-2xl overflow-scroll flex text-wrap">
-            {`${error} `} <p>¯\_(ツ)_/¯</p>
+            {`${error} `}{' '}
+            <p>
+              <br />
+              ¯\_(ツ)_/¯
+            </p>
           </pre>
         )}
         <p>We still working on it. Please try again later.</p>

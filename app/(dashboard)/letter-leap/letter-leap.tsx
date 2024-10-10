@@ -155,10 +155,7 @@ export default function LetterLeap({ name }: { name: string }) {
             <p className="text-lg font-semibold mb-2">
               {`${name.split(' ')[0]}, Out of ideas? 🚨`}
             </p>
-            <p className="mb-4">
-              Hit only in case of brain block!
-              {/* Break Glass for Words! But only as a last resort. */}
-            </p>
+            <p className="mb-4">Hit only in case of brain block!</p>
             <Button
               variant={'outline'}
               className="capitalize mb-2"
@@ -200,7 +197,6 @@ export default function LetterLeap({ name }: { name: string }) {
                   C'mon! At least, Spin First...
                 </p>
               )}
-              {}
             </div>
           </div>
         </div>

@@ -7,6 +7,7 @@ import {
   SelectValue
 } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
+import confetti from 'canvas-confetti';
 
 export default function Countdown({
   name,
@@ -39,6 +40,10 @@ export default function Countdown({
           if (prevTime <= 1) {
             clearInterval(timerInterval);
             setStartCountdown(false);
+            confetti({
+              particleCount: 150,
+              spread: 180
+            });
             return 0;
           } else {
             return prevTime - 1;
@@ -93,7 +98,6 @@ export default function Countdown({
   return (
     <div>
       <p className="text-lg font-semibold mb-2">Answer Clock ⏱️</p>
-      {/* <p className="text-sm my-2">Set the timer and let's go!</p> */}
       <p className="text-sm my-2">Customize your countdown:</p>
       <div className="flex flex-col gap-2">
         <div className="flex flex-col gap-2">
