@@ -106,7 +106,7 @@ export default function LetterLeap({ name }: { name: string }) {
               Let the letter lead your thoughts. 🎯
             </p>
             <Button className="capitalize" onClick={handleSpin}>
-              Spin & Start!
+              Spin!
             </Button>
           </div>
 
@@ -251,12 +251,12 @@ const startWords = {
     'During',
     'Due',
     'Definitely',
-    'Deciding',
     'Doing',
     'Driving',
     'Directly',
     'Don’t',
-    'Does'
+    'Does',
+    'Doubtfully'
   ],
   E: [
     'Even',
@@ -275,47 +275,47 @@ const startWords = {
     'For',
     'Finally',
     'From',
-    'Further',
-    'Feeling',
+    'Furthermore',
     'Facing',
     'Finding',
     'Focusing',
-    'Forming'
+    'Frequently',
+    'Feeling'
   ],
   G: [
+    'Generally',
+    'Gradually',
+    'Getting',
     'Given',
     'Going',
-    'Gradually',
-    'Growing',
     'Gaining',
-    'Getting',
     'Giving',
-    'Generally',
     'Guiding',
-    'Granted'
+    'Goodbye',
+    'Good'
   ],
   H: [
+    'Hopefully',
     'However',
     'Having',
+    'How',
     'Here',
-    'Hence',
-    'Helping',
-    'Hopefully',
-    'Holding',
     'Hearing',
-    'Handling',
-    'Heading'
+    'Holly (Cow!)',
+    'Holding',
+    'Helping',
+    'Hang (on)'
   ],
   I: [
-    'In',
-    'If',
-    'Interestingly',
     'Initially',
-    'Including',
+    'Interestingly',
     'Instead',
+    'In (Addition)',
+    'If',
+    'Including',
     'It’s',
     'I’ve',
-    'Involving',
+    'Itself',
     'Imagine'
   ],
   J: [
@@ -327,55 +327,55 @@ const startWords = {
     'Journeying',
     'Joyfully',
     'Jokingly',
-    'Joking',
-    'Juxtaposing'
+    'Jzus',
+    'Join (the club)'
   ],
   K: [
     'Knowing',
     'Keeping',
     'Kindly',
-    'Kicking',
     'Knocking',
     'Keenly',
-    'Kids',
-    'Keeping',
-    'Key',
-    'Keen'
+    'Kick (the bucket)',
+    'Knock (on wood)',
+    'Keep (calm)',
+    'Knock (it out)',
+    'Keep (going)'
   ],
   L: [
-    'Looking',
-    'Learning',
+    'Likewise',
     'Luckily',
     'Later',
+    'Largely',
+    'Looking',
+    'Learning',
     'Letting',
     'Living',
     'Leading',
-    'Largely',
-    'Likewise',
-    'Longing'
+    'Let’s'
   ],
   M: [
     'Meanwhile',
     'Moreover',
+    'Mostly',
+    'Mentioning',
+    'Must',
+    'May',
     'Making',
     'Moving',
     'Managing',
-    'Mostly',
-    'May',
-    'Must',
-    'Mentioning',
-    'Maintaining'
+    'My'
   ],
   N: [
     'Nevertheless',
-    'Next',
     'Naturally',
+    'Next',
     'Noticing',
     'Never',
     'Nothing',
     'Not',
-    'Needing',
     'Now',
+    'Nice',
     'Notably'
   ],
   O: [
@@ -386,9 +386,9 @@ const startWords = {
     'Over',
     'Outside',
     'Otherwise',
-    'Offering',
-    'Opening',
-    'Observing'
+    'On (one hand)',
+    'Off (the hook)',
+    'Out (of the blue)'
   ],
   P: [
     'Perhaps',
@@ -399,8 +399,8 @@ const startWords = {
     'Providing',
     'Pursuing',
     'Personally',
-    'Planning',
-    'Passing'
+    'Pretty (nice)',
+    'Point (taken)'
   ],
   Q: [
     'Quite',
@@ -411,8 +411,8 @@ const startWords = {
     'Qualifying',
     'Questionably',
     'Quaintly',
-    'Quirking',
-    'Quintessentially'
+    'Quiet (as a mouse)',
+    'Quite (the opposite)'
   ],
   R: [
     'Rather',
@@ -421,7 +421,7 @@ const startWords = {
     'Reaching',
     'Realizing',
     'Relating',
-    'Running',
+    'Right',
     'Returning',
     'Reading',
     'Referring'
@@ -445,9 +445,9 @@ const startWords = {
     'Trying',
     'Thinking',
     'Talking',
-    'Turning',
     'Telling',
-    'Thanking',
+    'Take (it easy)',
+    'To (be honest)',
     'Though'
   ],
   U: [
@@ -469,7 +469,7 @@ const startWords = {
     'Visiting',
     'Valuing',
     'Verifying',
-    'Vividly',
+    'Virtually',
     'Venturing',
     'Vacating',
     'Voicing'
@@ -483,38 +483,35 @@ const startWords = {
     'Whenever',
     'Whether',
     'Willing',
-    'Waiting',
-    'Working'
+    'What’s up',
+    'We’re'
   ],
   X: [
     'Xenophobically',
     'Xeroxing',
     'X-raying',
-    'Xylophones',
     'X-rayed',
     'X-treme',
     'X-factors',
-    'Xenon',
-    'X-tra',
-    'Xenial'
+    'Xylitol'
   ],
   Y: [
     'Yes',
     'Yet',
     'You’re',
     'Your',
-    'Yielding',
     'Yearning',
-    'Yelling',
+    'You (bet)',
+    'You (better)',
     'Yours',
     'Yelling',
-    'Yard'
+    'Yielding'
   ],
   Z: [
     'Zooming',
     'Zealously',
     'Zipping',
-    'Zoning',
+    'Zillion-dollar',
     'Zeroing',
     'Zestfully',
     'Zigzagging',

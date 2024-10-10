@@ -29,7 +29,7 @@ export function DesktopNav() {
           // className="group flex h-9 w-9 shrink-0 items-center justify-center gap-2 text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base"
         >
           <Image
-            src="/logos/HandyForMe_Square200x200.png"
+            src="/logos/HandyForMe_Cog200x200.png"
             alt="HandyFor.Me Logo"
             width={200}
             height={200}

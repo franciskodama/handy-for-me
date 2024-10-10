@@ -18,12 +18,15 @@ import { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { CircleHelp, RefreshCw, SquareX, Trash2 } from 'lucide-react';
 import ExplanationAffirmation from './explanation-affirmation';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 
-export default function Affirmation({
-  affirmations
-}: {
-  affirmations: AffirmationProps[];
-}) {
+export default function Affirmation() {
+  //   {
+  //   affirmations
+  // }: {
+  //   affirmations: AffirmationProps[];
+  // }
   // const [lists, setLists] = useState<SpinList[]>(initialLists);
   // const [allItems, setAllItems] = useState<SpinItem[]>(initialItems);
   // const [listId, setListId] = useState<string>('');
@@ -34,7 +37,9 @@ export default function Affirmation({
   // const [spinning, setSpinning] = useState<boolean>(false);
   // const [result, setResult] = useState<string>('');
   const [openAction, setOpenAction] = useState(false);
-  console.log('---  🚀 ---> | affirmations:', affirmations);
+  // console.log('---  🚀 ---> | affirmations:', affirmations);
+
+  // https://www.youtube.com/watch?v=-aBKrvK5Vn8&list=WL&index=73&t=6s
 
   //   const handleCreateList = async () => {
   //     setPendingNewList(true);
@@ -112,6 +117,47 @@ export default function Affirmation({
           ) : null}
         </AnimatePresence>
         {/* ----------------------- First Column ----------------------- */}
+        <div className="flex justify-between gap-8 mb-4 w-full">
+          <div className="flex flex-col w-1/3">
+            <div className="w-[25em]">
+              <p className="text-sm h-10 py-2">
+                Do you want to start a new list?
+              </p>
+              <div className="flex items-center gap-2">
+                <Input
+                  placeholder="List's Name"
+                  // value={listInput}
+                  // onChange={(e) => setListInput(e.target.value)}
+                />
+                <Button
+                // className={pendingNewList ? 'bg-primary' : ''}
+                // onClick={handleCreateList}
+                // disabled={pendingNewList || listInput.trim() === ''}
+                >
+                  {/* {pendingNewList ? 'Creating...' : 'Create a New List'} */}
+                </Button>
+              </div>
+            </div>
+            {/* 
+            <div className="w-[25em] mt-8">
+              <p className="text-sm h-10 py-2">Do you want to delete a list?</p>
+              <div className="flex items-center gap-2">
+                <Input
+                  placeholder="List's Name"
+                  value={listInput}
+                  onChange={(e) => setListInput(e.target.value)}
+                />
+                <Button
+                  className={pendingNewList ? 'bg-primary' : ''}
+                  onClick={handleCreateList}
+                  disabled={pendingNewList || listInput.trim() === ''}
+                >
+                  {pendingNewList ? 'Creating...' : 'Create a New List'}
+                </Button>
+              </div>
+            </div> */}
+          </div>
+        </div>
         The conscious mind is like the navigator or captain at the bridge of a
         ship. He directs the ship and signals orders to men in the engine room,
         who in turn control all the boilers, instruments, gauges, etc. The men

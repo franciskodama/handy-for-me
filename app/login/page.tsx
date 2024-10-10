@@ -26,14 +26,12 @@ export default async function Login() {
         <div className="flex flex-col p-12 border-red-500bg bg-white mr-12 w-[90ch] border border-primary shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
           <Image
             className="mb-12"
-            src="/logos/HandyForMe_Square200x200.png"
+            src="/logos/HandyForMe_Cog200x200.png"
             alt="HandyFor.Me Logo"
             width={150}
             height={150}
           />
-          <div
-            className={`flex flex-col text-4xl text-black font-extrabold uppercase`}
-          >
+          <div className={`flex flex-col text-4xl font-extrabold uppercase`}>
             <p className={`${kumbh_sans.className} text-8xl leading-[5.5rem]`}>
               Goodbye 👋 overwhelm!
             </p>
@@ -66,7 +64,7 @@ export default async function Login() {
               <Button
                 size="xl"
                 type="submit"
-                className="w-full bg-black text-base font-normal"
+                className="w-full text-base font-normal"
               >
                 Sign in with Google
               </Button>
@@ -84,7 +82,7 @@ export default async function Login() {
               <Button
                 size="xl"
                 type="submit"
-                className="w-full bg-black text-base font-normal"
+                className="w-full text-base font-normal"
               >
                 Sign in with GitHub
               </Button>

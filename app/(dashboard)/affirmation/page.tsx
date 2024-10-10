@@ -8,5 +8,10 @@ export default async function AffirmationPage() {
 
   const affirmations = uid && (await getAffirmations(uid));
 
-  return <>{affirmations && <Affirmation affirmations={affirmations} />}</>;
+  return (
+    <>
+      Hello!
+      {/* {!affirmations && <Affirmation affirmations={affirmations} />} */}
+    </>
+  );
 }

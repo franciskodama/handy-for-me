@@ -2,23 +2,17 @@
 // Google Cloud Credentials: https://console.cloud.google.com/apis/credentials
 
 // TODO: WORKING ON + FAST
+// Auth in Production as well!
 // Spin: How to delete a list?
-// Random Quotes pencial banner
-// Countdown: fixes
+// Confetti for Spin Page: https://classic.yarnpkg.com/en/package/canvas-confetti or https://www.youtube.com/watch?v=5YTK7Mor-wM
 // Spin: Titles and emojis
-// ABC feature
+// Create the page Dashboard
+// Feature: Words that you need to practice (pronunctiation - AI?) time adn show the word?
 
 // TODO: WORKING ON
-// Questions feature
-// Breadcrumb
 // Spin: Do something if a list has only one item (and the item must be selected or message the user)
 // Component MessageTeam
-// Confetti for Spin Page: https://classic.yarnpkg.com/en/package/canvas-confetti or https://www.youtube.com/watch?v=5YTK7Mor-wM
-// domain to vercel: https://porkbun.com/
 // use() instead of useEffect and useState: https://www.youtube.com/watch?v=oMvW3A_IRsY>>
-// Create the page Draw
-// Create the page Dashboard
-// Prisma get auth from github: https://authjs.dev/getting-started/adapters/prisma
 
 // TODO: FEATURES
 // Edit your photos by chatting with a generative AI model: https://vercel.com/templates/next.js/paint-by-text
@@ -34,3 +28,11 @@
 // Auth Google
 // Auth GitHub
 // Fix deployment error on vercel
+// Random Quotes pencial banner
+// Countdown: fixes
+// ABC feature
+// ABC feature: words review
+// Questions feature
+// Breadcrumb
+// domain to vercel: https://porkbun.com/
+// Prisma get auth from github: https://authjs.dev/getting-started/adapters/prisma
