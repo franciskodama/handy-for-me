@@ -154,18 +154,14 @@ export async function selectionSpinItem(id: string) {
   }
 }
 
-export async function addAffirmation(
-  uid: string,
-  name: string,
-  url: string
-): Promise<AffirmationProps | false> {
+export async function addAffirmation(uid: string, name: string, url: string) {
   try {
     const item = await prisma.affirmation.create({
       data: {
         id: v4(),
         createdAt: new Date(),
         uid,
-        name,
+        name: name || '',
         url
       }
     });
@@ -176,9 +172,7 @@ export async function addAffirmation(
   }
 }
 
-export async function getAffirmations(
-  uid: string
-): Promise<AffirmationProps[] | false> {
+export async function getAffirmations(uid: string) {
   try {
     const item = await prisma.affirmation.findMany({
       where: {

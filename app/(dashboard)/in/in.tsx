@@ -56,7 +56,7 @@ export default function In({ user }: { user: User | undefined }) {
                       setOpenAction(true);
                     }}
                   >
-                    <CircleHelp size={22} strokeWidth={1.6} />
+                    <CircleHelp size={32} strokeWidth={1.4} />
                   </TooltipTrigger>
                   <TooltipContent>
                     <p className="text-primary ml-2 capitalize font-light">

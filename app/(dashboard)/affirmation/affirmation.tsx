@@ -13,20 +13,47 @@ import {
   TooltipProvider,
   TooltipTrigger
 } from '@/components/ui/tooltip';
-import { AffirmationProps } from '@/lib/types';
-import { useState } from 'react';
+import { useActionState, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { CircleHelp, RefreshCw, SquareX, Trash2 } from 'lucide-react';
 import ExplanationAffirmation from './explanation-affirmation';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { AffirmationProps } from '@/lib/types';
+import { isEmptyBindingElement } from 'typescript';
+import { Span } from 'next/dist/trace';
+import { addAffirmation } from '@/lib/actions';
 
-export default function Affirmation() {
-  //   {
-  //   affirmations
-  // }: {
-  //   affirmations: AffirmationProps[];
-  // }
+const handleSubmit = async (previousState: unknown, formData: FormData) => {
+  const name = formData.get('name') as string;
+  const url = formData.get('url') as string;
+  const uid = formData.get('uid') as string;
+  console.log('---  🚀 ---> | uid:', uid);
+  console.log('---  🚀 ---> | name:', name);
+  console.log('---  🚀 ---> | url:', url);
+
+  if (!url) {
+    return { error: 'Url is required' };
+  }
+
+  const affirmation = await addAffirmation(uid, name, url);
+  console.log('---  🚀 ---> | affirmation:', affirmation);
+
+  if (!affirmation) {
+    return { error: 'Something got wrong. Try again.' };
+  }
+  return { message: 'Affirmation added successfully' };
+};
+
+export default function Affirmation({
+  firstName,
+  uid,
+  affirmations
+}: {
+  firstName: string;
+  uid: string;
+  affirmations: AffirmationProps[];
+}) {
   // const [lists, setLists] = useState<SpinList[]>(initialLists);
   // const [allItems, setAllItems] = useState<SpinItem[]>(initialItems);
   // const [listId, setListId] = useState<string>('');
@@ -37,7 +64,9 @@ export default function Affirmation() {
   // const [spinning, setSpinning] = useState<boolean>(false);
   // const [result, setResult] = useState<string>('');
   const [openAction, setOpenAction] = useState(false);
-  // console.log('---  🚀 ---> | affirmations:', affirmations);
+  const [data, action, isPending] = useActionState(handleSubmit, undefined);
+
+  console.log('---  🚀 ---> | affirmations:', affirmations);
 
   // https://www.youtube.com/watch?v=-aBKrvK5Vn8&list=WL&index=73&t=6s
 
@@ -71,8 +100,8 @@ export default function Affirmation() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>
-          Affirmation
+        <CardTitle className="flex justify-between items-center gap-2">
+          Vision Board
           {!openAction ? (
             <>
               <TooltipProvider>
@@ -83,7 +112,7 @@ export default function Affirmation() {
                       setOpenAction(true);
                     }}
                   >
-                    <CircleHelp size={22} strokeWidth={1.6} />
+                    <CircleHelp size={32} strokeWidth={1.4} />
                   </TooltipTrigger>
                   <TooltipContent>
                     <p className="text-primary ml-2 capitalize font-light">
@@ -98,7 +127,8 @@ export default function Affirmation() {
           )}
         </CardTitle>
         <CardDescription>
-          You are the captain of your soul and the master of your fate.
+          Visualize your goals and turn desires into reality.
+          {/* You are the captain of your soul and the master of your fate. */}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -118,44 +148,39 @@ export default function Affirmation() {
         </AnimatePresence>
         {/* ----------------------- First Column ----------------------- */}
         <div className="flex justify-between gap-8 mb-4 w-full">
-          <div className="flex flex-col w-1/3">
-            <div className="w-[25em]">
-              <p className="text-sm h-10 py-2">
-                Do you want to start a new list?
+          <div className="flex flex-col w-1/3 gap-4">
+            <form className="w-full" action={action}>
+              <p className="text-lg font-semibold">
+                {/* {`${firstName}, enter the name of your goal and a picture to make it real.`}
+                {`${firstName}, enter the name of your goal and a picture to make it real.`} */}
+                “Whatever the mind can conceive and believe, it can achieve.” –
+                Napoleon Hill
               </p>
               <div className="flex items-center gap-2">
+                <Input placeholder="Affirmation's Name" id="name" name="name" />
+                <Input placeholder="Url" id="url" name="url" />
                 <Input
-                  placeholder="List's Name"
-                  // value={listInput}
-                  // onChange={(e) => setListInput(e.target.value)}
+                  id="uid"
+                  name="uid"
+                  value={uid}
+                  readOnly
+                  className="hidden"
                 />
-                <Button
-                // className={pendingNewList ? 'bg-primary' : ''}
-                // onClick={handleCreateList}
-                // disabled={pendingNewList || listInput.trim() === ''}
-                >
-                  {/* {pendingNewList ? 'Creating...' : 'Create a New List'} */}
+                <Button type="submit" disabled={isPending}>
+                  {isPending ? 'Adding...' : 'Add Your Desire'}
                 </Button>
+                {data?.error && (
+                  <span className="text-white bg-red-500 px-2 py-1">
+                    {data?.error}
+                  </span>
+                )}
+                {data?.message && (
+                  <span className="text-white bg-green-500 px-2 py-1">
+                    {data?.message}
+                  </span>
+                )}
               </div>
-            </div>
-            {/* 
-            <div className="w-[25em] mt-8">
-              <p className="text-sm h-10 py-2">Do you want to delete a list?</p>
-              <div className="flex items-center gap-2">
-                <Input
-                  placeholder="List's Name"
-                  value={listInput}
-                  onChange={(e) => setListInput(e.target.value)}
-                />
-                <Button
-                  className={pendingNewList ? 'bg-primary' : ''}
-                  onClick={handleCreateList}
-                  disabled={pendingNewList || listInput.trim() === ''}
-                >
-                  {pendingNewList ? 'Creating...' : 'Create a New List'}
-                </Button>
-              </div>
-            </div> */}
+            </form>
           </div>
         </div>
         The conscious mind is like the navigator or captain at the bridge of a

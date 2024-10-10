@@ -25,6 +25,6 @@ export type AffirmationProps = {
   id: string;
   createdAt: Date;
   uid: string;
-  name: string;
+  name?: string;
   url: string;
 };
