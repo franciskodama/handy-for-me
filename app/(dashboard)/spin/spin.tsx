@@ -37,6 +37,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import ExplanationSpin from './explanation-spin';
 import { Foldit } from 'next/font/google';
 import { kumbh_sans } from '@/app/ui/fonts';
+import confetti from 'canvas-confetti';
 
 export const foldit = Foldit({
   weight: ['700'],
@@ -115,6 +116,7 @@ export default function Spin({
     const randomItem = itemsSelected[randomIndex].name;
     setTimeout(() => {
       setResult(randomItem);
+      confetti({ particleCount: 200, spread: 200, origin: { y: 0.6 } });
       setSpinning(false);
     }, 2000);
   };
