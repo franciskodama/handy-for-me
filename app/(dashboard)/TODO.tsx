@@ -4,7 +4,6 @@
 // TODO: WORKING ON + FAST
 // Auth in Production as well!
 // Spin: How to delete a list?
-// Confetti for Spin Page: https://classic.yarnpkg.com/en/package/canvas-confetti or https://www.youtube.com/watch?v=5YTK7Mor-wM
 // Spin: Titles and emojis
 // Create the page Dashboard
 // Feature: Words that you need to practice (pronunctiation - AI?) time adn show the word?
@@ -36,3 +35,4 @@
 // Breadcrumb
 // domain to vercel: https://porkbun.com/
 // Prisma get auth from github: https://authjs.dev/getting-started/adapters/prisma
+// Confetti for Spin Page: https://classic.yarnpkg.com/en/package/canvas-confetti

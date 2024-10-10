@@ -3,6 +3,8 @@
 import { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { CircleHelp, RefreshCw, SquareX, Trash2 } from 'lucide-react';
+import { Foldit } from 'next/font/google';
+import confetti from 'canvas-confetti';
 
 import {
   Card,
@@ -35,7 +37,6 @@ import {
 } from '@/lib/actions';
 import { Checkbox } from '@/components/ui/checkbox';
 import ExplanationSpin from './explanation-spin';
-import { Foldit } from 'next/font/google';
 import { kumbh_sans } from '@/app/ui/fonts';
 
 export const foldit = Foldit({
@@ -116,6 +117,18 @@ export default function Spin({
     setTimeout(() => {
       setResult(randomItem);
       setSpinning(false);
+      confetti({
+        particleCount: 150,
+        angle: 60,
+        spread: 55,
+        origin: { x: 0 }
+      });
+      confetti({
+        particleCount: 150,
+        angle: 120,
+        spread: 55,
+        origin: { x: 1 }
+      });
     }, 2000);
   };
 
@@ -299,6 +312,7 @@ export default function Spin({
                   />
                   <p className="ml-2 text-xs">Clear</p>
                 </Button>
+                {/* <Fireworks autorun={{ speed: 3 }}  */}
               </>
             )}
           </div>
