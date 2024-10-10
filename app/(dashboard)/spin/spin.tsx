@@ -287,7 +287,7 @@ export default function Spin({
             {result && (
               <>
                 <p
-                  className={`${kumbh_sans.className} uppercase font-bold text-3xl leading-none text-center animate-pulse w-full my-8`}
+                  className={`${kumbh_sans.className} ${result.length > 8 ? 'text-4xl' : 'text-7xl'} uppercase font-bold leading-none text-center animate-pulse w-full my-8`}
                 >
                   {result}
                 </p>
@@ -325,6 +325,27 @@ export default function Spin({
                 </Button>
               </div>
             </div>
+
+            {/*handle deleteSpinList(id) */}
+
+            {/* 
+            <div className="w-[25em] mt-8">
+              <p className="text-sm h-10 py-2">Do you want to delete a list?</p>
+              <div className="flex items-center gap-2">
+                <Input
+                  placeholder="List's Name"
+                  value={listInput}
+                  onChange={(e) => setListInput(e.target.value)}
+                />
+                <Button
+                  className={pendingNewList ? 'bg-primary' : ''}
+                  onClick={handleCreateList}
+                  disabled={pendingNewList || listInput.trim() === ''}
+                >
+                  {pendingNewList ? 'Creating...' : 'Create a New List'}
+                </Button>
+              </div>
+            </div> */}
           </div>
         </div>
       </CardContent>

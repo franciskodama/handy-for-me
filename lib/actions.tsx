@@ -62,6 +62,20 @@ export async function getSpinLists(
   }
 }
 
+export async function deleteSpinList(id: string) {
+  try {
+    await prisma.spinList.delete({
+      where: {
+        id
+      }
+    });
+    return true;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+}
+
 export async function addSpinItem(
   uid: string,
   listId: string,

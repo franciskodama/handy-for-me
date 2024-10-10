@@ -36,7 +36,7 @@ import Countdown from './countdown';
 export default function RandomQuestion({ name }: { name: string }) {
   const [topic, setTopic] = useState<string>('');
   const [questions, setQuestions] = useState<string[]>([]);
-  const [spinning, setSpinning] = useState<boolean>(false);
+  // const [spinning, setSpinning] = useState<boolean>(false);
   const [result, setResult] = useState<string>('');
   const [openAction, setOpenAction] = useState(false);
   const [startCountdown, setStartCountdown] = useState(false);
@@ -48,22 +48,22 @@ export default function RandomQuestion({ name }: { name: string }) {
   }, [topic]);
 
   const handleSpin = () => {
-    setSpinning(true);
+    // setSpinning(true);
     const randomIndex = Math.floor(Math.random() * questions.length);
     const randomItem = questions[randomIndex];
     setTimeout(() => {
       setResult(randomItem);
-      setSpinning(false);
+      // setSpinning(false);
       setStartCountdown(true);
     }, 1000);
   };
 
   const handleFeelingLucky = () => {
-    setSpinning(true);
+    // setSpinning(true);
     const luckyChoice = getLuckyChoice();
     setTimeout(() => {
       setResult(luckyChoice);
-      setSpinning(false);
+      // setSpinning(false);
       setStartCountdown(true);
     }, 1000);
   };

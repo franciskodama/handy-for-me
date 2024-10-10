@@ -4,9 +4,9 @@ import { Analytics } from '@vercel/analytics/react';
 import { barlow } from './ui/fonts';
 
 export const metadata = {
-  title: 'Next.js App Router + NextAuth + Tailwind CSS',
+  title: 'Handyfor.Me',
   description:
-    'A user admin dashboard configured with Next.js, Postgres, NextAuth, Tailwind CSS, TypeScript, and Prettier.'
+    'Your personal hub for organizing daily tasks is just one click away! Configured with Next.js, Postgres, NextAuth, Tailwind CSS, TypeScript, and Prettier.'
 };
 
 export default function RootLayout({

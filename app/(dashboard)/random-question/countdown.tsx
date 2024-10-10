@@ -22,10 +22,14 @@ export default function Countdown({
   setStartCountdown: (value: boolean) => void;
 }) {
   const minutesOptions = [1, 2, 3, 4, 5];
+  const [isPaused, setIsPaused] = useState(false);
   const [timeRemaining, setTimeRemaining] = useState(0);
   const [selectedValue, setSelectedValue] = useState('');
   const [lastSelectedTime, setLastSelectedTime] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
+
+  useEffect(() => {
+    handleValueChange('2');
+  }, []);
 
   useEffect(() => {
     let timerInterval: NodeJS.Timeout;
@@ -89,8 +93,8 @@ export default function Countdown({
   return (
     <div>
       <p className="text-lg font-semibold mb-2">Answer Clock ⏱️</p>
-      <p className="text-sm my-2">Set the timer and let's go!</p>
-      {/* <p className="text-sm">Customize your countdown:</p> */}
+      {/* <p className="text-sm my-2">Set the timer and let's go!</p> */}
+      <p className="text-sm my-2">Customize your countdown:</p>
       <div className="flex flex-col gap-2">
         <div className="flex flex-col gap-2">
           <Select value={selectedValue} onValueChange={handleValueChange}>
