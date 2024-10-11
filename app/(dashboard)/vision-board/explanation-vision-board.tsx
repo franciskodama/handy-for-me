@@ -5,7 +5,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 
-export default function ExplanationAffirmation({
+export default function ExplanationVisionBoard({
   setOpenAction
 }: {
   setOpenAction: (value: boolean) => void;

@@ -13,18 +13,21 @@ import {
   TooltipProvider,
   TooltipTrigger
 } from '@/components/ui/tooltip';
-import { useActionState, useState } from 'react';
+import { use, useActionState, useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { CircleHelp, RefreshCw, SquareX, Trash2 } from 'lucide-react';
-import ExplanationAffirmation from './explanation-affirmation';
+import { Check, CircleHelp, Trash2 } from 'lucide-react';
+import ExplanationAffirmation from './explanation-vision-board';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { AffirmationProps } from '@/lib/types';
-import { addAffirmation, deleteAffirmations } from '@/lib/actions';
+import { VisualBoardItem } from '@/lib/types';
+import {
+  addVisualBoardItem,
+  deleteVisualBoardItem,
+  getVisualBoardItem
+} from '@/lib/actions';
 import { barlow, kumbh_sans } from '@/app/ui/fonts';
 import Link from 'next/link';
 import Image from 'next/image';
-import { AspectRatio } from '@/components/ui/aspect-ratio';
 
 const handleSubmit = async (previousState: unknown, formData: FormData) => {
   const name = formData.get('name') as string;
@@ -33,41 +36,44 @@ const handleSubmit = async (previousState: unknown, formData: FormData) => {
   if (!url) {
     return { error: 'Url is required.' };
   }
-  const affirmation = await addAffirmation(uid, name, url);
+
+  if (!url.includes('unsplash' || 'fkodama')) {
+    return { error: 'Image URL should be sourced from Unsplash.' };
+  }
+
+  const affirmation = await addVisualBoardItem(uid, name, url);
   if (!affirmation) {
     return { error: 'Something got wrong. 🚨 Try again.' };
   }
-  return { message: 'Added 🎉' };
+
+  const newAffirmations = await getVisualBoardItem(uid);
+  return {
+    message: 'Added 🎉',
+    newAffirmations
+  };
 };
 
-export default function Affirmation({
-  firstName,
+export default function VisionBoard({
   uid,
   affirmations
 }: {
-  firstName: string;
   uid: string;
-  affirmations: AffirmationProps[];
+  affirmations: VisualBoardItem[];
 }) {
   const [openAction, setOpenAction] = useState(false);
+  const [board, setBoard] = useState<VisualBoardItem[]>(affirmations);
   const [data, action, isPending] = useActionState(handleSubmit, undefined);
 
-  //   const handleDeleteItem = async (id: string) => {
-  //     const success = await deleteAffirmations(id);
-  //     if (success) {
-  //       setAllItems(allItems.filter((item) => item.id !== id));
-  //     }
-  //   };
+  useEffect(() => {
+    // setBoard(data.newAffirmations || board);
+  }, [data]);
 
-  //   <div>
-  //   <p className="text-lg font-semibold w-[30ch]">
-  //     {/* {`${firstName}, enter the name of your goal and a picture to make it real.`}
-  //     {`${firstName}, enter the name of your goal and a picture to make it real.`} */}
-  //     {/* “Whatever the mind can conceive and believe, it can achieve.” –
-  //     Napoleon Hill */}
-  //     Set Your Goal and Visualize
-  //   </p>
-  // </div>
+  const handleDeleteItem = (id: string) => {
+    const success = use(deleteVisualBoardItem(id));
+    if (success) {
+      setBoard(board.filter((item) => item.id !== id));
+    }
+  };
 
   return (
     <Card>
@@ -173,66 +179,50 @@ export default function Affirmation({
         </AnimatePresence>
         {/* ----------------------- First Column ----------------------- */}
         <div className="flex justify-between gap-8 mb-4 w-full">
-          {/* <div className="flex flex-col w-1/3 gap-4">
-            <p className="text-lg font-semibold">
-              Set Your Goal and Visualize
-            </p>
-            <form className="w-full" action={action}>
-              <div className="flex items-center gap-2">
-                <Input placeholder="Affirmation's Name" id="name" name="name" />
-                <Input placeholder="Url" id="url" name="url" />
-                <Input
-                  id="uid"
-                  name="uid"
-                  value={uid}
-                  readOnly
-                  className="hidden"
-                />
-                <Button type="submit" disabled={isPending}>
-                  {isPending ? 'Adding...' : 'Add Your Desire'}
-                </Button>
-                {data?.error && (
-                  <span className="text-white bg-red-500 px-2 py-1">
-                    {data?.error}
-                  </span>
-                )}
-                {data?.message && (
-                  <span className="text-white bg-green-500 px-2 py-1">
-                    {data?.message}
-                  </span>
-                )}
-              </div>
-            </form>
-          </div> */}
+          {/* Nothing */}
         </div>
 
-        <div className="flex flex-wrap">
-          {affirmations?.map((affirmation) => (
-            <div key={affirmation.id}>
+        <div className="flex flex-wrap relative">
+          {board.map((item: VisualBoardItem) => (
+            <div key={item.id}>
               <div className="relative group">
                 <Image
-                  src={affirmation.url}
+                  src={item.url}
                   width={150}
                   height={150}
-                  alt={`Picture of ${affirmation.name}`}
-                  className="object-cover h-64 w-64 group-hover:opacity-100"
+                  alt={`Picture of ${item.name}`}
+                  className="object-cover h-60 w-60 group-hover:opacity-100"
                 />
-                {/* <p className="absolute bottom-2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-xl font-semibold bg-white px-4 border -skew-x-6 shadow-[0_0px_0px_0px_inset,#000_-5px_5px_0_-1px,#000_-5px_5px]"> */}
                 <p
-                  className={`${kumbh_sans.className} text-white uppercase font-bold text-md leading-none absolute bottom-2 left-1/2 -translate-x-1/2 -translate-y-1/2`}
+                  className={`${kumbh_sans.className} text-white text-center uppercase font-bold text-md leading-none absolute bottom-2 left-1/2 -translate-x-1/2 -translate-y-1/2 drop-shadow-lg`}
                 >
-                  {affirmation.name}
+                  {item.name}
                 </p>
+                <Button
+                  className="absolute top-2 right-2 opacity-0 group-hover:opacity-100"
+                  variant={'link'}
+                  onClick={handleDeleteItem(item.id)}
+                >
+                  <Trash2 size={24} strokeWidth={1.8} color="#fff" />
+                </Button>
                 <Button
                   className="absolute top-2 left-2 opacity-0 group-hover:opacity-100"
                   variant={'link'}
-                  onClick={() => deleteAffirmations(affirmation.id)}
+                  // onClick={() => selectAffirmations(affirmation.id)}
                 >
-                  <Trash2 size={32} strokeWidth={1.4} color="#fff" />
+                  <Check size={24} strokeWidth={1.8} color="#fff" />
                 </Button>
               </div>
             </div>
           ))}
+          <div>
+            <p className="absolute bottom-10 text-center right-1/2 translate-x-1/2 text-lg w-[70ch] px-10 py-2 bg-white border shadow-md">
+              <span className="italic mr-4">
+                “Whatever the mind can conceive and believe, it can achieve.”
+              </span>
+              – Napoleon Hill
+            </p>
+          </div>
         </div>
       </CardContent>
     </Card>

@@ -1,8 +1,8 @@
 import { auth } from '@/lib/auth';
-import Affirmation from './affirmation';
+import VisionBoard from './vision-board';
 import { getAffirmations } from '@/lib/actions';
 
-export default async function AffirmationPage() {
+export default async function VisionBoardPage() {
   const session = await auth();
   const uid = session?.user?.email;
   const firstName = session?.user?.name?.split(' ')[0];
@@ -11,11 +11,7 @@ export default async function AffirmationPage() {
   return (
     <>
       {affirmations && uid && firstName && (
-        <Affirmation
-          firstName={firstName}
-          uid={uid}
-          affirmations={affirmations}
-        />
+        <VisionBoard uid={uid} affirmations={affirmations} />
       )}
     </>
   );
