@@ -10,7 +10,6 @@ export default async function AffirmationPage() {
 
   return (
     <>
-      Hello!
       {affirmations && uid && firstName && (
         <Affirmation
           firstName={firstName}
