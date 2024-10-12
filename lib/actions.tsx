@@ -177,7 +177,7 @@ export async function addVisualBoardItem(
   }
 }
 
-export async function getVisualBoardItem(uid: string) {
+export async function getVisualBoardItems(uid: string) {
   try {
     const item = await prisma.visualBoardItem.findMany({
       where: {

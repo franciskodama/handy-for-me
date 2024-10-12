@@ -16,18 +16,18 @@ import {
 import { use, useActionState, useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Check, CircleHelp, Trash2 } from 'lucide-react';
-import ExplanationAffirmation from './explanation-vision-board';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { VisualBoardItem } from '@/lib/types';
 import {
   addVisualBoardItem,
   deleteVisualBoardItem,
-  getVisualBoardItem
+  getVisualBoardItems
 } from '@/lib/actions';
 import { barlow, kumbh_sans } from '@/app/ui/fonts';
 import Link from 'next/link';
 import Image from 'next/image';
+import ExplanationVisionBoard from './explanation-vision-board';
 
 const handleSubmit = async (previousState: unknown, formData: FormData) => {
   const name = formData.get('name') as string;
@@ -41,31 +41,33 @@ const handleSubmit = async (previousState: unknown, formData: FormData) => {
     return { error: 'Image URL should be sourced from Unsplash.' };
   }
 
-  const affirmation = await addVisualBoardItem(uid, name, url);
-  if (!affirmation) {
+  const visualBoardItem = await addVisualBoardItem(uid, name, url);
+  if (!visualBoardItem) {
     return { error: 'Something got wrong. 🚨 Try again.' };
   }
 
-  const newAffirmations = await getVisualBoardItem(uid);
+  const newVisualBoardItem = await getVisualBoardItems(uid);
   return {
     message: 'Added 🎉',
-    newAffirmations
+    newVisualBoardItem
   };
 };
 
 export default function VisionBoard({
   uid,
-  affirmations
+  visualBoard
 }: {
   uid: string;
-  affirmations: VisualBoardItem[];
+  visualBoard: VisualBoardItem[];
 }) {
   const [openAction, setOpenAction] = useState(false);
-  const [board, setBoard] = useState<VisualBoardItem[]>(affirmations);
+  const [board, setBoard] = useState<VisualBoardItem[]>(visualBoard);
   const [data, action, isPending] = useActionState(handleSubmit, undefined);
 
   useEffect(() => {
-    // setBoard(data.newAffirmations || board);
+    if (data?.newVisualBoardItem && Array.isArray(data.newVisualBoardItem)) {
+      setBoard(data.newVisualBoardItem as VisualBoardItem[]);
+    }
   }, [data]);
 
   const handleDeleteItem = (id: string) => {
@@ -172,15 +174,13 @@ export default function VisionBoard({
               exit={{ opacity: 0, scale: 0.5, transition: { duration: 0.2 } }}
             >
               <div className="mb-12">
-                <ExplanationAffirmation setOpenAction={setOpenAction} />
+                <ExplanationVisionBoard setOpenAction={setOpenAction} />
               </div>
             </motion.div>
           ) : null}
         </AnimatePresence>
-        {/* ----------------------- First Column ----------------------- */}
-        <div className="flex justify-between gap-8 mb-4 w-full">
-          {/* Nothing */}
-        </div>
+
+        {/* -------------------------------------------------------------- */}
 
         <div className="flex flex-wrap relative">
           {board.map((item: VisualBoardItem) => (
@@ -194,34 +194,37 @@ export default function VisionBoard({
                   className="object-cover h-60 w-60 group-hover:opacity-100"
                 />
                 <p
-                  className={`${kumbh_sans.className} text-white text-center uppercase font-bold text-md leading-none absolute bottom-2 left-1/2 -translate-x-1/2 -translate-y-1/2 drop-shadow-lg`}
+                  // className={`${kumbh_sans.className} text-white text-center uppercase font-bold text-md leading-none absolute bottom-2 left-1/2 -translate-x-1/2 -translate-y-1/2 drop-shadow-lg`}
+                  className={`${kumbh_sans.className} bg-white text-center uppercase text-md leading-none absolute bottom-0 left-2 px-2 py-1`}
                 >
                   {item.name}
                 </p>
                 <Button
                   className="absolute top-2 right-2 opacity-0 group-hover:opacity-100"
                   variant={'link'}
-                  onClick={handleDeleteItem(item.id)}
+                  onClick={() => handleDeleteItem(item.id)}
                 >
-                  <Trash2 size={24} strokeWidth={1.8} color="#fff" />
+                  <Trash2 size={18} strokeWidth={1.8} color="#fff" />
                 </Button>
                 <Button
                   className="absolute top-2 left-2 opacity-0 group-hover:opacity-100"
                   variant={'link'}
                   // onClick={() => selectAffirmations(affirmation.id)}
                 >
-                  <Check size={24} strokeWidth={1.8} color="#fff" />
+                  <Check size={18} strokeWidth={1.8} color="#fff" />
                 </Button>
               </div>
             </div>
           ))}
           <div>
-            <p className="absolute bottom-10 text-center right-1/2 translate-x-1/2 text-lg w-[70ch] px-10 py-2 bg-white border shadow-md">
-              <span className="italic mr-4">
+            <div className="flex flex-col gap-1 absolute text-left bottom-10 left-10 text-lg">
+              <p className=" bg-white px-2 py-1">
                 “Whatever the mind can conceive and believe, it can achieve.”
-              </span>
-              – Napoleon Hill
-            </p>
+              </p>
+              <p className="text-sm font-bold bg-white px-2 py-1 w-28">
+                – Napoleon Hill
+              </p>
+            </div>
           </div>
         </div>
       </CardContent>
