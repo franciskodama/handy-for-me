@@ -2,7 +2,7 @@
 
 import { v4 } from 'uuid';
 import { prisma } from './prisma';
-import { AffirmationProps, SpinItem, SpinList } from './types';
+import { SpinItem, SpinList } from './types';
 
 export async function addUser(uid: string, name: string, avatar: string) {
   try {
@@ -154,19 +154,20 @@ export async function selectionSpinItem(id: string) {
   }
 }
 
-export async function addAffirmation(
+export async function addVisualBoardItem(
   uid: string,
   name: string,
   url: string
-): Promise<AffirmationProps | false> {
+) {
   try {
-    const item = await prisma.affirmation.create({
+    const item = await prisma.visualBoardItem.create({
       data: {
         id: v4(),
         createdAt: new Date(),
         uid,
-        name,
-        url
+        name: name || '',
+        url,
+        done: false
       }
     });
     return item;
@@ -176,11 +177,9 @@ export async function addAffirmation(
   }
 }
 
-export async function getAffirmations(
-  uid: string
-): Promise<AffirmationProps[] | false> {
+export async function getVisualBoardItems(uid: string) {
   try {
-    const item = await prisma.affirmation.findMany({
+    const item = await prisma.visualBoardItem.findMany({
       where: {
         uid
       }
@@ -192,9 +191,9 @@ export async function getAffirmations(
   }
 }
 
-export async function deleteAffirmations(id: string) {
+export async function deleteVisualBoardItem(id: string) {
   try {
-    await prisma.affirmation.delete({
+    await prisma.visualBoardItem.delete({
       where: {
         id
       }
@@ -203,5 +202,22 @@ export async function deleteAffirmations(id: string) {
   } catch (error) {
     console.log(error);
     return false;
+  }
+}
+
+export async function setVisualBoardItemDone(id: string, selection: boolean) {
+  try {
+    const user = await prisma.visualBoardItem.update({
+      where: {
+        id
+      },
+      data: {
+        done: selection
+      }
+    });
+    return user;
+  } catch (error) {
+    console.error('Error adding user:', error);
+    return null;
   }
 }

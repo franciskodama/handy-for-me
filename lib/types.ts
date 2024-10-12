@@ -21,10 +21,10 @@ export type SpinItem = {
   selected: boolean;
 };
 
-export type AffirmationProps = {
+export type VisualBoardItem = {
   id: string;
   createdAt: Date;
   uid: string;
-  name: string;
+  name?: string;
   url: string;
 };

@@ -52,7 +52,7 @@ export function DesktopNav() {
           <BookA className="h-5 w-5" />
         </NavItem>
 
-        <NavItem href="/affirmation" label="Affirmation">
+        <NavItem href="/vision-board" label="Visual Board">
           <Grid3x3 className="h-5 w-5" />
         </NavItem>
 

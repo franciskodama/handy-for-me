@@ -18,10 +18,26 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: 'unsplash.com'
+      },
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com'
+      },
+      {
+        protocol: 'https',
+        hostname: 'plus.unsplash.com'
+      },
+      {
+        protocol: 'https',
+        hostname: 'fkodama.com'
+      },
+      {
+        protocol: 'https',
+        hostname: 'www.fkodama.com'
       }
+
     ]
   }
 };
 
 module.exports = nextConfig;
-

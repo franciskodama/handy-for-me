@@ -2,6 +2,14 @@
 // Google Cloud Credentials: https://console.cloud.google.com/apis/credentials
 
 // TODO: WORKING ON + FAST
+// Affirmation: Accomplished Goals can be checked
+// Affirmation: Random Sort each time that mounts
+// Affirmation: Repeates images if there is no enough images
+// Affirmation: check if the image comes from unsplash
+// Affirmation: refresh button or refresh automatically (state)
+// Responsivity
+// Bug on Random Questions: until restart, the buttons to start need to be disabled
+// Bug on Random Questions: after restart, the timer didn't restart even though the time was selected
 // Auth in Production as well!
 // Spin: How to delete a list?
 // Spin: Titles and emojis

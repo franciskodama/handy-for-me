@@ -64,7 +64,7 @@ export default function LetterLeap({ name }: { name: string }) {
                       setOpenAction(true);
                     }}
                   >
-                    <CircleHelp size={22} strokeWidth={1.6} />
+                    <CircleHelp size={32} strokeWidth={1.4} />
                   </TooltipTrigger>
                   <TooltipContent>
                     <p className="text-primary ml-2 capitalize font-light">
