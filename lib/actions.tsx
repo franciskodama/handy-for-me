@@ -207,7 +207,7 @@ export async function deleteVisualBoardItem(id: string) {
 
 export async function setVisualBoardItemDone(id: string, selection: boolean) {
   try {
-    const user = await prisma.visualBoardItem.update({
+    const check = await prisma.visualBoardItem.update({
       where: {
         id
       },
@@ -215,9 +215,9 @@ export async function setVisualBoardItemDone(id: string, selection: boolean) {
         done: selection
       }
     });
-    return user;
+    return check;
   } catch (error) {
-    console.error('Error adding user:', error);
+    console.error('Error setting check to the item:', error);
     return null;
   }
 }

@@ -1,5 +1,11 @@
 'use client';
 
+import Link from 'next/link';
+import Image from 'next/image';
+import { AnimatePresence, motion } from 'framer-motion';
+import { Bomb, Check, CircleHelp, Trash2 } from 'lucide-react';
+import { useActionState, useEffect, useState } from 'react';
+
 import {
   Card,
   CardContent,
@@ -13,44 +19,79 @@ import {
   TooltipProvider,
   TooltipTrigger
 } from '@/components/ui/tooltip';
-import { use, useActionState, useEffect, useState } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
-import { Check, CircleHelp, Trash2 } from 'lucide-react';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger
+} from '@/components/ui/alert-dialog';
+import { VisualBoardItem } from '@/lib/types';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { VisualBoardItem } from '@/lib/types';
 import {
   addVisualBoardItem,
   deleteVisualBoardItem,
-  getVisualBoardItems
+  getVisualBoardItems,
+  setVisualBoardItemDone
 } from '@/lib/actions';
 import { barlow, kumbh_sans } from '@/app/ui/fonts';
-import Link from 'next/link';
-import Image from 'next/image';
 import ExplanationVisionBoard from './explanation-vision-board';
+import { toast } from '@/hooks/use-toast';
 
 const handleSubmit = async (previousState: unknown, formData: FormData) => {
   const name = formData.get('name') as string;
   const url = formData.get('url') as string;
   const uid = formData.get('uid') as string;
   if (!url) {
-    return { error: 'Url is required.' };
+    toast({
+      title: 'URL is required!',
+      description: 'And the image URL should be sourced from Unsplash, ok?',
+      variant: 'destructive'
+    });
   }
 
-  if (!url.includes('unsplash' || 'fkodama')) {
-    return { error: 'Image URL should be sourced from Unsplash.' };
+  if (!url.includes('unsplash') && !url.includes('fkodama')) {
+    toast({
+      title: 'URL not valid!',
+      description: 'Image URL should be sourced from Unsplash.',
+      variant: 'destructive'
+    });
+    return;
   }
 
   const visualBoardItem = await addVisualBoardItem(uid, name, url);
   if (!visualBoardItem) {
-    return { error: 'Something got wrong. 🚨 Try again.' };
+    toast({
+      title: 'Ops...',
+      description: 'Something got wrong. 🚨 Try again.',
+      variant: 'destructive'
+    });
+  } else {
+    toast({
+      title: 'URL added successfully! 🎉',
+      description: 'You have one more vision board item to conquer.',
+      variant: 'success'
+    });
   }
-
   const newVisualBoardItem = await getVisualBoardItems(uid);
+
   return {
-    message: 'Added 🎉',
     newVisualBoardItem
   };
+};
+
+const randomSortVisualBoard = (visualBoard: VisualBoardItem[]) => {
+  const shuffledBoard = [...visualBoard];
+  for (let i = shuffledBoard.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffledBoard[i], shuffledBoard[j]] = [shuffledBoard[j], shuffledBoard[i]];
+  }
+  return shuffledBoard;
 };
 
 export default function VisionBoard({
@@ -61,8 +102,14 @@ export default function VisionBoard({
   visualBoard: VisualBoardItem[];
 }) {
   const [openAction, setOpenAction] = useState(false);
-  const [board, setBoard] = useState<VisualBoardItem[]>(visualBoard);
+  const [board, setBoard] = useState<VisualBoardItem[]>([]);
   const [data, action, isPending] = useActionState(handleSubmit, undefined);
+
+  useEffect(() => {
+    if (visualBoard) {
+      setBoard(randomSortVisualBoard(visualBoard));
+    }
+  }, []);
 
   useEffect(() => {
     if (data?.newVisualBoardItem && Array.isArray(data.newVisualBoardItem)) {
@@ -70,10 +117,52 @@ export default function VisionBoard({
     }
   }, [data]);
 
-  const handleDeleteItem = (id: string) => {
-    const success = use(deleteVisualBoardItem(id));
-    if (success) {
-      setBoard(board.filter((item) => item.id !== id));
+  const handleDeleteItem = async (item: VisualBoardItem) => {
+    try {
+      const success = await deleteVisualBoardItem(item.id);
+      if (success) {
+        setBoard(board.filter((el) => el.id !== item.id));
+      }
+      toast({
+        title: 'Vision Board Item gone!',
+        description: `The ${item.name} has been successfully deleted.`,
+        variant: 'success'
+      });
+    } catch (error) {
+      console.error(error);
+      toast({
+        title: 'Error deleting Item! 🚨',
+        description: 'Something went wrong while deleting the Item.',
+        variant: 'destructive'
+      });
+    }
+  };
+
+  const handleCheck = async (item: VisualBoardItem) => {
+    try {
+      const success = await setVisualBoardItemDone(item.id, !item.done);
+      if (success) {
+        setBoard((prevBoard) =>
+          prevBoard.map((boardItem) =>
+            boardItem.id === item.id
+              ? { ...boardItem, done: !boardItem.done }
+              : boardItem
+          )
+        );
+      }
+      toast({
+        title: 'Vision Progress Updated! 🌟',
+        description: `"${item.name}" has been marked as ${item.done ? 'incomplete' : 'achieved'}. Keep pushing towards your dreams!`,
+        variant: 'success'
+      });
+    } catch (error) {
+      console.error(error);
+      toast({
+        title: 'Error changing Status! 🚨',
+        description:
+          'Something went wrong while changing the Status of this Item.',
+        variant: 'destructive'
+      });
     }
   };
 
@@ -125,16 +214,6 @@ export default function VisionBoard({
                 <Button variant={'outline'} type="submit" disabled={isPending}>
                   {isPending ? 'Adding...' : 'Add'}
                 </Button>
-                {data?.error && (
-                  <span className="text-white text-sm font-semibold bg-red-500 px-1 py-2 text-center w-[32ch]">
-                    {data?.error}
-                  </span>
-                )}
-                {data?.message && (
-                  <span className="text-white text-sm font-semibold bg-green-500 px-2 py-2 text-center w-[32ch]">
-                    {data?.message}
-                  </span>
-                )}
               </div>
             </form>
           </div>
@@ -180,8 +259,6 @@ export default function VisionBoard({
           ) : null}
         </AnimatePresence>
 
-        {/* -------------------------------------------------------------- */}
-
         <div className="flex flex-wrap relative">
           {board.map((item: VisualBoardItem) => (
             <div key={item.id}>
@@ -194,38 +271,95 @@ export default function VisionBoard({
                   className="object-cover h-60 w-60 group-hover:opacity-100"
                 />
                 <p
-                  // className={`${kumbh_sans.className} text-white text-center uppercase font-bold text-md leading-none absolute bottom-2 left-1/2 -translate-x-1/2 -translate-y-1/2 drop-shadow-lg`}
                   className={`${kumbh_sans.className} bg-white text-center uppercase text-md leading-none absolute bottom-0 left-2 px-2 py-1`}
                 >
                   {item.name}
                 </p>
+
+                {item.done ? (
+                  <>
+                    <div className="absolute bottom-0 left-0 opacity-70 h-60 w-60 bg-primary" />
+                    {/* <div className="absolute bottom-0 right-0 h-6 w-6">
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger className="text-sm"> */}
+                    <Check
+                      size={18}
+                      strokeWidth={1.8}
+                      className="absolute bottom-0 right-2 h-6 w-6 bg-green-500 text-white p-1 z-200"
+                    />
+                    {/* </TooltipTrigger>
+                          <TooltipContent>
+                            <p className="text-primary ml-2 capitalize font-light">
+                              Dream came true!
+                              <Goal size={18} strokeWidth={1.8} />
+                            </p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    </div> */}
+                  </>
+                ) : null}
+
+                {/* -------------------------------------------------------------- */}
+
+                <AlertDialog>
+                  <AlertDialogTrigger className="absolute top-0 right-2 opacity-0 group-hover:opacity-100 bg-white p-1">
+                    <Trash2 size={18} strokeWidth={1.8} color="#000" />
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle className="flex items-center gap-2">
+                        <Bomb size={24} strokeWidth={1.8} />
+                        Are you absolutely sure?
+                      </AlertDialogTitle>
+                      <AlertDialogDescription className="py-4">
+                        This will permanently delete the vision
+                        <span className="font-bold mx-1">{item.name}</span>
+                        from our servers.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel
+                        onClick={() => {
+                          toast({
+                            title: 'Operation Cancelled! ❌',
+                            description: `Phew! 😮‍💨 Crisis averted. You successfully cancelled the operation.`,
+                            variant: 'destructive'
+                          });
+                        }}
+                      >
+                        Cancel
+                      </AlertDialogCancel>
+                      <AlertDialogAction onClick={() => handleDeleteItem(item)}>
+                        Continue
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+
                 <Button
-                  className="absolute top-2 right-2 opacity-0 group-hover:opacity-100"
+                  className="absolute bottom-0 right-2 opacity-0 group-hover:opacity-100 h-6 bg-white p-1"
+                  onClick={() => handleCheck(item)}
                   variant={'link'}
-                  onClick={() => handleDeleteItem(item.id)}
                 >
-                  <Trash2 size={18} strokeWidth={1.8} color="#fff" />
-                </Button>
-                <Button
-                  className="absolute top-2 left-2 opacity-0 group-hover:opacity-100"
-                  variant={'link'}
-                  // onClick={() => selectAffirmations(affirmation.id)}
-                >
-                  <Check size={18} strokeWidth={1.8} color="#fff" />
+                  <Check size={18} strokeWidth={1.8} color="#000" />
                 </Button>
               </div>
             </div>
           ))}
-          <div>
-            <div className="flex flex-col gap-1 absolute text-left bottom-10 left-10 text-lg">
-              <p className=" bg-white px-2 py-1">
-                “Whatever the mind can conceive and believe, it can achieve.”
-              </p>
-              <p className="text-sm font-bold bg-white px-2 py-1 w-28">
-                – Napoleon Hill
-              </p>
+          {board.length > 3 && (
+            <div>
+              <div className="flex flex-col gap-1 absolute text-left bottom-10 left-10 text-lg">
+                <p className=" bg-white px-2 py-1">
+                  “Whatever the mind can conceive and believe, it can achieve.”
+                </p>
+                <p className="text-sm font-bold bg-white px-2 py-1 w-28">
+                  – Napoleon Hill
+                </p>
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </CardContent>
     </Card>

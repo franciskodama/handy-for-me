@@ -34,8 +34,11 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: 'www.fkodama.com'
+      },
+      {
+        protocol: 'http',
+        hostname: 'localhost:3000'
       }
-
     ]
   }
 };

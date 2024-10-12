@@ -21,6 +21,7 @@ import { DashboardBreadcrumb } from './header/breadcrumb';
 import { SearchInput } from './header/search';
 import { MobileNav } from './nav/nav-mobile';
 import Greeting from './header/greeting';
+import { Toaster } from '@/components/ui/toaster';
 
 export default function DashboardLayout({
   children
@@ -45,6 +46,7 @@ export default function DashboardLayout({
           </header>
           <main className="grid flex-1 items-start gap-2 p-4 sm:px-6 sm:py-0 md:gap-4">
             {children}
+            <Toaster />
           </main>
         </div>
         {/* <Analytics /> */}
