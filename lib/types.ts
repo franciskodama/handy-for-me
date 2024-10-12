@@ -27,4 +27,5 @@ export type VisualBoardItem = {
   uid: string;
   name?: string;
   url: string;
+  done: boolean;
 };
