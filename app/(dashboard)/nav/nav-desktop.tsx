@@ -15,7 +15,8 @@ import {
   RefreshCw,
   BookA,
   Dices,
-  Ghost
+  Ghost,
+  WholeWord
 } from 'lucide-react';
 import Image from 'next/image';
 
@@ -40,8 +41,16 @@ export function DesktopNav() {
           <Home className="h-5 w-5" />
         </NavItem>
 
+        <NavItem href="/vision-board" label="Vision Board">
+          <Grid3x3 className="h-5 w-5" />
+        </NavItem>
+
         <NavItem href="/spin" label="Spin Magic">
           <RefreshCw className="h-5 w-5" />
+        </NavItem>
+
+        <NavItem href="/my-words" label="My Words">
+          <WholeWord className="h-5 w-5" />
         </NavItem>
 
         <NavItem href="/random-question" label="Random Questions">
@@ -50,10 +59,6 @@ export function DesktopNav() {
 
         <NavItem href="/letter-leap" label="Letter Leap">
           <BookA className="h-5 w-5" />
-        </NavItem>
-
-        <NavItem href="/vision-board" label="Visual Board">
-          <Grid3x3 className="h-5 w-5" />
         </NavItem>
 
         {/* <NavItem href="/ai" label="Artificial Intelligence">
