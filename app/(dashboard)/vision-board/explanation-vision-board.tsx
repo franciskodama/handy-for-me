@@ -1,18 +1,8 @@
 'use client';
 
-import {
-  Brain,
-  Goal,
-  HandHelping,
-  Lightbulb,
-  Settings,
-  Snail,
-  Trash2,
-  X
-} from 'lucide-react';
+import { Brain, Goal, Settings, X } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
 import Link from 'next/link';
 
 export default function ExplanationVisionBoard({
