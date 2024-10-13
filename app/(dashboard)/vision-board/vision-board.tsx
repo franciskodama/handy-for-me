@@ -334,11 +334,11 @@ export default function VisionBoard({
             </div>
           ))}
         </div>
-        <div className="flex flex-col gap-1 text-right absolute bottom-10 right-10 text-lg">
-          <p className=" bg-white px-2 py-1">
+        <div className="flex flex-col gap-1 items-end text-center absolute bottom-10 right-10 text-xl text-white">
+          <p className="bg-primary px-4 py-1">
             “Whatever the mind can conceive and believe, it can achieve.”
           </p>
-          <p className="text-sm font-bold bg-white px-2 py-1 w-28">
+          <p className="text-base font-bold bg-primary px-2 py-1 w-32">
             – Napoleon Hill
           </p>
         </div>
