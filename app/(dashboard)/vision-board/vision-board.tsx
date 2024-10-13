@@ -241,9 +241,9 @@ export default function VisionBoard({
             <div />
           )}
         </CardTitle>
-        <CardDescription></CardDescription>
+        {/* <CardDescription></CardDescription> */}
       </CardHeader>
-      <CardContent>
+      <CardContent className="relative p-10 pb-40">
         <AnimatePresence>
           {openAction ? (
             <motion.div
@@ -259,7 +259,7 @@ export default function VisionBoard({
           ) : null}
         </AnimatePresence>
 
-        <div className="flex flex-wrap relative">
+        <div className="flex flex-wrap gap-[1px]">
           {board.map((item: VisualBoardItem) => (
             <div key={item.id}>
               <div className="relative group">
@@ -279,29 +279,14 @@ export default function VisionBoard({
                 {item.done ? (
                   <>
                     <div className="absolute bottom-0 left-0 opacity-70 h-60 w-60 bg-primary" />
-                    {/* <div className="absolute bottom-0 right-0 h-6 w-6">
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger className="text-sm"> */}
+
                     <Check
                       size={18}
                       strokeWidth={1.8}
                       className="absolute bottom-0 right-2 h-6 w-6 bg-green-500 text-white p-1 z-200"
                     />
-                    {/* </TooltipTrigger>
-                          <TooltipContent>
-                            <p className="text-primary ml-2 capitalize font-light">
-                              Dream came true!
-                              <Goal size={18} strokeWidth={1.8} />
-                            </p>
-                          </TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
-                    </div> */}
                   </>
                 ) : null}
-
-                {/* -------------------------------------------------------------- */}
 
                 <AlertDialog>
                   <AlertDialogTrigger className="absolute top-0 right-2 opacity-0 group-hover:opacity-100 bg-white p-1">
@@ -348,18 +333,14 @@ export default function VisionBoard({
               </div>
             </div>
           ))}
-          {board.length > 3 && (
-            <div>
-              <div className="flex flex-col gap-1 absolute text-left bottom-10 left-10 text-lg">
-                <p className=" bg-white px-2 py-1">
-                  “Whatever the mind can conceive and believe, it can achieve.”
-                </p>
-                <p className="text-sm font-bold bg-white px-2 py-1 w-28">
-                  – Napoleon Hill
-                </p>
-              </div>
-            </div>
-          )}
+        </div>
+        <div className="flex flex-col gap-1 items-end text-center absolute bottom-10 right-10 text-xl text-white">
+          <p className="bg-primary px-4 py-1">
+            “Whatever the mind can conceive and believe, it can achieve.”
+          </p>
+          <p className="text-base font-bold bg-primary px-2 py-1 w-32">
+            – Napoleon Hill
+          </p>
         </div>
       </CardContent>
     </Card>
