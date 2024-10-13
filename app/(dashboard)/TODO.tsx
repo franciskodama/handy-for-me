@@ -2,11 +2,9 @@
 // Google Cloud Credentials: https://console.cloud.google.com/apis/credentials
 
 // TODO: WORKING ON + FAST
-// Affirmation: Accomplished Goals can be checked
-// Affirmation: Random Sort each time that mounts
+// Dahsboard: Pppulate the spaces, but think mobile first.
+// My Words: Strutcture...
 // Affirmation: Repeates images if there is no enough images
-// Affirmation: check if the image comes from unsplash
-// Affirmation: refresh button or refresh automatically (state)
 // Responsivity
 // Bug on Random Questions: until restart, the buttons to start need to be disabled
 // Bug on Random Questions: after restart, the timer didn't restart even though the time was selected
@@ -44,3 +42,7 @@
 // domain to vercel: https://porkbun.com/
 // Prisma get auth from github: https://authjs.dev/getting-started/adapters/prisma
 // Confetti for Spin Page: https://classic.yarnpkg.com/en/package/canvas-confetti
+// Affirmation: Accomplished Goals can be checked
+// Affirmation: Random Sort each time that mounts
+// Affirmation: check if the image comes from unsplash
+// Affirmation: refresh button or refresh automatically (state)
