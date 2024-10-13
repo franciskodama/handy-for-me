@@ -23,7 +23,7 @@ export default function UserCard({ user }: { user: User | undefined }) {
             </span>
             {`:)`}
           </p>
-          <p className="text-sm font-normal">Welcome to a Easier Life!</p>
+          <p className="text-sm font-normal">Welcome to an Easier Life!</p>
         </>
       ) : (
         <Image
