@@ -1,7 +1,5 @@
 'use client';
 
-import Link from 'next/link';
-import Image from 'next/image';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Bomb, Check, CircleHelp, Trash2 } from 'lucide-react';
 import { useActionState, useEffect, useState } from 'react';
@@ -30,42 +28,44 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger
 } from '@/components/ui/alert-dialog';
-import { VisualBoardItem } from '@/lib/types';
+import { BucketListItem } from '@/lib/types';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import {
-  addVisualBoardItem,
-  deleteVisualBoardItem,
-  getVisualBoardItems,
-  setVisualBoardItemDone
+  addBucketListItem,
+  deleteBucketListItem,
+  getBucketListItems,
+  setBucketListItemDone
 } from '@/lib/actions';
 import { barlow, kumbh_sans } from '@/app/ui/fonts';
 import { toast } from '@/hooks/use-toast';
 import ExplanationBucketList from './explanation-bucket-list';
 
 const handleSubmit = async (previousState: unknown, formData: FormData) => {
-  const name = formData.get('name') as string;
-  const url = formData.get('url') as string;
   const uid = formData.get('uid') as string;
-  if (!url) {
+  const name = formData.get('name') as string;
+  const category = formData.get('category') as string;
+
+  if (!name) {
     toast({
-      title: 'URL is required!',
-      description: 'And the image URL should be sourced from Unsplash, ok?',
+      title: 'Name is required!',
+      description: `No Adventure's name, no bucket list item.`,
       variant: 'destructive'
     });
   }
 
-  if (!url.includes('unsplash') && !url.includes('fkodama')) {
+  if (!category) {
     toast({
-      title: 'URL not valid!',
-      description: 'Image URL should be sourced from Unsplash.',
+      title: 'Category is required!',
+      description:
+        'The categories will give a nice overview of the Bucket List. Trust me! :)',
       variant: 'destructive'
     });
-    return;
   }
 
-  const visualBoardItem = await addVisualBoardItem(uid, name, url);
-  if (!visualBoardItem) {
+  const BucketListItem = await addBucketListItem(uid, name, category);
+  console.log('---  🚀 ---> | BucketListItem:', BucketListItem);
+  if (!BucketListItem) {
     toast({
       title: 'Ops...',
       description: 'Something got wrong. 🚨 Try again.',
@@ -73,58 +73,61 @@ const handleSubmit = async (previousState: unknown, formData: FormData) => {
     });
   } else {
     toast({
-      title: 'URL added successfully! 🎉',
-      description: 'You have one more vision board item to conquer.',
+      title: 'Category added successfully! 🎉',
+      description: 'You have one more item to conquer!',
       variant: 'success'
     });
   }
-  const newVisualBoardItem = await getVisualBoardItems(uid);
+  const newBucketListItem = await getBucketListItems(uid);
 
   return {
-    newVisualBoardItem
+    newBucketListItem
   };
 };
 
-const randomSortVisualBoard = (visualBoard: VisualBoardItem[]) => {
-  const shuffledBoard = [...visualBoard];
-  for (let i = shuffledBoard.length - 1; i > 0; i--) {
+const randomSortBucketList = (bucketList: BucketListItem[]) => {
+  const shuffledBucket = [...bucketList];
+  for (let i = shuffledBucket.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
-    [shuffledBoard[i], shuffledBoard[j]] = [shuffledBoard[j], shuffledBoard[i]];
+    [shuffledBucket[i], shuffledBucket[j]] = [
+      shuffledBucket[j],
+      shuffledBucket[i]
+    ];
   }
-  return shuffledBoard;
+  return shuffledBucket;
 };
 
 export default function BucketList({
   uid,
-  visualBoard
+  bucketList
 }: {
   uid: string;
-  visualBoard: VisualBoardItem[];
+  bucketList: BucketListItem[];
 }) {
   const [openAction, setOpenAction] = useState(false);
-  const [board, setBoard] = useState<VisualBoardItem[]>([]);
+  const [board, setBoard] = useState<BucketListItem[]>([]);
   const [data, action, isPending] = useActionState(handleSubmit, undefined);
 
   useEffect(() => {
-    if (visualBoard) {
-      setBoard(randomSortVisualBoard(visualBoard));
+    if (bucketList) {
+      setBoard(randomSortBucketList(bucketList));
     }
   }, []);
 
   useEffect(() => {
-    if (data?.newVisualBoardItem && Array.isArray(data.newVisualBoardItem)) {
-      setBoard(data.newVisualBoardItem as VisualBoardItem[]);
+    if (data?.newBucketListItem && Array.isArray(data.newBucketListItem)) {
+      setBoard(data.newBucketListItem as BucketListItem[]);
     }
   }, [data]);
 
-  const handleDeleteItem = async (item: VisualBoardItem) => {
+  const handleDeleteItem = async (item: BucketListItem) => {
     try {
-      const success = await deleteVisualBoardItem(item.id);
+      const success = await deleteBucketListItem(item.id);
       if (success) {
         setBoard(board.filter((el) => el.id !== item.id));
       }
       toast({
-        title: 'Vision Board Item gone!',
+        title: 'Item gone!',
         description: `The ${item.name} has been successfully deleted.`,
         variant: 'success'
       });
@@ -138,9 +141,9 @@ export default function BucketList({
     }
   };
 
-  const handleCheck = async (item: VisualBoardItem) => {
+  const handleCheck = async (item: BucketListItem) => {
     try {
-      const success = await setVisualBoardItemDone(item.id, !item.done);
+      const success = await setBucketListItemDone(item.id, !item.done);
       if (success) {
         setBoard((prevBoard) =>
           prevBoard.map((boardItem) =>
@@ -166,42 +169,45 @@ export default function BucketList({
     }
   };
 
+  const rainbowCategories = createRainbowCategories(categories);
+  console.log('---  🚀 ---> | rainbowCategories:', rainbowCategories);
+
+  function getColorCode(category: string) {
+    const colorCode = rainbowCategories.find(
+      (item) => item.name === category
+    )?.colorCode;
+    console.log('---  🚀 ---> | colorCode:', colorCode);
+    return colorCode;
+  }
+
   return (
     <Card>
       <CardHeader>
         <CardTitle className="flex justify-between items-start mb-0">
           <div className="flex flex-col">
-            Vision Board
+            Bucket List
             <p
               className={`${barlow.className} text-sm font-normal lowercase mt-2`}
             >
-              <span className="uppercase">V</span>isualize your goals and turn
-              desires into reality.
+              <span className="uppercase">A</span>
+              dd, explore, and cross off your next adventure.
             </p>
           </div>
           <div className={`${barlow.className} flex gap-4 capitalize w-3/5`}>
             <form className="w-full" action={action}>
               <div className="flex items-start gap-2 font-normal">
                 <div className="flex flex-col w-full gap-1">
-                  <Input placeholder="Goal" id="name" name="name" />
+                  <Input placeholder="Adventure" id="name" name="name" />
                   <p className="text-xs ml-4 lowercase">
-                    <span className="uppercase">N</span>ame your goal in one
-                    word (optional).
+                    <span className="uppercase">N</span>ame your adventure in
+                    one word.
                   </p>
                 </div>
                 <div className="flex flex-col w-full gap-1">
-                  <Input placeholder="Url" id="url" name="url" />
+                  <Input placeholder="Category" id="category" name="category" />
                   <p className="text-xs ml-4 lowercase">
-                    <span className="uppercase">A</span>dd the URL of a picture
-                    from
-                    <Link
-                      href="https://unsplash.com/"
-                      target="_blank"
-                      className="mx-1 font-bold underline"
-                    >
-                      <span className="uppercase">U</span>nsplash
-                    </Link>
-                    that reflects your vision. *
+                    <span className="uppercase">C</span>
+                    hoose a category that best describes your adventure.
                   </p>
                 </div>
                 <Input
@@ -243,7 +249,7 @@ export default function BucketList({
         </CardTitle>
         {/* <CardDescription></CardDescription> */}
       </CardHeader>
-      <CardContent className="relative p-10 pb-40">
+      <CardContent>
         <AnimatePresence>
           {openAction ? (
             <motion.div
@@ -259,19 +265,14 @@ export default function BucketList({
           ) : null}
         </AnimatePresence>
 
-        <div className="flex flex-wrap gap-[1px]">
-          {board.map((item: VisualBoardItem) => (
+        <div className="flex flex-wrap gap-2 mt-12">
+          {board.map((item: BucketListItem) => (
             <div key={item.id}>
               <div className="relative group">
-                <Image
-                  src={item.url}
-                  width={150}
-                  height={150}
-                  alt={`Picture of ${item.name}`}
-                  className="object-cover h-60 w-60 group-hover:opacity-100"
-                />
+                {/* <p className="text-center text-xl text-white bg-primary px-4 py-1"> */}
+                {/* <p className="text-center text-xl text-white bg-[#ff5a00] px-4 py-1"> */}
                 <p
-                  className={`${kumbh_sans.className} bg-white text-center uppercase text-md leading-none absolute bottom-0 left-2 px-2 py-1`}
+                  className={`bg-[${getColorCode(item.category)}] text-center text-xl text-black px-4 py-1`}
                 >
                   {item.name}
                 </p>
@@ -289,7 +290,7 @@ export default function BucketList({
                 ) : null}
 
                 <AlertDialog>
-                  <AlertDialogTrigger className="absolute top-0 right-2 opacity-0 group-hover:opacity-100 bg-white p-1">
+                  <AlertDialogTrigger className="absolute bottom-0 left-0 opacity-0 group-hover:opacity-100 bg-white p-1">
                     <Trash2 size={18} strokeWidth={1.8} color="#000" />
                   </AlertDialogTrigger>
                   <AlertDialogContent>
@@ -299,7 +300,7 @@ export default function BucketList({
                         Are you absolutely sure?
                       </AlertDialogTitle>
                       <AlertDialogDescription className="py-4">
-                        This will permanently delete the vision
+                        This will permanently delete the adventure
                         <span className="font-bold mx-1">{item.name}</span>
                         from our servers.
                       </AlertDialogDescription>
@@ -324,7 +325,7 @@ export default function BucketList({
                 </AlertDialog>
 
                 <Button
-                  className="absolute bottom-0 right-2 opacity-0 group-hover:opacity-100 h-6 bg-white p-1"
+                  className="absolute bottom-0 right-0 opacity-0 group-hover:opacity-100 h-6 bg-white p-1"
                   onClick={() => handleCheck(item)}
                   variant={'link'}
                 >
@@ -334,32 +335,106 @@ export default function BucketList({
             </div>
           ))}
         </div>
-        <div className="flex flex-col gap-1 items-end text-center absolute bottom-10 right-10 text-xl text-white">
-          <p className="bg-primary px-4 py-1">
-            “Whatever the mind can conceive and believe, it can achieve.”
-          </p>
-          <p className="text-base font-bold bg-primary px-2 py-1 w-32">
-            – Napoleon Hill
-          </p>
-        </div>
       </CardContent>
     </Card>
   );
 }
 
-// shadow-[0_0px_0px_0px_inset,#000_-5px_5px]
+// include cities, states/provinces, or countries
+// put in a object with the name of the color and the code of the color
+const categories = [
+  'Cultural',
+  'Restaurant',
+  'Bar',
+  'Nature',
+  'Adventure',
+  'Historical',
+  'Shopping',
+  'Entertainment',
+  'Event',
+  'Landmark',
+  'Outdoor Activity',
+  'Wellness',
+  'Festival',
+  'Sport',
+  'Educational',
+  'Romantic',
+  'Nightlife'
+];
 
-// The conscious mind is like the navigator or captain at the bridge of a
-// ship. He directs the ship and signals orders to men in the engine room,
-// who in turn control all the boilers, instruments, gauges, etc. The men
-// in the engine room do not know where they are going; they follow orders.
-// They would go on the rocks if the man on the bridge issued faulty or
-// wrong instructions based on his findings with the compass, sextant, or
-// other instruments. The men in the engine room obey him because he is in
-// charge and issues orders, which are automatically obeyed. Members of the
-// crew do not talk back to the captain; they simply carry out orders. The
-// captain is the master of his ship, and his decrees are carried out.
-// Likewise, your conscious mind is the captain and the master of your
-// ship, which represents your body, environment, and all your affairs.
-// Your subconscious mind takes the orders you give it based upon what your
-// conscious mind believes and accepts as true.
+function createRainbowCategories(categories: string[]) {
+  // Sort the categories alphabetically
+  categories.sort();
+
+  // Calculate the number of categories
+  const numCategories = categories.length;
+
+  // Determine the color step for the rainbow effect
+  const colorStep = 360 / numCategories;
+
+  // Create an array to store the formatted categories
+  const rainbowCategories = [];
+
+  // Iterate over each category and create a formatted object
+  for (let i = 0; i < numCategories; i++) {
+    const categoryName = categories[i];
+    const hue = i * colorStep;
+    const saturation = 100;
+    const lightness = 50;
+
+    // Convert HSL color to RGB
+    const rgb = hslToRgb(hue, saturation, lightness);
+    const colorCode = `#${rgb.r.toString(16).padStart(2, '0')}${rgb.g.toString(16).padStart(2, '0')}${rgb.b.toString(16).padStart(2, '0')}`;
+
+    rainbowCategories.push({
+      name: categoryName,
+      color: `hsl(${hue}, ${saturation}%, ${lightness}%)`,
+      colorCode: colorCode
+    });
+  }
+
+  return rainbowCategories;
+}
+
+// Helper function to convert HSL to RGB
+function hslToRgb(h, s, l) {
+  s /= 100;
+  l /= 100;
+  const c = (1 - Math.abs(2 * l - 1)) * s;
+  const x = c * (1 - Math.abs(((h / 60) % 2) - 1));
+  const m = l - c / 2;
+
+  let r, g, b;
+
+  if (h < 60) {
+    r = c;
+    g = x;
+    b = 0;
+  } else if (h < 120) {
+    r = x;
+    g = c;
+    b = 0;
+  } else if (h < 180) {
+    r = 0;
+    g = c;
+    b = x;
+  } else if (h < 240) {
+    r = 0;
+    g = x;
+    b = c;
+  } else if (h < 300) {
+    r = x;
+    g = 0;
+    b = c;
+  } else {
+    r = c;
+    g = 0;
+    b = x;
+  }
+
+  r = Math.round((r + m) * 255);
+  g = Math.round((g + m) * 255);
+  b = Math.round((b + m) * 255);
+
+  return { r, g, b };
+}

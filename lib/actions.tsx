@@ -221,3 +221,71 @@ export async function setVisualBoardItemDone(id: string, selection: boolean) {
     return null;
   }
 }
+
+export async function addBucketListItem(
+  uid: string,
+  name: string,
+  category: string
+) {
+  try {
+    const item = await prisma.bucketListItem.create({
+      data: {
+        id: v4(),
+        createdAt: new Date(),
+        uid,
+        name,
+        category,
+        done: false
+      }
+    });
+    return item;
+  } catch (error) {
+    console.error('Error adding Bucket List item:', error);
+    return false;
+  }
+}
+
+export async function getBucketListItems(uid: string) {
+  try {
+    const item = await prisma.bucketListItem.findMany({
+      where: {
+        uid
+      }
+    });
+    return item;
+  } catch (error) {
+    console.error('Error getting Affirmations Array:', error);
+    return false;
+  }
+}
+
+export async function deleteBucketListItem(id: string) {
+  try {
+    await prisma.bucketListItem.delete({
+      where: {
+        id
+      }
+    });
+    return true;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+}
+
+export async function setBucketListItemDone(id: string, selection: boolean) {
+  try {
+    const check = await prisma.bucketListItem.update({
+      where: {
+        id
+      },
+      data: {
+        done: selection
+      }
+    });
+    return check;
+  } catch (error) {
+    console.error('Error setting check to the item:', error);
+    return null;
+  }
+}
