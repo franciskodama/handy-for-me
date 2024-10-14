@@ -2,8 +2,11 @@
 // Google Cloud Credentials: https://console.cloud.google.com/apis/credentials
 
 // TODO: WORKING ON + FAST
+// Thigns to do Frame list that you can cross what was done.
 // Dahsboard: Pppulate the spaces, but think mobile first.
 // My Words: Strutcture...
+// My Words: bg: https://codepen.io/learosema/pen/oNrmRKY
+// Kanban Panel for To do: https://www.youtube.com/watch?v=bwIs_eOe6Z8, https://www.youtube.com/watch?v=ERXS6CROWR4
 // Affirmation: Repeates images if there is no enough images
 // Responsivity
 // Bug on Random Questions: until restart, the buttons to start need to be disabled
