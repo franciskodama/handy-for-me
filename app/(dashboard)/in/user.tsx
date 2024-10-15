@@ -5,12 +5,10 @@ import Image from 'next/image';
 export default function UserCard({ user }: { user: User | undefined }) {
   return (
     <div className="flex flex-col items-center gap-2 relative">
-      {/* <div className="absolute -top-1 -left-50 rounded-full w-[110px] h-[110px] bg-red-500 -z-1" /> */}
       {user?.image ? (
         <>
           <Image
-            src={user.image}
-            // src="/avatar.png"
+            src={user.image || '/avatar.png'}
             width={100}
             height={100}
             alt="Avatar"

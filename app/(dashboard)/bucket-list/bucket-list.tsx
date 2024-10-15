@@ -12,6 +12,13 @@ import {
   CardTitle
 } from '@/components/ui/card';
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from '@/components/ui/select';
+import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
@@ -37,14 +44,22 @@ import {
   getBucketListItems,
   setBucketListItemDone
 } from '@/lib/actions';
-import { barlow, kumbh_sans } from '@/app/ui/fonts';
+import { barlow } from '@/app/ui/fonts';
 import { toast } from '@/hooks/use-toast';
 import ExplanationBucketList from './explanation-bucket-list';
+
+type Category = {
+  name: string;
+  color: string;
+  bgColor: string;
+  textColor: string;
+};
 
 const handleSubmit = async (previousState: unknown, formData: FormData) => {
   const uid = formData.get('uid') as string;
   const name = formData.get('name') as string;
   const category = formData.get('category') as string;
+  console.log('---  🚀 ---> | category:', category);
 
   if (!name) {
     toast({
@@ -64,7 +79,6 @@ const handleSubmit = async (previousState: unknown, formData: FormData) => {
   }
 
   const BucketListItem = await addBucketListItem(uid, name, category);
-  console.log('---  🚀 ---> | BucketListItem:', BucketListItem);
   if (!BucketListItem) {
     toast({
       title: 'Ops...',
@@ -85,16 +99,13 @@ const handleSubmit = async (previousState: unknown, formData: FormData) => {
   };
 };
 
-const randomSortBucketList = (bucketList: BucketListItem[]) => {
-  const shuffledBucket = [...bucketList];
-  for (let i = shuffledBucket.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [shuffledBucket[i], shuffledBucket[j]] = [
-      shuffledBucket[j],
-      shuffledBucket[i]
-    ];
-  }
-  return shuffledBucket;
+const sortBucketList = (bucketList: BucketListItem[]) => {
+  const sortedBucketList = bucketList.sort((a, b) => {
+    if (a.category < b.category) return -1;
+    if (a.category > b.category) return 1;
+    return 0;
+  });
+  return sortedBucketList;
 };
 
 export default function BucketList({
@@ -110,7 +121,7 @@ export default function BucketList({
 
   useEffect(() => {
     if (bucketList) {
-      setBoard(randomSortBucketList(bucketList));
+      setBoard(sortBucketList(bucketList));
     }
   }, []);
 
@@ -169,16 +180,20 @@ export default function BucketList({
     }
   };
 
-  const rainbowCategories = createRainbowCategories(categories);
-  console.log('---  🚀 ---> | rainbowCategories:', rainbowCategories);
+  function getColorCodes(category: string) {
+    const foundCategory = categories.find(
+      (item: any) => item.name === category
+    );
+    // console.log('---  🚀 ---> | foundCategory:', foundCategory);
+    const bgColorCode = foundCategory?.bgColor || '#000000';
+    const textColorCode = foundCategory?.textColor || '#000000';
 
-  function getColorCode(category: string) {
-    const colorCode = rainbowCategories.find(
-      (item) => item.name === category
-    )?.colorCode;
-    console.log('---  🚀 ---> | colorCode:', colorCode);
-    return colorCode;
-  }
+    // return `bg-[#${bgColorCode}] text-[${textColorCode}]`;
+    return { color: textColorCode; 
+      backgroundColor: bgColorCode  }
+
+  const test = getColorCodes('Cultural');
+  console.log('---  🚀 ---> | test Color:', test);
 
   return (
     <Card>
@@ -204,7 +219,20 @@ export default function BucketList({
                   </p>
                 </div>
                 <div className="flex flex-col w-full gap-1">
-                  <Input placeholder="Category" id="category" name="category" />
+                  <Select name="category">
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Category" id="category" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {categories.map((category: Category) => (
+                        <div key={category.name}>
+                          <SelectItem value={category.name}>
+                            {category.name}
+                          </SelectItem>
+                        </div>
+                      ))}
+                    </SelectContent>
+                  </Select>
                   <p className="text-xs ml-4 lowercase">
                     <span className="uppercase">C</span>
                     hoose a category that best describes your adventure.
@@ -247,7 +275,6 @@ export default function BucketList({
             <div />
           )}
         </CardTitle>
-        {/* <CardDescription></CardDescription> */}
       </CardHeader>
       <CardContent>
         <AnimatePresence>
@@ -269,14 +296,24 @@ export default function BucketList({
           {board.map((item: BucketListItem) => (
             <div key={item.id}>
               <div className="relative group">
-                {/* <p className="text-center text-xl text-white bg-primary px-4 py-1"> */}
-                {/* <p className="text-center text-xl text-white bg-[#ff5a00] px-4 py-1"> */}
-                <p
-                  className={`bg-[${getColorCode(item.category)}] text-center text-xl text-black px-4 py-1`}
-                >
-                  {item.name}
-                </p>
-
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <p
+                        // className={`text-center ${item.category && getColorCodes(item.category)} text-xl px-4 py-1`}
+                        className={`text-center text-xl px-4 py-1`}
+                        style={item.category && getColorCodes(item.category)}
+                      >
+                        {item.name}
+                      </p>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p className="text-primary ml-2 capitalize font-light">
+                        {item.category}
+                      </p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
                 {item.done ? (
                   <>
                     <div className="absolute bottom-0 left-0 opacity-70 h-60 w-60 bg-primary" />
@@ -340,26 +377,90 @@ export default function BucketList({
   );
 }
 
-// include cities, states/provinces, or countries
-// put in a object with the name of the color and the code of the color
 const categories = [
-  'Cultural',
-  'Restaurant',
-  'Bar',
-  'Nature',
-  'Adventure',
-  'Historical',
-  'Shopping',
-  'Entertainment',
-  'Event',
-  'Landmark',
-  'Outdoor Activity',
-  'Wellness',
-  'Festival',
-  'Sport',
-  'Educational',
-  'Romantic',
-  'Nightlife'
+  { name: 'Cultural', color: 'red', bgColor: 'FF0000', textColor: '#FFFFFF' },
+  {
+    name: 'Destinations',
+    color: 'orange',
+    bgColor: '#FF7F00',
+    textColor: '#FFFFFF'
+  },
+  {
+    name: 'Restaurant',
+    color: 'yellow',
+    bgColor: '#FFFF00',
+    textColor: '#000000'
+  },
+  { name: 'Bar', color: 'green', bgColor: '#008000', textColor: '#000000' },
+  { name: 'Nature', color: 'blue', bgColor: '#0000FF', textColor: '#FFFFFF' },
+  {
+    name: 'Adventure',
+    color: 'indigo',
+    bgColor: '#4B0082',
+    textColor: '#FFF'
+  },
+  {
+    name: 'Historical',
+    color: 'violet',
+    bgColor: '#EE82EE',
+    textColor: '#FFFFFF'
+  },
+  {
+    name: 'Shopping',
+    color: 'red',
+    bgColor: '#FF0000',
+    textColor: '#FFFFFF'
+  },
+  {
+    name: 'Entertainment',
+    color: 'orange',
+    bgColor: '#FF7F00',
+    textColor: '#FFFFFF'
+  },
+  { name: 'Event', color: 'yellow', bgColor: '#FFFF00', textColor: '#000000' },
+  {
+    name: 'Landmark',
+    color: 'green',
+    bgColor: '#00FF00',
+    textColor: '#000000'
+  },
+  {
+    name: 'Outdoor Activity',
+    color: 'blue',
+    bgColor: '#0000FF',
+    textColor: '#FFFFFF'
+  },
+  {
+    name: 'Wellness',
+    color: 'indigo',
+    bgColor: '#4B0082',
+    textColor: '#FFFFFF'
+  },
+  {
+    name: 'Festival',
+    color: 'violet',
+    bgColor: '#8B00FF',
+    textColor: '#FFFFFF'
+  },
+  { name: 'Sport', color: 'red', bgColor: '#FF0000', textColor: '#FFFFFF' },
+  {
+    name: 'Educational',
+    color: 'orange',
+    bgColor: '#FF7F00',
+    textColor: '#FFFFFF'
+  },
+  {
+    name: 'Romantic',
+    color: 'yellow',
+    bgColor: '#FFFF00',
+    textColor: '#000000'
+  },
+  {
+    name: 'Nightlife',
+    color: 'green',
+    bgColor: '#00FF00',
+    textColor: '#000000'
+  }
 ];
 
 function createRainbowCategories(categories: string[]) {
@@ -397,7 +498,7 @@ function createRainbowCategories(categories: string[]) {
 }
 
 // Helper function to convert HSL to RGB
-function hslToRgb(h, s, l) {
+function hslToRgb(h: number, s: number, l: number) {
   s /= 100;
   l /= 100;
   const c = (1 - Math.abs(2 * l - 1)) * s;
