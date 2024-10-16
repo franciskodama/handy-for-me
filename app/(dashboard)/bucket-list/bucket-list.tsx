@@ -311,18 +311,14 @@ export default function BucketList({
                 {item.done ? (
                   <>
                     <div className="absolute bottom-1/2 translate-y-[calc(50%+2px)] left-0 opacity-70 h-[2px] bg-primary w-full" />
-                    {/* <Check
-                      size={18}
-                      strokeWidth={1.8}
-                      className="absolute bottom-0 right-2 h-6 w-full bg-green-500 text-white p-1 z-100"
-                    /> */}
                   </>
                 ) : null}
 
                 <AlertDialog>
                   <AlertDialogTrigger
                     // className="absolute top-full left-1/2 -translate-x-[calc(50%-25px] translate-y-0 opacity-0 group-hover:opacity-100 p-1 z-200"
-                    className="absolute top-full right-0 translate-y-0 opacity-0 group-hover:opacity-100 p-1 z-200"
+                    className="absolute bottom-full right-0 translate-y-0 opacity-0 group-hover:opacity-100 p-1 z-200"
+                    // className="absolute bottom-0 left-full -translate-x-0 opacity-0 group-hover:opacity-100 p-1 z-200 border-2 border-primary"
                     style={getColorCodes(item.category)}
                   >
                     <Trash2 size={18} strokeWidth={1.8} color="#FFF" />
@@ -360,7 +356,8 @@ export default function BucketList({
 
                 <Button
                   // className="absolute bottom-full right-1/2 translate-x-50 -translate-y-0 opacity-0 group-hover:opacity-100 h-6 bg-white p-1 z-200"
-                  className="absolute top-full left-0 -translate-y-0 opacity-0 group-hover:opacity-100 h-6 bg-white p-1 z-200"
+                  className="absolute bottom-full left-0 -translate-y-0 opacity-0 group-hover:opacity-100 h-6 bg-white p-1 z-200"
+                  // className="absolute bottom-0 right-full translate-x-0 opacity-0 group-hover:opacity-100 h-6 bg-white p-1 z-50"
                   style={getColorCodes(item.category)}
                   onClick={() => handleCheck(item)}
                   variant={'link'}
