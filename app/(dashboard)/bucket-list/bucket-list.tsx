@@ -59,7 +59,15 @@ const handleSubmit = async (previousState: unknown, formData: FormData) => {
   const uid = formData.get('uid') as string;
   const name = formData.get('name') as string;
   const category = formData.get('category') as string;
-  console.log('---  🚀 ---> | category:', category);
+
+  if (name.length < 3) {
+    toast({
+      title: 'The name is too short!',
+      description: `The name should be at least 3 characters.`,
+      variant: 'destructive'
+    });
+    return;
+  }
 
   if (!name) {
     toast({
@@ -67,6 +75,7 @@ const handleSubmit = async (previousState: unknown, formData: FormData) => {
       description: `No Adventure's name, no bucket list item.`,
       variant: 'destructive'
     });
+    return;
   }
 
   if (!category) {
@@ -76,6 +85,7 @@ const handleSubmit = async (previousState: unknown, formData: FormData) => {
         'The categories will give a nice overview of the Bucket List. Trust me! :)',
       variant: 'destructive'
     });
+    return;
   }
 
   const BucketListItem = await addBucketListItem(uid, name, category);
@@ -321,7 +331,11 @@ export default function BucketList({
                     // className="absolute bottom-0 left-full -translate-x-0 opacity-0 group-hover:opacity-100 p-1 z-200 border-2 border-primary"
                     style={getColorCodes(item.category)}
                   >
-                    <Trash2 size={18} strokeWidth={1.8} color="#FFF" />
+                    <Trash2
+                      size={18}
+                      strokeWidth={1.8}
+                      color={getColorCodes(item.category).color}
+                    />
                   </AlertDialogTrigger>
                   <AlertDialogContent>
                     <AlertDialogHeader>
@@ -362,7 +376,11 @@ export default function BucketList({
                   onClick={() => handleCheck(item)}
                   variant={'link'}
                 >
-                  <Check size={18} strokeWidth={1.8} color="#FFF" />
+                  <Check
+                    size={18}
+                    strokeWidth={1.8}
+                    color={getColorCodes(item.category).color}
+                  />
                 </Button>
               </div>
             </div>
