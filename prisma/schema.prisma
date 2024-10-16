@@ -41,3 +41,13 @@ model VisualBoardItem {
   url       String
   done      Boolean
 }
+
+
+model BucketListItem {
+  id        String   @id @default(uuid()) @db.VarChar(255)
+  createdAt DateTime @default(now()) @db.Timestamp(6)
+  uid       String   
+  name      String   
+  category  String
+  done      Boolean
+}

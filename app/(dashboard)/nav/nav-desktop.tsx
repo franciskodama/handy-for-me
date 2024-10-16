@@ -16,7 +16,8 @@ import {
   BookA,
   Dices,
   Ghost,
-  WholeWord
+  WholeWord,
+  ListMinus
 } from 'lucide-react';
 import Image from 'next/image';
 
@@ -43,6 +44,10 @@ export function DesktopNav() {
 
         <NavItem href="/vision-board" label="Vision Board">
           <Grid3x3 className="h-5 w-5" />
+        </NavItem>
+
+        <NavItem href="/bucket-list" label="Bucket List">
+          <ListMinus className="h-5 w-5" />
         </NavItem>
 
         <NavItem href="/spin" label="Spin Magic">

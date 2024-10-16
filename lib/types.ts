@@ -29,3 +29,12 @@ export type VisualBoardItem = {
   url: string;
   done: boolean;
 };
+
+export type BucketListItem = {
+  id: string;
+  createdAt: Date;
+  uid: string;
+  name: string;
+  category: string;
+  done: boolean;
+};

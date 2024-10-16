@@ -2,12 +2,14 @@
 // Google Cloud Credentials: https://console.cloud.google.com/apis/credentials
 
 // TODO: WORKING ON + FAST
-// Affirmation: Accomplished Goals can be checked
-// Affirmation: Random Sort each time that mounts
-// Affirmation: Repeates images if there is no enough images
-// Affirmation: check if the image comes from unsplash
-// Affirmation: refresh button or refresh automatically (state)
 // Responsivity
+// Cities I've visited Feature
+// Thigns to do Frame list that you can cross what was done.
+// Dahsboard: Pppulate the spaces, but think mobile first.
+// My Words: Strutcture...
+// My Words: bg: https://codepen.io/learosema/pen/oNrmRKY
+// Kanban Panel for To do: https://www.youtube.com/watch?v=bwIs_eOe6Z8, https://www.youtube.com/watch?v=ERXS6CROWR4
+// Affirmation: Repeates images if there is no enough images
 // Bug on Random Questions: until restart, the buttons to start need to be disabled
 // Bug on Random Questions: after restart, the timer didn't restart even though the time was selected
 // Auth in Production as well!
@@ -44,3 +46,7 @@
 // domain to vercel: https://porkbun.com/
 // Prisma get auth from github: https://authjs.dev/getting-started/adapters/prisma
 // Confetti for Spin Page: https://classic.yarnpkg.com/en/package/canvas-confetti
+// Affirmation: Accomplished Goals can be checked
+// Affirmation: Random Sort each time that mounts
+// Affirmation: check if the image comes from unsplash
+// Affirmation: refresh button or refresh automatically (state)
