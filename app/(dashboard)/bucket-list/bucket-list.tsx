@@ -321,7 +321,7 @@ export default function BucketList({
                 {item.done ? (
                   <>
                     <div
-                      className="absolute bottom-1/2 translate-y-[calc(50%+2px)] left-0 opacity-70 h-[2px] bg-primary w-full"
+                      className="absolute bottom-1/2 translate-y-[calc(50%+2px)] left-0 opacity-70 h-[2px] w-full"
                       style={{
                         backgroundColor: getColorCodes(item.category).color
                       }}

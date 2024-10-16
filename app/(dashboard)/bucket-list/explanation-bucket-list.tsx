@@ -1,6 +1,6 @@
 'use client';
 
-import { Brain, Goal, Settings, X } from 'lucide-react';
+import { Brain, Gem, Goal, Settings, Telescope, X } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
@@ -30,20 +30,23 @@ export default function ExplanationBucketList({
         <AlertDescription className="relative text-sm flex items-start justify-between p-2">
           <div className="flex flex-col w-1/3 py-2 px-12">
             <div className="flex items-center gap-2 mb-4">
-              <Brain size={24} strokeWidth={1.6} />
-              <p className="text-lg font-bold">What is the Vision Board?</p>
+              <Telescope size={24} strokeWidth={1.6} />
+              <p className="text-lg font-bold">Explore & Achieve Your Goals </p>
             </div>
             <div className="flex flex-col gap-4 mb-4">
               <p>
-                The Vision Board is your personal space to visualize and focus
-                on your biggest goals. Inspired by Think and Grow Rich by
-                Napoleon Hill, it reinforces your desires through daily
-                visualization.
+                This feature lets you create a personalized list of places to
+                visit or things to do—whether it’s local hotspots or bucket list
+                adventures.
               </p>
               <p>
-                By regularly seeing your goals, you engage your subconscious
-                mind, strengthening your mental and emotional connection to your
-                dreams, keeping you motivated and on track.
+                Input the name of your goal (e.g., Notre-Dame Church, Japan,
+                Finnigan's Pub) and choose its category (Cultural, Destination,
+                Adventure, etc.).
+              </p>
+              <p>
+                Each category is color-coded for easy distinction, and you can
+                hover over any item to see its category.
               </p>
             </div>
           </div>
@@ -54,67 +57,38 @@ export default function ExplanationBucketList({
               <p className="text-lg font-bold">How to use</p>
             </div>
             <ul className="flex flex-col gap-4">
+              <li>- Enter the name of the place or goal.</li>
+              <li>- Choose a category to classify your entry</li>
+              <li>- Hover over an item to view its category.</li>
               <li>
-                <span className="font-semibold mr-1">
-                  1) Enter a goal name:
-                </span>
-                e.g., Job, House, Car, Health, etc.
-              </li>
-              <li>
-                <span className="font-semibold mr-1">
-                  2) Enter an Image Url:
-                </span>
-                Paste a URL from
-                <Link
-                  href="https://unsplash.com/"
-                  target="_blank"
-                  className="mx-1 underline"
-                >
-                  <span className="uppercase">U</span>nsplash
-                </Link>
-                that represents your vision
-                <span className="text-xs italic ml-1">
-                  (Only Unsplash images are accepted.)
-                </span>
-              </li>
-              <li>
-                <span className="font-semibold mr-1">3) Tap “Add”</span>
-                to instantly see your goal’s image in the gallery.
-              </li>
-              <li className="font-semibold mr-1">
-                4) Hover over an image:
-                <div className="flex flex-col gap-1 mt-2 ml-4 font-normal">
-                  <p>a) Check a goal when completed (can be unchecked).</p>
-                  <p>b) Delete a goal if no longer relevant.</p>
-                </div>
+                - Cross off goals you’ve accomplished, or delete them if they’re
+                no longer relevant.
               </li>
             </ul>
           </div>
 
           <div className="flex flex-col justify-between w-1/3 py-2 px-12">
             <div className="flex items-center gap-2 mb-4">
-              <Goal size={24} strokeWidth={1.6} />
-              <p className="text-lg font-bold">Benefits:</p>
+              <Gem size={24} strokeWidth={1.6} />
+              <p className="text-lg font-bold">The Perks:</p>
             </div>
             <ul className="flex flex-wrap gap-4">
-              <li className="font-semibold">
-                - Clarify Your Desires:{' '}
-                <span className="font-normal">
-                  Clearly define your goals with visual support.
-                </span>
+              <li>
+                - Keep track of your dream destinations and goals in one place,
+                ensuring you never forget them.
               </li>
-              <li className="font-semibold">
-                - Daily Motivation:{' '}
-                <span className="font-normal">
-                  Constantly remind yourself of what you’re working toward.
-                </span>
+              <li>
+                - Add new goals anytime you remember or discover a place you
+                want to visit.
               </li>
-              <li className="font-semibold">
-                - Strengthen Focus:{' '}
-                <span className="font-normal">
-                  Visualization encourages belief and action, key to success
-                  according to Napoleon Hill.
-                </span>
+              <li>
+                - Gain a sense of accomplishment by crossing off places you’ve
+                visited, while keeping them for future reference.
+              </li>
+
+              <li>
+                - Reflect on the memories and experiences you’ve achieved as
+                your list grows over time.
               </li>
             </ul>
             <Button
@@ -122,7 +96,7 @@ export default function ExplanationBucketList({
               className="capitalize mt-12 w-[26ch]"
               onClick={() => setOpenAction(false)}
             >
-              Add goals now!
+              Start Your Journey!
             </Button>
           </div>
           <button
