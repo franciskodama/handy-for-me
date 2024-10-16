@@ -184,16 +184,11 @@ export default function BucketList({
     const foundCategory = categories.find(
       (item: any) => item.name === category
     );
-    // console.log('---  🚀 ---> | foundCategory:', foundCategory);
     const bgColorCode = foundCategory?.bgColor || '#000000';
-    const textColorCode = foundCategory?.textColor || '#000000';
+    const textColorCode = foundCategory?.textColor || '#FFF';
 
-    // return `bg-[#${bgColorCode}] text-[${textColorCode}]`;
-    return { color: textColorCode; 
-      backgroundColor: bgColorCode  }
-
-  const test = getColorCodes('Cultural');
-  console.log('---  🚀 ---> | test Color:', test);
+    return { color: textColorCode, backgroundColor: bgColorCode };
+  }
 
   return (
     <Card>
@@ -300,9 +295,8 @@ export default function BucketList({
                   <Tooltip>
                     <TooltipTrigger>
                       <p
-                        // className={`text-center ${item.category && getColorCodes(item.category)} text-xl px-4 py-1`}
-                        className={`text-center text-xl px-4 py-1`}
-                        style={item.category && getColorCodes(item.category)}
+                        className="text-center text-xl px-4 py-1 font-semibold"
+                        style={getColorCodes(item.category)}
                       >
                         {item.name}
                       </p>
@@ -316,19 +310,22 @@ export default function BucketList({
                 </TooltipProvider>
                 {item.done ? (
                   <>
-                    <div className="absolute bottom-0 left-0 opacity-70 h-60 w-60 bg-primary" />
-
-                    <Check
+                    <div className="absolute bottom-1/2 translate-y-[calc(50%+2px)] left-0 opacity-70 h-[2px] bg-primary w-full" />
+                    {/* <Check
                       size={18}
                       strokeWidth={1.8}
-                      className="absolute bottom-0 right-2 h-6 w-6 bg-green-500 text-white p-1 z-200"
-                    />
+                      className="absolute bottom-0 right-2 h-6 w-full bg-green-500 text-white p-1 z-100"
+                    /> */}
                   </>
                 ) : null}
 
                 <AlertDialog>
-                  <AlertDialogTrigger className="absolute bottom-0 left-0 opacity-0 group-hover:opacity-100 bg-white p-1">
-                    <Trash2 size={18} strokeWidth={1.8} color="#000" />
+                  <AlertDialogTrigger
+                    // className="absolute top-full left-1/2 -translate-x-[calc(50%-25px] translate-y-0 opacity-0 group-hover:opacity-100 p-1 z-200"
+                    className="absolute top-full right-0 translate-y-0 opacity-0 group-hover:opacity-100 p-1 z-200"
+                    style={getColorCodes(item.category)}
+                  >
+                    <Trash2 size={18} strokeWidth={1.8} color="#FFF" />
                   </AlertDialogTrigger>
                   <AlertDialogContent>
                     <AlertDialogHeader>
@@ -362,11 +359,13 @@ export default function BucketList({
                 </AlertDialog>
 
                 <Button
-                  className="absolute bottom-0 right-0 opacity-0 group-hover:opacity-100 h-6 bg-white p-1"
+                  // className="absolute bottom-full right-1/2 translate-x-50 -translate-y-0 opacity-0 group-hover:opacity-100 h-6 bg-white p-1 z-200"
+                  className="absolute top-full left-0 -translate-y-0 opacity-0 group-hover:opacity-100 h-6 bg-white p-1 z-200"
+                  style={getColorCodes(item.category)}
                   onClick={() => handleCheck(item)}
                   variant={'link'}
                 >
-                  <Check size={18} strokeWidth={1.8} color="#000" />
+                  <Check size={18} strokeWidth={1.8} color="#FFF" />
                 </Button>
               </div>
             </div>
@@ -378,51 +377,62 @@ export default function BucketList({
 }
 
 const categories = [
-  { name: 'Cultural', color: 'red', bgColor: 'FF0000', textColor: '#FFFFFF' },
-  {
-    name: 'Destinations',
-    color: 'orange',
-    bgColor: '#FF7F00',
-    textColor: '#FFFFFF'
-  },
-  {
-    name: 'Restaurant',
-    color: 'yellow',
-    bgColor: '#FFFF00',
-    textColor: '#000000'
-  },
-  { name: 'Bar', color: 'green', bgColor: '#008000', textColor: '#000000' },
-  { name: 'Nature', color: 'blue', bgColor: '#0000FF', textColor: '#FFFFFF' },
   {
     name: 'Adventure',
-    color: 'indigo',
-    bgColor: '#4B0082',
-    textColor: '#FFF'
+    color: 'red',
+    bgColor: '#FF0000',
+    textColor: '#FFFF00'
+  },
+  { name: 'Bar', color: 'orange', bgColor: '#FF7F00', textColor: '#FFFFFF' },
+  {
+    name: 'Cultural',
+    color: 'yellow',
+    bgColor: '#FFFF00',
+    textColor: '#FF7F00'
   },
   {
-    name: 'Historical',
-    color: 'violet',
-    bgColor: '#EE82EE',
+    name: 'Destinations',
+    color: 'green',
+    bgColor: '#00FF00',
+    textColor: '#8B00FF'
+  },
+  {
+    name: 'Educational',
+    color: 'blue',
+    bgColor: '#0000FF',
+    textColor: '#FFFF00'
+  },
+  {
+    name: 'Entertainment',
+    color: 'indigo',
+    bgColor: '#8B00FF',
     textColor: '#FFFFFF'
   },
+  { name: 'Event', color: 'violet', bgColor: '#EE82EE', textColor: '#8B00FF' },
   {
-    name: 'Shopping',
+    name: 'Festival',
     color: 'red',
     bgColor: '#FF0000',
     textColor: '#FFFFFF'
   },
   {
-    name: 'Entertainment',
+    name: 'Historical',
     color: 'orange',
     bgColor: '#FF7F00',
     textColor: '#FFFFFF'
   },
-  { name: 'Event', color: 'yellow', bgColor: '#FFFF00', textColor: '#000000' },
   {
     name: 'Landmark',
-    color: 'green',
-    bgColor: '#00FF00',
-    textColor: '#000000'
+    color: 'yellow',
+    bgColor: '#FFFF00',
+    textColor: '#FF7F00'
+  },
+  { name: 'Nature', color: 'green', bgColor: '#00FF00', textColor: '#8B00FF' },
+  {
+    name: 'Nightlife',
+    color: 'blue',
+    bgColor: '#0000FF',
+    textColor: '#FFFF00'
   },
   {
     name: 'Outdoor Activity',
@@ -431,35 +441,29 @@ const categories = [
     textColor: '#FFFFFF'
   },
   {
-    name: 'Wellness',
+    name: 'Restaurant',
     color: 'indigo',
-    bgColor: '#4B0082',
-    textColor: '#FFFFFF'
-  },
-  {
-    name: 'Festival',
-    color: 'violet',
     bgColor: '#8B00FF',
-    textColor: '#FFFFFF'
-  },
-  { name: 'Sport', color: 'red', bgColor: '#FF0000', textColor: '#FFFFFF' },
-  {
-    name: 'Educational',
-    color: 'orange',
-    bgColor: '#FF7F00',
     textColor: '#FFFFFF'
   },
   {
     name: 'Romantic',
-    color: 'yellow',
-    bgColor: '#FFFF00',
-    textColor: '#000000'
+    color: 'violet',
+    bgColor: '#EE82EE',
+    textColor: '#8B00FF'
   },
   {
-    name: 'Nightlife',
-    color: 'green',
-    bgColor: '#00FF00',
-    textColor: '#000000'
+    name: 'Shopping',
+    color: 'red',
+    bgColor: '#FF0000',
+    textColor: '#FFFF00'
+  },
+  { name: 'Sport', color: 'orange', bgColor: '#FF7F00', textColor: '#FFFFFF' },
+  {
+    name: 'Wellness',
+    color: 'yellow',
+    bgColor: '#FFFF00',
+    textColor: '#FF7F00'
   }
 ];
 
