@@ -3,9 +3,17 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Bomb, Check, CircleHelp, Trash2 } from 'lucide-react';
+import {
+  Bomb,
+  Check,
+  CircleHelp,
+  Trash2,
+  Brain,
+  Goal,
+  Settings,
+  X
+} from 'lucide-react';
 import { useActionState, useEffect, useState } from 'react';
-
 import {
   Card,
   CardContent,
@@ -42,11 +50,23 @@ import {
 import { barlow, kumbh_sans } from '@/app/ui/fonts';
 import ExplanationVisionBoard from './explanation-vision-board';
 import { toast } from '@/hooks/use-toast';
+import Help from '@/components/Help';
+import ExplanationBox from '@/components/ExplanationBox';
 
 const handleSubmit = async (previousState: unknown, formData: FormData) => {
   const name = formData.get('name') as string;
   const url = formData.get('url') as string;
   const uid = formData.get('uid') as string;
+
+  if (name.length > 10) {
+    toast({
+      title: 'Maximum 10 characters!',
+      description: 'The name should be at most 10 characters.',
+      variant: 'destructive'
+    });
+    return;
+  }
+
   if (!url) {
     toast({
       title: 'URL is required!',
@@ -169,7 +189,7 @@ export default function VisionBoard({
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="flex justify-between items-start mb-0">
+        <CardTitle className="flex flex-col sm:flex-row justify-between items-start mb-0">
           <div className="flex flex-col">
             Vision Board
             <p
@@ -179,9 +199,11 @@ export default function VisionBoard({
               desires into reality.
             </p>
           </div>
-          <div className={`${barlow.className} flex gap-4 capitalize w-3/5`}>
+          <div
+            className={`${barlow.className} flex gap-4 capitalize sm:w-3/5 mt-8 sm:mt-0`}
+          >
             <form className="w-full" action={action}>
-              <div className="flex items-start gap-2 font-normal">
+              <div className="flex flex-col sm:flex-row items-start gap-8 sm:gap-2 font-normal">
                 <div className="flex flex-col w-full gap-1">
                   <Input placeholder="Goal" id="name" name="name" />
                   <p className="text-xs ml-4 lowercase">
@@ -211,37 +233,26 @@ export default function VisionBoard({
                   readOnly
                   className="hidden"
                 />
-                <Button variant={'outline'} type="submit" disabled={isPending}>
-                  {isPending ? 'Adding...' : 'Add'}
-                </Button>
+                <div className="flex justify-between items-center w-full">
+                  <Button
+                    variant={'outline'}
+                    type="submit"
+                    disabled={isPending}
+                  >
+                    {isPending ? 'Adding...' : 'Add'}
+                  </Button>
+                  {!openAction ? (
+                    <>
+                      <Help setOpenAction={setOpenAction} />
+                    </>
+                  ) : (
+                    <div />
+                  )}
+                </div>
               </div>
             </form>
           </div>
-          {!openAction ? (
-            <>
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger
-                    className="text-sm"
-                    onClick={() => {
-                      setOpenAction(true);
-                    }}
-                  >
-                    <CircleHelp size={32} strokeWidth={1.4} />
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p className="text-primary ml-2 capitalize font-light">
-                      learn more
-                    </p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            </>
-          ) : (
-            <div />
-          )}
         </CardTitle>
-        {/* <CardDescription></CardDescription> */}
       </CardHeader>
       <CardContent className="relative p-10 pb-40">
         <AnimatePresence>
@@ -253,7 +264,17 @@ export default function VisionBoard({
               exit={{ opacity: 0, scale: 0.5, transition: { duration: 0.2 } }}
             >
               <div className="mb-12">
-                <ExplanationVisionBoard setOpenAction={setOpenAction} />
+                {/* <ExplanationVisionBoard setOpenAction={setOpenAction} /> */}
+                <ExplanationBox
+                  setOpenAction={setOpenAction}
+                  iconOne={<Brain size={24} strokeWidth={1.6} />}
+                  iconTwo={<Settings size={24} strokeWidth={1.6} />}
+                  iconThree={<Goal size={24} strokeWidth={1.6} />}
+                  titleOne="What is the Vision Board?"
+                  titleTwo="How to use"
+                  titleThree="Benefits"
+                  callToAction="Add a new goal"
+                />
               </div>
             </motion.div>
           ) : null}
@@ -268,10 +289,10 @@ export default function VisionBoard({
                   width={150}
                   height={150}
                   alt={`Picture of ${item.name}`}
-                  className="object-cover h-60 w-60 group-hover:opacity-100"
+                  className="object-cover w-20 h-20 sm:w-48 sm:h-48 group-hover:opacity-100"
                 />
                 <p
-                  className={`${kumbh_sans.className} bg-white text-center uppercase text-md leading-none absolute bottom-0 left-2 px-2 py-1`}
+                  className={`${kumbh_sans.className} bg-white text-center uppercase text-[10px] sm:text-sm leading-none absolute bottom-0 left-0 sm:left-2 px-2 py-1`}
                 >
                   {item.name}
                 </p>
@@ -334,11 +355,11 @@ export default function VisionBoard({
             </div>
           ))}
         </div>
-        <div className="flex flex-col gap-1 items-end text-center absolute bottom-10 right-10 text-xl text-white">
+        <div className="flex flex-col gap-1 items-end text-center absolute bottom-10 right-10 ml-6 text-sm sm:text-xl text-white">
           <p className="bg-primary px-4 py-1">
             “Whatever the mind can conceive and believe, it can achieve.”
           </p>
-          <p className="text-base font-bold bg-primary px-2 py-1 w-32">
+          <p className="text-sm sm:text-base font-bold bg-primary px-2 py-1 w-32">
             – Napoleon Hill
           </p>
         </div>
