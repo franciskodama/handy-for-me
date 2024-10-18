@@ -305,7 +305,7 @@ export default function BucketList({
                   <Tooltip>
                     <TooltipTrigger>
                       <p
-                        className="text-center text-xl px-4 py-1 font-semibold"
+                        className="text-center md:text-xl px-4 py-1 font-semibold"
                         style={getColorCodes(item.category)}
                       >
                         {item.name}
