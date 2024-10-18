@@ -1,14 +1,21 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { Analytics } from '@vercel/analytics/react';
 
 import {
+  BookA,
+  Grid3x3,
   Home,
   LineChart,
+  ListMinus,
+  MessageCircleQuestion,
   Package,
   Package2,
   PanelLeft,
+  RefreshCw,
   ShoppingCart,
-  Users2
+  Users2,
+  WholeWord
 } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
@@ -72,43 +79,61 @@ function WrongMobileNav() {
             href="#"
             className="group flex h-10 w-10 shrink-0 items-center justify-center gap-2 bg-primary text-lg font-semibold text-primary-foreground md:text-base"
           >
-            <Package2 className="h-5 w-5 transition-all group-hover:scale-110" />
-            <span className="sr-only">Vercel</span>
+            <Image
+              src="/logos/HandyForMe_Cog200x200.png"
+              alt="HandyFor.Me Logo"
+              width={200}
+              height={200}
+            />
           </Link>
           <Link
-            href="#"
+            href="/in"
             className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
           >
             <Home className="h-5 w-5" />
             Dashboard
           </Link>
           <Link
-            href="#"
+            href="/vision-board"
             className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
           >
-            <ShoppingCart className="h-5 w-5" />
-            Orders
+            <Grid3x3 className="h-5 w-5" />
+            Vision Board
           </Link>
           <Link
-            href="#"
+            href="/bucket-list"
             className="flex items-center gap-4 px-2.5 text-foreground"
           >
-            <Package className="h-5 w-5" />
-            Products
+            <ListMinus className="h-5 w-5" />
+            Bucket List
           </Link>
           <Link
-            href="#"
+            href="/spin"
             className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
           >
-            <Users2 className="h-5 w-5" />
-            Customers
+            <RefreshCw className="h-5 w-5" />
+            Spin Magic
           </Link>
           <Link
-            href="#"
+            href="/my-words"
             className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
           >
-            <LineChart className="h-5 w-5" />
-            Settings
+            <WholeWord className="h-5 w-5" />
+            My Words
+          </Link>
+          <Link
+            href="/random-question"
+            className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
+          >
+            <MessageCircleQuestion className="h-5 w-5" />
+            Random Questions
+          </Link>
+          <Link
+            href="/letter-leap"
+            className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
+          >
+            <BookA className="h-5 w-5" />
+            Letter Leap
           </Link>
         </nav>
       </SheetContent>
