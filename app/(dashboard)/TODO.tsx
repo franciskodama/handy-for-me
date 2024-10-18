@@ -36,6 +36,8 @@
 
 //TODO: DONE
 // Auth Google
+// Auth Google in Production
+// Auth GitHub in Production
 // Auth GitHub
 // Fix deployment error on vercel
 // Random Quotes pencial banner

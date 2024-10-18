@@ -2,15 +2,15 @@ export default function PencilBanner() {
   const randomIndex = Math.floor(Math.random() * quotes.length);
 
   return (
-    <>
+    <div>
       <div className="flex flex-col items-center px-12 py-2 bg-primary border-0">
-        <div className="flex tracking-wide text-xs text-white uppercase font-semibold">
+        <div className="flex tracking-wide text-[10px] sm:text-xs md:text-sm text-white text-center uppercase font-semibold">
           <p>"{quotes[randomIndex].quote}"</p>
           <p className="mx-2">—</p>
           <p>{quotes[randomIndex].author}</p>
         </div>
       </div>
-    </>
+    </div>
   );
 }
 
