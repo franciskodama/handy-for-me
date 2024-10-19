@@ -6,21 +6,27 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 
 export default function ExplanationBox({
-  callToAction,
   iconOne,
-  iconTwo,
-  iconThree,
   titleOne,
+  contentOne,
+  iconTwo,
   titleTwo,
+  contentTwo,
+  iconThree,
   titleThree,
+  contentThree,
+  callToAction,
   setOpenAction
 }: {
   iconOne: JSX.Element;
-  iconTwo: JSX.Element;
-  iconThree: JSX.Element;
   titleOne: string;
+  contentOne: JSX.Element;
+  iconTwo: JSX.Element;
   titleTwo: string;
+  contentTwo: JSX.Element;
+  iconThree: JSX.Element;
   titleThree: string;
+  contentThree: JSX.Element;
   callToAction: string;
   setOpenAction: (value: boolean) => void;
 }) {
@@ -41,26 +47,13 @@ export default function ExplanationBox({
           borderWidth: '1em'
         }}
       >
-        <AlertDescription className="relative text-sm flex flex-col sm:flex-row items-start justify-between p-2">
+        <AlertDescription className="relative text-sm flex flex-col sm:flex-row items-start justify-between p-1">
           <div className="flex flex-col mb-6 sm:w-1/3 py-2 sm:px-12">
             <div className="flex items-center gap-2 mb-4">
               {iconOne}
               <p className="text-lg font-bold">{titleOne}</p>
             </div>
-
-            <div className="flex flex-col gap-4 mb-4">
-              <p>
-                The Vision Board is your personal space to visualize and focus
-                on your biggest goals. Inspired by Think and Grow Rich by
-                Napoleon Hill, it reinforces your desires through daily
-                visualization.
-              </p>
-              <p>
-                By regularly seeing your goals, you engage your subconscious
-                mind, strengthening your mental and emotional connection to your
-                dreams, keeping you motivated and on track.
-              </p>
-            </div>
+            <div className="flex flex-col gap-4 mb-4">{contentOne}</div>
           </div>
 
           <div className="flex flex-col mb-6 sm:w-1/3 py-2 sm:px-12">
@@ -69,42 +62,7 @@ export default function ExplanationBox({
               <p className="text-lg font-bold">{titleTwo}</p>
             </div>
 
-            <ul className="flex flex-col gap-4">
-              <li>
-                <span className="font-semibold mr-1">
-                  1) Enter a goal name:
-                </span>
-                e.g., Job, House, Car, Health, etc.
-              </li>
-              <li>
-                <span className="font-semibold mr-1">
-                  2) Enter an Image Url:
-                </span>
-                Paste a URL from
-                <Link
-                  href="https://unsplash.com/"
-                  target="_blank"
-                  className="mx-1 underline"
-                >
-                  <span className="uppercase">U</span>nsplash
-                </Link>
-                that represents your vision
-                <span className="text-xs italic ml-1">
-                  (Only Unsplash images are accepted.)
-                </span>
-              </li>
-              <li>
-                <span className="font-semibold mr-1">3) Tap “Add”</span>
-                to instantly see your goal’s image in the gallery.
-              </li>
-              <li className="font-semibold mr-1">
-                4) Hover over an image:
-                <div className="flex flex-col gap-1 mt-2 ml-4 font-normal">
-                  <p>a) Check a goal when completed (can be unchecked).</p>
-                  <p>b) Delete a goal if no longer relevant.</p>
-                </div>
-              </li>
-            </ul>
+            <div className="flex flex-col gap-4 mb-4">{contentTwo}</div>
           </div>
 
           <div className="flex flex-col justify-between sm:w-1/3 py-2 sm:px-12">
@@ -112,30 +70,10 @@ export default function ExplanationBox({
               {iconThree}
               <p className="text-lg font-bold">{titleThree}</p>
             </div>
-            <ul className="flex flex-wrap gap-4">
-              <li className="font-semibold">
-                - Clarify Your Desires:{' '}
-                <span className="font-normal">
-                  Clearly define your goals with visual support.
-                </span>
-              </li>
-              <li className="font-semibold">
-                - Daily Motivation:{' '}
-                <span className="font-normal">
-                  Constantly remind yourself of what you’re working toward.
-                </span>
-              </li>
-              <li className="font-semibold">
-                - Strengthen Focus:{' '}
-                <span className="font-normal">
-                  Visualization encourages belief and action, key to success
-                  according to Napoleon Hill.
-                </span>
-              </li>
-            </ul>
+            <div className="flex flex-wrap gap-4">{contentThree}</div>
             <Button
               variant={'outline'}
-              className="capitalize mt-12 w-[26ch]"
+              className="capitalize mt-12 mb-6 w-[26ch]"
               onClick={() => setOpenAction(false)}
             >
               {callToAction}

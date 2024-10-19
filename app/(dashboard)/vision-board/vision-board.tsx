@@ -234,11 +234,7 @@ export default function VisionBoard({
                   className="hidden"
                 />
                 <div className="flex justify-between items-center w-full">
-                  <Button
-                    variant={'outline'}
-                    type="submit"
-                    disabled={isPending}
-                  >
+                  <Button type="submit" disabled={isPending}>
                     {isPending ? 'Adding...' : 'Add'}
                   </Button>
                   {!openAction ? (
@@ -264,17 +260,7 @@ export default function VisionBoard({
               exit={{ opacity: 0, scale: 0.5, transition: { duration: 0.2 } }}
             >
               <div className="mb-12">
-                {/* <ExplanationVisionBoard setOpenAction={setOpenAction} /> */}
-                <ExplanationBox
-                  setOpenAction={setOpenAction}
-                  iconOne={<Brain size={24} strokeWidth={1.6} />}
-                  iconTwo={<Settings size={24} strokeWidth={1.6} />}
-                  iconThree={<Goal size={24} strokeWidth={1.6} />}
-                  titleOne="What is the Vision Board?"
-                  titleTwo="How to use"
-                  titleThree="Benefits"
-                  callToAction="Add a new goal"
-                />
+                <ExplanationVisionBoard setOpenAction={setOpenAction} />
               </div>
             </motion.div>
           ) : null}
