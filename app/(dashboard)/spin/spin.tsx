@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { CircleHelp, RefreshCw, SquareX, Trash2 } from 'lucide-react';
+import { RefreshCw, SquareX, Trash2 } from 'lucide-react';
 import { Foldit } from 'next/font/google';
 import confetti from 'canvas-confetti';
 
@@ -20,12 +20,6 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger
-} from '@/components/ui/tooltip';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { SpinList, SpinItem } from '@/lib/types';

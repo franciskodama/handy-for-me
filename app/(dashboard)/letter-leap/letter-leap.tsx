@@ -27,6 +27,7 @@ import {
 } from '@/components/ui/tooltip';
 import { Button } from '@/components/ui/button';
 import ExplanationLetterLeap from './explanation-letter-leap';
+import Help from '@/components/Help';
 
 export default function LetterLeap({ name }: { name: string }) {
   const [spinning, setSpinning] = useState<boolean>(false);
@@ -54,29 +55,7 @@ export default function LetterLeap({ name }: { name: string }) {
       <CardHeader className="mb-12">
         <CardTitle className="flex justify-between items-center gap-2">
           <p>Letter Leap</p>
-          {!openAction ? (
-            <>
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger
-                    className="text-sm"
-                    onClick={() => {
-                      setOpenAction(true);
-                    }}
-                  >
-                    <CircleHelp size={32} strokeWidth={1.4} />
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p className="text-primary ml-2 capitalize font-light">
-                      learn more
-                    </p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            </>
-          ) : (
-            <div />
-          )}
+          {!openAction ? <Help setOpenAction={setOpenAction} /> : <div />}
         </CardTitle>
         <CardDescription>
           Master conversations, one letter at a time!
@@ -100,8 +79,8 @@ export default function LetterLeap({ name }: { name: string }) {
 
         {/* ----------------------- First Column ----------------------- */}
 
-        <div className="flex justify-between gap-8 mb-4 w-full">
-          <div className="flex w-1/5 flex-col gap-4">
+        <div className="flex flex-col sm:flex-row justify-between gap-8 mb-4 w-full">
+          <div className="flex sm:w-1/5 flex-col gap-4">
             <p className="text-lg font-semibold">
               Let the letter lead your thoughts. 🎯
             </p>
@@ -113,7 +92,7 @@ export default function LetterLeap({ name }: { name: string }) {
           {/* ----------------------- Second Column ----------------------- */}
 
           <div
-            className={`flex flex-col w-3/5 items-center h-[40em]`}
+            className="flex flex-col justify-center items-center h-full sm:w-3/5 my-8 sm:my-0"
             style={{
               borderImage: `repeating-linear-gradient(
                   45deg,
@@ -131,15 +110,15 @@ export default function LetterLeap({ name }: { name: string }) {
             {result ? (
               <>
                 <p
-                  className={`${foldit.className} text-[20rem] uppercase p-8 text-center w-full font-bold`}
+                  className={`${foldit.className} flex flex-col justify-center text-[20rem] uppercase text-center w-full font-bold`}
                 >
                   {result}
                 </p>
-                <p className={`text-xl lowercase text-center`}>({result})</p>
+                <p className="mb-4 text-xl lowercase text-center">({result})</p>
               </>
             ) : (
               <>
-                <div className="flex flex-col text-xl text-primary leading-tight p-4 text-center w-full mt-[10em] gap-4">
+                <div className="flex flex-col h-full justify-center p-12 text-xl text-primary leading-tight text-center w-full gap-4">
                   <p className="font-semibold text-2xl">
                     Ready to spin and spark your creativity? 🍀
                   </p>
@@ -151,7 +130,7 @@ export default function LetterLeap({ name }: { name: string }) {
 
           {/* ----------------------- Third Column ----------------------- */}
 
-          <div className="flex flex-col w-1/5">
+          <div className="flex flex-col sm:w-1/5">
             <p className="text-lg font-semibold mb-2">
               {`${name.split(' ')[0]}, Out of ideas? 🚨`}
             </p>
