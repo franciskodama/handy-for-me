@@ -97,40 +97,24 @@ function MobileNav() {
       <SheetContent side="left" className="sm:max-w-xs">
         <nav className="grid gap-6 text-lg font-medium">
           <Link
-            href="#"
+            href="/"
             className="group flex h-10 w-10 shrink-0 items-center justify-center gap-2 bg-primary text-lg font-semibold text-primary-foreground md:text-base"
           >
             <Package2 className="h-5 w-5 transition-all group-hover:scale-110" />
-            <span className="sr-only">Vercel</span>
+            <span className="sr-only">HandyFor.me</span>
           </Link>
-          <Link
-            href="#"
-            className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-          >
-            <Home className="h-5 w-5" />
-            Dashboard
-          </Link>
-          <Link
-            href="#"
-            className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-          >
-            <ShoppingCart className="h-5 w-5" />
-            Orders
-          </Link>
-          <Link
-            href="#"
-            className="flex items-center gap-4 px-2.5 text-foreground"
-          >
-            <Package className="h-5 w-5" />
-            Products
-          </Link>
-          <Link
-            href="#"
-            className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-          >
-            <Users2 className="h-5 w-5" />
-            Customers
-          </Link>
+
+          {menuItems.map((item) => (
+            <Link
+              key={item.label}
+              href={item.href}
+              className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
+            >
+              {item.icon}
+              {item.label}
+            </Link>
+          ))}
+
           <Link
             href="#"
             className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
@@ -166,41 +150,11 @@ export function DesktopNav() {
           />
         </Link> */}
 
-        <NavItem href="/" label="Dashboard">
-          <Home className="h-5 w-5" />
-        </NavItem>
-
-        <NavItem href="/vision-board" label="Vision Board">
-          <Grid3x3 className="h-5 w-5" />
-        </NavItem>
-
-        <NavItem href="/bucket-list" label="Bucket List">
-          <ListMinus className="h-5 w-5" />
-        </NavItem>
-
-        <NavItem href="/spin" label="Spin Magic">
-          <RefreshCw className="h-5 w-5" />
-        </NavItem>
-
-        <NavItem href="/my-words" label="My Words">
-          <WholeWord className="h-5 w-5" />
-        </NavItem>
-
-        <NavItem href="/random-question" label="Random Questions">
-          <MessageCircleQuestion className="h-5 w-5" />
-        </NavItem>
-
-        <NavItem href="/letter-leap" label="Letter Leap">
-          <BookA className="h-5 w-5" />
-        </NavItem>
-
-        {/* <NavItem href="/ai" label="Artificial Intelligence">
-          <Bot className="h-5 w-5" />
-        </NavItem> */}
-
-        {/* <NavItem href="/products" label="Products">
-          <Ghost className="h-5 w-5" />
-        </NavItem> */}
+        {menuItems.map((item) => (
+          <NavItem key={item.href} href={item.href} label={item.label}>
+            {item.icon}
+          </NavItem>
+        ))}
       </nav>
       <nav className="mt-auto flex flex-col items-center gap-4 px-2 sm:py-5">
         <Tooltip>
@@ -219,3 +173,39 @@ export function DesktopNav() {
     </aside>
   );
 }
+
+const menuItems = [
+  { label: 'Dashboard', href: '/in', icon: <Home className="h-5 w-5" /> },
+  {
+    label: 'Vision Board',
+    href: '/vision-board',
+    icon: <Grid3x3 className="h-5 w-5" />
+  },
+  {
+    label: 'Bucket List',
+    href: '/bucket-list',
+    icon: <ListMinus className="h-5 w-5" />
+  },
+  {
+    label: 'Spin Magic',
+    href: '/spin',
+    icon: <RefreshCw className="h-5 w-5" />
+  },
+  {
+    label: 'My Words',
+    href: '/my-words',
+    icon: <WholeWord className="h-5 w-5" />
+  },
+  {
+    label: 'Random Questions',
+    href: '/random-question',
+    icon: <MessageCircleQuestion className="h-5 w-5" />
+  },
+  {
+    label: 'Letter Leap',
+    href: '/letter-leap',
+    icon: <BookA className="h-5 w-5" />
+  }
+  // { label: 'Artificial Intelligence', href: '/ai', icon: Bot },
+  // { label: 'Products', href: '/products', icon: Ghost },
+];
