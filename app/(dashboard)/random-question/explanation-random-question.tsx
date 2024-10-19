@@ -64,7 +64,7 @@ export default function ExplanationRandomQuestion({
       titleTwo="How?"
       contentTwo={contentTwo}
       iconThree={<div className="mt-8" />}
-      titleThree=" "
+      titleThree="...And More!"
       contentThree={contentThree}
       callToAction="Start Practicing Now!"
     />
