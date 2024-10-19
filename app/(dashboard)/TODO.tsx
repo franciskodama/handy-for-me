@@ -2,7 +2,6 @@
 // Google Cloud Credentials: https://console.cloud.google.com/apis/credentials
 
 // TODO: WORKING ON + FAST
-/// Login Reponsive
 // Close Sheet after clicking on a menu item
 // Button hover effect: Mariana thinks it's counterintuitive
 // Vision Board mosaic centralized in the middle of the parent div
@@ -39,6 +38,8 @@
 // Button: https://medium.com/@dewamadewira25/how-to-make-a-neo-brutalism-button-using-tailwindcss-91d3faf2b269
 
 //TODO: DONE
+// Spin Magic: font size for Mobile
+// Login Reponsive
 // Dashboard responsive
 // Right Position of the ? in Bucket List and Vision Board
 // Hamburguer Menu

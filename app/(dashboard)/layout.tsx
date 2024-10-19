@@ -4,6 +4,7 @@ import { Analytics } from '@vercel/analytics/react';
 
 import {
   BookA,
+  Cog,
   Grid3x3,
   Home,
   LineChart,
@@ -78,9 +79,15 @@ function MobileNav() {
         <nav className="grid gap-6 text-lg font-medium">
           <Link
             href="/"
-            className="group flex h-10 w-10 shrink-0 items-center justify-center gap-2 bg-primary text-lg font-semibold text-primary-foreground md:text-base"
+            className="group flex h-10 w-10 shrink-0 items-center justify-center gap-2 text-lg font-semibold text-primary-foreground md:text-base"
           >
-            <Package2 className="h-5 w-5 transition-all group-hover:scale-110" />
+            {/* <Package2 className="h-5 w-5 transition-all group-hover:scale-110" /> */}
+            <Image
+              src="/logos/HandyForMe_Cog200x200.png"
+              alt="HandyFor.Me Logo"
+              width={200}
+              height={200}
+            />
             <span className="sr-only">HandyFor.me</span>
           </Link>
 
@@ -95,13 +102,13 @@ function MobileNav() {
             </Link>
           ))}
 
-          <Link
+          {/* <Link
             href="#"
             className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
           >
-            <LineChart className="h-5 w-5" />
+            <Settings className="h-5 w-5" />
             Settings
-          </Link>
+          </Link> */}
         </nav>
       </SheetContent>
     </Sheet>
@@ -136,7 +143,7 @@ export function DesktopNav() {
           </NavItem>
         ))}
       </nav>
-      <nav className="mt-auto flex flex-col items-center gap-4 px-2 sm:py-5">
+      {/* <nav className="mt-auto flex flex-col items-center gap-4 px-2 sm:py-5">
         <Tooltip>
           <TooltipTrigger asChild>
             <Link
@@ -149,7 +156,7 @@ export function DesktopNav() {
           </TooltipTrigger>
           <TooltipContent side="right">Settings</TooltipContent>
         </Tooltip>
-      </nav>
+      </nav> */}
     </aside>
   );
 }
@@ -180,12 +187,12 @@ const menuItems = [
     label: 'Letter Leap',
     href: '/letter-leap',
     icon: <BookA className="h-5 w-5" />
-  },
-  {
-    label: 'My Words',
-    href: '/my-words',
-    icon: <WholeWord className="h-5 w-5" />
   }
+  // {
+  //   label: 'My Words',
+  //   href: '/my-words',
+  //   icon: <WholeWord className="h-5 w-5" />
+  // }
   // { label: 'Artificial Intelligence', href: '/ai', icon: Bot },
   // { label: 'Products', href: '/products', icon: Ghost },
 ];
