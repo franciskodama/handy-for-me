@@ -189,11 +189,6 @@ const menuItems = [
     icon: <RefreshCw className="h-5 w-5" />
   },
   {
-    label: 'My Words',
-    href: '/my-words',
-    icon: <WholeWord className="h-5 w-5" />
-  },
-  {
     label: 'Random Questions',
     href: '/random-question',
     icon: <MessageCircleQuestion className="h-5 w-5" />
@@ -202,6 +197,11 @@ const menuItems = [
     label: 'Letter Leap',
     href: '/letter-leap',
     icon: <BookA className="h-5 w-5" />
+  },
+  {
+    label: 'My Words',
+    href: '/my-words',
+    icon: <WholeWord className="h-5 w-5" />
   }
   // { label: 'Artificial Intelligence', href: '/ai', icon: Bot },
   // { label: 'Products', href: '/products', icon: Ghost },

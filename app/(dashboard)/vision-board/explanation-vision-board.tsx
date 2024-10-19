@@ -84,15 +84,15 @@ export default function ExplanationVisionBoard({
   return (
     <ExplanationBox
       setOpenAction={setOpenAction}
-      iconTwo={<Settings size={24} strokeWidth={1.6} />}
-      iconThree={<Goal size={24} strokeWidth={1.6} />}
       iconOne={<Brain size={24} strokeWidth={1.6} />}
       titleOne="What is the Vision Board?"
       contentOne={contentOne}
-      contentTwo={contentTwo}
-      contentThree={contentThree}
+      iconTwo={<Settings size={24} strokeWidth={1.6} />}
       titleTwo="How to use"
+      contentTwo={contentTwo}
+      iconThree={<Goal size={24} strokeWidth={1.6} />}
       titleThree="Benefits"
+      contentThree={contentThree}
       callToAction="Add a new goal"
     />
   );

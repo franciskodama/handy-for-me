@@ -217,9 +217,7 @@ export default function VisionBoard({
                     {isPending ? 'Adding...' : 'Add'}
                   </Button>
                   {!openAction ? (
-                    <>
-                      <Help setOpenAction={setOpenAction} />
-                    </>
+                    <Help setOpenAction={setOpenAction} />
                   ) : (
                     <div />
                   )}

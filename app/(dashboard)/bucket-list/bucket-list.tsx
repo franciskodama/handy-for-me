@@ -47,6 +47,7 @@ import {
 import { barlow } from '@/app/ui/fonts';
 import { toast } from '@/hooks/use-toast';
 import ExplanationBucketList from './explanation-bucket-list';
+import Help from '@/components/Help';
 
 type Category = {
   name: string;
@@ -203,7 +204,7 @@ export default function BucketList({
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="flex justify-between items-start mb-0">
+        <CardTitle className="flex flex-col sm:flex-row justify-between items-start mb-0">
           <div className="flex flex-col">
             Bucket List
             <p
@@ -213,9 +214,11 @@ export default function BucketList({
               dd, explore, and cross off your next adventure.
             </p>
           </div>
-          <div className={`${barlow.className} flex gap-4 capitalize w-3/5`}>
+          <div
+            className={`${barlow.className} flex gap-4 capitalize sm:w-3/5 mt-8 sm:mt-0`}
+          >
             <form className="w-full" action={action}>
-              <div className="flex items-start gap-2 font-normal">
+              <div className="flex flex-col sm:flex-row items-start gap-8 sm:gap-2 font-normal">
                 <div className="flex flex-col w-full gap-1">
                   <Input placeholder="Adventure" id="name" name="name" />
                   <p className="text-xs ml-4 lowercase">
@@ -250,35 +253,19 @@ export default function BucketList({
                   readOnly
                   className="hidden"
                 />
-                <Button variant={'outline'} type="submit" disabled={isPending}>
-                  {isPending ? 'Adding...' : 'Add'}
-                </Button>
+                <div className="flex justify-between items-center w-full">
+                  <Button type="submit" disabled={isPending}>
+                    {isPending ? 'Adding...' : 'Add'}
+                  </Button>
+                  {!openAction ? (
+                    <Help setOpenAction={setOpenAction} />
+                  ) : (
+                    <div />
+                  )}
+                </div>
               </div>
             </form>
           </div>
-          {!openAction ? (
-            <>
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger
-                    className="text-sm"
-                    onClick={() => {
-                      setOpenAction(true);
-                    }}
-                  >
-                    <CircleHelp size={32} strokeWidth={1.4} />
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p className="text-primary ml-2 capitalize font-light">
-                      learn more
-                    </p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            </>
-          ) : (
-            <div />
-          )}
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -305,7 +292,7 @@ export default function BucketList({
                   <Tooltip>
                     <TooltipTrigger>
                       <p
-                        className="text-center md:text-xl px-4 py-1 font-semibold"
+                        className="text-center text-sm sm:text-xl px-4 py-1 font-semibold"
                         style={getColorCodes(item.category)}
                       >
                         {item.name}
