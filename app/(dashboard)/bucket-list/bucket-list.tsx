@@ -205,8 +205,11 @@ export default function BucketList({
     <Card>
       <CardHeader>
         <CardTitle className="flex flex-col sm:flex-row justify-between items-start mb-0">
-          <div className="flex flex-col">
-            Bucket List
+          <div className="flex flex-col w-full">
+            <div className="flex items-center justify-between">
+              <p>Bucket List</p>
+              {!openAction ? <Help setOpenAction={setOpenAction} /> : <div />}
+            </div>
             <p
               className={`${barlow.className} text-sm font-normal lowercase mt-2`}
             >
@@ -253,16 +256,9 @@ export default function BucketList({
                   readOnly
                   className="hidden"
                 />
-                <div className="flex justify-between items-center w-full">
-                  <Button type="submit" disabled={isPending}>
-                    {isPending ? 'Adding...' : 'Add'}
-                  </Button>
-                  {!openAction ? (
-                    <Help setOpenAction={setOpenAction} />
-                  ) : (
-                    <div />
-                  )}
-                </div>
+                <Button type="submit" disabled={isPending}>
+                  {isPending ? 'Adding...' : 'Add'}
+                </Button>
               </div>
             </form>
           </div>

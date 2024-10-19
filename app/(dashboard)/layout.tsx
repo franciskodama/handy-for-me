@@ -8,9 +8,9 @@ import {
   Home,
   LineChart,
   ListMinus,
+  Menu,
   MessageCircleQuestion,
   Package2,
-  PanelLeft,
   RefreshCw,
   Settings,
   WholeWord
@@ -38,23 +38,6 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-    // <Providers>
-    //   <main className="flex min-h-screen w-full flex-col bg-muted/40">
-    //     <DesktopNav />
-    //     <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
-    //       <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
-    //         <MobileNav />
-    //         <DashboardBreadcrumb />
-    //         <SearchInput />
-    //         <User />
-    //       </header>
-    //       <main className="grid flex-1 items-start gap-2 p-4 sm:px-6 sm:py-0 md:gap-4 bg-muted/40">
-    //         {children}
-    //       </main>
-    //     </div>
-    //     <Analytics />
-    //   </main>
-    // </Providers>
     <Providers>
       <main className="flex min-h-screen w-full flex-col bg-muted/40">
         <PencilBanner />
@@ -87,7 +70,7 @@ function MobileNav() {
     <Sheet>
       <SheetTrigger asChild>
         <Button size="icon" variant="outline" className="sm:hidden">
-          <PanelLeft className="h-5 w-5" />
+          <Menu className="h-5 w-5" />
           <span className="sr-only">Toggle Menu</span>
         </Button>
       </SheetTrigger>
@@ -129,13 +112,13 @@ export function DesktopNav() {
   return (
     <aside className="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-background sm:flex">
       <nav className="flex flex-col items-center gap-4 px-2 sm:py-5">
-        <Link
+        {/* <Link
           href="/"
           className="bg-primary group flex h-9 w-9 shrink-0 items-center justify-center gap-2 text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base"
         >
           <p className="text-[10px] skew-y-[-12deg]">Juvoo</p>
-        </Link>
-        {/* <Link
+        </Link> */}
+        <Link
           href="/"
           className="group flex h-9 w-9 shrink-0 items-center justify-center gap-2 text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base"
         >
@@ -145,7 +128,7 @@ export function DesktopNav() {
             width={200}
             height={200}
           />
-        </Link> */}
+        </Link>
 
         {menuItems.map((item) => (
           <NavItem key={item.href} href={item.href} label={item.label}>

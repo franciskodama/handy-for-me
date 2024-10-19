@@ -169,8 +169,11 @@ export default function VisionBoard({
     <Card>
       <CardHeader>
         <CardTitle className="flex flex-col sm:flex-row justify-between items-start mb-0">
-          <div className="flex flex-col">
-            Vision Board
+          <div className="flex flex-col w-full">
+            <div className="flex items-center justify-between">
+              <p>Vision Board</p>
+              {!openAction ? <Help setOpenAction={setOpenAction} /> : <div />}
+            </div>
             <p
               className={`${barlow.className} text-sm font-normal lowercase mt-2`}
             >
@@ -216,11 +219,6 @@ export default function VisionBoard({
                   <Button type="submit" disabled={isPending}>
                     {isPending ? 'Adding...' : 'Add'}
                   </Button>
-                  {!openAction ? (
-                    <Help setOpenAction={setOpenAction} />
-                  ) : (
-                    <div />
-                  )}
                 </div>
               </div>
             </form>
