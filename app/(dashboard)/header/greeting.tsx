@@ -7,14 +7,14 @@ export default async function Greeting() {
   const greeting = getGreeting(firstName ? firstName : '');
 
   return (
-    <>
+    <div className="hidden sm:flex">
       {firstName ? (
         <h4 className="font-semibold text-sm">
           {greeting}
           <span className="ml-2 text-xl">{getEmoji(greeting)}</span>
         </h4>
       ) : null}
-    </>
+    </div>
   );
 }
 

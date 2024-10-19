@@ -2,23 +2,11 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
+import { Bomb, Check, Trash2 } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Bomb, Check, CircleHelp, Trash2 } from 'lucide-react';
 import { useActionState, useEffect, useState } from 'react';
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle
-} from '@/components/ui/card';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger
-} from '@/components/ui/tooltip';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -39,14 +27,25 @@ import {
   getVisualBoardItems,
   setVisualBoardItemDone
 } from '@/lib/actions';
+import Help from '@/components/Help';
+import { toast } from '@/hooks/use-toast';
 import { barlow, kumbh_sans } from '@/app/ui/fonts';
 import ExplanationVisionBoard from './explanation-vision-board';
-import { toast } from '@/hooks/use-toast';
 
 const handleSubmit = async (previousState: unknown, formData: FormData) => {
   const name = formData.get('name') as string;
   const url = formData.get('url') as string;
   const uid = formData.get('uid') as string;
+
+  if (name.length > 10) {
+    toast({
+      title: 'Maximum 10 characters!',
+      description: 'The name should be at most 10 characters.',
+      variant: 'destructive'
+    });
+    return;
+  }
+
   if (!url) {
     toast({
       title: 'URL is required!',
@@ -169,7 +168,7 @@ export default function VisionBoard({
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="flex justify-between items-start mb-0">
+        <CardTitle className="flex flex-col sm:flex-row justify-between items-start mb-0">
           <div className="flex flex-col">
             Vision Board
             <p
@@ -179,9 +178,11 @@ export default function VisionBoard({
               desires into reality.
             </p>
           </div>
-          <div className={`${barlow.className} flex gap-4 capitalize w-3/5`}>
+          <div
+            className={`${barlow.className} flex gap-4 capitalize sm:w-3/5 mt-8 sm:mt-0`}
+          >
             <form className="w-full" action={action}>
-              <div className="flex items-start gap-2 font-normal">
+              <div className="flex flex-col sm:flex-row items-start gap-8 sm:gap-2 font-normal">
                 <div className="flex flex-col w-full gap-1">
                   <Input placeholder="Goal" id="name" name="name" />
                   <p className="text-xs ml-4 lowercase">
@@ -211,37 +212,20 @@ export default function VisionBoard({
                   readOnly
                   className="hidden"
                 />
-                <Button variant={'outline'} type="submit" disabled={isPending}>
-                  {isPending ? 'Adding...' : 'Add'}
-                </Button>
+                <div className="flex justify-between items-center w-full">
+                  <Button type="submit" disabled={isPending}>
+                    {isPending ? 'Adding...' : 'Add'}
+                  </Button>
+                  {!openAction ? (
+                    <Help setOpenAction={setOpenAction} />
+                  ) : (
+                    <div />
+                  )}
+                </div>
               </div>
             </form>
           </div>
-          {!openAction ? (
-            <>
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger
-                    className="text-sm"
-                    onClick={() => {
-                      setOpenAction(true);
-                    }}
-                  >
-                    <CircleHelp size={32} strokeWidth={1.4} />
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p className="text-primary ml-2 capitalize font-light">
-                      learn more
-                    </p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            </>
-          ) : (
-            <div />
-          )}
         </CardTitle>
-        {/* <CardDescription></CardDescription> */}
       </CardHeader>
       <CardContent className="relative p-10 pb-40">
         <AnimatePresence>
@@ -268,10 +252,10 @@ export default function VisionBoard({
                   width={150}
                   height={150}
                   alt={`Picture of ${item.name}`}
-                  className="object-cover h-60 w-60 group-hover:opacity-100"
+                  className="object-cover w-20 h-20 sm:w-48 sm:h-48 group-hover:opacity-100"
                 />
                 <p
-                  className={`${kumbh_sans.className} bg-white text-center uppercase text-md leading-none absolute bottom-0 left-2 px-2 py-1`}
+                  className={`${kumbh_sans.className} bg-white text-center uppercase text-[10px] sm:text-sm leading-none absolute bottom-0 left-0 sm:left-2 px-2 py-1`}
                 >
                   {item.name}
                 </p>
@@ -334,11 +318,11 @@ export default function VisionBoard({
             </div>
           ))}
         </div>
-        <div className="flex flex-col gap-1 items-end text-center absolute bottom-10 right-10 text-xl text-white">
+        <div className="flex flex-col gap-1 items-end text-center absolute bottom-10 right-10 ml-6 text-sm sm:text-xl text-white">
           <p className="bg-primary px-4 py-1">
             “Whatever the mind can conceive and believe, it can achieve.”
           </p>
-          <p className="text-base font-bold bg-primary px-2 py-1 w-32">
+          <p className="text-sm sm:text-base font-bold bg-primary px-2 py-1 w-32">
             – Napoleon Hill
           </p>
         </div>
@@ -346,20 +330,3 @@ export default function VisionBoard({
     </Card>
   );
 }
-
-// shadow-[0_0px_0px_0px_inset,#000_-5px_5px]
-
-// The conscious mind is like the navigator or captain at the bridge of a
-// ship. He directs the ship and signals orders to men in the engine room,
-// who in turn control all the boilers, instruments, gauges, etc. The men
-// in the engine room do not know where they are going; they follow orders.
-// They would go on the rocks if the man on the bridge issued faulty or
-// wrong instructions based on his findings with the compass, sextant, or
-// other instruments. The men in the engine room obey him because he is in
-// charge and issues orders, which are automatically obeyed. Members of the
-// crew do not talk back to the captain; they simply carry out orders. The
-// captain is the master of his ship, and his decrees are carried out.
-// Likewise, your conscious mind is the captain and the master of your
-// ship, which represents your body, environment, and all your affairs.
-// Your subconscious mind takes the orders you give it based upon what your
-// conscious mind believes and accepts as true.

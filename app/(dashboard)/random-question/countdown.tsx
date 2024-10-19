@@ -138,8 +138,9 @@ export default function Countdown({
             Restart
           </Button>
         </div>
+
         {timeRemaining === 0 && result && (
-          <p className="text-xl font-semibold text-center p-8 mt-8 animate-pulse bg-yellow-500">
+          <p className="text-xl text-white font-semibold text-center p-8 mt-8 animate-pulse bg-yellow-500">
             {getKudos(name.split(' ')[0])}
           </p>
         )}

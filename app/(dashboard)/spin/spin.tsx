@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { CircleHelp, RefreshCw, SquareX, Trash2 } from 'lucide-react';
+import { RefreshCw, SquareX, Trash2 } from 'lucide-react';
 import { Foldit } from 'next/font/google';
 import confetti from 'canvas-confetti';
 
@@ -20,12 +20,6 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger
-} from '@/components/ui/tooltip';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { SpinList, SpinItem } from '@/lib/types';
@@ -38,6 +32,7 @@ import {
 import { Checkbox } from '@/components/ui/checkbox';
 import ExplanationSpin from './explanation-spin';
 import { kumbh_sans } from '@/app/ui/fonts';
+import Help from '@/components/Help';
 
 export const foldit = Foldit({
   weight: ['700'],
@@ -137,29 +132,7 @@ export default function Spin({
       <CardHeader className="mb-4">
         <CardTitle className="flex justify-between items-center gap-2">
           <p>Spin Magic</p>
-          {!openAction ? (
-            <>
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger
-                    className="text-sm"
-                    onClick={() => {
-                      setOpenAction(true);
-                    }}
-                  >
-                    <CircleHelp size={32} strokeWidth={1.4} />
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p className="text-primary ml-2 capitalize font-light">
-                      learn more
-                    </p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            </>
-          ) : (
-            <div />
-          )}
+          {!openAction ? <Help setOpenAction={setOpenAction} /> : <div />}
         </CardTitle>
         <CardDescription>
           A fun, random decision-maker that spins the wheel to pick your next
@@ -182,10 +155,8 @@ export default function Spin({
           ) : null}
         </AnimatePresence>
 
-        {/* ----------------------- First Column ----------------------- */}
-
-        <div className="flex justify-between gap-8 mb-4 w-full">
-          <div className="flex w-1/3 flex-col">
+        <div className="flex flex-col sm:flex-row justify-between gap-8 mb-4 w-full">
+          <div className="flex flex-col sm:w-1/3">
             <div className="flex flex-col gap-2">
               <Select
                 onValueChange={(value) => {
@@ -249,10 +220,8 @@ export default function Spin({
             )}
           </div>
 
-          {/* ----------------------- Second Column ----------------------- */}
-
           <div
-            className="flex flex-col w-1/3 items-center p-12"
+            className="flex flex-col sm:w-1/3 items-center p-12"
             style={{
               borderImage: `repeating-linear-gradient(
                   45deg,
@@ -276,13 +245,13 @@ export default function Spin({
                     {spinning ? 'Spinning...' : 'Spin the Wheel'}
                   </p>
                   <Button
-                    className="rounded-full w-[15em] h-[15em] p-0"
+                    className="rounded-full w-[12em] h-[12em] sm:w-[15em] sm:h-[15em] p-0"
                     onClick={handleSpin}
                     variant={'outline'}
                   >
                     <RefreshCw
                       color={'black'}
-                      size={150}
+                      size={120}
                       strokeWidth={0.25}
                       className={`${spinning ? 'animate-spin' : null}`}
                     />
@@ -319,8 +288,8 @@ export default function Spin({
 
           {/* ----------------------- Third Column ----------------------- */}
 
-          <div className="flex flex-col w-1/3">
-            <div className="w-[25em]">
+          <div className="flex flex-col sm:w-1/3">
+            <div className="sm:w-[25em]">
               <p className="text-sm h-10 py-2">
                 Do you want to start a new list?
               </p>

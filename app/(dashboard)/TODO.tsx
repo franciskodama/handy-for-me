@@ -2,6 +2,7 @@
 // Google Cloud Credentials: https://console.cloud.google.com/apis/credentials
 
 // TODO: WORKING ON + FAST
+// Bucket List: Filter for done and not done
 // Responsivity
 // Cities I've visited Feature
 // Thigns to do Frame list that you can cross what was done.
@@ -35,6 +36,8 @@
 
 //TODO: DONE
 // Auth Google
+// Auth Google in Production
+// Auth GitHub in Production
 // Auth GitHub
 // Fix deployment error on vercel
 // Random Quotes pencial banner

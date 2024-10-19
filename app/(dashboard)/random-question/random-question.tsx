@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { CircleHelp } from 'lucide-react';
 
 import {
   Card,
@@ -18,12 +17,6 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger
-} from '@/components/ui/tooltip';
 import { Button } from '@/components/ui/button';
 import ExplanationRandomQuestion from './explanation-random-question';
 import {
@@ -32,6 +25,7 @@ import {
   getLuckyChoice
 } from './questions';
 import Countdown from './countdown';
+import Help from '@/components/Help';
 
 export default function RandomQuestion({ name }: { name: string }) {
   const [topic, setTopic] = useState<string>('');
@@ -73,29 +67,7 @@ export default function RandomQuestion({ name }: { name: string }) {
       <CardHeader className="mb-12">
         <CardTitle className="flex justify-between items-center gap-2">
           <p>Random Questions</p>
-          {!openAction ? (
-            <>
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger
-                    className="text-sm"
-                    onClick={() => {
-                      setOpenAction(true);
-                    }}
-                  >
-                    <CircleHelp size={32} strokeWidth={1.4} />
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p className="text-primary ml-2 capitalize font-light">
-                      learn more
-                    </p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            </>
-          ) : (
-            <div />
-          )}
+          {!openAction ? <Help setOpenAction={setOpenAction} /> : <div />}
         </CardTitle>
         <CardDescription>
           Boost your English with fun, random prompts!
@@ -117,10 +89,8 @@ export default function RandomQuestion({ name }: { name: string }) {
           ) : null}
         </AnimatePresence>
 
-        {/* ----------------------- First Column ----------------------- */}
-
-        <div className="flex justify-between gap-8 mb-4 w-full">
-          <div className="flex w-1/5 flex-col gap-4">
+        <div className="flex flex-col sm:flex-row justify-between gap-8 mb-4 w-full">
+          <div className="flex sm:w-1/5 flex-col gap-4">
             <p className="text-lg font-semibold">
               {`${name.split(' ')[0]}, let's get started! 👋 `}
             </p>
@@ -165,16 +135,14 @@ export default function RandomQuestion({ name }: { name: string }) {
               >
                 {`I'm feeling lucky!`}
               </Button>
-              <p className="text-xs">
+              <p className="text-xs mb-8">
                 Let fate decide your next topic and question
               </p>
             </div>
           </div>
 
-          {/* ----------------------- Second Column ----------------------- */}
-
           <div
-            className={`flex flex-col w-3/5 items-center h-[30em]`}
+            className={`flex flex-col sm:w-3/5 items-center`}
             style={{
               borderImage: `repeating-linear-gradient(
                   45deg,
@@ -191,7 +159,7 @@ export default function RandomQuestion({ name }: { name: string }) {
           >
             {result ? (
               <>
-                <p className="text-5xl font-semibold text-primary leading-tight p-16 text-center w-full my-8">
+                <p className="flex flex-col justify-center p-12 text-2xl sm:text-5xl font-semibold text-primary sm:leading-normal text-center">
                   {result}
                 </p>
                 <Button
@@ -199,24 +167,26 @@ export default function RandomQuestion({ name }: { name: string }) {
                   className="capitalize mb-12"
                   onClick={handleResetAll}
                 >
-                  restart
+                  Reset
                 </Button>
               </>
             ) : (
               <>
-                <div className="flex flex-col text-xl text-primary leading-tight p-4 text-center w-full my-8 gap-4">
-                  <p className="font-semibold text-2xl pt-[4em]">
-                    Ready for a challenge? 🔥
-                  </p>
-                  <p>Set the timer, choose a topic, spin, and answer.</p>
+                <div className="flex flex-col h-full justify-center p-12 leading-tight text-center w-full gap-4">
+                  <div>
+                    <p className="font-semibold text-lg sm:text-2xl mb-4">
+                      Ready for a challenge? 🔥
+                    </p>
+                    <p className="text-sm sm:text-xl">
+                      Set the timer, choose a topic, spin, and answer.
+                    </p>
+                  </div>
                 </div>
               </>
             )}
           </div>
 
-          {/* ----------------------- Third Column ----------------------- */}
-
-          <div className="flex flex-col w-1/5">
+          <div className="flex flex-col mt-8 sm:mt-0 sm:w-1/5">
             <Countdown
               name={name}
               resetAll={resetAll}
