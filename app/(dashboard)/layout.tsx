@@ -9,13 +9,10 @@ import {
   LineChart,
   ListMinus,
   MessageCircleQuestion,
-  Package,
   Package2,
   PanelLeft,
   RefreshCw,
   Settings,
-  ShoppingCart,
-  Users2,
   WholeWord
 } from 'lucide-react';
 

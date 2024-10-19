@@ -2,31 +2,11 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
+import { Bomb, Check, Trash2 } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
-import {
-  Bomb,
-  Check,
-  CircleHelp,
-  Trash2,
-  Brain,
-  Goal,
-  Settings,
-  X
-} from 'lucide-react';
 import { useActionState, useEffect, useState } from 'react';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle
-} from '@/components/ui/card';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger
-} from '@/components/ui/tooltip';
+
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -47,11 +27,10 @@ import {
   getVisualBoardItems,
   setVisualBoardItemDone
 } from '@/lib/actions';
+import Help from '@/components/Help';
+import { toast } from '@/hooks/use-toast';
 import { barlow, kumbh_sans } from '@/app/ui/fonts';
 import ExplanationVisionBoard from './explanation-vision-board';
-import { toast } from '@/hooks/use-toast';
-import Help from '@/components/Help';
-import ExplanationBox from '@/components/ExplanationBox';
 
 const handleSubmit = async (previousState: unknown, formData: FormData) => {
   const name = formData.get('name') as string;
@@ -353,20 +332,3 @@ export default function VisionBoard({
     </Card>
   );
 }
-
-// shadow-[0_0px_0px_0px_inset,#000_-5px_5px]
-
-// The conscious mind is like the navigator or captain at the bridge of a
-// ship. He directs the ship and signals orders to men in the engine room,
-// who in turn control all the boilers, instruments, gauges, etc. The men
-// in the engine room do not know where they are going; they follow orders.
-// They would go on the rocks if the man on the bridge issued faulty or
-// wrong instructions based on his findings with the compass, sextant, or
-// other instruments. The men in the engine room obey him because he is in
-// charge and issues orders, which are automatically obeyed. Members of the
-// crew do not talk back to the captain; they simply carry out orders. The
-// captain is the master of his ship, and his decrees are carried out.
-// Likewise, your conscious mind is the captain and the master of your
-// ship, which represents your body, environment, and all your affairs.
-// Your subconscious mind takes the orders you give it based upon what your
-// conscious mind believes and accepts as true.
