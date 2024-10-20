@@ -204,11 +204,13 @@ export default function BucketList({
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="flex flex-col sm:flex-row justify-between items-start mb-0">
-          <div className="flex flex-col w-full">
+        <CardTitle className="flex flex-col sm:flex-row sm:justify-between items-start mb-0">
+          <div className="flex flex-col">
             <div className="flex items-center justify-between">
               <p>Bucket List</p>
-              {!openAction ? <Help setOpenAction={setOpenAction} /> : <div />}
+              <div className="block sm:hidden">
+                {!openAction ? <Help setOpenAction={setOpenAction} /> : <div />}
+              </div>
             </div>
             <p
               className={`${barlow.className} text-sm font-normal lowercase mt-2`}
@@ -218,49 +220,53 @@ export default function BucketList({
             </p>
           </div>
           <div
-            className={`${barlow.className} flex gap-4 capitalize sm:w-3/5 mt-8 sm:mt-0`}
+            className={`${barlow.className} flex gap-4 capitalize mt-8 sm:mt-0`}
           >
-            <form className="w-full" action={action}>
-              <div className="flex flex-col sm:flex-row items-start gap-8 sm:gap-2 font-normal">
-                <div className="flex flex-col w-full gap-1">
-                  <Input placeholder="Adventure" id="name" name="name" />
-                  <p className="text-xs ml-4 lowercase">
-                    <span className="uppercase">N</span>ame your adventure in
-                    one word.
-                  </p>
-                </div>
-                <div className="flex flex-col w-full gap-1">
-                  <Select name="category">
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Category" id="category" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {categories.map((category: Category) => (
-                        <div key={category.name}>
-                          <SelectItem value={category.name}>
-                            {category.name}
-                          </SelectItem>
-                        </div>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <p className="text-xs ml-4 lowercase">
-                    <span className="uppercase">C</span>
-                    hoose a category that best describes your adventure.
-                  </p>
-                </div>
-                <Input
-                  id="uid"
-                  name="uid"
-                  value={uid}
-                  readOnly
-                  className="hidden"
-                />
-                <Button type="submit" disabled={isPending}>
-                  {isPending ? 'Adding...' : 'Add'}
-                </Button>
+            <form
+              className="flex flex-col sm:flex-row items-start gap-8 sm:gap-2 font-normal"
+              action={action}
+            >
+              <div className="flex flex-col gap-1 w-full sm:w-2/5">
+                <Input placeholder="Adventure" id="name" name="name" />
+                <p className="text-xs ml-4 lowercase">
+                  <span className="uppercase">N</span>ame your adventure in one
+                  word.
+                </p>
               </div>
+              <div className="flex flex-col gap-1 w-full sm:w-2/5">
+                <Select name="category">
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Category" id="category" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {categories.map((category: Category) => (
+                      <div key={category.name}>
+                        <SelectItem value={category.name}>
+                          {category.name}
+                        </SelectItem>
+                      </div>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <p className="text-xs ml-4 lowercase">
+                  <span className="uppercase">C</span>
+                  hoose a category that best describes your adventure.
+                </p>
+              </div>
+              <Input
+                id="uid"
+                name="uid"
+                value={uid}
+                readOnly
+                className="hidden"
+              />
+              <Button type="submit" disabled={isPending}>
+                {isPending ? 'Adding...' : 'Add'}
+              </Button>
             </form>
+          </div>
+          <div className="hidden sm:block">
+            {!openAction ? <Help setOpenAction={setOpenAction} /> : <div />}
           </div>
         </CardTitle>
       </CardHeader>

@@ -3,7 +3,6 @@
 
 // TODO: WORKING ON + FAST
 // Button hover effect: Mariana thinks it's counterintuitive
-// Vision Board mosaic centralized in the middle of the parent div
 // Bucket List: Filter for done and not done
 // Responsivity
 // Cities I've visited Feature
@@ -37,6 +36,8 @@
 // Button: https://medium.com/@dewamadewira25/how-to-make-a-neo-brutalism-button-using-tailwindcss-91d3faf2b269
 
 //TODO: DONE
+// Vision Board: Title align left
+// Vision Board mosaic centralized in the middle of the parent div
 // Better organization for the nav files
 // Letter Leap: Title in one line
 // Letter Leap: Size of the Letter
