@@ -4,17 +4,12 @@ import { Analytics } from '@vercel/analytics/react';
 
 import {
   BookA,
-  Cog,
   Grid3x3,
   Home,
-  LineChart,
   ListMinus,
   Menu,
   MessageCircleQuestion,
-  Package2,
-  RefreshCw,
-  Settings,
-  WholeWord
+  RefreshCw
 } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
@@ -31,12 +26,7 @@ import { DashboardBreadcrumb } from './header/breadcrumb';
 import { SearchInput } from './header/search';
 import Greeting from './header/greeting';
 import { Toaster } from '@/components/ui/toaster';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger
-} from '@/components/ui/tooltip';
-import { NavItem } from './nav/nav-item';
+import { NavItem } from '../../components/NavItem';
 
 export default function DashboardLayout({
   children
