@@ -23,10 +23,9 @@ import { User } from './header/user';
 import Providers from './providers';
 import PencilBanner from './header/pencil-banner';
 import { DashboardBreadcrumb } from './header/breadcrumb';
-import { SearchInput } from './header/search';
 import Greeting from './header/greeting';
 import { Toaster } from '@/components/ui/toaster';
-import { NavItem } from '../../components/NavItem';
+import { NavItem } from '@/components/NavItem';
 
 export default function DashboardLayout({
   children
@@ -76,7 +75,6 @@ function MobileNav() {
             href="/"
             className="group flex h-10 w-10 shrink-0 items-center justify-center gap-2 text-lg font-semibold text-primary-foreground md:text-base"
           >
-            {/* <Package2 className="h-5 w-5 transition-all group-hover:scale-110" /> */}
             <Image
               src="/logos/HandyForMe_Cog200x200.png"
               alt="HandyFor.Me Logo"
@@ -113,12 +111,6 @@ export function DesktopNav() {
   return (
     <aside className="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-background sm:flex">
       <nav className="flex flex-col items-center gap-4 px-2 sm:py-5">
-        {/* <Link
-          href="/"
-          className="bg-primary group flex h-9 w-9 shrink-0 items-center justify-center gap-2 text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base"
-        >
-          <p className="text-[10px] skew-y-[-12deg]">Juvoo</p>
-        </Link> */}
         <Link
           href="/"
           className="group flex h-9 w-9 shrink-0 items-center justify-center gap-2 text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base"

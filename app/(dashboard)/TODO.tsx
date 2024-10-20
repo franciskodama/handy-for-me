@@ -37,6 +37,7 @@
 // Button: https://medium.com/@dewamadewira25/how-to-make-a-neo-brutalism-button-using-tailwindcss-91d3faf2b269
 
 //TODO: DONE
+// Better organization for the nav files
 // Letter Leap: Title in one line
 // Letter Leap: Size of the Letter
 // Letter Leap: Scroll to the results of emergency words (mobile)
