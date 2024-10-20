@@ -18,7 +18,12 @@ import {
 } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetTrigger
+} from '@/components/ui/sheet';
 import { User } from './header/user';
 import Providers from './providers';
 import PencilBanner from './header/pencil-banner';
@@ -90,15 +95,14 @@ function MobileNav() {
             />
             <span className="sr-only">HandyFor.me</span>
           </Link>
-
           {menuItems.map((item) => (
-            <Link
-              key={item.label}
-              href={item.href}
-              className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-            >
-              {item.icon}
-              {item.label}
+            <Link key={item.label} href={item.href}>
+              <SheetClose asChild>
+                <button className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground">
+                  {item.icon}
+                  {item.label}
+                </button>
+              </SheetClose>
             </Link>
           ))}
 
