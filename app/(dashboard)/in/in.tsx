@@ -89,7 +89,7 @@ export default function In({ user }: { user: User | undefined }) {
               >
                 Affirmation
               </h3>
-              <p className="">Donec sapien mi, fermentum et</p>
+              <p className="hidden sm:block">Donec sapien mi, fermentum et</p>
               <ChevronsUpDown size={24} strokeWidth={1.8} />
             </div>
             <div className="flex items-center justify-between sm:w-1/3 border border-dashed border-slate-300 p-4">
@@ -98,7 +98,7 @@ export default function In({ user }: { user: User | undefined }) {
               >
                 Pellentesque
               </h3>
-              <p className="">Mauris tristique sem consequat</p>
+              <p className="hidden sm:block">Mauris tristique sem consequat</p>
               <ChevronsUpDown size={24} strokeWidth={1.8} />
             </div>
             <div className="flex items-center justify-between sm:w-1/3 border border-dashed border-slate-300 p-4">
@@ -107,7 +107,9 @@ export default function In({ user }: { user: User | undefined }) {
               >
                 Donec
               </h3>
-              <p className="">Pellentesque est ante, porttitor</p>
+              <p className="hidden sm:block">
+                Pellentesque est ante, porttitor
+              </p>
               <ChevronsUpDown size={24} strokeWidth={1.8} />
             </div>
           </div>
@@ -174,7 +176,7 @@ export default function In({ user }: { user: User | undefined }) {
                 borderWidth: '1em'
               }}
             >
-              <p>
+              <p className="hidden sm:block">
                 Praesent ante est, facilisis at commodo sit amet, efficitur id
                 diam. Mauris tristique sem consequat, aliquam est eu, sodales
                 nisi. Vivamus elementum, eros quis varius fermentum.{' '}
@@ -188,28 +190,28 @@ export default function In({ user }: { user: User | undefined }) {
           >
             ultricies
           </p>
-          <div className="flex w-full justify-between gap-8">
-            <div className="flex items-start justify-between w-1/3 border border-dashed border-slate-300 p-4 h-[10em]">
+          <div className="flex flex-col sm:flex-row w-full justify-between gap-8">
+            <div className="flex items-start justify-between sm:w-1/3 border border-dashed border-slate-300 p-4 h-[10em]">
               <h3
                 className={`${kumbh_sans.className} uppercase font-bold text-lg leading-none`}
               >
                 Title
               </h3>
             </div>
-            <div className="flex items-start justify-between w-1/3 border border-dashed border-slate-300 p-4 h-[10em]">
+            <div className="flex items-start justify-between sm:w-1/3 border border-dashed border-slate-300 p-4 h-[10em]">
               <h3
                 className={`${kumbh_sans.className} uppercase font-bold text-lg leading-none`}
               >
                 Title
               </h3>
             </div>
-            <div className="flex flex-col items-start gap-4 w-1/3 border border-dashed border-slate-300 p-4 h-[10em]">
+            <div className="flex flex-col items-start gap-4 sm:w-1/3 border border-dashed border-slate-300 p-4 h-[10em]">
               <h3
                 className={`${kumbh_sans.className} uppercase font-bold text-lg leading-none`}
               >
                 Title
               </h3>
-              <p>
+              <p className="hidden sm:block">
                 Praesent ante est, facilisis at commodo sit amet, efficitur id
                 diam. Mauris tristique sem consequat, aliquam est eu, sodales
                 nisi. Vivamus elementum, eros quis varius fermentum.{' '}
@@ -223,22 +225,22 @@ export default function In({ user }: { user: User | undefined }) {
           >
             aliquam
           </p>
-          <div className="flex w-full justify-between gap-8">
-            <div className="flex items-start justify-between w-1/3 border border-dashed border-slate-300 p-4 h-[10em]">
+          <div className="flex flex-col sm:flex-row w-full justify-between gap-8">
+            <div className="flex items-start justify-between sm:w-1/3 border border-dashed border-slate-300 p-4 h-[10em]">
               <h3
                 className={`${kumbh_sans.className} uppercase font-bold text-lg leading-none`}
               >
                 Title
               </h3>
             </div>
-            <div className="flex items-start justify-between w-1/3 border border-dashed border-slate-300 p-4 h-[10em]">
+            <div className="flex items-start justify-between sm:w-1/3 border border-dashed border-slate-300 p-4 h-[10em]">
               <h3
                 className={`${kumbh_sans.className} uppercase font-bold text-lg leading-none`}
               >
                 Title
               </h3>
             </div>
-            <div className="flex items-start justify-between w-1/3 border border-dashed border-slate-300 p-4 h-[10em]">
+            <div className="flex items-start justify-between sm:w-1/3 border border-dashed border-slate-300 p-4 h-[10em]">
               <h3
                 className={`${kumbh_sans.className} uppercase font-bold text-lg leading-none`}
               >
@@ -254,9 +256,9 @@ export default function In({ user }: { user: User | undefined }) {
           >
             elementum
           </p>
-          <div className="flex w-full justify-between gap-8">
+          <div className="flex flex-col sm:flex-row w-full justify-between gap-8">
             <div
-              className={`flex flex-col w-1/3 items-center h-[10em] p-4`}
+              className={`flex flex-col sm:w-1/3 items-center h-[10em] p-4`}
               style={{
                 borderImage: `repeating-linear-gradient(
                   45deg,
@@ -274,7 +276,7 @@ export default function In({ user }: { user: User | undefined }) {
               <p>Box</p>
             </div>
             <div
-              className={`flex flex-col w-1/3 items-center h-[10em] p-4`}
+              className={`flex flex-col sm:w-1/3 items-center h-[10em] p-4`}
               style={{
                 borderImage: `repeating-linear-gradient(
                   45deg,
@@ -292,7 +294,7 @@ export default function In({ user }: { user: User | undefined }) {
               <p>Box</p>
             </div>
             <div
-              className={`flex flex-col w-1/3 items-center h-[10em] p-4`}
+              className={`flex flex-col sm:w-1/3 items-center h-[10em] p-4`}
               style={{
                 borderImage: `repeating-linear-gradient(
                   45deg,

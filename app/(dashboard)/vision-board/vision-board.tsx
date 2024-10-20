@@ -257,7 +257,7 @@ export default function VisionBoard({
                   className="object-cover w-20 h-20 sm:w-48 sm:h-48 group-hover:opacity-100"
                 />
                 <p
-                  className={`${kumbh_sans.className} bg-white text-center uppercase text-[10px] sm:text-sm leading-none absolute bottom-0 left-0 sm:left-2 px-2 py-1`}
+                  className={`${kumbh_sans.className} bg-white text-left uppercase text-[8px] sm:text-sm leading-none absolute bottom-0 left-0 sm:left-2 px-2 py-1`}
                 >
                   {item.name}
                 </p>
