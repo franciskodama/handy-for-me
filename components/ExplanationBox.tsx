@@ -31,10 +31,8 @@ export default function ExplanationBox({
   setOpenAction: (value: boolean) => void;
 }) {
   return (
-    <div className="relative mt-8 p-1">
-      {/* no padding here? */}
+    <div className="relative mt-8 border">
       <Alert
-        className="border-[0.5em] sm:border-[1em]"
         style={{
           borderImage: `repeating-linear-gradient(
               45deg,
@@ -45,8 +43,8 @@ export default function ExplanationBox({
               transparent 3px,
               transparent 3px
             ) 15 / 0.75rem`,
-          borderStyle: 'solid'
-          // borderWidth: '1em'
+          borderStyle: 'solid',
+          borderWidth: '1em'
         }}
       >
         <AlertDescription className="relative text-sm flex flex-col sm:flex-row items-start justify-between p-1">
