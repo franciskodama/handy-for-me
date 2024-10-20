@@ -168,11 +168,13 @@ export default function VisionBoard({
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="flex flex-col sm:flex-row justify-between items-start mb-0">
-          <div className="flex flex-col w-full">
+        <CardTitle className="flex flex-col sm:flex-row sm:justify-between items-start mb-0">
+          <div className="flex flex-col">
             <div className="flex items-center justify-between">
               <p>Vision Board</p>
-              {!openAction ? <Help setOpenAction={setOpenAction} /> : <div />}
+              <div className="block sm:hidden">
+                {!openAction ? <Help setOpenAction={setOpenAction} /> : <div />}
+              </div>
             </div>
             <p
               className={`${barlow.className} text-sm font-normal lowercase mt-2`}
@@ -182,46 +184,48 @@ export default function VisionBoard({
             </p>
           </div>
           <div
-            className={`${barlow.className} flex gap-4 capitalize sm:w-3/5 mt-8 sm:mt-0`}
+            className={`${barlow.className} flex gap-4 capitalize mt-8 sm:mt-0`}
           >
-            <form className="w-full" action={action}>
-              <div className="flex flex-col sm:flex-row items-start gap-8 sm:gap-2 font-normal">
-                <div className="flex flex-col w-full gap-1">
-                  <Input placeholder="Goal" id="name" name="name" />
-                  <p className="text-xs ml-4 lowercase">
-                    <span className="uppercase">N</span>ame your goal in one
-                    word (optional).
-                  </p>
-                </div>
-                <div className="flex flex-col w-full gap-1">
-                  <Input placeholder="Url" id="url" name="url" />
-                  <p className="text-xs ml-4 lowercase">
-                    <span className="uppercase">A</span>dd the URL of a picture
-                    from
-                    <Link
-                      href="https://unsplash.com/"
-                      target="_blank"
-                      className="mx-1 font-bold underline"
-                    >
-                      <span className="uppercase">U</span>nsplash
-                    </Link>
-                    that reflects your vision. *
-                  </p>
-                </div>
-                <Input
-                  id="uid"
-                  name="uid"
-                  value={uid}
-                  readOnly
-                  className="hidden"
-                />
-                <div className="flex justify-between items-center w-full">
-                  <Button type="submit" disabled={isPending}>
-                    {isPending ? 'Adding...' : 'Add'}
-                  </Button>
-                </div>
+            <form
+              className="flex flex-col sm:flex-row items-start gap-8 sm:gap-2 font-normal"
+              action={action}
+            >
+              <div className="flex flex-col gap-1 w-full sm:w-2/5">
+                <Input placeholder="Goal" id="name" name="name" />
+                <p className="text-xs ml-4 lowercase">
+                  <span className="uppercase">N</span>ame your goal in one word
+                  (optional).
+                </p>
               </div>
+              <div className="flex flex-col gap-1 w-full sm:w-2/5">
+                <Input placeholder="Url" id="url" name="url" />
+                <p className="text-xs ml-4 lowercase">
+                  <span className="uppercase">A</span>dd the URL of a picture
+                  from
+                  <Link
+                    className="mx-1 font-bold underline"
+                    href="https://unsplash.com/"
+                    target="_blank"
+                  >
+                    <span className="uppercase">U</span>nsplash
+                  </Link>
+                  that reflects your vision. *
+                </p>
+              </div>
+              <Input
+                id="uid"
+                name="uid"
+                value={uid}
+                readOnly
+                className="hidden"
+              />
+              <Button type="submit" disabled={isPending}>
+                {isPending ? 'Adding...' : 'Add'}
+              </Button>
             </form>
+          </div>
+          <div className="hidden sm:block">
+            {!openAction ? <Help setOpenAction={setOpenAction} /> : <div />}
           </div>
         </CardTitle>
       </CardHeader>
@@ -241,7 +245,7 @@ export default function VisionBoard({
           ) : null}
         </AnimatePresence>
 
-        <div className="flex flex-wrap gap-[1px]">
+        <div className="flex flex-wrap gap-[1px] justify-center">
           {board.map((item: VisualBoardItem) => (
             <div key={item.id}>
               <div className="relative group">
