@@ -1,8 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { CircleHelp, SquareX } from 'lucide-react';
+import { SquareX } from 'lucide-react';
 import { Foldit } from 'next/font/google';
 
 export const foldit = Foldit({
@@ -19,35 +19,36 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/card';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger
-} from '@/components/ui/tooltip';
+
 import { Button } from '@/components/ui/button';
 import ExplanationLetterLeap from './explanation-letter-leap';
 import Help from '@/components/Help';
 
 export default function LetterLeap({ name }: { name: string }) {
-  const [spinning, setSpinning] = useState<boolean>(false);
   const [result, setResult] = useState<string>('');
   const [openAction, setOpenAction] = useState(false);
   const [showInspirations, setShowInspirations] = useState(false);
+  const optionsRef = useRef<HTMLDivElement>(null);
 
   const handleSpin = () => {
-    setSpinning(true);
     setShowInspirations(false);
     const randomIndex = Math.floor(Math.random() * alphabet.length);
     const randomLetter = alphabet[randomIndex];
     setTimeout(() => {
       setResult(randomLetter);
-      setSpinning(false);
     }, 1000);
   };
 
   const handleShowInspirations = () => {
     setShowInspirations(!showInspirations);
+    if (!showInspirations) {
+      setTimeout(() => {
+        optionsRef.current?.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }, 100);
+    }
   };
 
   return (
@@ -77,22 +78,16 @@ export default function LetterLeap({ name }: { name: string }) {
           ) : null}
         </AnimatePresence>
 
-        {/* ----------------------- First Column ----------------------- */}
-
         <div className="flex flex-col sm:flex-row justify-between gap-8 mb-4 w-full">
           <div className="flex sm:w-1/5 flex-col gap-4">
-            <p className="text-lg font-semibold">
-              Let the letter lead your thoughts. 🎯
-            </p>
+            <p className="text-lg font-semibold">Let words guide you. 🎯</p>
             <Button className="capitalize" onClick={handleSpin}>
               Spin!
             </Button>
           </div>
 
-          {/* ----------------------- Second Column ----------------------- */}
-
           <div
-            className="flex flex-col justify-center items-center h-full sm:w-3/5 my-8 sm:my-0"
+            className="flex flex-col justify-center items-center sm:w-3/5 my-2 sm:my-0"
             style={{
               borderImage: `repeating-linear-gradient(
                   45deg,
@@ -110,7 +105,7 @@ export default function LetterLeap({ name }: { name: string }) {
             {result ? (
               <>
                 <p
-                  className={`${foldit.className} flex flex-col justify-center text-[20rem] uppercase text-center w-full font-bold`}
+                  className={`${foldit.className} flex flex-col justify-center text-[10rem] sm:text-[20rem] uppercase text-center font-bold`}
                 >
                   {result}
                 </p>
@@ -118,7 +113,7 @@ export default function LetterLeap({ name }: { name: string }) {
               </>
             ) : (
               <>
-                <div className="flex flex-col h-full justify-center p-12 text-xl text-primary leading-tight text-center w-full gap-4">
+                <div className="flex flex-col justify-center p-12 sm:py-32 text-xl text-primary leading-tight text-center gap-4">
                   <p className="font-semibold text-2xl">
                     Ready to spin and spark your creativity? 🍀
                   </p>
@@ -127,8 +122,6 @@ export default function LetterLeap({ name }: { name: string }) {
               </>
             )}
           </div>
-
-          {/* ----------------------- Third Column ----------------------- */}
 
           <div className="flex flex-col sm:w-1/5">
             <p className="text-lg font-semibold mb-2">
@@ -142,7 +135,7 @@ export default function LetterLeap({ name }: { name: string }) {
             >
               Emergency Helper
             </Button>
-            <div className="">
+            <div ref={optionsRef}>
               {result &&
                 showInspirations &&
                 startWords[result.toUpperCase() as keyof typeof startWords].map(

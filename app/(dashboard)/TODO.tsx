@@ -2,6 +2,8 @@
 // Google Cloud Credentials: https://console.cloud.google.com/apis/credentials
 
 // TODO: WORKING ON + FAST
+// Button hover effect: Mariana thinks it's counterintuitive
+// Vision Board mosaic centralized in the middle of the parent div
 // Bucket List: Filter for done and not done
 // Responsivity
 // Cities I've visited Feature
@@ -35,6 +37,16 @@
 // Button: https://medium.com/@dewamadewira25/how-to-make-a-neo-brutalism-button-using-tailwindcss-91d3faf2b269
 
 //TODO: DONE
+// Better organization for the nav files
+// Letter Leap: Title in one line
+// Letter Leap: Size of the Letter
+// Letter Leap: Scroll to the results of emergency words (mobile)
+// Close Menu (Sheet) after clicking on a menu item
+// Spin Magic: font size for Mobile
+// Login Reponsive
+// Dashboard responsive
+// Right Position of the ? in Bucket List and Vision Board
+// Hamburguer Menu
 // Auth Google
 // Auth Google in Production
 // Auth GitHub in Production

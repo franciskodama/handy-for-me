@@ -15,28 +15,30 @@ import Image from 'next/image';
 export default async function Login() {
   return (
     <div
-      className="min-h-screen flex justify-center items-start md:items-center p-8 bg-[#ffffff] opacity-80"
+      className="min-h-screen flex flex-col sm:flex-row justify-center items-start md:items-center p-8 bg-[#ffffff] opacity-80"
       style={{
         backgroundSize: '10px 10px',
         backgroundImage:
           'repeating-linear-gradient(45deg, #000000 0, #030303 1px, #ffffff 0, #ffffff 50%)'
       }}
     >
-      <div className="flex">
-        <div className="flex flex-col p-12 border-red-500bg bg-white mr-12 w-[90ch] border border-primary shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+      <div className="flex flex-col sm:flex-row items-center">
+        <div className="flex flex-col p-4 sm:p-12 border-red-500bg bg-white sm:mr-12 mb-8 sm:mb-0 sm:w-[90ch] border border-primary shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
           <Image
-            className="mb-12"
+            className="mb-6 sm:mb-12 w-20 h-20 sm:w-32 sm:h-32"
             src="/logos/HandyForMe_Cog200x200.png"
             alt="HandyFor.Me Logo"
             width={150}
             height={150}
           />
-          <div className={`flex flex-col text-4xl font-extrabold uppercase`}>
-            <p className={`${kumbh_sans.className} text-8xl leading-[5.5rem]`}>
+          <div className="flex flex-col uppercase w-full">
+            <p
+              className={`${kumbh_sans.className} text-5xl sm:text-8xl font-extrabold sm:leading-[5.5rem]`}
+            >
               Goodbye 👋 overwhelm!
             </p>
-            <div className="opacity-50 leading-10 w-[20ch] mt-12 font-medium">
-              <p>
+            <div className="flex w-full sm:justify-end text-xl sm:text-4xl font-medium sm:text-right opacity-50 sm:leading-10 mt-12">
+              <p className="w-[20ch]">
                 Your personal hub for organizing daily tasks is just one click
                 away!
               </p>
@@ -51,7 +53,7 @@ export default async function Login() {
               Life’s better when it’s handy – Let’s sign in!
             </CardDescription>
           </CardHeader>
-          <CardContent className="flex flex-col items-center my-[6em]">
+          <CardContent className="flex flex-col items-center my-4 sm:my-[6em]">
             <form
               action={async () => {
                 'use server';

@@ -29,6 +29,7 @@ import { ChevronsUpDown, CircleHelp, UnfoldVertical } from 'lucide-react';
 import UserCard from './user';
 import { User } from '@/lib/types';
 import { kumbh_sans } from '@/app/ui/fonts';
+import Help from '@/components/Help';
 
 export default function In({ user }: { user: User | undefined }) {
   // { user }: { user: UserProps }
@@ -46,29 +47,7 @@ export default function In({ user }: { user: User | undefined }) {
       <CardHeader className="mb-12">
         <CardTitle className="flex justify-between items-center gap-2">
           <p>Dashboard</p>
-          {!openAction ? (
-            <>
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger
-                    className="text-sm"
-                    onClick={() => {
-                      setOpenAction(true);
-                    }}
-                  >
-                    <CircleHelp size={32} strokeWidth={1.4} />
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p className="text-primary ml-2 capitalize font-light">
-                      Learn More
-                    </p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            </>
-          ) : (
-            <div />
-          )}
+          {!openAction ? <Help setOpenAction={setOpenAction} /> : <div />}
         </CardTitle>
         <CardDescription>
           Everything you need, right at your fingertips.
@@ -94,17 +73,17 @@ export default function In({ user }: { user: User | undefined }) {
         <div className="flex flex-col gap-4">
           {/* ----------------------- First Row ----------------------- */}
 
-          <div className="flex w-full justify-between gap-8 mb-12">
-            <div className="w-1/3">
+          <div className="flex flex-col sm:flex-row w-full justify-between gap-8 mb-12">
+            <div className="sm:w-1/3">
               <UserCard user={user} />
             </div>
-            <div className="w-1/3 border border-dashed border-slate-300 p-4"></div>
-            <div className="w-1/3 border border-dashed border-slate-300 p-4"></div>
+            <div className="sm:w-1/3 border border-dashed border-slate-300 p-4"></div>
+            <div className="sm:w-1/3 border border-dashed border-slate-300 p-4"></div>
           </div>
 
           {/* ----------------------- Second Row ----------------------- */}
-          <div className="flex w-full justify-between gap-8">
-            <div className="flex items-center justify-between w-1/3 border border-dashed border-slate-300 p-4">
+          <div className="flex flex-col sm:flex-row w-full justify-between gap-8">
+            <div className="flex items-center justify-between sm:w-1/3 border border-dashed border-slate-300 p-4">
               <h3
                 className={`${kumbh_sans.className} uppercase font-bold text-lg leading-none`}
               >
@@ -113,7 +92,7 @@ export default function In({ user }: { user: User | undefined }) {
               <p className="">Donec sapien mi, fermentum et</p>
               <ChevronsUpDown size={24} strokeWidth={1.8} />
             </div>
-            <div className="flex items-center justify-between w-1/3 border border-dashed border-slate-300 p-4">
+            <div className="flex items-center justify-between sm:w-1/3 border border-dashed border-slate-300 p-4">
               <h3
                 className={`${kumbh_sans.className} uppercase font-bold text-lg leading-none`}
               >
@@ -122,7 +101,7 @@ export default function In({ user }: { user: User | undefined }) {
               <p className="">Mauris tristique sem consequat</p>
               <ChevronsUpDown size={24} strokeWidth={1.8} />
             </div>
-            <div className="flex items-center justify-between w-1/3 border border-dashed border-slate-300 p-4">
+            <div className="flex items-center justify-between sm:w-1/3 border border-dashed border-slate-300 p-4">
               <h3
                 className={`${kumbh_sans.className} uppercase font-bold text-lg leading-none`}
               >
@@ -139,9 +118,9 @@ export default function In({ user }: { user: User | undefined }) {
           >
             fermentum
           </p>
-          <div className="flex w-full justify-between gap-8">
+          <div className="flex flex-col sm:flex-row w-full justify-between gap-8">
             <div
-              className={`flex flex-col w-1/3 items-center h-[10em] p-4`}
+              className={`flex flex-col sm:w-1/3 items-center h-[10em] p-4`}
               style={{
                 borderImage: `repeating-linear-gradient(
                   45deg,
@@ -156,14 +135,10 @@ export default function In({ user }: { user: User | undefined }) {
                 borderWidth: '1em'
               }}
             >
-              <p>
-                Pellentesque est ante, porttitor at enim vel, finibus dictum
-                tellus. Donec sapien mi, fermentum et dignissim at, ultricies
-                nec quam.
-              </p>
+              <p>Pellentesque est ante</p>
             </div>
             <div
-              className={`flex flex-col w-1/3 items-center h-[10em] p-4`}
+              className={`flex flex-col sm:w-1/3 items-center h-[10em] p-4`}
               style={{
                 borderImage: `repeating-linear-gradient(
                   45deg,
@@ -184,7 +159,7 @@ export default function In({ user }: { user: User | undefined }) {
               </p>
             </div>
             <div
-              className={`flex flex-col w-1/3 items-center h-[10em] p-4`}
+              className={`flex flex-col sm:w-1/3 items-center h-[10em] p-4`}
               style={{
                 borderImage: `repeating-linear-gradient(
                   45deg,

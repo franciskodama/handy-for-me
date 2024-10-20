@@ -7,7 +7,7 @@ export default async function Greeting() {
   const greeting = getGreeting(firstName ? firstName : '');
 
   return (
-    <div className="hidden sm:flex">
+    <div>
       {firstName ? (
         <h4 className="font-semibold text-sm">
           {greeting}

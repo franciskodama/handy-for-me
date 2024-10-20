@@ -269,7 +269,7 @@ export default function Spin({
             {result && (
               <>
                 <p
-                  className={`${kumbh_sans.className} ${result.length > 8 ? 'text-4xl' : 'text-7xl'} uppercase font-bold leading-none text-center animate-pulse w-full my-8`}
+                  className={`${kumbh_sans.className} ${result.length > 8 ? 'text-xl sm:text-4xl' : 'text-4xl sm:text-7xl'} uppercase font-bold leading-none text-center animate-pulse w-full my-8`}
                 >
                   {result}
                 </p>
