@@ -2,7 +2,6 @@
 // Google Cloud Credentials: https://console.cloud.google.com/apis/credentials
 
 // TODO: WORKING ON + FAST
-// Close Sheet after clicking on a menu item
 // Button hover effect: Mariana thinks it's counterintuitive
 // Vision Board mosaic centralized in the middle of the parent div
 // Bucket List: Filter for done and not done
@@ -38,6 +37,7 @@
 // Button: https://medium.com/@dewamadewira25/how-to-make-a-neo-brutalism-button-using-tailwindcss-91d3faf2b269
 
 //TODO: DONE
+// Close Menu (Sheet) after clicking on a menu item
 // Spin Magic: font size for Mobile
 // Login Reponsive
 // Dashboard responsive
