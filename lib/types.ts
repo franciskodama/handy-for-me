@@ -47,7 +47,7 @@ export type ShortcutCategory = {
   uid: string;
   name: string;
   color: shortcut_color_enum;
-  shortcuts: Shortcut[] | null;
+  shortcuts?: Shortcut[];
 };
 
 export type Shortcut = {
@@ -58,5 +58,5 @@ export type Shortcut = {
   url: string;
   description: string;
   categoryId: string;
-  category: string;
+  category?: ShortcutCategory;
 };

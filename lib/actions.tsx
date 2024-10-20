@@ -350,6 +350,9 @@ export const getShortcuts = async (uid: string) => {
     const shortcuts = await prisma.shortcut.findMany({
       where: {
         uid
+      },
+      include: {
+        category: true
       }
     });
     return shortcuts;

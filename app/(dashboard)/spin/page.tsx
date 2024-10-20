@@ -9,6 +9,7 @@ export default async function SpinPage() {
 
   let lists: SpinList[] = [];
   let items: SpinItem[] = [];
+
   if (uid) {
     const fetchedLists = await getSpinLists(uid);
     if (Array.isArray(fetchedLists)) {
