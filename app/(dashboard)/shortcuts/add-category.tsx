@@ -1,15 +1,12 @@
 'use client';
 
-import Link from 'next/link';
+import { useActionState } from 'react';
+import { Bomb, Trash2 } from 'lucide-react';
+import { shortcut_color_enum } from '@prisma/client';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import {
-  Sheet,
-  SheetClose,
-  SheetContent,
-  SheetTrigger
-} from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import {
   Select,
   SelectContent,
@@ -28,7 +25,6 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger
 } from '@/components/ui/alert-dialog';
-import { useActionState } from 'react';
 import { kumbh_sans } from '@/app/ui/fonts';
 import { ShortcutCategory } from '@/lib/types';
 import { toast } from '@/hooks/use-toast';
@@ -37,9 +33,7 @@ import {
   deleteShortcutCategory,
   getShortcutsCategories
 } from '@/lib/actions';
-import { shortcut_color_enum } from '@prisma/client';
 import { colors } from '@/lib/utils';
-import { Bomb, Trash2 } from 'lucide-react';
 
 type Color = {
   name: string;

@@ -60,3 +60,11 @@ export type Shortcut = {
   categoryId: string;
   category?: ShortcutCategory;
 };
+
+export type AddShortcutParams = {
+  uid: string;
+  name: string;
+  url: string;
+  description: string;
+  categoryId: string;
+};

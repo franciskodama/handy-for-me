@@ -40,8 +40,9 @@ export default function Shortcuts({
   shortcuts: Shortcut[];
 }) {
   const [openAction, setOpenAction] = useState(false);
-
   const [board, setBoard] = useState<VisualBoardItem[]>([]);
+
+  //   getShortcutsCategories
 
   //   useEffect(() => {
   //     if (data?.newVisualBoardItem && Array.isArray(data.newVisualBoardItem)) {

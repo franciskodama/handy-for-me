@@ -2,7 +2,7 @@
 
 import { v4 } from 'uuid';
 import { prisma } from './prisma';
-import { SpinItem, SpinList } from './types';
+import { AddShortcutParams, SpinItem, SpinList } from './types';
 import { Shortcut, shortcut_color_enum } from '@prisma/client';
 
 export async function addUser(uid: string, name: string, avatar: string) {
@@ -361,7 +361,7 @@ export const getShortcuts = async (uid: string) => {
   }
 };
 
-export async function addShortcut(formData: Shortcut) {
+export async function addShortcut(formData: AddShortcutParams) {
   const { uid, name, url, description, categoryId } = formData;
 
   try {
