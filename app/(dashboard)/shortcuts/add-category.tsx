@@ -1,7 +1,7 @@
 'use client';
 
 import { useActionState } from 'react';
-import { Bomb, Trash2 } from 'lucide-react';
+import { Bomb, Inbox, Trash2 } from 'lucide-react';
 import { shortcut_color_enum } from '@prisma/client';
 
 import { Button } from '@/components/ui/button';
@@ -117,7 +117,7 @@ export function AddCategory({
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button variant="outline">Add Category</Button>
+        <Button variant="outline">Manage Categories</Button>
       </SheetTrigger>
       <SheetContent side="right" className="sm:max-w-xs mt-8 gap-8">
         <div className="flex flex-col gap-2 my-8">
@@ -167,62 +167,69 @@ export function AddCategory({
           </Button>
         </form>
 
-        <div className="flex flex-col gap-2 my-8">
+        <div className="flex flex-col gap-2 my-12">
           <p className="text-sm font-semibold capitalize">
             Current Categories:
           </p>
-          {categories.map((category: ShortcutCategory) => (
-            <div
-              key={category.id}
-              className="flex items-center justify-between border px-4 py-1"
-            >
-              <div className="flex items-center gap-2">
-                <div
-                  className="w-4 h-4 rounded-full"
-                  style={{ backgroundColor: category.color }}
-                />
-                <p className="text-center text-sm capitalize">
-                  {category.name}
-                </p>
+          {categories ? (
+            categories.map((category: ShortcutCategory) => (
+              <div
+                key={category.id}
+                className="flex items-center justify-between border px-4 py-1"
+              >
+                <div className="flex items-center gap-2">
+                  <div
+                    className="w-4 h-4 rounded-full"
+                    style={{ backgroundColor: category.color }}
+                  />
+                  <p className="text-center text-sm capitalize">
+                    {category.name}
+                  </p>
+                </div>
+                <AlertDialog>
+                  <AlertDialogTrigger>
+                    <Trash2 size={18} strokeWidth={1.8} color="black" />
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle className="flex items-center gap-2">
+                        <Bomb size={24} strokeWidth={1.8} />
+                        Are you absolutely sure?
+                      </AlertDialogTitle>
+                      <AlertDialogDescription className="py-4">
+                        This will permanently delete this Category
+                        <span className="font-bold mx-1">{category.name}</span>
+                        from our servers.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel
+                        onClick={() => {
+                          toast({
+                            title: 'Operation Cancelled! ❌',
+                            description: `Phew! 😮‍💨 Crisis averted. You successfully cancelled the operation.`,
+                            variant: 'destructive'
+                          });
+                        }}
+                      >
+                        Cancel
+                      </AlertDialogCancel>
+                      <AlertDialogAction
+                        onClick={() => handleDeleteCategory(category)}
+                      >
+                        Continue
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
               </div>
-              <AlertDialog>
-                <AlertDialogTrigger>
-                  <Trash2 size={18} strokeWidth={1.8} color="black" />
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle className="flex items-center gap-2">
-                      <Bomb size={24} strokeWidth={1.8} />
-                      Are you absolutely sure?
-                    </AlertDialogTitle>
-                    <AlertDialogDescription className="py-4">
-                      This will permanently delete this Category
-                      <span className="font-bold mx-1">{category.name}</span>
-                      from our servers.
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel
-                      onClick={() => {
-                        toast({
-                          title: 'Operation Cancelled! ❌',
-                          description: `Phew! 😮‍💨 Crisis averted. You successfully cancelled the operation.`,
-                          variant: 'destructive'
-                        });
-                      }}
-                    >
-                      Cancel
-                    </AlertDialogCancel>
-                    <AlertDialogAction
-                      onClick={() => handleDeleteCategory(category)}
-                    >
-                      Continue
-                    </AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
+            ))
+          ) : (
+            <div className="flex items-center gap-2 mt-4">
+              <Inbox size={24} strokeWidth={1.8} />
+              <p className="text-sm capitalize">No categories yet</p>
             </div>
-          ))}
+          )}
         </div>
       </SheetContent>
     </Sheet>

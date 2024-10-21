@@ -2,6 +2,8 @@
 // Google Cloud Credentials: https://console.cloud.google.com/apis/credentials
 
 // TODO: WORKING ON + FAST
+// Shortcut: handleDeleteCategory + what if there is shortcuts on this categories?
+
 // Button hover effect: Mariana thinks it's counterintuitive
 // Bucket List: Filter for done and not done
 // Responsivity
