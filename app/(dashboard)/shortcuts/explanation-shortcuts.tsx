@@ -1,6 +1,5 @@
 import { Lightbulb, Settings, Snail, Trash2 } from 'lucide-react';
 import ExplanationBox from '@/components/ExplanationBox';
-import { Checkbox } from '@/components/ui/checkbox';
 
 export default function ExplanationShortcuts({
   setOpenAction
@@ -27,14 +26,10 @@ export default function ExplanationShortcuts({
         when it’s time to make a decision, spin the wheel for a surprise choice!
       </p>
       <p className="flex items-center gap-4">
-        <Checkbox checked={true} />
         Easily manage items by unselecting them to skip the next draw without
         deleting them.
       </p>
       <p className="flex items-center gap-4">
-        <div>
-          <Trash2 size={18} strokeWidth={1.6} />
-        </div>
         You can also permanently delete items whenever you no longer need them.
       </p>
     </>

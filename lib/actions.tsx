@@ -307,11 +307,11 @@ export const getShortcutsCategories = async (uid: string) => {
 export async function addShortcutCategory({
   uid,
   name,
-  color
+  colorUppperCase
 }: {
   uid: string;
   name: string;
-  color: shortcut_color_enum;
+  colorUppperCase: shortcut_color_enum;
 }) {
   try {
     await prisma.shortcutCategory.create({
@@ -320,7 +320,7 @@ export async function addShortcutCategory({
         id: v4(),
         createdAt: new Date(),
         name,
-        color
+        color: colorUppperCase
       }
     });
     return true;

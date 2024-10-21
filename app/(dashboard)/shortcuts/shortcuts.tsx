@@ -1,10 +1,9 @@
 'use client';
 
 import Link from 'next/link';
-import Image from 'next/image';
-import { Bomb, Check, Trash2 } from 'lucide-react';
+import { Bomb, Trash2 } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useActionState, useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
@@ -19,69 +18,16 @@ import {
   AlertDialogTrigger
 } from '@/components/ui/alert-dialog';
 import { Shortcut, ShortcutCategory, VisualBoardItem } from '@/lib/types';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import {
-  addVisualBoardItem,
-  deleteVisualBoardItem,
-  getVisualBoardItems,
-  setVisualBoardItemDone
-} from '@/lib/actions';
 import Help from '@/components/Help';
 import { toast } from '@/hooks/use-toast';
 import { barlow, kumbh_sans } from '@/app/ui/fonts';
 import ExplanationShortcuts from './explanation-shortcuts';
+import { AddShortcut } from './add-shortcut';
+import { AddCategory } from './add-category';
 
-const handleSubmit = async (previousState: unknown, formData: FormData) => {
-  const name = formData.get('name') as string;
-  const url = formData.get('url') as string;
-  const uid = formData.get('uid') as string;
-
-  if (name.length > 10) {
-    toast({
-      title: 'Maximum 10 characters!',
-      description: 'The name should be at most 10 characters.',
-      variant: 'destructive'
-    });
-    return;
-  }
-
-  if (!url) {
-    toast({
-      title: 'URL is required!',
-      description: 'And the image URL should be sourced from Unsplash, ok?',
-      variant: 'destructive'
-    });
-  }
-
-  if (!url.includes('unsplash') && !url.includes('fkodama')) {
-    toast({
-      title: 'URL not valid!',
-      description: 'Image URL should be sourced from Unsplash.',
-      variant: 'destructive'
-    });
-    return;
-  }
-
-  const visualBoardItem = await addVisualBoardItem(uid, name, url);
-  if (!visualBoardItem) {
-    toast({
-      title: 'Ops...',
-      description: 'Something got wrong. 🚨 Try again.',
-      variant: 'destructive'
-    });
-  } else {
-    toast({
-      title: 'URL added successfully! 🎉',
-      description: 'You have one more vision board item to conquer.',
-      variant: 'success'
-    });
-  }
-  const newVisualBoardItem = await getVisualBoardItems(uid);
-
-  return {
-    newVisualBoardItem
-  };
+export type CategoryInput = {
+  name: string;
+  color: string;
 };
 
 export default function Shortcuts({
@@ -94,35 +40,35 @@ export default function Shortcuts({
   shortcuts: Shortcut[];
 }) {
   const [openAction, setOpenAction] = useState(false);
+
   const [board, setBoard] = useState<VisualBoardItem[]>([]);
-  const [data, action, isPending] = useActionState(handleSubmit, undefined);
 
-  useEffect(() => {
-    if (data?.newVisualBoardItem && Array.isArray(data.newVisualBoardItem)) {
-      setBoard(data.newVisualBoardItem as VisualBoardItem[]);
-    }
-  }, [data]);
+  //   useEffect(() => {
+  //     if (data?.newVisualBoardItem && Array.isArray(data.newVisualBoardItem)) {
+  //       setBoard(data.newVisualBoardItem as VisualBoardItem[]);
+  //     }
+  //   }, [data]);
 
-  const handleDeleteItem = async (shortcut: Shortcut) => {
-    try {
-      const success = await deleteVisualBoardItem(shortcut.id);
-      if (success) {
-        setBoard(board.filter((el) => el.id !== shortcut.id));
-      }
-      toast({
-        title: 'Vision Board Item gone!',
-        description: `The ${shortcut.name} has been successfully deleted.`,
-        variant: 'success'
-      });
-    } catch (error) {
-      console.error(error);
-      toast({
-        title: 'Error deleting Shortcut! 🚨',
-        description: 'Something went wrong while deleting the Shortcut.',
-        variant: 'destructive'
-      });
-    }
-  };
+  //   const handleDeleteItem = async (shortcut: Shortcut) => {
+  //     try {
+  //       const success = await deleteVisualBoardItem(shortcut.id);
+  //       if (success) {
+  //         setBoard(board.filter((el) => el.id !== shortcut.id));
+  //       }
+  //       toast({
+  //         title: 'Vision Board Item gone!',
+  //         description: `The ${shortcut.name} has been successfully deleted.`,
+  //         variant: 'success'
+  //       });
+  //     } catch (error) {
+  //       console.error(error);
+  //       toast({
+  //         title: 'Error deleting Shortcut! 🚨',
+  //         description: 'Something went wrong while deleting the Shortcut.',
+  //         variant: 'destructive'
+  //       });
+  //     }
+  //   };
 
   //   const handleCheck = async (item: VisualBoardItem) => {
   //     try {
@@ -173,43 +119,14 @@ export default function Shortcuts({
           <div
             className={`${barlow.className} flex gap-4 capitalize mt-8 sm:mt-0`}
           >
-            {/* <form
-              className="flex flex-col sm:flex-row items-start gap-8 sm:gap-2 font-normal"
-              action={action}
-            >
-              <div className="flex flex-col gap-1 w-full sm:w-2/5">
-                <Input placeholder="Goal" id="name" name="name" />
-                <p className="text-xs ml-4 lowercase">
-                  <span className="uppercase">N</span>ame your goal in one word
-                  (optional).
-                </p>
-              </div>
-              <div className="flex flex-col gap-1 w-full sm:w-2/5">
-                <Input placeholder="Url" id="url" name="url" />
-                <p className="text-xs ml-4 lowercase">
-                  <span className="uppercase">A</span>dd the URL of a picture
-                  from
-                  <Link
-                    className="mx-1 font-bold underline"
-                    href="https://unsplash.com/"
-                    target="_blank"
-                  >
-                    <span className="uppercase">U</span>nsplash
-                  </Link>
-                  that reflects your vision. *
-                </p>
-              </div>
-              <Input
-                id="uid"
-                name="uid"
-                value={uid}
-                readOnly
-                className="hidden"
+            <div className="flex gap-4">
+              <AddCategory uid={uid} categories={categories} />
+              <AddShortcut
+                uid={uid}
+                categories={categories}
+                shortcuts={shortcuts}
               />
-              <Button type="submit" disabled={isPending}>
-                {isPending ? 'Adding...' : 'Add'}
-              </Button>
-            </form> */}
+            </div>
           </div>
           <div className="hidden sm:block">
             {!openAction ? <Help setOpenAction={setOpenAction} /> : <div />}
@@ -237,22 +154,10 @@ export default function Shortcuts({
             <div key={shortcut.id}>
               <div className="relative group">
                 <p
-                  className={`${kumbh_sans.className} bg-white text-left uppercase text-[8px] sm:text-sm leading-none absolute bottom-0 left-0 sm:left-2 px-2 py-1`}
+                  className={`${kumbh_sans.className} border text-left px-2 py-1 uppercase text-[8px] sm:text-sm leading-none absolute bottom-0 left-0 sm:left-2`}
                 >
                   {shortcut.name}
                 </p>
-
-                {/* {item.done ? (
-                  <>
-                    <div className="absolute bottom-0 left-0 opacity-70 h-60 w-60 bg-primary" />
-
-                    <Check
-                      size={18}
-                      strokeWidth={1.8}
-                      className="absolute bottom-0 right-2 h-6 w-6 bg-green-500 text-white p-1 z-200"
-                    />
-                  </>
-                ) : null} */}
 
                 <AlertDialog>
                   <AlertDialogTrigger className="absolute top-0 right-2 opacity-0 group-hover:opacity-100 bg-white p-1">
@@ -283,7 +188,7 @@ export default function Shortcuts({
                         Cancel
                       </AlertDialogCancel>
                       <AlertDialogAction
-                        onClick={() => handleDeleteItem(shortcut)}
+                      // onClick={() => handleDeleteItem(shortcut)}
                       >
                         Continue
                       </AlertDialogAction>
