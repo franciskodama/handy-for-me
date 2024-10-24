@@ -25,6 +25,7 @@ import ExplanationShortcuts from './explanation-shortcuts';
 import { AddShortcut } from './add-shortcut';
 import { AddCategory } from './add-category';
 import { Button } from '@/components/ui/button';
+import { deleteShortcut } from '@/lib/actions';
 
 export type CategoryInput = {
   name: string;
@@ -90,54 +91,28 @@ export default function Shortcuts({
   //     }
   //   }, [data]);
 
-  //   const handleDeleteItem = async (shortcut: Shortcut) => {
-  //     try {
-  //       const success = await deleteVisualBoardItem(shortcut.id);
-  //       if (success) {
-  //         setBoard(board.filter((el) => el.id !== shortcut.id));
-  //       }
-  //       toast({
-  //         title: 'Vision Board Item gone!',
-  //         description: `The ${shortcut.name} has been successfully deleted.`,
-  //         variant: 'success'
-  //       });
-  //     } catch (error) {
-  //       console.error(error);
-  //       toast({
-  //         title: 'Error deleting Shortcut! 🚨',
-  //         description: 'Something went wrong while deleting the Shortcut.',
-  //         variant: 'destructive'
-  //       });
-  //     }
-  //   };
-
-  //   const handleCheck = async (item: VisualBoardItem) => {
-  //     try {
-  //       const success = await setVisualBoardItemDone(item.id, !item.done);
-  //       if (success) {
-  //         setBoard((prevBoard) =>
-  //           prevBoard.map((boardItem) =>
-  //             boardItem.id === item.id
-  //               ? { ...boardItem, done: !boardItem.done }
-  //               : boardItem
-  //           )
-  //         );
-  //       }
-  //       toast({
-  //         title: 'Vision Progress Updated! 🌟',
-  //         description: `"${item.name}" has been marked as ${item.done ? 'incomplete' : 'achieved'}. Keep pushing towards your dreams!`,
-  //         variant: 'success'
-  //       });
-  //     } catch (error) {
-  //       console.error(error);
-  //       toast({
-  //         title: 'Error changing Status! 🚨',
-  //         description:
-  //           'Something went wrong while changing the Status of this Item.',
-  //         variant: 'destructive'
-  //       });
-  //     }
-  //   };
+  const handleDeleteItem = async (shortcut: Shortcut) => {
+    try {
+      const success = await deleteShortcut(shortcut.id);
+      if (success) {
+        setCurrentShortcutsAction(
+          currentShortcuts.filter((el) => el.id !== shortcut.id)
+        );
+      }
+      toast({
+        title: 'Shortcut gone!',
+        description: `The ${shortcut.name} has been successfully deleted.`,
+        variant: 'success'
+      });
+    } catch (error) {
+      console.error(error);
+      toast({
+        title: 'Error deleting Shortcut! 🚨',
+        description: 'Something went wrong while deleting the Shortcut.',
+        variant: 'destructive'
+      });
+    }
+  };
 
   return (
     <Card>
@@ -197,11 +172,8 @@ export default function Shortcuts({
         <div className="flex flex-col sm:flex-wrap gap-8 justify-center">
           {board.map((groupOfShortcuts: Shortcut[]) => (
             <div key={groupOfShortcuts[0].categoryId}>
-              <div
-              //  className="relative group"
-              >
-                <h3
-                  className={`${kumbh_sans.className} 
+              <h3
+                className={`${kumbh_sans.className} 
                    ${
                      colorMap[
                        (groupOfShortcuts[0].category?.color?.toLowerCase() ??
@@ -209,75 +181,67 @@ export default function Shortcuts({
                      ]
                    } 
                   text-left text-sm font-semibold text-primary px-4 py-3 my-2 uppercase leading-none`}
-                >
-                  {groupOfShortcuts[0].category?.name}
-                </h3>
+              >
+                {groupOfShortcuts[0].category?.name}
+              </h3>
 
-                {groupOfShortcuts.map((shortcut: Shortcut) => (
-                  <div key={shortcut.id}>
+              {groupOfShortcuts.map((shortcut: Shortcut) => (
+                <div
+                  key={shortcut.id}
+                  className="flex border border-primary my-2"
+                >
+                  <div className="w-full px-4 py-3">
                     <Link
                       href={shortcut.url}
                       target="_blank"
                       className="w-full"
                     >
-                      <p
-                        className="border text-left px-4 py-3 my-2 uppercase text-sm leading-none"
-                        // className={`${kumbh_sans.className} border text-left px-2 py-1 uppercase text-sm leading-none`}
-                      >
+                      <p className="text-left uppercase text-sm leading-none">
                         {shortcut.name}
                       </p>
                     </Link>
-
-                    <AlertDialog>
-                      <AlertDialogTrigger
-                      // className="absolute top-0 right-2 opacity-0 group-hover:opacity-100 p-1"
-                      >
-                        <Trash2 size={18} strokeWidth={1.8} color="#000" />
-                      </AlertDialogTrigger>
-                      <AlertDialogContent>
-                        <AlertDialogHeader>
-                          <AlertDialogTitle className="flex items-center gap-2">
-                            <Bomb size={24} strokeWidth={1.8} />
-                            Are you absolutely sure?
-                          </AlertDialogTitle>
-                          <AlertDialogDescription className="py-4">
-                            This will permanently delete the vision
-                            <span className="font-bold mx-1">
-                              {shortcut.name}
-                            </span>
-                            from our servers.
-                          </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                          <AlertDialogCancel
-                            onClick={() => {
-                              toast({
-                                title: 'Operation Cancelled! ❌',
-                                description: `Phew! 😮‍💨 Crisis averted. You successfully cancelled the operation.`,
-                                variant: 'destructive'
-                              });
-                            }}
-                          >
-                            Cancel
-                          </AlertDialogCancel>
-                          <AlertDialogAction
-                          // onClick={() => handleDeleteItem(shortcut)}
-                          >
-                            Continue
-                          </AlertDialogAction>
-                        </AlertDialogFooter>
-                      </AlertDialogContent>
-                    </AlertDialog>
                   </div>
-                ))}
-                {/* <Button
-  className="absolute bottom-0 right-2 opacity-0 group-hover:opacity-100 h-6 bg-white p-1"
-  onClick={() => handleCheck(item)}
-  variant={'link'}
-  >
-  <Check size={18} strokeWidth={1.8} color="#000" />
-  </Button> */}
-              </div>
+
+                  <AlertDialog>
+                    <AlertDialogTrigger className="px-2 py-1">
+                      <Trash2 size={18} strokeWidth={1.8} color="#000" />
+                    </AlertDialogTrigger>
+                    <AlertDialogContent className="w-4/5">
+                      <AlertDialogHeader>
+                        <AlertDialogTitle className="flex items-center gap-2">
+                          <Bomb size={24} strokeWidth={1.8} />
+                          Are you absolutely sure?
+                        </AlertDialogTitle>
+                        <AlertDialogDescription className="py-4">
+                          This will permanently delete the vision
+                          <span className="font-bold mx-1">
+                            {shortcut.name}
+                          </span>
+                          from our servers.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel
+                          onClick={() => {
+                            toast({
+                              title: 'Operation Cancelled! ❌',
+                              description: `Phew! 😮‍💨 Crisis averted. You successfully cancelled the operation.`,
+                              variant: 'destructive'
+                            });
+                          }}
+                        >
+                          Cancel
+                        </AlertDialogCancel>
+                        <AlertDialogAction
+                          onClick={() => handleDeleteItem(shortcut)}
+                        >
+                          Continue
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
+                </div>
+              ))}
             </div>
           ))}
         </div>

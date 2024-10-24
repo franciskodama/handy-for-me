@@ -338,7 +338,6 @@ export async function deleteShortcutCategory(id: string) {
       }
     });
     return true;
-    // revalidatePath('/in/shortcut');
   } catch (error) {
     console.log(error);
     throw new Error('🚨 Failed to delete Shortcut');
@@ -415,8 +414,7 @@ export async function deleteShortcut(id: string) {
         id
       }
     });
-
-    // revalidatePath('/in/shortcut');
+    return true;
   } catch (error) {
     console.log(error);
     throw new Error('🚨 Failed to delete Shortcut');
