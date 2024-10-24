@@ -3,6 +3,7 @@
 
 // TODO: WORKING ON + FAST
 // Shortcut: handleDeleteCategory + what if there is shortcuts on this categories?
+// Shortcut: categories as a state for appearing in the sheet
 
 // Button hover effect: Mariana thinks it's counterintuitive
 // Bucket List: Filter for done and not done

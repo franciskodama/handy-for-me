@@ -337,7 +337,7 @@ export async function deleteShortcutCategory(id: string) {
         id
       }
     });
-
+    return true;
     // revalidatePath('/in/shortcut');
   } catch (error) {
     console.log(error);

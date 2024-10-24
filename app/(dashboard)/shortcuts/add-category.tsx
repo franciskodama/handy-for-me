@@ -1,12 +1,17 @@
 'use client';
 
-import { useActionState } from 'react';
+import { useActionState, useEffect, useState } from 'react';
 import { Bomb, Inbox, Trash2 } from 'lucide-react';
 import { shortcut_color_enum } from '@prisma/client';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetTrigger
+} from '@/components/ui/sheet';
 import {
   Select,
   SelectContent,
@@ -77,10 +82,10 @@ const handleSubmit = async (previousState: unknown, formData: FormData) => {
       variant: 'success'
     });
   }
-  const newShortcutCategories = await getShortcutsCategories(uid);
+  const _currentCategories = await getShortcutsCategories(uid);
 
   return {
-    newShortcutCategories
+    _currentCategories
   };
 };
 
@@ -92,13 +97,23 @@ export function AddCategory({
   categories: ShortcutCategory[];
 }) {
   const [data, action, isPending] = useActionState(handleSubmit, undefined);
+  const [currentCategories, setCurrentCategories] =
+    useState<ShortcutCategory[]>(categories);
+
+  useEffect(() => {
+    if (data?._currentCategories && Array.isArray(data._currentCategories)) {
+      setCurrentCategories(data._currentCategories);
+    }
+  }, [data]);
 
   const handleDeleteCategory = async (category: ShortcutCategory) => {
     try {
       const success = await deleteShortcutCategory(category.id);
-      //   if (success) {
-      //     setBoard(board.filter((el) => el.id !== category.id));
-      //   }
+      if (success) {
+        setCurrentCategories(
+          currentCategories.filter((el) => el.id !== category.id)
+        );
+      }
       toast({
         title: 'Category gone!',
         description: `The ${category.name} has been successfully deleted.`,
@@ -116,7 +131,7 @@ export function AddCategory({
 
   return (
     <Sheet>
-      <SheetTrigger asChild>
+      <SheetTrigger asChild className="w-full">
         <Button variant="outline">Manage Categories</Button>
       </SheetTrigger>
       <SheetContent side="right" className="sm:max-w-xs mt-8 gap-8">
@@ -162,17 +177,19 @@ export function AddCategory({
             <p className="text-xs ml-4">Pick a color</p>
           </div>
           <Input id="uid" name="uid" value={uid} readOnly className="hidden" />
-          <Button type="submit" disabled={isPending}>
-            {isPending ? 'Adding...' : 'Add'}
-          </Button>
+          <SheetClose asChild>
+            <Button type="submit" disabled={isPending}>
+              {isPending ? 'Adding...' : 'Add'}
+            </Button>
+          </SheetClose>
         </form>
 
         <div className="flex flex-col gap-2 my-12">
           <p className="text-sm font-semibold capitalize">
             Current Categories:
           </p>
-          {categories ? (
-            categories.map((category: ShortcutCategory) => (
+          {currentCategories ? (
+            currentCategories.map((category: ShortcutCategory) => (
               <div
                 key={category.id}
                 className="flex items-center justify-between border px-4 py-1"
@@ -190,7 +207,7 @@ export function AddCategory({
                   <AlertDialogTrigger>
                     <Trash2 size={18} strokeWidth={1.8} color="black" />
                   </AlertDialogTrigger>
-                  <AlertDialogContent>
+                  <AlertDialogContent className="w-4/5">
                     <AlertDialogHeader>
                       <AlertDialogTitle className="flex items-center gap-2">
                         <Bomb size={24} strokeWidth={1.8} />

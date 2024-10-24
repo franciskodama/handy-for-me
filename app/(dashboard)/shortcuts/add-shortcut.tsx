@@ -1,10 +1,15 @@
 'use client';
 
-import { useActionState } from 'react';
+import { useActionState, useEffect } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetTrigger
+} from '@/components/ui/sheet';
 import {
   Select,
   SelectContent,
@@ -63,27 +68,33 @@ const handleSubmit = async (previousState: unknown, formData: FormData) => {
       variant: 'success'
     });
   }
-  const newShortcut = await getShortcuts(uid);
+  const _currentShortcuts = await getShortcuts(uid);
 
   return {
-    newShortcut
+    _currentShortcuts
   };
 };
 
 export function AddShortcut({
   uid,
   categories,
-  shortcuts
+  setCurrentShortcutsAction
 }: {
   uid: string;
   categories: ShortcutCategory[];
-  shortcuts: Shortcut[];
+  setCurrentShortcutsAction: (shortcuts: Shortcut[]) => void;
 }) {
   const [data, action, isPending] = useActionState(handleSubmit, undefined);
 
+  useEffect(() => {
+    if (data?._currentShortcuts && Array.isArray(data._currentShortcuts)) {
+      setCurrentShortcutsAction(data._currentShortcuts);
+    }
+  }, [data]);
+
   return (
     <Sheet>
-      <SheetTrigger asChild>
+      <SheetTrigger asChild className="w-full">
         <Button>Add Shortcut</Button>
       </SheetTrigger>
       <SheetContent side="right" className="sm:max-w-xs mt-8 gap-8">
@@ -145,9 +156,14 @@ export function AddShortcut({
             <p className="text-xs ml-4">Choose a Category</p>
           </div>
           <Input id="uid" name="uid" value={uid} readOnly className="hidden" />
-          <Button type="submit" disabled={isPending}>
-            {isPending ? 'Adding...' : 'Add'}
-          </Button>
+          <SheetClose asChild>
+            <div className="flex gap-4">
+              <Button type="submit" disabled={isPending}>
+                {isPending ? 'Adding...' : 'Add'}
+              </Button>
+              {/* <Button variant="outline">Close</Button> */}
+            </div>
+          </SheetClose>
         </form>
       </SheetContent>
     </Sheet>
