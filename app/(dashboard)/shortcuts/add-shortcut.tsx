@@ -112,12 +112,14 @@ export function AddShortcut({
         >
           <div className="flex flex-col gap-1 w-full">
             <Input placeholder="Name" id="name" name="name" />
-            <p className="text-xs ml-4">Give your shortcut a memorable name.</p>
+            <p className="text-xs ml-4 mt-1">
+              Give your shortcut a memorable name.
+            </p>
           </div>
 
           <div className="flex flex-col gap-1 w-full">
             <Input placeholder="Url" id="url" name="url" />
-            <p className="text-xs ml-4">Enter the full website address</p>
+            <p className="text-xs ml-4 mt-1">Enter the full website address</p>
             <p className="text-xs ml-4">(e.g., https://example.com).</p>
           </div>
 
@@ -127,7 +129,9 @@ export function AddShortcut({
               id="description"
               name="description"
             />
-            <p className="text-xs ml-4">Add a quick reminder for this site.</p>
+            <p className="text-xs ml-4 mt-1">
+              Add a quick reminder for this site.
+            </p>
           </div>
 
           <div className="flex flex-col gap-1 w-full">
@@ -153,7 +157,7 @@ export function AddShortcut({
                 ))}
               </SelectContent>
             </Select>
-            <p className="text-xs ml-4">Choose a Category</p>
+            <p className="text-xs ml-4 mt-1">Choose a Category</p>
           </div>
           <Input id="uid" name="uid" value={uid} readOnly className="hidden" />
           <SheetClose asChild>

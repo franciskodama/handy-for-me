@@ -150,7 +150,7 @@ export function AddCategory({
         >
           <div className="flex flex-col gap-1 w-full">
             <Input placeholder="Name" id="name" name="name" />
-            <p className="text-xs ml-4">Name your category in one word</p>
+            <p className="text-xs ml-4 mt-1">Name your category in one word</p>
           </div>
           <div className="flex flex-col gap-1 w-full">
             <Select name="color">
@@ -175,7 +175,7 @@ export function AddCategory({
                 ))}
               </SelectContent>
             </Select>
-            <p className="text-xs ml-4">Pick a color</p>
+            <p className="text-xs ml-4 mt-1">Pick a color</p>
           </div>
           <Input id="uid" name="uid" value={uid} readOnly className="hidden" />
           <SheetClose asChild>
@@ -186,10 +186,10 @@ export function AddCategory({
         </form>
 
         <div className="flex flex-col gap-2 my-12">
-          <p className="text-sm font-semibold capitalize">
+          <p className="text-sm font-semibold capitalize mb-2">
             Current Categories:
           </p>
-          {currentCategories ? (
+          {currentCategories.length > 0 ? (
             currentCategories.map((category: ShortcutCategory) => (
               <div
                 key={category.id}
@@ -243,7 +243,7 @@ export function AddCategory({
               </div>
             ))
           ) : (
-            <div className="flex items-center gap-2 mt-4">
+            <div className="flex items-center gap-2 mt-2">
               <Inbox size={24} strokeWidth={1.8} />
               <p className="text-sm capitalize">No categories yet</p>
             </div>

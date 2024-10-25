@@ -15,5 +15,6 @@ export const colors = [
   { name: 'Pink', code: '#FF69B4', foreground: '#000000' },
   { name: 'Teal', code: '#20B2AA', foreground: '#FFFFFF' },
   { name: 'Grey', code: '#808080', foreground: '#FFFFFF' },
-  { name: 'Brown', code: '#A52A2A', foreground: '#FFFFFF' }
+  { name: 'Brown', code: '#A52A2A', foreground: '#FFFFFF' },
+  { name: 'Black', code: '#000000', foreground: '#FFFFFF' }
 ];
