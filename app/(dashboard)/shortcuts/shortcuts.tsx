@@ -1,9 +1,15 @@
 'use client';
 
 import Link from 'next/link';
-import { Bomb, Trash2 } from 'lucide-react';
+import {
+  ArrowDownWideNarrow,
+  ArrowUpWideNarrow,
+  Bomb,
+  MessageCircleX,
+  Trash2
+} from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
@@ -17,7 +23,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger
 } from '@/components/ui/alert-dialog';
-import { Shortcut, ShortcutCategory, VisualBoardItem } from '@/lib/types';
+import { Shortcut, ShortcutCategory } from '@/lib/types';
 import Help from '@/components/Help';
 import { toast } from '@/hooks/use-toast';
 import { barlow, kumbh_sans } from '@/app/ui/fonts';
@@ -26,6 +32,7 @@ import { AddShortcut } from './add-shortcut';
 import { AddCategory } from './add-category';
 import { Button } from '@/components/ui/button';
 import { deleteShortcut } from '@/lib/actions';
+import { colors } from '@/lib/utils';
 
 export type CategoryInput = {
   name: string;
@@ -46,6 +53,9 @@ export default function Shortcuts({
   const [openAction, setOpenAction] = useState(false);
   const [currentShortcuts, setCurrentShortcutsAction] =
     useState<Shortcut[]>(shortcuts);
+  const [openDescriptions, setOpenDescriptions] = useState<Set<string>>(
+    new Set()
+  );
 
   const board: Shortcut[][] = Object.values(
     currentShortcuts.reduce(
@@ -70,27 +80,6 @@ export default function Shortcuts({
     grey: 'bg-gray-500'
   };
 
-  // export const colors = [
-  //   { name: 'Blue', code: '#1E90FF' },
-  //   { name: 'Green', code: '#32CD32' },
-  //   { name: 'Red', code: '#FF4500' },
-  //   { name: 'Yellow', code: '#FFD700' },
-  //   { name: 'Purple', code: '#8A2BE2' },
-  //   { name: 'Orange', code: '#FFA500' },
-  //   { name: 'Pink', code: '#FF69B4' },
-  //   { name: 'Teal', code: '#20B2AA' },
-  //   { name: 'Gray', code: '#808080' },
-  //   { name: 'Brown', code: '#A52A2A' }
-  // ];
-
-  //   getShortcutsCategories
-
-  //   useEffect(() => {
-  //     if (data?.newVisualBoardItem && Array.isArray(data.newVisualBoardItem)) {
-  //       setBoard(data.newVisualBoardItem as VisualBoardItem[]);
-  //     }
-  //   }, [data]);
-
   const handleDeleteItem = async (shortcut: Shortcut) => {
     try {
       const success = await deleteShortcut(shortcut.id);
@@ -112,6 +101,18 @@ export default function Shortcuts({
         variant: 'destructive'
       });
     }
+  };
+
+  const toggleDescription = (shortcutId: string) => {
+    setOpenDescriptions((prevOpen) => {
+      const newOpen = new Set(prevOpen);
+      if (newOpen.has(shortcutId)) {
+        newOpen.delete(shortcutId);
+      } else {
+        newOpen.add(shortcutId);
+      }
+      return newOpen;
+    });
   };
 
   return (
@@ -169,78 +170,127 @@ export default function Shortcuts({
           ) : null}
         </AnimatePresence>
 
-        <div className="flex flex-col sm:flex-wrap gap-8 justify-center">
+        <div className="flex flex-col sm:flex-row w-full gap-8">
           {board.map((groupOfShortcuts: Shortcut[]) => (
-            <div key={groupOfShortcuts[0].categoryId}>
+            <div key={groupOfShortcuts[0].categoryId} className="sm:w-1/5">
               <h3
-                className={`${kumbh_sans.className} 
-                   ${
-                     colorMap[
-                       (groupOfShortcuts[0].category?.color?.toLowerCase() ??
-                         'grey') as ColorType
-                     ]
-                   } 
-                  text-left text-sm font-semibold text-primary px-4 py-3 my-2 uppercase leading-none`}
+                className={`${kumbh_sans.className} text-left text-sm font-semibold text-primary px-4 py-3 my-2 uppercase leading-none`}
+                style={getColorCode(
+                  (groupOfShortcuts[0].category?.color ?? 'grey') as ColorType
+                )}
               >
                 {groupOfShortcuts[0].category?.name}
               </h3>
 
               {groupOfShortcuts.map((shortcut: Shortcut) => (
-                <div
-                  key={shortcut.id}
-                  className="flex border border-primary my-2"
-                >
-                  <div className="w-full px-4 py-3">
-                    <Link
-                      href={shortcut.url}
-                      target="_blank"
-                      className="w-full"
+                <>
+                  <div
+                    key={shortcut.id}
+                    className="flex border border-primary mt-2"
+                  >
+                    <div className="w-full px-4 py-3">
+                      <Link
+                        href={shortcut.url}
+                        target="_blank"
+                        className="w-full"
+                      >
+                        <p className="text-left uppercase text-sm leading-none">
+                          {shortcut.name}
+                        </p>
+                      </Link>
+                    </div>
+
+                    <Button
+                      variant="ghost"
+                      onClick={() => {
+                        toggleDescription(shortcut.id);
+                      }}
                     >
-                      <p className="text-left uppercase text-sm leading-none">
-                        {shortcut.name}
-                      </p>
-                    </Link>
+                      {openDescriptions.has(shortcut.id) ? (
+                        <ArrowUpWideNarrow
+                          size={18}
+                          strokeWidth={1.8}
+                          color="#000"
+                        />
+                      ) : (
+                        <ArrowDownWideNarrow
+                          size={18}
+                          strokeWidth={1.8}
+                          color="#000"
+                        />
+                      )}
+                    </Button>
+
+                    <AlertDialog>
+                      <AlertDialogTrigger className="px-2 py-1 mr-4">
+                        <Trash2 size={18} strokeWidth={1.8} color="#000" />
+                      </AlertDialogTrigger>
+                      <AlertDialogContent className="w-4/5">
+                        <AlertDialogHeader>
+                          <AlertDialogTitle className="flex items-center gap-2">
+                            <Bomb size={24} strokeWidth={1.8} />
+                            Are you absolutely sure?
+                          </AlertDialogTitle>
+                          <AlertDialogDescription className="py-4">
+                            This will permanently delete the vision
+                            <span className="font-bold mx-1">
+                              {shortcut.name}
+                            </span>
+                            from our servers.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel
+                            onClick={() => {
+                              toast({
+                                title: 'Operation Cancelled! ❌',
+                                description: `Phew! 😮‍💨 Crisis averted. You successfully cancelled the operation.`,
+                                variant: 'destructive'
+                              });
+                            }}
+                          >
+                            Cancel
+                          </AlertDialogCancel>
+                          <AlertDialogAction
+                            onClick={() => handleDeleteItem(shortcut)}
+                          >
+                            Continue
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
                   </div>
 
-                  <AlertDialog>
-                    <AlertDialogTrigger className="px-2 py-1">
-                      <Trash2 size={18} strokeWidth={1.8} color="#000" />
-                    </AlertDialogTrigger>
-                    <AlertDialogContent className="w-4/5">
-                      <AlertDialogHeader>
-                        <AlertDialogTitle className="flex items-center gap-2">
-                          <Bomb size={24} strokeWidth={1.8} />
-                          Are you absolutely sure?
-                        </AlertDialogTitle>
-                        <AlertDialogDescription className="py-4">
-                          This will permanently delete the vision
-                          <span className="font-bold mx-1">
-                            {shortcut.name}
-                          </span>
-                          from our servers.
-                        </AlertDialogDescription>
-                      </AlertDialogHeader>
-                      <AlertDialogFooter>
-                        <AlertDialogCancel
-                          onClick={() => {
-                            toast({
-                              title: 'Operation Cancelled! ❌',
-                              description: `Phew! 😮‍💨 Crisis averted. You successfully cancelled the operation.`,
-                              variant: 'destructive'
-                            });
-                          }}
-                        >
-                          Cancel
-                        </AlertDialogCancel>
-                        <AlertDialogAction
-                          onClick={() => handleDeleteItem(shortcut)}
-                        >
-                          Continue
-                        </AlertDialogAction>
-                      </AlertDialogFooter>
-                    </AlertDialogContent>
-                  </AlertDialog>
-                </div>
+                  <AnimatePresence>
+                    {openDescriptions.has(shortcut.id) ? (
+                      <motion.div
+                        layout
+                        initial={{ opacity: 0, y: 0, scale: 0.3 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{
+                          opacity: 0,
+                          scale: 0.5,
+                          transition: { duration: 0.1 }
+                        }}
+                      >
+                        <div className="px-4 py-2 bg-primary text-white text-xs font-semibold">
+                          {shortcut.description ? (
+                            shortcut.description
+                          ) : (
+                            <div className="flex items-center ml-1">
+                              <MessageCircleX
+                                size={18}
+                                strokeWidth={1.8}
+                                color="#fff"
+                              />
+                              <p className="ml-2">No description available.</p>
+                            </div>
+                          )}
+                        </div>
+                      </motion.div>
+                    ) : null}
+                  </AnimatePresence>
+                </>
               ))}
             </div>
           ))}
@@ -249,3 +299,27 @@ export default function Shortcuts({
     </Card>
   );
 }
+
+const getColorCode = (colorName: string) => {
+  const color = colors.find((c) => c.name.toUpperCase() === colorName);
+  const result = {
+    color: color?.foreground,
+    backgroundColor: color?.code
+  };
+  return result;
+};
+
+//   getShortcutsCategories
+
+//   useEffect(() => {
+//     if (data?.newVisualBoardItem && Array.isArray(data.newVisualBoardItem)) {
+//       setBoard(data.newVisualBoardItem as VisualBoardItem[]);
+//     }
+//   }, [data]);
+
+// ${
+//   colorMap[
+//     (groupOfShortcuts[0].category?.color?.toLowerCase() ??
+//       'grey') as ColorType
+//   ]
+// }

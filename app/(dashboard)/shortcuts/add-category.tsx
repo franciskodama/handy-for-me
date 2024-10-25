@@ -43,6 +43,7 @@ import { colors } from '@/lib/utils';
 type Color = {
   name: string;
   code: string;
+  foreground?: string;
 };
 
 const handleSubmit = async (previousState: unknown, formData: FormData) => {
