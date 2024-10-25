@@ -6,6 +6,7 @@ import {
   BookA,
   Grid3x3,
   Home,
+  ExternalLink,
   ListMinus,
   Menu,
   MessageCircleQuestion,
@@ -153,6 +154,11 @@ const menuItems = [
     label: 'Vision Board',
     href: '/vision-board',
     icon: <Grid3x3 className="h-5 w-5" />
+  },
+  {
+    label: 'Shortcuts',
+    href: '/shortcuts',
+    icon: <ExternalLink className="h-5 w-5" />
   },
   {
     label: 'Bucket List',

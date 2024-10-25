@@ -2,7 +2,8 @@
 
 import { v4 } from 'uuid';
 import { prisma } from './prisma';
-import { SpinItem, SpinList } from './types';
+import { AddShortcutParams, SpinItem, SpinList } from './types';
+import { Shortcut, shortcut_color_enum } from '@prisma/client';
 
 export async function addUser(uid: string, name: string, avatar: string) {
   try {
@@ -287,5 +288,135 @@ export async function setBucketListItemDone(id: string, selection: boolean) {
   } catch (error) {
     console.error('Error setting check to the item:', error);
     return null;
+  }
+}
+
+export const getShortcutsCategories = async (uid: string) => {
+  try {
+    const shortcutsCategories = await prisma.shortcutCategory.findMany({
+      where: {
+        uid
+      }
+    });
+    return shortcutsCategories;
+  } catch (error) {
+    return { error };
+  }
+};
+
+export async function addShortcutCategory({
+  uid,
+  name,
+  colorUppperCase
+}: {
+  uid: string;
+  name: string;
+  colorUppperCase: shortcut_color_enum;
+}) {
+  try {
+    await prisma.shortcutCategory.create({
+      data: {
+        uid,
+        id: v4(),
+        createdAt: new Date(),
+        name,
+        color: colorUppperCase
+      }
+    });
+    return true;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+}
+
+export async function deleteShortcutCategory(id: string) {
+  try {
+    await prisma.shortcutCategory.delete({
+      where: {
+        id
+      }
+    });
+    return true;
+  } catch (error) {
+    console.log(error);
+    throw new Error('🚨 Failed to delete Shortcut');
+  }
+}
+
+export const getShortcuts = async (uid: string) => {
+  try {
+    const shortcuts = await prisma.shortcut.findMany({
+      where: {
+        uid
+      },
+      include: {
+        category: true
+      }
+    });
+    return shortcuts;
+  } catch (error) {
+    return { error };
+  }
+};
+
+export async function addShortcut(formData: AddShortcutParams) {
+  const { uid, name, url, description, categoryId } = formData;
+
+  try {
+    await prisma.shortcut.create({
+      data: {
+        uid,
+        id: v4(),
+        createdAt: new Date(),
+        name,
+        url,
+        description,
+        categoryId
+      }
+    });
+    return true;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+}
+
+// export async function updateShortcut(formData: Shortcut) {
+//   const { uid, name, url, description, categoryId } = formData;
+
+//   try {
+//     await prisma.shortcut.update({
+//       where: {
+//         id
+//       },
+//       data: {
+//         uid,
+//         id: v4(),
+//         createdAt: new Date(),
+//         name,
+//         url,
+//         description,
+//         categoryId
+//       }
+//     });
+//     return true;
+//   } catch (error) {
+//     console.log(error);
+//     return false;
+//   }
+// }
+
+export async function deleteShortcut(id: string) {
+  try {
+    await prisma.shortcut.delete({
+      where: {
+        id
+      }
+    });
+    return true;
+  } catch (error) {
+    console.log(error);
+    throw new Error('🚨 Failed to delete Shortcut');
   }
 }

@@ -51,3 +51,36 @@ model BucketListItem {
   category  String
   done      Boolean
 }
+
+model ShortcutCategory {
+  id        String   @id @default(uuid()) @db.VarChar(255)
+  createdAt DateTime @default(now()) @db.Timestamp(6)
+  uid       String   
+  name      String   
+  color     shortcut_color_enum    @default(GRAY)
+  shortcuts Shortcut[]
+}
+
+enum shortcut_color_enum {
+  BLUE
+  GREEN
+  RED
+  YELLOW
+  PURPLE
+  ORANGE
+  PINK
+  TEAL
+  GRAY
+  BROWN
+}
+
+model Shortcut {
+  id        String   @id @default(uuid()) @db.VarChar(255)
+  createdAt DateTime @default(now()) @db.Timestamp(6)
+  uid       String   
+  name      String   
+  url       String
+  description String @default("No description yet")
+  categoryId  String   
+  category    ShortcutCategory @relation(fields: [categoryId], references: [id])
+}

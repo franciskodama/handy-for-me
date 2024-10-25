@@ -1,0 +1,171 @@
+'use client';
+
+import { useActionState, useEffect } from 'react';
+
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetTrigger
+} from '@/components/ui/sheet';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from '@/components/ui/select';
+import { kumbh_sans } from '@/app/ui/fonts';
+import { Shortcut, ShortcutCategory } from '@/lib/types';
+import { toast } from '@/hooks/use-toast';
+import { addShortcut, getShortcuts } from '@/lib/actions';
+
+const handleSubmit = async (previousState: unknown, formData: FormData) => {
+  const name = formData.get('name') as string;
+  const url = formData.get('url') as string;
+  const categoryId = formData.get('category') as string;
+  const description = (formData.get('description') || '') as string;
+  const uid = formData.get('uid') as string;
+
+  if (name.length > 20) {
+    toast({
+      title: 'Maximum 20 characters!',
+      description: 'The name should be at most 20 characters.',
+      variant: 'destructive'
+    });
+    return;
+  }
+
+  if (!url.includes('https://') && !url.includes('http://')) {
+    toast({
+      title: 'Enter the full website link!',
+      description: 'e.g., https://example.com',
+      variant: 'destructive'
+    });
+    return;
+  }
+
+  const shortcut = await addShortcut({
+    uid,
+    name,
+    url,
+    description,
+    categoryId
+  });
+
+  if (!shortcut) {
+    toast({
+      title: 'Ops...',
+      description: 'Something got wrong. 🚨 Try again.',
+      variant: 'destructive'
+    });
+  } else {
+    toast({
+      title: 'Added successfully! 🎉',
+      description: 'Your new shortcut is ready to use!',
+      variant: 'success'
+    });
+  }
+  const _currentShortcuts = await getShortcuts(uid);
+
+  return {
+    _currentShortcuts
+  };
+};
+
+export function AddShortcut({
+  uid,
+  categories,
+  setCurrentShortcutsAction
+}: {
+  uid: string;
+  categories: ShortcutCategory[];
+  setCurrentShortcutsAction: (shortcuts: Shortcut[]) => void;
+}) {
+  const [data, action, isPending] = useActionState(handleSubmit, undefined);
+
+  useEffect(() => {
+    if (data?._currentShortcuts && Array.isArray(data._currentShortcuts)) {
+      setCurrentShortcutsAction(data._currentShortcuts);
+    }
+  }, [data]);
+
+  return (
+    <Sheet>
+      <SheetTrigger asChild className="w-full">
+        <Button>Add Shortcut</Button>
+      </SheetTrigger>
+      <SheetContent side="right" className="sm:max-w-xs mt-8 gap-8">
+        <div className="flex flex-col gap-2 my-8">
+          <h2 className={`${kumbh_sans.className} text-lg uppercase font-bold`}>
+            Add Your Shortcut
+          </h2>
+          <p className="text-sm font-normal lowercase">
+            Store your go-to websites and categorize them with a personal touch.
+          </p>
+        </div>
+        <form
+          action={action}
+          className="flex flex-col items-start gap-8 font-normal"
+        >
+          <div className="flex flex-col gap-1 w-full">
+            <Input placeholder="Name" id="name" name="name" />
+            <p className="text-xs ml-4">Give your shortcut a memorable name.</p>
+          </div>
+
+          <div className="flex flex-col gap-1 w-full">
+            <Input placeholder="Url" id="url" name="url" />
+            <p className="text-xs ml-4">Enter the full website address</p>
+            <p className="text-xs ml-4">(e.g., https://example.com).</p>
+          </div>
+
+          <div className="flex flex-col gap-1 w-full">
+            <Input
+              placeholder="Description"
+              id="description"
+              name="description"
+            />
+            <p className="text-xs ml-4">Add a quick reminder for this site.</p>
+          </div>
+
+          <div className="flex flex-col gap-1 w-full">
+            <Select name="category">
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Category" id="category" />
+              </SelectTrigger>
+              <SelectContent>
+                {categories.map((category: ShortcutCategory) => (
+                  <div key={category.id}>
+                    {category && (
+                      <SelectItem value={category.id}>
+                        <div className="flex items-center gap-2">
+                          <div
+                            className="w-4 h-4 rounded-full"
+                            style={{ backgroundColor: category.color }}
+                          />
+                          <p className="capitalize">{category.name}</p>
+                        </div>
+                      </SelectItem>
+                    )}
+                  </div>
+                ))}
+              </SelectContent>
+            </Select>
+            <p className="text-xs ml-4">Choose a Category</p>
+          </div>
+          <Input id="uid" name="uid" value={uid} readOnly className="hidden" />
+          <SheetClose asChild>
+            <div className="flex gap-4">
+              <Button type="submit" disabled={isPending}>
+                {isPending ? 'Adding...' : 'Add'}
+              </Button>
+              {/* <Button variant="outline">Close</Button> */}
+            </div>
+          </SheetClose>
+        </form>
+      </SheetContent>
+    </Sheet>
+  );
+}
