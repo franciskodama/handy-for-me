@@ -9,56 +9,79 @@ export default function ExplanationShortcuts({
   const contentOne = (
     <>
       <p>
-        With Spin Magic, you can turn any list into a fun, random selection!
+        This tool is like your own special list of favorite websites that you
+        can keep online. It helps you easily find and go to the pages you love!
       </p>
       <p>
-        Whether it’s picking a family activity, deciding on what to cook for
-        dinner, or choosing the next movie for movie night — Spin Magic has you
-        covered.
+        Instead of messy bookmarks, you can create organized, color-coded
+        categories for your favorite websites. Whether for work, blogs, or
+        everyday sites, your links are neatly sorted and always accessible, no
+        matter where you are.
       </p>
     </>
   );
 
   const contentTwo = (
     <>
-      <p>
-        Create lists. Then, simply add your favorite items to each list, and
-        when it’s time to make a decision, spin the wheel for a surprise choice!
+      <p className="font-semibold">
+        - Create Categories:
+        <span className="font-normal">
+          Start by creating categories for your shortcuts
+        </span>
       </p>
-      <p className="flex items-center gap-4">
-        Easily manage items by unselecting them to skip the next draw without
-        deleting them.
+      <p className="font-semibold">
+        - Add Shortcuts:
+        <span className="font-normal">
+          For each shortcut, input the name, URL, and assign it to a category.
+        </span>
       </p>
-      <p className="flex items-center gap-4">
-        You can also permanently delete items whenever you no longer need them.
+      <p className="font-semibold">
+        - Access Your Shortcuts:
+        <span className="font-normal">
+          All your shortcuts will appear as buttons, organized by category on
+          your board.
+        </span>
+      </p>
+
+      <p className="font-semibold">
+        - Quick Actions:
+        <span className="font-normal">
+          Click to visit the website directly, View the description for a
+          reminder of why you saved it, Delete the shortcut if it’s no longer
+          needed.
+        </span>
       </p>
     </>
   );
 
   const contentThree = (
     <>
-      <p>
-        - Family Activities:{' '}
+      <p className="font-semibold">
+        - Stay Organized:{' '}
         <span className="font-normal">
-          From board games to outdoor adventures.
+          Keep all your important URLs in one place, categorized and easy to
+          find.
         </span>
       </p>
-      <p>
-        - Date Night Ideas:{' '}
+      <p className="font-semibold">
+        - Always Available:{' '}
         <span className="font-normal">
-          Pick the perfect plan without the hassle.
+          Unlike browser bookmarks tied to specific devices, this board is
+          accessible from anywhere.
         </span>
       </p>
-      <p>
-        - Weekly Chores:{' '}
+      <p className="font-semibold">
+        - Save Time:{' '}
         <span className="font-normal">
-          Make it fun by spinning for who does what!
+          Access your favorite sites instantly without searching through a
+          cluttered bookmarks bar.
         </span>
       </p>
-      <p>
-        - Fitness Challenges:{' '}
+      <p className="font-semibold">
+        - Enhance Productivity:{' '}
         <span className="font-normal">
-          Choose a workout at random to keep things exciting!
+          Quickly get to the websites you need for work or leisure, saving you
+          valuable time every day.
         </span>
       </p>
     </>
@@ -70,13 +93,13 @@ export default function ExplanationShortcuts({
       iconOne={<Snail size={24} strokeWidth={1.6} />}
       iconTwo={<Settings size={24} strokeWidth={1.6} />}
       iconThree={<Lightbulb size={24} strokeWidth={1.6} />}
-      titleOne="Overwhelmed by choices?"
+      titleOne="What’s This?"
       titleTwo="How to use"
-      titleThree="Some ideas"
+      titleThree="Why You Need It"
       contentOne={contentOne}
       contentTwo={contentTwo}
       contentThree={contentThree}
-      callToAction="Start spinning today!"
+      callToAction="Save your favorites now!"
     />
   );
 }

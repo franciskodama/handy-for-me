@@ -2,9 +2,7 @@
 // Google Cloud Credentials: https://console.cloud.google.com/apis/credentials
 
 // TODO: WORKING ON + FAST
-// Shortcut: handleDeleteCategory + what if there is shortcuts on this categories?
-// Shortcut: categories as a state for appearing in the sheet
-
+// Shortcut: Explanation
 // Button hover effect: Mariana thinks it's counterintuitive
 // Bucket List: Filter for done and not done
 // Responsivity
@@ -39,6 +37,8 @@
 // Button: https://medium.com/@dewamadewira25/how-to-make-a-neo-brutalism-button-using-tailwindcss-91d3faf2b269
 
 //TODO: DONE
+// Shortcut: categories as a state for appearing in the sheet
+// Shortcut: handleDeleteCategory + what if there is shortcuts on this categories?
 // Vision Board: Title align left
 // Vision Board mosaic centralized in the middle of the parent div
 // Better organization for the nav files

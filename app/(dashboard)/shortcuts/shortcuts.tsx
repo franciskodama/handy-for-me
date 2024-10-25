@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { useState } from 'react';
 import {
   ArrowDownWideNarrow,
   ArrowUpWideNarrow,
@@ -9,7 +10,6 @@ import {
   Trash2
 } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useState } from 'react';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
@@ -38,8 +38,6 @@ export type CategoryInput = {
   name: string;
   color: string;
 };
-
-type ColorType = 'green' | 'blue' | 'red' | 'yellow' | 'purple' | 'grey';
 
 export default function Shortcuts({
   uid,
@@ -70,15 +68,6 @@ export default function Shortcuts({
       {}
     )
   );
-
-  const colorMap: Record<ColorType, string> = {
-    green: 'bg-green-500',
-    blue: 'bg-blue-500',
-    red: 'bg-red-500',
-    yellow: 'bg-yellow-500',
-    purple: 'bg-purple-500',
-    grey: 'bg-gray-500'
-  };
 
   const handleDeleteItem = async (shortcut: Shortcut) => {
     try {
@@ -113,6 +102,15 @@ export default function Shortcuts({
       }
       return newOpen;
     });
+  };
+
+  const getColorCode = (colorName: string) => {
+    const color = colors.find((c) => c.name.toUpperCase() === colorName);
+    const result = {
+      color: color?.foreground,
+      backgroundColor: color?.code
+    };
+    return result;
   };
 
   return (
@@ -176,7 +174,7 @@ export default function Shortcuts({
               <h3
                 className={`${kumbh_sans.className} text-left text-sm font-semibold text-primary px-4 py-3 my-2 uppercase leading-none`}
                 style={getColorCode(
-                  (groupOfShortcuts[0].category?.color ?? 'grey') as ColorType
+                  groupOfShortcuts[0].category?.color ?? 'grey'
                 )}
               >
                 {groupOfShortcuts[0].category?.name}
@@ -299,27 +297,3 @@ export default function Shortcuts({
     </Card>
   );
 }
-
-const getColorCode = (colorName: string) => {
-  const color = colors.find((c) => c.name.toUpperCase() === colorName);
-  const result = {
-    color: color?.foreground,
-    backgroundColor: color?.code
-  };
-  return result;
-};
-
-//   getShortcutsCategories
-
-//   useEffect(() => {
-//     if (data?.newVisualBoardItem && Array.isArray(data.newVisualBoardItem)) {
-//       setBoard(data.newVisualBoardItem as VisualBoardItem[]);
-//     }
-//   }, [data]);
-
-// ${
-//   colorMap[
-//     (groupOfShortcuts[0].category?.color?.toLowerCase() ??
-//       'grey') as ColorType
-//   ]
-// }
