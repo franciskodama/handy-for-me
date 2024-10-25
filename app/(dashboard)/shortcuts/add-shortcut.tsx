@@ -161,12 +161,9 @@ export function AddShortcut({
           </div>
           <Input id="uid" name="uid" value={uid} readOnly className="hidden" />
           <SheetClose asChild>
-            <div className="flex gap-4">
-              <Button type="submit" disabled={isPending}>
-                {isPending ? 'Adding...' : 'Add'}
-              </Button>
-              {/* <Button variant="outline">Close</Button> */}
-            </div>
+            <Button type="submit" disabled={isPending}>
+              {isPending ? 'Adding...' : 'Add'}
+            </Button>
           </SheetClose>
         </form>
       </SheetContent>

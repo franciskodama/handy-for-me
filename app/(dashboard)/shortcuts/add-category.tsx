@@ -193,12 +193,18 @@ export function AddCategory({
             currentCategories.map((category: ShortcutCategory) => (
               <div
                 key={category.id}
-                className="flex items-center justify-between border px-4 py-1"
+                className="flex items-center justify-between border border-primary px-4 py-2"
               >
                 <div className="flex items-center gap-2">
                   <div
                     className="w-4 h-4 rounded-full"
-                    style={{ backgroundColor: category.color }}
+                    style={{
+                      backgroundColor: category.color,
+                      border:
+                        category.color === 'YELLOW'
+                          ? `1px solid lightgrey`
+                          : `1px solid ${category.color}`
+                    }}
                   />
                   <p className="text-center text-sm capitalize">
                     {category.name}
