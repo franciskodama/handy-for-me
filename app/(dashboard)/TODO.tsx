@@ -3,10 +3,10 @@
 
 // TODO: WORK<ING ON + FAST
 // Shortcut: Message when you don't have any shortcuts
+// Button hover effect: Mariana thinks it's counterintuitive
 // Shortcut: delete my categories that is blocked with error
 // Quotes to long: Solution?
 
-// Button hover effect: Mariana thinks it's counterintuitive
 // Bucket List: Filter for done and not done
 // Responsivity
 // Cities I've visited Feature

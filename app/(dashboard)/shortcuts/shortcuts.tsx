@@ -6,6 +6,7 @@ import {
   ArrowDownWideNarrow,
   ArrowUpWideNarrow,
   Bomb,
+  Ghost,
   MessageCircleX,
   Trash2
 } from 'lucide-react';
@@ -33,6 +34,7 @@ import { AddCategory } from './add-category';
 import { Button } from '@/components/ui/button';
 import { deleteShortcut } from '@/lib/actions';
 import { colors } from '@/lib/utils';
+import MessageEmpty from '@/components/MessageEmpty';
 
 export type CategoryInput = {
   name: string;
@@ -168,6 +170,24 @@ export default function Shortcuts({
           ) : null}
         </AnimatePresence>
 
+        {board.length < 1 && (
+          <div className="mt-8">
+            <MessageEmpty
+              image={'/no-shortcut.webp'}
+              objectPosition={'50% 10%'}
+              alt={'Looking for something'}
+              icon={<Ghost size={32} strokeWidth={1.6} />}
+              titleOne={'Oops...'}
+              titleTwo={'Shortcut Not Found'}
+              subtitle={
+                'Start by adding a category for easy organization, then save your first shortcut here. Get ready to access your favorites in a click!'
+              }
+              setOpenAction={setOpenAction}
+              buttonCopy={'Learn More'}
+              hasButton={true}
+            />
+          </div>
+        )}
         <div className="flex flex-col sm:flex-row w-full gap-8">
           {board.map((groupOfShortcuts: Shortcut[]) => (
             <div key={groupOfShortcuts[0].categoryId} className="sm:w-1/5">
