@@ -1,8 +1,10 @@
 // Our template: https://vercel.com/templates/next.js/admin-dashboard-tailwind-postgres-react-nextjs
 // Google Cloud Credentials: https://console.cloud.google.com/apis/credentials
 
-// TODO: WORKING ON + FAST
-// Shortcut: Explanation
+// TODO: WORK<ING ON + FAST
+// Shortcut: Message when you don't have any shortcuts
+// Shortcut: delete my categories that is blocked with error
+
 // Button hover effect: Mariana thinks it's counterintuitive
 // Bucket List: Filter for done and not done
 // Responsivity
@@ -37,6 +39,7 @@
 // Button: https://medium.com/@dewamadewira25/how-to-make-a-neo-brutalism-button-using-tailwindcss-91d3faf2b269
 
 //TODO: DONE
+// Shortcut: Explanation
 // Shortcut: categories as a state for appearing in the sheet
 // Shortcut: handleDeleteCategory + what if there is shortcuts on this categories?
 // Vision Board: Title align left
