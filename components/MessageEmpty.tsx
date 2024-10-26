@@ -29,7 +29,7 @@ export default function MessageEmpty({
   hasButton
 }: MessageInTable) {
   return (
-    <div className="flex flex-col sm:flex-row items-center justify-around px-8 sm:px-0">
+    <div className="flex flex-col sm:flex-row items-center justify-around px-8 sm:px-0 mb-24">
       <div className="w-full sm:w-[450px] mx-auto my-8">
         <AspectRatio ratio={16 / 9}>
           <Image
@@ -44,7 +44,7 @@ export default function MessageEmpty({
         </AspectRatio>
       </div>
       <div className="flex flex-col sm:w-[450px] mx-auto">
-        <div className="flex items-center gap-2 mb-2">
+        <div className="flex items-center gap-3 mb-2">
           {icon}
           <p className="text-4xl font-semibold">{titleOne}</p>
         </div>

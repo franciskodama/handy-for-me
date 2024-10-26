@@ -173,7 +173,7 @@ export default function Shortcuts({
         {board.length < 1 && (
           <div className="mt-8">
             <MessageEmpty
-              image={'/no-shortcut.webp'}
+              image={'/shortcut-empty.webp'}
               objectPosition={'50% 10%'}
               alt={'Looking for something'}
               icon={<Ghost size={32} strokeWidth={1.6} />}

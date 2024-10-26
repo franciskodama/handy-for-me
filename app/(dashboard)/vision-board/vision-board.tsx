@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { Bomb, Check, Trash2 } from 'lucide-react';
+import { Bomb, Check, EyeOff, Grid2x2X, Trash2 } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useActionState, useEffect, useState } from 'react';
 
@@ -31,6 +31,7 @@ import Help from '@/components/Help';
 import { toast } from '@/hooks/use-toast';
 import { barlow, kumbh_sans } from '@/app/ui/fonts';
 import ExplanationVisionBoard from './explanation-vision-board';
+import MessageEmpty from '@/components/MessageEmpty';
 
 const handleSubmit = async (previousState: unknown, formData: FormData) => {
   const name = formData.get('name') as string;
@@ -244,6 +245,25 @@ export default function VisionBoard({
             </motion.div>
           ) : null}
         </AnimatePresence>
+
+        {board.length < 1 && (
+          <div className="mt-8">
+            <MessageEmpty
+              image={'/brucelee-emptymind.webp'}
+              objectPosition={'50% 50%'}
+              alt={'Bruce Lee Empty your mind'}
+              icon={<Grid2x2X size={32} strokeWidth={1.6} />}
+              titleOne={'Oops...'}
+              titleTwo={'Vision Not Found'}
+              subtitle={
+                'An empty board is like an empty mind… Add your goals and bring your vision to life!'
+              }
+              setOpenAction={setOpenAction}
+              buttonCopy={'How it works?'}
+              hasButton={true}
+            />
+          </div>
+        )}
 
         <div className="flex flex-wrap gap-[1px] justify-center">
           {board.map((item: VisualBoardItem) => (

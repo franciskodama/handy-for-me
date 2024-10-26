@@ -31,7 +31,7 @@ export default function ExplanationBox({
   setOpenAction: (value: boolean) => void;
 }) {
   return (
-    <div className="relative mt-8 border">
+    <div className="relative mt-8">
       <Alert
         style={{
           borderImage: `repeating-linear-gradient(
