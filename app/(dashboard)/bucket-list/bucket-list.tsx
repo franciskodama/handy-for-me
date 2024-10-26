@@ -1,7 +1,14 @@
 'use client';
 
 import { AnimatePresence, motion } from 'framer-motion';
-import { Bomb, Check, CircleHelp, Trash2 } from 'lucide-react';
+import {
+  Bomb,
+  Check,
+  CircleHelp,
+  FlagOff,
+  LightbulbOff,
+  Trash2
+} from 'lucide-react';
 import { useActionState, useEffect, useState } from 'react';
 
 import {
@@ -48,6 +55,7 @@ import { barlow } from '@/app/ui/fonts';
 import { toast } from '@/hooks/use-toast';
 import ExplanationBucketList from './explanation-bucket-list';
 import Help from '@/components/Help';
+import MessageEmpty from '@/components/MessageEmpty';
 
 type Category = {
   name: string;
@@ -285,6 +293,25 @@ export default function BucketList({
             </motion.div>
           ) : null}
         </AnimatePresence>
+
+        {board.length < 1 && (
+          <div className="mt-8">
+            <MessageEmpty
+              image={'/superman-where.webp'}
+              objectPosition={'50% 10%'}
+              alt={'Looking for something'}
+              icon={<FlagOff size={32} strokeWidth={1.6} />}
+              titleOne={'Oops...'}
+              titleTwo={'Adventures Missing'}
+              subtitle={
+                'Every hero needs epic adventures! Start adding yours now and get ready for action!'
+              }
+              setOpenAction={setOpenAction}
+              buttonCopy={`Tell me more about it`}
+              hasButton={true}
+            />
+          </div>
+        )}
 
         <div className="flex flex-wrap gap-2 mt-12">
           {board.map((item: BucketListItem) => (
