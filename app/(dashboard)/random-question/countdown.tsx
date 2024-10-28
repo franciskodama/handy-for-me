@@ -8,6 +8,7 @@ import {
 } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
 import confetti from 'canvas-confetti';
+import { Timer } from 'lucide-react';
 
 export default function Countdown({
   name,
@@ -97,7 +98,11 @@ export default function Countdown({
 
   return (
     <div>
-      <p className="text-lg font-semibold mb-2">Answer Clock ⏱️</p>
+      <div className="flex items-center gap-2 mb-2">
+        <p className="text-lg font-semibold">Answer Clock</p>
+        <Timer size={24} strokeWidth={1.6} />
+      </div>
+
       <p className="text-sm my-2">Customize your countdown:</p>
       <div className="flex flex-col gap-2">
         <div className="flex flex-col gap-2">

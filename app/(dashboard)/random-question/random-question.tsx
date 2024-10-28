@@ -26,6 +26,7 @@ import {
 } from './questions';
 import Countdown from './countdown';
 import Help from '@/components/Help';
+import { Flame } from 'lucide-react';
 
 export default function RandomQuestion({ name }: { name: string }) {
   const [topic, setTopic] = useState<string>('');
@@ -92,7 +93,7 @@ export default function RandomQuestion({ name }: { name: string }) {
         <div className="flex flex-col sm:flex-row justify-between gap-8 mb-4 w-full">
           <div className="flex sm:w-1/5 flex-col gap-4">
             <p className="text-lg font-semibold">
-              {`${name.split(' ')[0]}, let's get started! 👋 `}
+              {`${name.split(' ')[0]}, let's get started! `}
             </p>
             <div className="flex flex-col gap-2">
               <Select
@@ -172,15 +173,16 @@ export default function RandomQuestion({ name }: { name: string }) {
               </>
             ) : (
               <>
-                <div className="flex flex-col h-full justify-center p-12 leading-tight text-center w-full gap-4">
-                  <div>
-                    <p className="font-semibold text-lg sm:text-2xl mb-4">
-                      Ready for a challenge? 🔥
+                <div className="flex flex-col h-full justify-center items-center p-12 leading-tight text-center w-full gap-4">
+                  <div className="flex items-center gap-2">
+                    <p className="font-semibold text-lg sm:text-2xl">
+                      Ready for a challenge?
                     </p>
-                    <p className="text-sm sm:text-xl">
-                      Set the timer, choose a topic, spin, and answer.
-                    </p>
+                    <Flame size={24} strokeWidth={1.6} />
                   </div>
+                  <p className="text-sm sm:text-xl">
+                    Set the timer, choose a topic, spin, and answer.
+                  </p>
                 </div>
               </>
             )}
