@@ -2,8 +2,11 @@
 // Google Cloud Credentials: https://console.cloud.google.com/apis/credentials
 
 // TODO: WORK<ING ON + FAST
+// Letter Leap everything on one screen
 // Button hover effect: Mariana thinks it's counterintuitive
 // Quotes to long: Solution?
+// Random Questions: position time button and question
+// Vision board: zoom library
 
 // Bucket List: Filter for done and not done
 // Responsivity
