@@ -2,7 +2,14 @@
 
 import { useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { SquareX } from 'lucide-react';
+import {
+  AArrowDown,
+  Clover,
+  Compass,
+  LifeBuoy,
+  SquareX,
+  Zap
+} from 'lucide-react';
 import { Foldit } from 'next/font/google';
 
 export const foldit = Foldit({
@@ -80,7 +87,10 @@ export default function LetterLeap({ name }: { name: string }) {
 
         <div className="flex flex-col sm:flex-row justify-between gap-8 mb-4 w-full">
           <div className="flex sm:w-1/5 flex-col gap-4">
-            <p className="text-lg font-semibold">Let words guide you. 🎯</p>
+            <div className="flex items-center gap-2">
+              <p className="text-lg font-semibold">Let words guide you.</p>
+              <Compass size={24} strokeWidth={1.6} />
+            </div>
             <Button className="capitalize" onClick={handleSpin}>
               Spin!
             </Button>
@@ -114,9 +124,12 @@ export default function LetterLeap({ name }: { name: string }) {
             ) : (
               <>
                 <div className="flex flex-col justify-center p-12 sm:py-32 text-xl text-primary leading-tight text-center gap-4">
-                  <p className="font-semibold text-2xl">
-                    Ready to spin and spark your creativity? 🍀
-                  </p>
+                  <div className="flex items-center gap-2">
+                    <p className="font-semibold text-2xl">
+                      Ready to spin and spark your creativity?
+                    </p>
+                    <Clover size={24} strokeWidth={1.6} />
+                  </div>
                   <p>Let’s see where your next letter takes you!</p>
                 </div>
               </>
@@ -124,9 +137,12 @@ export default function LetterLeap({ name }: { name: string }) {
           </div>
 
           <div className="flex flex-col sm:w-1/5">
-            <p className="text-lg font-semibold mb-2">
-              {`${name.split(' ')[0]}, Out of ideas? 🚨`}
-            </p>
+            <div className="flex items-center gap-2 mb-2">
+              <p className="text-lg font-semibold">
+                {`${name.split(' ')[0]}, Out of ideas?`}
+              </p>
+              <LifeBuoy size={24} strokeWidth={1.6} />
+            </div>
             <p className="mb-4">Hit only in case of brain block!</p>
             <Button
               variant={'outline'}
