@@ -178,7 +178,7 @@ export default function RandomQuestion({ name }: { name: string }) {
                     <p className="font-semibold text-lg sm:text-2xl">
                       Ready for a challenge?
                     </p>
-                    <Flame size={24} strokeWidth={1.6} />
+                    <Flame size={32} strokeWidth={1.6} />
                   </div>
                   <p className="text-sm sm:text-xl">
                     Set the timer, choose a topic, spin, and answer.

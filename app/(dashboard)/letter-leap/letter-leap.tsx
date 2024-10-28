@@ -6,6 +6,8 @@ import {
   AArrowDown,
   Clover,
   Compass,
+  CornerDownLeft,
+  CornerRightDown,
   LifeBuoy,
   SquareX,
   Zap
@@ -88,8 +90,8 @@ export default function LetterLeap({ name }: { name: string }) {
         <div className="flex flex-col sm:flex-row justify-between gap-8 mb-4 w-full">
           <div className="flex sm:w-1/5 flex-col gap-4">
             <div className="flex items-center gap-2">
-              <p className="text-lg font-semibold">Let words guide you.</p>
-              <Compass size={24} strokeWidth={1.6} />
+              <p className="text-lg font-semibold">Let words guide you</p>
+              <CornerRightDown size={24} strokeWidth={1.6} />
             </div>
             <Button className="capitalize" onClick={handleSpin}>
               Spin!
@@ -128,7 +130,7 @@ export default function LetterLeap({ name }: { name: string }) {
                     <p className="font-semibold text-2xl">
                       Ready to spin and spark your creativity?
                     </p>
-                    <Clover size={24} strokeWidth={1.6} />
+                    <Clover size={32} strokeWidth={1.6} />
                   </div>
                   <p>Let’s see where your next letter takes you!</p>
                 </div>
