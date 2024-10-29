@@ -103,7 +103,7 @@ export default function Countdown({
         <Timer size={24} strokeWidth={1.6} />
       </div>
 
-      <p className="text-sm my-2">Customize your countdown:</p>
+      <p className="text-sm my-2 text-left">Customize your countdown:</p>
       <div className="flex flex-col gap-2">
         <div className="flex flex-col gap-2">
           <Select value={selectedValue} onValueChange={handleValueChange}>
@@ -121,7 +121,7 @@ export default function Countdown({
           </Select>
         </div>
 
-        <div className="text-5xl my-2">
+        <div className="text-5xl text-left my-2">
           <p>{`${minutes.toString().padStart(2, '0')}m ${seconds.toString().padStart(2, '0')}s`}</p>
         </div>
         <div className="flex gap-2 mt-4">

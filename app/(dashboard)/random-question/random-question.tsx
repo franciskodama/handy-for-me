@@ -17,6 +17,18 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger
+} from '@/components/ui/alert-dialog';
+
 import { Button } from '@/components/ui/button';
 import ExplanationRandomQuestion from './explanation-random-question';
 import {
@@ -26,7 +38,7 @@ import {
 } from './questions';
 import Countdown from './countdown';
 import Help from '@/components/Help';
-import { Flame } from 'lucide-react';
+import { Flame, SquareX, X } from 'lucide-react';
 
 export default function RandomQuestion({ name }: { name: string }) {
   const [topic, setTopic] = useState<string>('');
@@ -74,7 +86,7 @@ export default function RandomQuestion({ name }: { name: string }) {
           Boost your English with fun, random prompts!
         </CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="h-screen">
         <AnimatePresence>
           {openAction ? (
             <motion.div
@@ -142,7 +154,90 @@ export default function RandomQuestion({ name }: { name: string }) {
             </div>
           </div>
 
-          <div
+          <AlertDialog open={result.length > 0}>
+            <AlertDialogContent className="w-4/5">
+              <AlertDialogHeader>
+                <AlertDialogDescription>
+                  <div
+                    className={`relative flex flex-col sm:w-3/5 items-center`}
+                    style={{
+                      borderImage: `repeating-linear-gradient(
+                  45deg,
+                  transparent,
+                  transparent 2.5px,
+                  black 3px,
+                  black 3px,
+                  transparent 3px,
+                  transparent 3px
+                ) 15 / 0.75rem`,
+                      borderStyle: 'solid',
+                      borderWidth: '1em'
+                    }}
+                  >
+                    {result ? (
+                      <>
+                        <p className="flex flex-col justify-center p-12 text-2xl sm:text-5xl font-semibold text-primary sm:leading-normal text-center">
+                          {result}
+                        </p>
+                        <Button
+                          variant="outline"
+                          className="capitalize mb-12 hidden sm:flex"
+                          onClick={handleResetAll}
+                        >
+                          Reset
+                        </Button>
+                      </>
+                    ) : (
+                      <>
+                        <div className="flex flex-col h-full justify-center items-center p-12 leading-tight text-center w-full gap-4">
+                          <div className="flex items-center gap-2">
+                            <p className="font-semibold text-lg sm:text-2xl">
+                              Ready for a challenge?
+                            </p>
+                            <Flame size={32} strokeWidth={1.6} />
+                          </div>
+                          <p className="text-sm sm:text-xl">
+                            Set the timer, choose a topic, spin, and answer.
+                          </p>
+                        </div>
+                      </>
+                    )}
+                  </div>
+
+                  <div className="flex flex-col mt-8 sm:mt-0 sm:w-1/5">
+                    <Countdown
+                      name={name}
+                      resetAll={resetAll}
+                      result={result}
+                      setStartCountdown={setStartCountdown}
+                      startCountdown={startCountdown}
+                    />
+                  </div>
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter className="flex justify-center w-full">
+                {/* <Button
+                  variant="ghost"
+                  onClick={() => setResult('')}
+                  className="flex items-center mt-8 mb-0"
+                >
+                  <SquareX size={18} strokeWidth={1.6} />
+                  <p className="text-xs ml-2 underline">Close</p>
+                </Button> */}
+                {/* <AlertDialogAction onClick={() => setResult('')}>
+                        Done! Back to Choices.
+                      </AlertDialogAction> */}
+              </AlertDialogFooter>
+              <button
+                className="absolute -right-4 -top-4 sm:right-0 sm:top-0 sm:border-0 border border-primary bg-white p-1 z-50"
+                onClick={() => setResult('')}
+              >
+                <X size={24} color="black" strokeWidth={1.8} />
+              </button>
+            </AlertDialogContent>
+          </AlertDialog>
+
+          {/* <div
             className={`flex flex-col sm:w-3/5 items-center`}
             style={{
               borderImage: `repeating-linear-gradient(
@@ -196,7 +291,7 @@ export default function RandomQuestion({ name }: { name: string }) {
               setStartCountdown={setStartCountdown}
               startCountdown={startCountdown}
             />
-          </div>
+          </div> */}
         </div>
       </CardContent>
     </Card>

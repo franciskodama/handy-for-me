@@ -279,7 +279,6 @@ export default function DecisionHelper({
             {result && (
               <>
                 <AlertDialog open={result.length > 0}>
-                  <AlertDialogTrigger>Open</AlertDialogTrigger>
                   <AlertDialogContent className="w-4/5">
                     <AlertDialogHeader>
                       <AlertDialogTitle className="flex items-center gap-2 justify-center animate-pulse">
@@ -307,9 +306,6 @@ export default function DecisionHelper({
                       >
                         Done! Back to Choices.
                       </AlertDialogCancel>
-                      {/* <AlertDialogAction onClick={() => setResult('')}>
-                        Done! Back to Choices.
-                      </AlertDialogAction> */}
                     </AlertDialogFooter>
                   </AlertDialogContent>
                 </AlertDialog>

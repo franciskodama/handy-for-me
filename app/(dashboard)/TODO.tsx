@@ -2,9 +2,8 @@
 // Google Cloud Credentials: https://console.cloud.google.com/apis/credentials
 
 // TODO: WORK<ING ON + FAST
-// Change the name of Spin Magic: Decision Helper
+// Random Questions: everything on one screen
 // Grid: https://www.youtube.com/watch?v=3T0gjtXRNC0
-// Letter Leap everything on one screen
 // Button hover effect: Mariana thinks it's counterintuitive
 // Quotes to long: Solution?
 // Random Questions: position time button and question
@@ -37,12 +36,14 @@
 // Emoji Generator: https://vercel.com/templates/next.js/ai-emoji-generator
 // Galery for Affirmation: https://codepen.io/cbolson/pen/GRbzyGJ
 
-//TODO: TODOS
+// TODO: TODOS
 // Middleware: create a About page and include it in the middleware (matcher)
 // Add second font: josefin
 // Button: https://medium.com/@dewamadewira25/how-to-make-a-neo-brutalism-button-using-tailwindcss-91d3faf2b269
 
-//TODO: DONE
+// TODO: DONE
+// Letter Leap everything on one screen
+// Change the name of Spin Magic: Decision Helper
 // Shortcut: Message when you don't have any shortcuts
 // Shortcut: delete my categories that is blocked with error
 // Shortcut: Explanation
