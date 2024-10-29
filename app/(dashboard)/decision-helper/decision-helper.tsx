@@ -2,19 +2,12 @@
 
 import { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import {
-  PartyPopper,
-  RefreshCw,
-  SquareX,
-  Terminal,
-  Trash2
-} from 'lucide-react';
+import { PartyPopper, RefreshCw, SquareX, Trash2 } from 'lucide-react';
 import { Foldit } from 'next/font/google';
 import confetti from 'canvas-confetti';
 
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -23,7 +16,6 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger
 } from '@/components/ui/alert-dialog';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import {
   Card,
   CardContent,
@@ -48,9 +40,9 @@ import {
   selectionSpinItem
 } from '@/lib/actions';
 import { Checkbox } from '@/components/ui/checkbox';
-import ExplanationSpin from './explanation-spin';
 import { kumbh_sans } from '@/app/ui/fonts';
 import Help from '@/components/Help';
+import ExplanationDecisionHelper from './explanation-decision-helper';
 
 export const foldit = Foldit({
   weight: ['700'],
@@ -59,7 +51,7 @@ export const foldit = Foldit({
   display: 'swap'
 });
 
-export default function Spin({
+export default function DecisionHelper({
   uid,
   initialLists,
   initialItems
@@ -149,7 +141,7 @@ export default function Spin({
     <Card>
       <CardHeader className="mb-4">
         <CardTitle className="flex justify-between items-center gap-2">
-          <p>Spin Magic</p>
+          <p>Decision Helper</p>
           {!openAction ? <Help setOpenAction={setOpenAction} /> : <div />}
         </CardTitle>
         <CardDescription>
@@ -167,7 +159,7 @@ export default function Spin({
               exit={{ opacity: 0, scale: 0.5, transition: { duration: 0.2 } }}
             >
               <div className="mb-12">
-                <ExplanationSpin setOpenAction={setOpenAction} />
+                <ExplanationDecisionHelper setOpenAction={setOpenAction} />
               </div>
             </motion.div>
           ) : null}
@@ -308,8 +300,11 @@ export default function Spin({
                         </p>
                       </AlertDialogDescription>
                     </AlertDialogHeader>
-                    <AlertDialogFooter>
-                      <AlertDialogCancel onClick={() => setResult('')}>
+                    <AlertDialogFooter className="flex justify-center w-full">
+                      <AlertDialogCancel
+                        onClick={() => setResult('')}
+                        className="mx-auto"
+                      >
                         Done! Back to Choices.
                       </AlertDialogCancel>
                       {/* <AlertDialogAction onClick={() => setResult('')}>

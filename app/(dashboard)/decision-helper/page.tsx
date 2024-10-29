@@ -1,9 +1,9 @@
 import { auth } from '@/lib/auth';
-import Spin from './spin';
 import { getAllSpinItems, getSpinLists } from '@/lib/actions';
 import { SpinItem, SpinList } from '@/lib/types';
+import DecisionHelper from './decision-helper';
 
-export default async function SpinPage() {
+export default async function DecisionHelperPage() {
   const session = await auth();
   const uid = session?.user?.email;
 
@@ -22,6 +22,10 @@ export default async function SpinPage() {
   }
 
   return (
-    <>{uid && <Spin uid={uid} initialLists={lists} initialItems={items} />}</>
+    <>
+      {uid && (
+        <DecisionHelper uid={uid} initialLists={lists} initialItems={items} />
+      )}
+    </>
   );
 }
