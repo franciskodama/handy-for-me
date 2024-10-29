@@ -30,7 +30,7 @@ export default function MessageEmpty({
 }: MessageInTable) {
   return (
     <div className="flex flex-col sm:flex-row items-center justify-around px-8 sm:px-0 mb-24">
-      <div className="w-full sm:w-[450px] mx-auto my-8">
+      <div className="w-full sm:w-[450px] mx-auto mb-8 sm:my-8">
         <AspectRatio ratio={16 / 9}>
           <Image
             src={image}

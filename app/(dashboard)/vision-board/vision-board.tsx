@@ -188,7 +188,7 @@ export default function VisionBoard({
             className={`${barlow.className} flex gap-4 capitalize mt-8 sm:mt-0`}
           >
             <form
-              className="flex flex-col sm:flex-row items-start gap-8 sm:gap-2 font-normal"
+              className="flex flex-col sm:flex-row items-start gap-4 sm:gap-2 font-normal"
               action={action}
             >
               <div className="flex flex-col gap-1 w-full sm:w-2/5">
@@ -247,7 +247,7 @@ export default function VisionBoard({
         </AnimatePresence>
 
         {board.length < 1 && (
-          <div className="mt-8">
+          <div className="sm:mt-8">
             <MessageEmpty
               image={'/brucelee-emptymind.webp'}
               objectPosition={'50% 50%'}

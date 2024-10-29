@@ -2,6 +2,8 @@
 // Google Cloud Credentials: https://console.cloud.google.com/apis/credentials
 
 // TODO: WORK<ING ON + FAST
+// Change the name of Spin Magic: Decision Helper
+// Grid: https://www.youtube.com/watch?v=3T0gjtXRNC0
 // Letter Leap everything on one screen
 // Button hover effect: Mariana thinks it's counterintuitive
 // Quotes to long: Solution?

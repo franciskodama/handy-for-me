@@ -62,7 +62,7 @@ export default function LetterLeap({ name }: { name: string }) {
 
   return (
     <Card>
-      <CardHeader className="mb-12">
+      <CardHeader className="mb-4 sm:mb-12">
         <CardTitle className="flex justify-between items-center gap-2">
           <p>Letter Leap</p>
           {!openAction ? <Help setOpenAction={setOpenAction} /> : <div />}
@@ -126,13 +126,12 @@ export default function LetterLeap({ name }: { name: string }) {
             ) : (
               <>
                 <div className="flex flex-col justify-center p-12 sm:py-32 text-xl text-primary leading-tight text-center gap-4">
-                  <div className="flex items-center gap-2">
-                    <p className="font-semibold text-2xl">
-                      Ready to spin and spark your creativity?
-                    </p>
-                    <Clover size={32} strokeWidth={1.6} />
-                  </div>
-                  <p>Let’s see where your next letter takes you!</p>
+                  <p className="font-semibold text-2xl">
+                    Ready to spin and spark your creativity?
+                  </p>
+                  <p className="text-sm sm:text-base">
+                    Let’s see where your next letter takes you!
+                  </p>
                 </div>
               </>
             )}
