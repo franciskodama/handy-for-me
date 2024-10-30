@@ -9,29 +9,26 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/card';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue
-} from '@/components/ui/select';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger
-} from '@/components/ui/tooltip';
-import { Button } from '@/components/ui/button';
 import ExplanationIn from './explanation-in';
 import { useState } from 'react';
-import { ChevronsUpDown, CircleHelp, UnfoldVertical } from 'lucide-react';
+import { ChevronsUpDown } from 'lucide-react';
 import UserCard from './user';
-import { User } from '@/lib/types';
+import { LocationProps, User } from '@/lib/types';
 import { kumbh_sans } from '@/app/ui/fonts';
 import Help from '@/components/Help';
+import { CardWeather } from './cards';
 
-export default function In({ user }: { user: User | undefined }) {
+export default function In({
+  user,
+  location,
+  weather
+}: {
+  user: User | undefined;
+  location: LocationProps | null;
+  weather: any;
+}) {
+  console.log('---  🚀 ---> | weather:', weather);
+  console.log('---  🚀 ---> | location:', location);
   // { user }: { user: UserProps }
   // const [listId, setListId] = useState<string>('');
   // const [listInput, setListInput] = useState<string>('');
@@ -41,6 +38,26 @@ export default function In({ user }: { user: User | undefined }) {
   // const [spinning, setSpinning] = useState<boolean>(false);
   // const [result, setResult] = useState<string>('');
   const [openAction, setOpenAction] = useState(false);
+
+  // const giveMeDateLocationWeather = ({
+  //   location,
+  //   weather
+  // }: {
+  //   location: Location;
+  //   weather: any;
+  // }) => {
+  //   return {
+  //     date: new Date(),
+  //     city: location.city,
+  //     state: location.region,
+  //     country: location.country,
+  //     weather: weather.main.weather.description,
+  //     temperature: weather.main.temp
+  //   };
+  // };
+
+  // const dateLocationWeather = giveMeDateLocationWeather(location, weather);
+  // console.log('---  🚀 ---> | dateLocationWeather:', dateLocationWeather);
 
   return (
     <Card>
@@ -77,7 +94,8 @@ export default function In({ user }: { user: User | undefined }) {
             <div className="sm:w-1/3">
               <UserCard user={user} />
             </div>
-            <div className="sm:w-1/3 border border-dashed border-slate-300 p-4"></div>
+            <CardWeather location={location} weather={weather} />
+            {/* <div className="sm:w-1/3 border border-dashed border-slate-300 p-4"></div> */}
             <div className="sm:w-1/3 border border-dashed border-slate-300 p-4"></div>
           </div>
 

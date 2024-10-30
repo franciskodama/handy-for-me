@@ -293,7 +293,7 @@ export default function DecisionHelper({
                       </AlertDialogTitle>
                       <AlertDialogDescription>
                         <p
-                          className={`${kumbh_sans.className} ${result.length > 8 ? 'text-lg sm:text-4xl' : 'text-3xl sm:text-7xl'} uppercase font-bold leading-none text-center w-full my-8`}
+                          className={`${kumbh_sans.className} ${result.length > 8 ? 'text-lg sm:text-4xl' : 'text-3xl sm:text-7xl'} text-primary uppercase font-bold leading-none text-center w-full my-8`}
                         >
                           {result}
                         </p>

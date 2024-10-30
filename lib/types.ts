@@ -68,3 +68,9 @@ export type AddShortcutParams = {
   description: string;
   categoryId: string;
 };
+
+export type LocationProps = {
+  city: string;
+  region: string;
+  country: string;
+};

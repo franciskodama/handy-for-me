@@ -2,15 +2,17 @@
 // Google Cloud Credentials: https://console.cloud.google.com/apis/credentials
 
 // TODO: WORK<ING ON + FAST
+// Random Questions:Reset All must Reset the Clock as well
+// Random Questions: When it's reseted, don't show the kudos message either
 // Random Questions: everything on one screen
+// Random Questions: Clock must restart on 2 min after Reset
+
 // Grid: https://www.youtube.com/watch?v=3T0gjtXRNC0
 // Button hover effect: Mariana thinks it's counterintuitive
 // Quotes to long: Solution?
-// Random Questions: position time button and question
 // Vision board: zoom library
 
 // Bucket List: Filter for done and not done
-// Responsivity
 // Cities I've visited Feature
 // Thigns to do Frame list that you can cross what was done.
 // Dahsboard: Pppulate the spaces, but think mobile first.
@@ -42,6 +44,8 @@
 // Button: https://medium.com/@dewamadewira25/how-to-make-a-neo-brutalism-button-using-tailwindcss-91d3faf2b269
 
 // TODO: DONE
+// Responsivity
+// Random Questions: position time button and question
 // Letter Leap everything on one screen
 // Change the name of Spin Magic: Decision Helper
 // Shortcut: Message when you don't have any shortcuts
