@@ -1,12 +1,16 @@
 // Our template: https://vercel.com/templates/next.js/admin-dashboard-tailwind-postgres-react-nextjs
 // Google Cloud Credentials: https://console.cloud.google.com/apis/credentials
 
+// TODO: HELPERS
+// size={24} strokeWidth={1.8}
+
 // TODO: WORK<ING ON + FAST
 // Dashboard: if it's Dashboard, don't show the avatar on the top
 // Random Questions:Reset All must Reset the Clock as well
 // Random Questions: When it's reseted, don't show the kudos message either
 // Random Questions: everything on one screen
 // Random Questions: Clock must restart on 2 min after Reset
+// analytics
 
 // Grid: https://www.youtube.com/watch?v=3T0gjtXRNC0
 // Button hover effect: Mariana thinks it's counterintuitive

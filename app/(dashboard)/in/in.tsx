@@ -9,6 +9,8 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+
 import ExplanationIn from './explanation-in';
 import { useState } from 'react';
 import { ChevronsUpDown } from 'lucide-react';
@@ -16,7 +18,7 @@ import UserCard from './user';
 import { LocationProps, User } from '@/lib/types';
 import { kumbh_sans } from '@/app/ui/fonts';
 import Help from '@/components/Help';
-import { CardWeather } from './cards';
+import { FunFactCard, WeatherCard } from './cards';
 
 export default function In({
   user,
@@ -88,12 +90,30 @@ export default function In({
         <div className="flex flex-col gap-4">
           {/* ----------------------- First Row ----------------------- */}
 
-          <div className="flex flex-col sm:flex-row w-full justify-between gap-8 mb-12">
+          <Tabs defaultValue="user" className="w-[400px] sm:hidden">
+            <TabsList>
+              <TabsTrigger value="user">Hello!</TabsTrigger>
+              <TabsTrigger value="weather">Weather</TabsTrigger>
+              <TabsTrigger value="fun-fact">Fun Fact</TabsTrigger>
+            </TabsList>
+            <TabsContent value="user">
+              <UserCard user={user} />
+            </TabsContent>
+            <TabsContent value="weather">
+              <WeatherCard location={location} weather={weather} />
+            </TabsContent>
+            <TabsContent value="fun-fact">
+              <FunFactCard />
+            </TabsContent>
+          </Tabs>
+
+          {/* ----------------------- First Row ----------------------- */}
+
+          <div className="hidden sm:flex flex-col sm:flex-row w-full justify-between gap-8 mb-12">
             <div className="sm:w-1/3">
               <UserCard user={user} />
             </div>
-            <CardWeather location={location} weather={weather} />
-            {/* <div className="sm:w-1/3 border border-dashed border-slate-300 p-4"></div> */}
+            <WeatherCard location={location} weather={weather} />
             <div className="sm:w-1/3 border border-dashed border-slate-300 p-4"></div>
           </div>
 
