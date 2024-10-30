@@ -166,8 +166,8 @@ const menuItems = [
     icon: <ListMinus className="h-5 w-5" />
   },
   {
-    label: 'Spin Magic',
-    href: '/spin',
+    label: 'Decision Helper',
+    href: '/decision-helper',
     icon: <RefreshCw className="h-5 w-5" />
   },
   {

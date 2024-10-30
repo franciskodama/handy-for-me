@@ -15,13 +15,15 @@ export default function Countdown({
   resetAll,
   result,
   startCountdown,
-  setStartCountdown
+  setStartCountdown,
+  handleResetAll
 }: {
   name: string;
   resetAll: boolean;
   result: string;
   startCountdown: boolean;
   setStartCountdown: (value: boolean) => void;
+  handleResetAll: () => void;
 }) {
   const minutesOptions = [1, 2, 3, 4, 5];
   const [isPaused, setIsPaused] = useState(false);
@@ -97,13 +99,13 @@ export default function Countdown({
   };
 
   return (
-    <div>
+    <div className="text-primary">
       <div className="flex items-center gap-2 mb-2">
         <p className="text-lg font-semibold">Answer Clock</p>
         <Timer size={24} strokeWidth={1.6} />
       </div>
 
-      <p className="text-sm my-2">Customize your countdown:</p>
+      <p className="text-sm my-2 text-left">Customize your countdown:</p>
       <div className="flex flex-col gap-2">
         <div className="flex flex-col gap-2">
           <Select value={selectedValue} onValueChange={handleValueChange}>
@@ -121,13 +123,12 @@ export default function Countdown({
           </Select>
         </div>
 
-        <div className="text-5xl my-2">
+        <div className="text-5xl text-left my-2">
           <p>{`${minutes.toString().padStart(2, '0')}m ${seconds.toString().padStart(2, '0')}s`}</p>
         </div>
         <div className="flex gap-2 mt-4">
           <Button
             className="w-[10ch]"
-            variant="outline"
             onClick={handlePauseResumeButton}
             disabled={timeRemaining === 0 || (!startCountdown && !isPaused)}
           >
@@ -136,12 +137,22 @@ export default function Countdown({
 
           <Button
             className="w-[10ch]"
-            variant="outline"
             onClick={handleRestartButton}
             disabled={lastSelectedTime === 0}
           >
             Restart
           </Button>
+
+          <div className="sm:hidden">
+            <Button
+              className="w-[10ch]"
+              variant="outline"
+              onClick={handleResetAll}
+              disabled={lastSelectedTime === 0}
+            >
+              Reset All
+            </Button>
+          </div>
         </div>
 
         {timeRemaining === 0 && result && (

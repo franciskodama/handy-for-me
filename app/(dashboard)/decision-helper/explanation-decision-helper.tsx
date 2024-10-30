@@ -2,7 +2,7 @@ import { Lightbulb, Settings, Snail, Trash2 } from 'lucide-react';
 import ExplanationBox from '@/components/ExplanationBox';
 import { Checkbox } from '@/components/ui/checkbox';
 
-export default function ExplanationSpin({
+export default function ExplanationDecisionHelper({
   setOpenAction
 }: {
   setOpenAction: (value: boolean) => void;
@@ -10,12 +10,13 @@ export default function ExplanationSpin({
   const contentOne = (
     <>
       <p>
-        With Spin Magic, you can turn any list into a fun, random selection!
+        With Decision Helper, you can turn any list into a fun, random
+        selection!
       </p>
       <p>
         Whether it’s picking a family activity, deciding on what to cook for
-        dinner, or choosing the next movie for movie night — Spin Magic has you
-        covered.
+        dinner, or choosing the next movie for movie night — Decision Helper has
+        you covered.
       </p>
     </>
   );
@@ -81,7 +82,7 @@ export default function ExplanationSpin({
       contentOne={contentOne}
       contentTwo={contentTwo}
       contentThree={contentThree}
-      callToAction="Start spinning today!"
+      callToAction="Start deciding now!"
     />
   );
 }

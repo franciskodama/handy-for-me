@@ -2,10 +2,20 @@
 
 import { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { RefreshCw, SquareX, Trash2 } from 'lucide-react';
+import { PartyPopper, RefreshCw, SquareX, Trash2 } from 'lucide-react';
 import { Foldit } from 'next/font/google';
 import confetti from 'canvas-confetti';
 
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger
+} from '@/components/ui/alert-dialog';
 import {
   Card,
   CardContent,
@@ -30,9 +40,9 @@ import {
   selectionSpinItem
 } from '@/lib/actions';
 import { Checkbox } from '@/components/ui/checkbox';
-import ExplanationSpin from './explanation-spin';
 import { kumbh_sans } from '@/app/ui/fonts';
 import Help from '@/components/Help';
+import ExplanationDecisionHelper from './explanation-decision-helper';
 
 export const foldit = Foldit({
   weight: ['700'],
@@ -41,7 +51,7 @@ export const foldit = Foldit({
   display: 'swap'
 });
 
-export default function Spin({
+export default function DecisionHelper({
   uid,
   initialLists,
   initialItems
@@ -131,7 +141,7 @@ export default function Spin({
     <Card>
       <CardHeader className="mb-4">
         <CardTitle className="flex justify-between items-center gap-2">
-          <p>Spin Magic</p>
+          <p>Decision Helper</p>
           {!openAction ? <Help setOpenAction={setOpenAction} /> : <div />}
         </CardTitle>
         <CardDescription>
@@ -149,7 +159,7 @@ export default function Spin({
               exit={{ opacity: 0, scale: 0.5, transition: { duration: 0.2 } }}
             >
               <div className="mb-12">
-                <ExplanationSpin setOpenAction={setOpenAction} />
+                <ExplanationDecisionHelper setOpenAction={setOpenAction} />
               </div>
             </motion.div>
           ) : null}
@@ -268,11 +278,37 @@ export default function Spin({
 
             {result && (
               <>
-                <p
-                  className={`${kumbh_sans.className} ${result.length > 8 ? 'text-lg sm:text-4xl' : 'text-3xl sm:text-7xl'} uppercase font-bold leading-none text-center animate-pulse w-full my-8`}
-                >
-                  {result}
-                </p>
+                <AlertDialog open={result.length > 0}>
+                  <AlertDialogContent className="w-4/5">
+                    <AlertDialogHeader>
+                      <AlertDialogTitle className="flex items-center gap-2 justify-center animate-pulse">
+                        <p>
+                          {
+                            titleAlert[
+                              Math.floor(Math.random() * titleAlert.length)
+                            ]
+                          }
+                        </p>
+                        <PartyPopper size={24} strokeWidth={1.8} />
+                      </AlertDialogTitle>
+                      <AlertDialogDescription>
+                        <p
+                          className={`${kumbh_sans.className} ${result.length > 8 ? 'text-lg sm:text-4xl' : 'text-3xl sm:text-7xl'} text-primary uppercase font-bold leading-none text-center w-full my-8`}
+                        >
+                          {result}
+                        </p>
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter className="flex justify-center w-full">
+                      <AlertDialogCancel
+                        onClick={() => setResult('')}
+                        className="mx-auto"
+                      >
+                        Done! Back to Choices.
+                      </AlertDialogCancel>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
                 <Button variant="link" onClick={() => setResult('')}>
                   <SquareX
                     size={18}
@@ -281,7 +317,6 @@ export default function Spin({
                   />
                   <p className="ml-2 text-xs">Clear</p>
                 </Button>
-                {/* <Fireworks autorun={{ speed: 3 }}  */}
               </>
             )}
           </div>
@@ -335,3 +370,14 @@ export default function Spin({
     </Card>
   );
 }
+
+const titleAlert = [
+  'Your Decision is Made!',
+  'Here’s Your Choice!',
+  'Here’s Your Decision!',
+  'The Decision is In!',
+  'Here’s Your Pick!',
+  'Decision Unlocked!',
+  'Your Choice Awaits!',
+  'Decision Made Easy!'
+];
