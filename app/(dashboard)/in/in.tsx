@@ -27,8 +27,6 @@ export default function In({
   location: LocationProps | null;
   weather: any;
 }) {
-  console.log('---  🚀 ---> | weather:', weather);
-  console.log('---  🚀 ---> | location:', location);
   // { user }: { user: UserProps }
   // const [listId, setListId] = useState<string>('');
   // const [listInput, setListInput] = useState<string>('');

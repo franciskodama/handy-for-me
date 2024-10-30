@@ -2,6 +2,7 @@
 // Google Cloud Credentials: https://console.cloud.google.com/apis/credentials
 
 // TODO: WORK<ING ON + FAST
+// Dashboard: if it's Dashboard, don't show the avatar on the top
 // Random Questions:Reset All must Reset the Clock as well
 // Random Questions: When it's reseted, don't show the kudos message either
 // Random Questions: everything on one screen
