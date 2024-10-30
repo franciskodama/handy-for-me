@@ -14,11 +14,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import ExplanationIn from './explanation-in';
 import { useState } from 'react';
 import { ChevronsUpDown } from 'lucide-react';
-import UserCard from './user';
 import { LocationProps, User } from '@/lib/types';
 import { kumbh_sans } from '@/app/ui/fonts';
 import Help from '@/components/Help';
-import { FunFactCard, WeatherCard } from './cards';
+import UserCard, { FunFactCard, WeatherCard } from './cards';
 
 export default function In({
   user,
@@ -90,20 +89,20 @@ export default function In({
         <div className="flex flex-col gap-4">
           {/* ----------------------- First Row ----------------------- */}
 
-          <Tabs defaultValue="user" className="w-[400px] sm:hidden">
-            <TabsList>
+          <Tabs defaultValue="user" className="w-full sm:hidden mb-8">
+            <TabsList className="flex w-full justify-between mb-8">
               <TabsTrigger value="user">Hello!</TabsTrigger>
               <TabsTrigger value="weather">Weather</TabsTrigger>
               <TabsTrigger value="fun-fact">Fun Fact</TabsTrigger>
             </TabsList>
-            <TabsContent value="user">
-              <UserCard user={user} />
-            </TabsContent>
             <TabsContent value="weather">
               <WeatherCard location={location} weather={weather} />
             </TabsContent>
             <TabsContent value="fun-fact">
               <FunFactCard />
+            </TabsContent>
+            <TabsContent value="user">
+              <UserCard user={user} />
             </TabsContent>
           </Tabs>
 
