@@ -1,6 +1,8 @@
 'use client';
 
 import { AnimatePresence, motion } from 'framer-motion';
+import { useState } from 'react';
+import { ChevronsUpDown } from 'lucide-react';
 
 import {
   Card,
@@ -10,13 +12,8 @@ import {
   CardTitle
 } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-
-import ExplanationIn from './explanation-in';
-import { useState } from 'react';
-import { ChevronsUpDown } from 'lucide-react';
 import { LocationProps, User } from '@/lib/types';
 import { kumbh_sans } from '@/app/ui/fonts';
-import Help from '@/components/Help';
 import UserCard, { FunFactCard, WeatherCard } from './cards';
 
 export default function In({
@@ -28,14 +25,6 @@ export default function In({
   location: LocationProps | null;
   weather: any;
 }) {
-  // { user }: { user: UserProps }
-  // const [listId, setListId] = useState<string>('');
-  // const [listInput, setListInput] = useState<string>('');
-  // const [itemInput, setItemInput] = useState<string>('');
-  // const [pendingNewList, setPendingNewList] = useState<boolean>(false);
-  // const [pendingNewItem, setPendingNewItem] = useState<boolean>(false);
-  // const [spinning, setSpinning] = useState<boolean>(false);
-  // const [result, setResult] = useState<string>('');
   const [openAction, setOpenAction] = useState(false);
 
   return (

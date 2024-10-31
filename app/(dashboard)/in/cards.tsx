@@ -165,7 +165,6 @@ export function WeatherCard({
           <div className="flex items-start pt-8 w-full text-xs">
             <div className="w-1/3 font-bold">
               <p>{location?.city}</p>
-              {/* <p>{location?.region}</p> */}
               <p>{location?.country}</p>
             </div>
             <div className="w-1/3">
@@ -196,7 +195,7 @@ export function FunFactCard() {
     <>
       <div className="flex flex-col sm:flex-row gap-2 bg-muted p-6 py-8 sm:bg-transparent border border-slate-300 border-dashed ">
         <div className="flex flex-col items-start justify-between gap-2">
-          <p className="text-xl sm:text-sm">{currentFact.start}</p>
+          <p className="text-base sm:text-sm">{currentFact.start}</p>
           <p className="text-2xl sm:text-xl font-bold sm:pr-4">
             {currentFact.curiosity}
           </p>

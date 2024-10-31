@@ -5,17 +5,19 @@
 // size={24} strokeWidth={1.8}
 
 // TODO: WORK<ING ON + FAST
-// Dashboard: if it's Dashboard, don't show the avatar on the top
+// TO DO of the week: show on Dashboard
+// Install Analytics
+// Button hover effect: Mariana thinks it's counterintuitive
+// Quotes to long: Solution?
+// Vision board: zoom library
+
 // Random Questions:Reset All must Reset the Clock as well
 // Random Questions: When it's reseted, don't show the kudos message either
 // Random Questions: everything on one screen
 // Random Questions: Clock must restart on 2 min after Reset
-// analytics
 
+// Dashboard: if it's Dashboard, don't show the avatar on the top
 // Grid: https://www.youtube.com/watch?v=3T0gjtXRNC0
-// Button hover effect: Mariana thinks it's counterintuitive
-// Quotes to long: Solution?
-// Vision board: zoom library
 
 // Bucket List: Filter for done and not done
 // Cities I've visited Feature

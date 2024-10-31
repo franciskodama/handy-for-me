@@ -3,7 +3,7 @@ export default function PencilBanner() {
 
   return (
     <div>
-      <div className="flex flex-col items-center px-12 py-2 bg-primary border-0">
+      <div className="flex flex-col items-center px-8 py-2 bg-primary border-0">
         <div className="flex tracking-wide text-[10px] sm:text-xs md:text-sm text-white text-center uppercase font-semibold">
           <p>"{quotes[randomIndex].quote}"</p>
           <p className="mx-2">—</p>
@@ -40,11 +40,7 @@ const quotes = [
     quote: 'What you do matters, but why you do it matters much more.',
     author: 'Unknown'
   },
-  {
-    quote:
-      'We either make ourselves miserable, or we make ourselves strong. The amount of work is the same.',
-    author: 'Carlos Castaneda'
-  },
+
   {
     quote: 'When the whole world is silent, even one voice becomes powerful.',
     author: 'Malala Yousafzai'
@@ -52,11 +48,6 @@ const quotes = [
   {
     quote: 'Do the thing you think you cannot do.',
     author: 'Eleanor Roosevelt'
-  },
-  {
-    quote:
-      'If you know you have to swallow a frog, swallow it first thing in the morning. If there are two frogs, swallow the big one first.',
-    author: 'Mark Twain'
   },
   {
     quote: 'Be not afraid of growing slowly; be afraid only of standing still.',
@@ -74,20 +65,10 @@ const quotes = [
   {
     quote:
       'People do not seem to realize that their opinion of the world is also a confession of character.',
-    author: 'Ralph Algo Emerson'
-  },
-  {
-    quote:
-      'Some people make your laugh a little louder, your smile a little brighter and your life a little better. Try to be one of those people.',
-    author: 'Unknown'
+    author: 'Ralph A. Emerson'
   },
   {
     quote: 'May your life be full in the simplicity of your actions.',
-    author: 'Unknown'
-  },
-  {
-    quote:
-      "You often feel tired, not because you've done too much, but because you've done too little of what sparks a light in you.",
     author: 'Unknown'
   },
   { quote: 'You are what you do repeatedly.', author: 'Unknown' },
@@ -110,7 +91,7 @@ const quotes = [
   {
     quote:
       'Give me six hours to chop down a tree and i will spend the first four sharpening the axe.',
-    author: 'Attributed to Abraham Lincoln'
+    author: 'Unknown'
   },
   {
     quote:
@@ -146,18 +127,8 @@ const quotes = [
     author: 'William James'
   },
   {
-    quote:
-      "Being happy doesn't mean that everything is perfect. It means that you decided to look beyond the imperfections.",
-    author: 'Unknown'
-  },
-  {
     quote: 'Tension is who you think you should be. Relaxation is who you are.',
     author: 'Unknown'
-  },
-  {
-    quote:
-      'Respect yourself enough to walk away from anything that no longer serves you, grows you, or makes you happy.',
-    author: 'Robert Tew'
   },
   {
     quote: 'The past is done. The future has plenty of room for change.',
@@ -167,11 +138,6 @@ const quotes = [
     quote:
       'A positive attitude causes a chain reaction of positive thoughts, events, and outcomes.',
     author: 'Wade Boggs'
-  },
-  {
-    quote:
-      'Progress is impossible without change, and those who cannot change their minds cannot change anything.',
-    author: 'George Bernard Shaw'
   },
   { quote: 'Bravery is the solution to regret.', author: 'Robin Sharma' },
   { quote: 'Do or do not, there is no try.', author: 'Yoda' },
@@ -191,35 +157,15 @@ const quotes = [
   { quote: 'All great achievements require time.', author: 'Maya Angelou' },
   {
     quote:
-      'What you get by achieving your goals is not as important as what you become by achieving your goals.',
-    author: 'Henry David Thoreau'
-  },
-  {
-    quote:
-      'Beating yourself up for your flaws and mistakes won’t make you perfect, and you don’t have to be. Learn, forgive yourself, and remember: We all struggle; it’s just part of being human.',
-    author: 'Lori Deschene'
-  },
-  {
-    quote:
-      'Successful people have fear, successful people have doubts, and successful people have worry. They just don’t let these feelings stop them.',
-    author: 'T. Harv Eker'
-  },
-  {
-    quote:
       "Do a little more of what you want to do every day, until your idea becomes what's real.",
     author: 'Unknown'
   },
   {
     quote:
       'Never give up, for that is just the place and time that the tide will turn.',
-    author: 'Harriet Beecher Stowe'
+    author: 'Harriet Stowe'
   },
   { quote: "It's kind of fun to do the impossible.", author: 'Walt Disney' },
-  {
-    quote:
-      'Learn to love slow progress. Learn to forgive yourself for the inevitable backsliding. And of course, expect to be uncomfortable along the way.',
-    author: 'Steven Kotler'
-  },
   {
     quote: 'A goal without a plan is only a wish.',
     author: 'Antoine de Saint-Exupéry'
