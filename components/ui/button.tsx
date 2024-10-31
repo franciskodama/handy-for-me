@@ -13,6 +13,7 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
+        new: 'border border-primary bg-background transition-all duration-200 ease-in-out hover:translate-x-[5px] hover:-translate-y-[5px] hover:shadow-[0_0px_0px_0px_inset,#FFF_-5px_5px_0_-1px,#000_-5px_5px]',
         default:
           'text-white bg-primary transition-all duration-200 ease-in-out hover:translate-x-[5px] hover:-translate-y-[5px] hover:shadow-[0_0px_0px_0px_inset,#FFF_-5px_5px_0_-1px,#000_-5px_5px]',
         destructive:

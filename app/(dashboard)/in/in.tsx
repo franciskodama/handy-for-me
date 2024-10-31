@@ -59,7 +59,7 @@ export default function In({
           {/* ----------------------- Mobile First Row ----------------------- */}
 
           <Tabs defaultValue="user" className="w-full sm:hidden mb-8">
-            <TabsList className="flex w-full justify-between">
+            <TabsList className="flex w-full justify-between mb-4">
               <TabsTrigger value="user">Hello!</TabsTrigger>
               <TabsTrigger value="weather">Weather</TabsTrigger>
               <TabsTrigger value="fun-fact">Fun Fact</TabsTrigger>

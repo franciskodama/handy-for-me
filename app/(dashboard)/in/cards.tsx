@@ -22,6 +22,8 @@ import { kumbh_sans } from '@/app/ui/fonts';
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 
+const tagClass =
+  'absolute -top-1 left-6 sm:-top-3 sm:-left-3 p-1 px-2 bg-primary text-white text-xs font-semibold';
 export default function UserCard({ user }: { user: User | undefined }) {
   return (
     <div className="flex flex-col items-center justify-center h-full gap-2 relative mt-16 sm:mt-0 mb-8">
@@ -65,7 +67,7 @@ export function WeatherCard({
 }) {
   return (
     <>
-      <div className="flex flex-col sm:flex-row gap-4 bg-muted p-6 sm:bg-transparent border border-slate-300 border-dashed">
+      <div className="relative flex flex-col sm:flex-row gap-4 bg-muted p-6 pt-10 sm:pt-6 sm:bg-transparent sm:border sm:border-slate-300 sm:border-dashed">
         <div className="flex sm:flex-col justify-around sm:w-1/2">
           <div className="flex w-full">
             <div className="flex flex-col items-center justify-center w-1/2">
@@ -98,8 +100,7 @@ export function WeatherCard({
               </div>
             </div>
           </div>
-          <div className="h-12" />
-          <h2 className="hidden sm:block font-semibold text-3xl capitalize text-center">
+          <h2 className="hidden sm:block font-semibold text-2xl capitalize text-center mt-4">
             {weather.weather[0].description}
           </h2>
         </div>
@@ -177,6 +178,7 @@ export function WeatherCard({
             </div>
           </div>
         </div>
+        <div className={tagClass}>Weather</div>
       </div>
     </>
   );
@@ -193,7 +195,7 @@ export function FunFactCard() {
 
   return (
     <>
-      <div className="flex flex-col sm:flex-row gap-2 bg-muted p-6 py-8 sm:bg-transparent border border-slate-300 border-dashed ">
+      <div className="relative flex flex-col sm:flex-row gap-2 bg-muted px-6 py-8 pt-12 sm:pt-8 sm:bg-transparent sm:border sm:border-slate-300 sm:border-dashed ">
         <div className="flex flex-col items-start justify-between gap-2">
           <p className="text-base sm:text-sm">{currentFact.start}</p>
           <p className="text-2xl sm:text-xl font-bold sm:pr-4">
@@ -215,6 +217,7 @@ export function FunFactCard() {
                 src={`/fun-fact/fun-fact-${Math.floor(Math.random() * numberOfGifsAvailable)}.webp`}
                 alt="Fun Fact Wow Image"
                 className="object-cover"
+                unoptimized
                 priority
                 fill
                 sizes="(max-width: 500px) 100vw"
@@ -229,6 +232,7 @@ export function FunFactCard() {
             Show Another Fun Fact
           </Button>
         </div>
+        <div className={tagClass}>Fun Fact</div>
       </div>
     </>
   );
