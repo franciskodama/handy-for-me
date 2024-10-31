@@ -38,32 +38,12 @@ export default function In({
   // const [result, setResult] = useState<string>('');
   const [openAction, setOpenAction] = useState(false);
 
-  // const giveMeDateLocationWeather = ({
-  //   location,
-  //   weather
-  // }: {
-  //   location: Location;
-  //   weather: any;
-  // }) => {
-  //   return {
-  //     date: new Date(),
-  //     city: location.city,
-  //     state: location.region,
-  //     country: location.country,
-  //     weather: weather.main.weather.description,
-  //     temperature: weather.main.temp
-  //   };
-  // };
-
-  // const dateLocationWeather = giveMeDateLocationWeather(location, weather);
-  // console.log('---  🚀 ---> | dateLocationWeather:', dateLocationWeather);
-
   return (
     <Card>
       <CardHeader className="mb-12">
         <CardTitle className="flex justify-between items-center gap-2">
           <p>Dashboard</p>
-          {!openAction ? <Help setOpenAction={setOpenAction} /> : <div />}
+          {/* {!openAction ? <Help setOpenAction={setOpenAction} /> : <div />} */}
         </CardTitle>
         <CardDescription>
           Everything you need, right at your fingertips.
@@ -79,7 +59,7 @@ export default function In({
               exit={{ opacity: 0, scale: 0.5, transition: { duration: 0.2 } }}
             >
               <div className="mb-12">
-                <ExplanationIn setOpenAction={setOpenAction} />
+                {/* <ExplanationIn setOpenAction={setOpenAction} /> */}
               </div>
             </motion.div>
           ) : null}
@@ -87,7 +67,7 @@ export default function In({
 
         {/* ----------------------- Main Container ----------------------- */}
         <div className="flex flex-col gap-4">
-          {/* ----------------------- First Row ----------------------- */}
+          {/* ----------------------- Mobile First Row ----------------------- */}
 
           <Tabs defaultValue="user" className="w-full sm:hidden mb-8">
             <TabsList className="flex w-full justify-between">
@@ -106,7 +86,7 @@ export default function In({
             </TabsContent>
           </Tabs>
 
-          {/* ----------------------- First Row ----------------------- */}
+          {/* ----------------------- Desktop First Row ----------------------- */}
 
           <div className="hidden sm:flex flex-col sm:flex-row w-full justify-between gap-8 mb-12">
             <div className="sm:w-1/3">

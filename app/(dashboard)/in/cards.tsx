@@ -24,7 +24,7 @@ import { useState } from 'react';
 
 export default function UserCard({ user }: { user: User | undefined }) {
   return (
-    <div className="flex flex-col items-center gap-2 relative mt-16 mb-8">
+    <div className="flex flex-col items-center justify-center h-full gap-2 relative mt-16 sm:mt-0 mb-8">
       {user?.image ? (
         <>
           <Image
@@ -65,110 +65,117 @@ export function WeatherCard({
 }) {
   return (
     <>
-      <div className="flex flex-col gap-4 bg-muted p-6">
-        <div className="flex">
-          <div className="flex flex-col items-center w-1/2 sm:w-1/5">
-            <AspectRatio ratio={16 / 10}>
-              <Image
-                src={`/weather/${weather.weather[0].icon}.png`}
-                alt={weather.weather[0].description}
-                className="object-cover"
-                priority
-                fill
-                sizes="(max-width: 500px) 100vw"
-              />
-            </AspectRatio>
-          </div>
+      <div className="flex flex-col sm:flex-row gap-4 bg-muted p-6 sm:bg-transparent border border-slate-300 border-dashed">
+        <div className="flex sm:flex-col justify-around sm:w-1/2">
+          <div className="flex w-full">
+            <div className="flex flex-col items-center justify-center w-1/2">
+              <AspectRatio ratio={16 / 10}>
+                <Image
+                  src={`/weather/${weather.weather[0].icon}.png`}
+                  alt={weather.weather[0].description}
+                  className="object-cover"
+                  priority
+                  fill
+                  sizes="(max-width: 500px) 100vw"
+                />
+              </AspectRatio>
+            </div>
+            <div className="w-1/2 flex justify-center">
+              <div className="flex flex-col items-left">
+                <h4 className="text-xs">Temperature</h4>
+                <div className="flex font-semibold text-xl mb-2">
+                  {weather.main ? (
+                    <p>{`${Math.trunc(weather.main.temp)} °C`}</p>
+                  ) : null}
+                </div>
 
-          <div className="w-1/2 sm:w-1/5 flex justify-center">
-            <div className="flex flex-col items-left">
-              <h4 className="text-xs">Temperature</h4>
-              <div className="flex font-semibold text-xl mb-2">
-                {weather.main ? (
-                  <p>{`${Math.trunc(weather.main.temp)} °C`}</p>
-                ) : null}
-              </div>
-
-              <h4 className="text-xs">Feels like</h4>
-              <div className="flex font-semibold text-xl">
-                {weather.main ? (
-                  <p>{`${Math.trunc(weather.main.feels_like)} °C`}</p>
-                ) : null}
+                <h4 className="text-xs">Feels like</h4>
+                <div className="flex font-semibold text-xl">
+                  {weather.main ? (
+                    <p>{`${Math.trunc(weather.main.feels_like)} °C`}</p>
+                  ) : null}
+                </div>
               </div>
             </div>
           </div>
+          <div className="h-12" />
+          <h2 className="hidden sm:block font-semibold text-3xl capitalize text-center">
+            {weather.weather[0].description}
+          </h2>
         </div>
-        <h2 className="font-semibold text-3xl capitalize pb-8 text-center sm:text-left">
+        <h2 className="sm:hidden font-semibold text-3xl capitalize pb-8 text-center sm:text-left">
           {weather.weather[0].description}
         </h2>
 
-        <div className="flex w-full">
-          <div className="w-1/3">
-            <h4 className="text-xs">Wind</h4>
-            <p className="font-semibold text-base capitalize">{`${weather.wind.speed} km/h`}</p>
-          </div>
+        <div className="flex flex-col gap-4 sm:w-1/2 sm:ml-8">
+          <div className="flex w-full">
+            <div className="w-1/3 sm:w-1/2">
+              <h4 className="text-xs">Wind</h4>
+              <p className="font-semibold text-base capitalize">{`${weather.wind.speed} km/h`}</p>
+            </div>
 
-          <div className="w-1/3">
-            <h4 className="text-xs">Pressure</h4>
-            <p className="font-semibold text-base capitalize">{`${weather.main.pressure} kPa`}</p>
-          </div>
+            <div className="w-1/3 sm:hidden">
+              <h4 className="text-xs ">Pressure</h4>
+              <p className="font-semibold text-base capitalize">{`${weather.main.pressure} kPa`}</p>
+            </div>
 
-          <div className="w-1/3">
-            <h4 className="text-xs">Humidity</h4>
-            <p className="font-semibold text-base capitalize">{`${weather.main.humidity} %`}</p>
-          </div>
-        </div>
-
-        <div className="flex w-full">
-          <div className="w-1/3">
-            <h4 className="text-xs">Visibility</h4>
-            <p className="font-semibold text-base capitalize">{`${weather.visibility} Km`}</p>
-          </div>
-          <div className="w-1/3">
-            <h4 className="text-xs">Sunrise</h4>
-            <div className="flex gap-1 font-semibold text-base capitalize">
-              {weather.sys ? (
-                <p>
-                  {new Date(
-                    weather.sys.sunrise * 6000 - weather.timezone * 1000
-                  )
-                    .toString()
-                    .slice(17, 21)}
-                </p>
-              ) : null}
-              <p>a.m.</p>
+            <div className="w-1/3 sm:w-1/2">
+              <h4 className="text-xs">Humidity</h4>
+              <p className="font-semibold text-base capitalize">{`${weather.main.humidity} %`}</p>
             </div>
           </div>
-          <div className="w-1/3">
-            <h4 className="text-xs">Sunset</h4>
-            <div className="flex gap-1 font-semibold text-base capitalize">
-              {weather.sys ? (
-                <p>
-                  {new Date(
-                    weather.sys.sunrise * 6000 - weather.timezone * 1000
-                  )
-                    .toString()
-                    .slice(17, 21)}
-                </p>
-              ) : null}
-              <p>p.m.</p>
+
+          <div className="flex w-full">
+            <div className="w-1/3 sm:hidden">
+              <h4 className="text-xs">Visibility</h4>
+              <p className="font-semibold text-base capitalize">{`${weather.visibility} Km`}</p>
+            </div>
+            <div className="w-1/3 sm:w-1/2">
+              <h4 className="text-xs">Sunrise</h4>
+              <div className="flex gap-1 font-semibold text-base capitalize">
+                {weather.sys ? (
+                  <p>
+                    {new Date(
+                      weather.sys.sunrise * 6000 - weather.timezone * 1000
+                    )
+                      .toString()
+                      .slice(17, 21)}
+                  </p>
+                ) : null}
+                <p>a.m.</p>
+              </div>
+            </div>
+            <div className="w-1/3 sm:w-1/2">
+              <h4 className="text-xs">Sunset</h4>
+              <div className="flex gap-1 font-semibold text-base capitalize">
+                {weather.sys ? (
+                  <p>
+                    {new Date(
+                      weather.sys.sunrise * 6000 - weather.timezone * 1000
+                    )
+                      .toString()
+                      .slice(17, 21)}
+                  </p>
+                ) : null}
+                <p>p.m.</p>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div className="flex items-start pt-8 w-full">
-          <div className="font-base w-1/3">
-            <p className="font-bold">{location?.city}</p>
-            {/* <p>{location?.region}</p> */}
-            <p>{location?.country}</p>
-          </div>
-          <div className="w-1/3">
-            <p className="text-xs">Longitude</p>
-            <p className="font-semibold">{weather.coord.lon}</p>
-          </div>
-          <div className="w-1/3">
-            <p className="text-xs">Latitude</p>
-            <p className="font-semibold">{weather.coord.lat}</p>
+          <div className="flex items-start pt-8 w-full text-xs">
+            <div className="w-1/3 font-bold">
+              <p>{location?.city}</p>
+              {/* <p>{location?.region}</p> */}
+              <p>{location?.country}</p>
+            </div>
+            <div className="w-1/3">
+              <p>Longitude</p>
+              <p>{weather.coord.lon}</p>
+            </div>
+            <div className="w-1/3">
+              <p>Latitude</p>
+              <p>{weather.coord.lat}</p>
+            </div>
           </div>
         </div>
       </div>
@@ -187,7 +194,7 @@ export function FunFactCard() {
 
   return (
     <>
-      <div className="flex flex-col sm:flex-row gap-2 bg-muted p-6 py-8">
+      <div className="flex flex-col sm:flex-row gap-2 bg-muted p-6 py-8 sm:bg-transparent border border-slate-300 border-dashed ">
         <div className="flex flex-col items-start justify-between gap-2">
           <p className="text-xl sm:text-sm">{currentFact.start}</p>
           <p className="text-2xl sm:text-xl font-bold sm:pr-4">
