@@ -178,5 +178,202 @@ export const funFacts = [
   {
     start: 'Today’s Fun Fact:',
     curiosity: 'The majority of your brain is fat.'
+  },
+  {
+    start: 'Did you know?',
+    curiosity:
+      'The Mona Lisa has no eyebrows; it was the fashion in Renaissance Florence to shave them off.'
+  },
+  { start: 'Fun Fact:', curiosity: 'Kangaroos can’t walk backward.' },
+  {
+    start: 'Surprise!',
+    curiosity: 'Tomatoes were once considered poisonous in Europe.'
+  },
+  {
+    start: 'Today’s Tidbit:',
+    curiosity: 'The first oranges were not orange; they were green.'
+  },
+  {
+    start: 'Fun to Know:',
+    curiosity: "The dot over the lowercase 'i' and 'j' is called a 'tittle.'"
+  },
+  {
+    start: 'Did You Know?',
+    curiosity:
+      'A bolt of lightning contains enough energy to toast 100,000 slices of bread.'
+  },
+  {
+    start: 'Surprising Fact:',
+    curiosity:
+      'Hot water freezes faster than cold water under certain conditions.'
+  },
+  {
+    start: 'Random Knowledge:',
+    curiosity: 'Maine is the only U.S. state with a one-syllable name.'
+  },
+  {
+    start: 'Today’s Fun Fact:',
+    curiosity: 'If you lift a kangaroo’s tail off the ground, it can’t hop.'
+  },
+  {
+    start: 'Surprising Tidbit:',
+    curiosity: 'The most popular item at Walmart is bananas.'
+  },
+  {
+    start: 'Did you know?',
+    curiosity:
+      'There’s a fruit that tastes like chocolate pudding called black sapote.'
+  },
+  {
+    start: 'Fun Fact:',
+    curiosity: 'The tongue of a blue whale weighs as much as an elephant.'
+  },
+  {
+    start: 'Surprise!',
+    curiosity: 'Polar bear fur is actually transparent, not white.'
+  },
+  {
+    start: 'Today’s Tidbit:',
+    curiosity: "There are more public libraries in the U.S. than McDonald's."
+  },
+  {
+    start: 'Fun to Know:',
+    curiosity: 'Apples are made of 25% air, which is why they float.'
+  },
+  {
+    start: 'Did You Know?',
+    curiosity: 'Your nose and ears never stop growing.'
+  },
+  {
+    start: 'Surprising Fact:',
+    curiosity: 'Some fish cough to clear their gills of debris.'
+  },
+  {
+    start: 'Random Knowledge:',
+    curiosity: 'A cloud can weigh more than a million pounds.'
+  },
+  { start: 'Today’s Fun Fact:', curiosity: 'Avocados are poisonous to birds.' },
+  {
+    start: 'Surprising Tidbit:',
+    curiosity: 'Octopus has three hearts and nine brains.'
+  },
+  {
+    start: 'Did you know?',
+    curiosity: 'Coca-Cola would be green if coloring wasn’t added to it.'
+  },
+  { start: 'Fun Fact:', curiosity: 'Starfish don’t have brains.' },
+  {
+    start: 'Surprise!',
+    curiosity: 'Goosebumps are meant to ward off predators.'
+  },
+  {
+    start: 'Today’s Tidbit:',
+    curiosity: 'Spiders are arachnids, not insects.'
+  },
+  {
+    start: 'Fun to Know:',
+    curiosity: 'In Switzerland, it is illegal to own just one guinea pig.'
+  },
+  {
+    start: 'Did You Know?',
+    curiosity: 'Some bamboo species grow up to 35 inches in a single day.'
+  },
+  {
+    start: 'Surprising Fact:',
+    curiosity: 'You burn more calories sleeping than watching TV.'
+  },
+  {
+    start: 'Random Knowledge:',
+    curiosity: 'Human teeth are just as strong as shark teeth.'
+  },
+  {
+    start: 'Today’s Fun Fact:',
+    curiosity: 'Pineapple works as a natural meat tenderizer.'
+  },
+  {
+    start: 'Surprising Tidbit:',
+    curiosity: 'Humans and giraffes have the same number of neck bones.'
+  },
+  {
+    start: 'Did you know?',
+    curiosity:
+      'The inventor of the Frisbee was turned into a Frisbee after he died.'
+  },
+  { start: 'Fun Fact:', curiosity: 'A crocodile can’t stick out its tongue.' },
+  {
+    start: 'Surprise!',
+    curiosity:
+      'The shortest war in history was between Britain and Zanzibar and lasted just 38 minutes.'
+  },
+  { start: 'Today’s Tidbit:', curiosity: 'Pigs can’t look up into the sky.' },
+  { start: 'Fun to Know:', curiosity: 'A group of crows is called a murder.' },
+  {
+    start: 'Did You Know?',
+    curiosity:
+      'There are more stars in the universe than grains of sand on all the Earth’s beaches.'
+  },
+  {
+    start: 'Surprising Fact:',
+    curiosity: 'A strawberry isn’t actually a berry, but a banana is.'
+  },
+  {
+    start: 'Random Knowledge:',
+    curiosity:
+      'Chewing gum boosts mental proficiency and is considered a better test aid than caffeine.'
+  },
+  {
+    start: 'Today’s Fun Fact:',
+    curiosity: 'The inventor of Vaseline ate a spoonful of it every day.'
+  },
+  { start: 'Surprising Tidbit:', curiosity: 'Only female mosquitoes bite.' },
+  {
+    start: 'Did you know?',
+    curiosity: 'It’s impossible to hum while holding your nose.'
+  },
+  {
+    start: 'Fun Fact:',
+    curiosity: 'A jiffy is an actual unit of time: 1/100th of a second.'
+  },
+  {
+    start: 'Surprise!',
+    curiosity: 'Your bones are about five times stronger than steel.'
+  },
+  {
+    start: 'Today’s Tidbit:',
+    curiosity: 'Ketchup was sold in the 1830s as medicine.'
+  },
+  {
+    start: 'Fun to Know:',
+    curiosity: 'A lion’s roar can be heard from 5 miles away.'
+  },
+  {
+    start: 'Did You Know?',
+    curiosity: 'A flock of flamingos is called a flamboyance.'
+  },
+  {
+    start: 'Surprising Fact:',
+    curiosity: 'The human body contains enough fat to make seven bars of soap.'
+  },
+  {
+    start: 'Random Knowledge:',
+    curiosity: 'Earth is the only planet not named after a god.'
+  },
+  {
+    start: 'Today’s Fun Fact:',
+    curiosity: 'A cockroach can live several weeks with its head cut off.'
+  },
+  {
+    start: 'Surprising Tidbit:',
+    curiosity: 'Humans are the only animals that blush.'
+  },
+  {
+    start: 'Did you know?',
+    curiosity:
+      'The average person walks the equivalent of five times around the world in their lifetime.'
+  },
+  {
+    start: 'Fun Fact:',
+    curiosity:
+      'Banging your head against a wall for one hour burns 150 calories.'
   }
 ];

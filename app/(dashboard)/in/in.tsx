@@ -90,7 +90,7 @@ export default function In({
           {/* ----------------------- First Row ----------------------- */}
 
           <Tabs defaultValue="user" className="w-full sm:hidden mb-8">
-            <TabsList className="flex w-full justify-between mb-8">
+            <TabsList className="flex w-full justify-between">
               <TabsTrigger value="user">Hello!</TabsTrigger>
               <TabsTrigger value="weather">Weather</TabsTrigger>
               <TabsTrigger value="fun-fact">Fun Fact</TabsTrigger>
@@ -112,8 +112,12 @@ export default function In({
             <div className="sm:w-1/3">
               <UserCard user={user} />
             </div>
-            <WeatherCard location={location} weather={weather} />
-            <div className="sm:w-1/3 border border-dashed border-slate-300 p-4"></div>
+            <div className="sm:w-1/3">
+              <FunFactCard />
+            </div>
+            <div className="sm:w-1/3">
+              <WeatherCard location={location} weather={weather} />
+            </div>
           </div>
 
           {/* ----------------------- Second Row ----------------------- */}

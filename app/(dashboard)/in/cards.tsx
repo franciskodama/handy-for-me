@@ -17,10 +17,14 @@ import {
 } from '@/components/ui/accordion';
 import { LocationProps, User } from '@/lib/types';
 import { CloudSun, Sun, ThermometerSun } from 'lucide-react';
+import { funFacts } from './fun-facts';
+import { kumbh_sans } from '@/app/ui/fonts';
+import { Button } from '@/components/ui/button';
+import { useState } from 'react';
 
 export default function UserCard({ user }: { user: User | undefined }) {
   return (
-    <div className="flex flex-col items-center gap-2 relative">
+    <div className="flex flex-col items-center gap-2 relative mt-16 mb-8">
       {user?.image ? (
         <>
           <Image
@@ -61,14 +65,8 @@ export function WeatherCard({
 }) {
   return (
     <>
-      {/* <Card> */}
-      {/* <CardHeader> */}
-      {/* <CardTitle>Weather</CardTitle> */}
-      {/* <CardDescription>Card Description<ss/CardDescription> */}
-      {/* </CardHeader> */}
-      {/* <CardContent className="flex flex-col gap-4"> */}
-      <div className="flex flex-col gap-4 border border-dashed border-slate-300">
-        <div className="flex pt-4">
+      <div className="flex flex-col gap-4 bg-muted p-6">
+        <div className="flex">
           <div className="flex flex-col items-center w-1/2">
             <AspectRatio ratio={16 / 10}>
               <Image
@@ -85,14 +83,14 @@ export function WeatherCard({
           <div className="w-1/2 flex justify-center">
             <div className="flex flex-col items-left">
               <h4 className="text-xs">Temperature</h4>
-              <div className="flex font-semibold text-base mb-2">
+              <div className="flex font-semibold text-xl mb-2">
                 {weather.main ? (
                   <p>{`${Math.trunc(weather.main.temp)} °C`}</p>
                 ) : null}
               </div>
 
               <h4 className="text-xs">Feels like</h4>
-              <div className="flex font-semibold text-base">
+              <div className="flex font-semibold text-xl">
                 {weather.main ? (
                   <p>{`${Math.trunc(weather.main.feels_like)} °C`}</p>
                 ) : null}
@@ -100,53 +98,49 @@ export function WeatherCard({
             </div>
           </div>
         </div>
-        <h2 className="font-semibold text-2xl capitalize pb-8">
+        <h2 className="font-semibold text-3xl capitalize pb-8 text-center">
           {weather.weather[0].description}
         </h2>
 
-        <div className="flex justify-between">
-          <div>
+        <div className="flex w-full">
+          <div className="w-1/3">
             <h4 className="text-xs">Wind</h4>
             <p className="font-semibold text-base capitalize">{`${weather.wind.speed} km/h`}</p>
           </div>
 
-          <div>
+          <div className="w-1/3">
             <h4 className="text-xs">Pressure</h4>
             <p className="font-semibold text-base capitalize">{`${weather.main.pressure} kPa`}</p>
           </div>
 
-          <div>
+          <div className="w-1/3">
             <h4 className="text-xs">Humidity</h4>
             <p className="font-semibold text-base capitalize">{`${weather.main.humidity} %`}</p>
           </div>
         </div>
 
-        <div className="flex justify-between">
-          <div>
+        <div className="flex w-full">
+          <div className="w-1/3">
             <h4 className="text-xs">Visibility</h4>
             <p className="font-semibold text-base capitalize">{`${weather.visibility} Km`}</p>
           </div>
-
-          <div>
+          <div className="w-1/3">
             <h4 className="text-xs">Sunrise</h4>
             <div className="flex gap-1 font-semibold text-base capitalize">
-              <p>
-                {weather.sys ? (
-                  <p>
-                    {new Date(
-                      weather.sys.sunrise * 6000 - weather.timezone * 1000
-                    )
-                      .toString()
-                      .slice(17, 21)}
-                  </p>
-                ) : null}
-              </p>
+              {weather.sys ? (
+                <p>
+                  {new Date(
+                    weather.sys.sunrise * 6000 - weather.timezone * 1000
+                  )
+                    .toString()
+                    .slice(17, 21)}
+                </p>
+              ) : null}
               <p>a.m.</p>
             </div>
           </div>
-
-          <div>
-            <h4>Sunset</h4>
+          <div className="w-1/3">
+            <h4 className="text-xs">Sunset</h4>
             <div className="flex gap-1 font-semibold text-base capitalize">
               {weather.sys ? (
                 <p>
@@ -162,56 +156,58 @@ export function WeatherCard({
           </div>
         </div>
 
-        {/* <div>
-                  <h4>Updated on</h4>
-                  <h3>
-                    {new Date(weather.dt * 1000 - weather.timezone * 6000)
-                      .toString()
-                      .slice(4)}
-                  </h3>
-                </div> */}
-      </div>
-      {/* <CardFooter className="flex justify-between items-start"> */}
-      <div className="flex justify-between items-start mt-8">
-        <div className="flex flex-col gap-2 font-base">
-          <p className="font-bold">{location?.city}</p>
-          {/* <p>{location?.region}</p> */}
-          <p>{location?.country}</p>
-        </div>
-        <div className="flex flex-col gap-2 text-xs">
-          <div>
-            Longitude
-            <p className="font-semibold">
-              {weather.coord ? <p>{weather.coord.lon}</p> : null}
-            </p>
+        <div className="flex items-start pt-8 w-full">
+          <div className="font-base w-1/3">
+            <p className="font-bold">{location?.city}</p>
+            {/* <p>{location?.region}</p> */}
+            <p>{location?.country}</p>
           </div>
-          <div>
-            Latitude
-            <p className="font-semibold">
-              {weather.coord ? <p>{weather.coord.lat}</p> : null}
-            </p>
+          <div className="w-1/3">
+            <p className="text-xs">Longitude</p>
+            <p className="font-semibold">{weather.coord.lon}</p>
+          </div>
+          <div className="w-1/3">
+            <p className="text-xs">Latitude</p>
+            <p className="font-semibold">{weather.coord.lat}</p>
           </div>
         </div>
       </div>
-      {/* </Card> */}
     </>
   );
 }
 
 export function FunFactCard() {
+  const getRandomFact = () => {
+    const randomIndex = Math.floor(Math.random() * funFacts.length);
+    return funFacts[randomIndex];
+  };
+
+  const [currentFact, setCurrentFact] = useState(getRandomFact());
+  const numberOfGifsAvailable = 20 - 1;
+
   return (
     <>
-      <Card>
-        <CardHeader>
-          <CardTitle>Fun Fact </CardTitle>
-          <CardDescription>Card Description</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="flex flex-col items-center w-1/2">
-            <AspectRatio ratio={16 / 10}>
+      <div className="flex flex-col justify-center sm:flex-row gap-2 bg-muted p-6 py-8">
+        <div className="flex flex-col gap-2">
+          <p className="text-xl sm:text-sm">{currentFact.start}</p>
+          <p className="text-2xl sm:text-xl font-bold sm:pr-4">
+            {currentFact.curiosity}
+          </p>
+          <Button
+            variant="link"
+            className="hidden sm:block text-xs"
+            onClick={() => setCurrentFact(getRandomFact())}
+          >
+            Show Another Fun Fact
+          </Button>
+        </div>
+
+        <div>
+          <div className="my-4 sm:my-0">
+            <AspectRatio ratio={1 / 1}>
               <Image
-                src={`/waiting.webp`}
-                alt="Fun fact of the Day"
+                src={`/fun-fact/fun-fact-${Math.floor(Math.random() * numberOfGifsAvailable)}.webp`}
+                alt="Fun Fact Wow Image"
                 className="object-cover"
                 priority
                 fill
@@ -219,11 +215,17 @@ export function FunFactCard() {
               />
             </AspectRatio>
           </div>
-        </CardContent>
-        <CardFooter className="flex justify-between items-start">
-          <div className="flex flex-col gap-2 font-base">TEst</div>
-        </CardFooter>
-      </Card>
+          <div className="">
+            <Button
+              variant="outline"
+              className="w-[22ch] mt-2"
+              onClick={() => setCurrentFact(getRandomFact())}
+            >
+              Show Another Fun Fact
+            </Button>
+          </div>
+        </div>
+      </div>
     </>
   );
 }
