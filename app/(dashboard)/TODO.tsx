@@ -3,6 +3,19 @@
 
 // TODO: HELPERS
 // size={24} strokeWidth={1.8}
+// primary color: 222.2 47.4% 11.2% --> rgba(15, 23, 57, 1) --> #0F1739
+
+// style={{
+//     repeating-linear-gradient(
+//         45deg,
+//         transparent,
+//         transparent 2.5px,
+//         black 3px,
+//         black 3px,
+//         transparent 3px,
+//         transparent 3px
+//       ) 15 / 0.75rem
+//   }}
 
 // TODO: WORK<ING ON + FAST
 // TO DO of the week: show on Dashboard

@@ -54,7 +54,7 @@ export default function MessageEmpty({
         {hasButton && (
           <>
             <Button
-              variant={'outline'}
+              variant="outline"
               onClick={() => {
                 setOpenAction(true);
               }}

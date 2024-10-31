@@ -203,7 +203,7 @@ export function FunFactCard() {
           </p>
           <Button
             variant="link"
-            className="hidden sm:block text-xs p-0"
+            className="hidden sm:block text-xs p-0 underline"
             onClick={() => setCurrentFact(getRandomFact())}
           >
             Show Another Fun Fact
