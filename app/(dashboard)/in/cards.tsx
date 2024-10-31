@@ -226,7 +226,7 @@ export function FunFactCard() {
           </div>
           <Button
             variant="outline"
-            className="sm:hidden w-[22ch] mt-2"
+            className="sm:hidden mt-2"
             onClick={() => setCurrentFact(getRandomFact())}
           >
             Show Another Fun Fact

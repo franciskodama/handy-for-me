@@ -72,7 +72,7 @@ export default function ExplanationBox({
             <div className="flex flex-wrap gap-4">{contentThree}</div>
             <Button
               variant={'outline'}
-              className="capitalize mt-12 mb-6 w-[26ch]"
+              className="mt-12 mb-6 w-fit"
               onClick={() => setOpenAction(false)}
             >
               {callToAction}

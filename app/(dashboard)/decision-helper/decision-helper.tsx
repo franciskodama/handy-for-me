@@ -195,7 +195,7 @@ export default function DecisionHelper({
                   onChange={(e) => setItemInput(e.target.value)}
                 />
                 <Button
-                  className={`w-[10ch] ${pendingNewItem ? 'bg-orange-500' : ''}`}
+                  className={`ml-1 w-[10ch] ${pendingNewItem ? 'bg-orange-500' : ''}`}
                   onClick={handleCreateItem}
                   disabled={pendingNewItem || itemInput.trim() === ''}
                 >
@@ -335,7 +335,7 @@ export default function DecisionHelper({
                   onChange={(e) => setListInput(e.target.value)}
                 />
                 <Button
-                  className={pendingNewList ? 'bg-primary' : ''}
+                  className={pendingNewList ? 'ml-1 bg-primary' : 'ml-1'}
                   onClick={handleCreateList}
                   disabled={pendingNewList || listInput.trim() === ''}
                 >

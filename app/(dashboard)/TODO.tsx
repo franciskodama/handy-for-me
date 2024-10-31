@@ -17,11 +17,10 @@
 //       ) 15 / 0.75rem
 //   }}
 
-// TODO: WORK<ING ON + FAST
-// TO DO of the week: show on Dashboard
+// TODO: WORKING ON
 // Install Analytics
-// Button hover effect: Mariana thinks it's counterintuitive
-// Quotes to long: Solution?
+// TO DO of the week: show on Dashboard
+// Cities I've visited Feature
 // Vision board: zoom library
 
 // Random Questions:Reset All must Reset the Clock as well
@@ -33,7 +32,6 @@
 // Grid: https://www.youtube.com/watch?v=3T0gjtXRNC0
 
 // Bucket List: Filter for done and not done
-// Cities I've visited Feature
 // Thigns to do Frame list that you can cross what was done.
 // Dahsboard: Pppulate the spaces, but think mobile first.
 // My Words: Strutcture...
@@ -64,6 +62,8 @@
 // Button: https://medium.com/@dewamadewira25/how-to-make-a-neo-brutalism-button-using-tailwindcss-91d3faf2b269
 
 // TODO: DONE
+// Quotes to long: Solution?
+// Button hover effect: Mariana thinks it's counterintuitive
 // Responsivity
 // Random Questions: position time button and question
 // Letter Leap everything on one screen

@@ -54,6 +54,7 @@ export default function MessageEmpty({
         {hasButton && (
           <>
             <Button
+              className="w-fit mt-4"
               variant="outline"
               onClick={() => {
                 setOpenAction(true);
