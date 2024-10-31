@@ -67,7 +67,7 @@ export function WeatherCard({
     <>
       <div className="flex flex-col gap-4 bg-muted p-6">
         <div className="flex">
-          <div className="flex flex-col items-center w-1/2">
+          <div className="flex flex-col items-center w-1/2 sm:w-1/5">
             <AspectRatio ratio={16 / 10}>
               <Image
                 src={`/weather/${weather.weather[0].icon}.png`}
@@ -80,7 +80,7 @@ export function WeatherCard({
             </AspectRatio>
           </div>
 
-          <div className="w-1/2 flex justify-center">
+          <div className="w-1/2 sm:w-1/5 flex justify-center">
             <div className="flex flex-col items-left">
               <h4 className="text-xs">Temperature</h4>
               <div className="flex font-semibold text-xl mb-2">
@@ -98,7 +98,7 @@ export function WeatherCard({
             </div>
           </div>
         </div>
-        <h2 className="font-semibold text-3xl capitalize pb-8 text-center">
+        <h2 className="font-semibold text-3xl capitalize pb-8 text-center sm:text-left">
           {weather.weather[0].description}
         </h2>
 
@@ -187,23 +187,23 @@ export function FunFactCard() {
 
   return (
     <>
-      <div className="flex flex-col justify-center sm:flex-row gap-2 bg-muted p-6 py-8">
-        <div className="flex flex-col gap-2">
+      <div className="flex flex-col sm:flex-row gap-2 bg-muted p-6 py-8">
+        <div className="flex flex-col items-start justify-between gap-2">
           <p className="text-xl sm:text-sm">{currentFact.start}</p>
           <p className="text-2xl sm:text-xl font-bold sm:pr-4">
             {currentFact.curiosity}
           </p>
           <Button
             variant="link"
-            className="hidden sm:block text-xs"
+            className="hidden sm:block text-xs p-0"
             onClick={() => setCurrentFact(getRandomFact())}
           >
             Show Another Fun Fact
           </Button>
         </div>
 
-        <div>
-          <div className="my-4 sm:my-0">
+        <div className="flex flex-col gap-2">
+          <div className="my-4 sm:my-0 sm:w-[10em]">
             <AspectRatio ratio={1 / 1}>
               <Image
                 src={`/fun-fact/fun-fact-${Math.floor(Math.random() * numberOfGifsAvailable)}.webp`}
@@ -215,15 +215,13 @@ export function FunFactCard() {
               />
             </AspectRatio>
           </div>
-          <div className="">
-            <Button
-              variant="outline"
-              className="w-[22ch] mt-2"
-              onClick={() => setCurrentFact(getRandomFact())}
-            >
-              Show Another Fun Fact
-            </Button>
-          </div>
+          <Button
+            variant="outline"
+            className="sm:hidden w-[22ch] mt-2"
+            onClick={() => setCurrentFact(getRandomFact())}
+          >
+            Show Another Fun Fact
+          </Button>
         </div>
       </div>
     </>
