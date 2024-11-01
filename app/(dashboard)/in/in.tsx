@@ -61,38 +61,42 @@ export default function In({
         <div className="flex flex-col gap-4">
           {/* -----------------------  First Row ----------------------- */}
 
-          {/* {location && weather && user && (
-            <>
-              <Tabs defaultValue="user" className="w-full sm:hidden mb-8">
-                <TabsList className="flex w-full justify-between mb-4">
-                  <TabsTrigger value="user">Hello!</TabsTrigger>
-                  <TabsTrigger value="weather">Weather</TabsTrigger>
-                  <TabsTrigger value="fun-fact">Fun Fact</TabsTrigger>
-                </TabsList>
-                <TabsContent value="weather">
+          <>
+            <Tabs defaultValue="user" className="w-full sm:hidden mb-8">
+              <TabsList className="flex w-full justify-between mb-4">
+                <TabsTrigger value="user">Hello!</TabsTrigger>
+                <TabsTrigger value="weather">Weather</TabsTrigger>
+                <TabsTrigger value="fun-fact">Fun Fact</TabsTrigger>
+              </TabsList>
+              <TabsContent value="weather">
+                {weather && location ? (
                   <WeatherCard location={location} weather={weather} />
-                </TabsContent>
-                <TabsContent value="fun-fact">
-                  <FunFactCard />
-                </TabsContent>
-                <TabsContent value="user">
-                  <UserCard user={user} />
-                </TabsContent>
-              </Tabs>
+                ) : (
+                  <p>No data</p>
+                )}
+              </TabsContent>
+              <TabsContent value="fun-fact">
+                <FunFactCard />
+              </TabsContent>
+              <TabsContent value="user">
+                {user && <UserCard user={user} />}
+              </TabsContent>
+            </Tabs>
 
-              <div className="hidden sm:flex flex-col sm:flex-row w-full justify-between gap-8 mb-12">
-                <div className="sm:w-1/3">
-                  <UserCard user={user} />
-                </div>
-                <div className="sm:w-1/3">
-                  <FunFactCard />
-                </div>
-                <div className="sm:w-1/3">
-                  <WeatherCard location={location} weather={weather} />
-                </div>
+            <div className="hidden sm:flex flex-col sm:flex-row w-full justify-between gap-8 mb-12">
+              <div className="sm:w-1/3">{user && <UserCard user={user} />}</div>
+              <div className="sm:w-1/3">
+                <FunFactCard />
               </div>
-            </>
-          )} */}
+              <div className="sm:w-1/3">
+                {weather && location ? (
+                  <WeatherCard location={location} weather={weather} />
+                ) : (
+                  <p>No data</p>
+                )}
+              </div>
+            </div>
+          </>
 
           {/* ----------------------- Second Row ----------------------- */}
           <div className="flex flex-col sm:flex-row w-full justify-between gap-8">
