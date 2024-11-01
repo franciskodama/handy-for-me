@@ -25,7 +25,7 @@ export default function In({
   location: LocationProps | null;
   weather: any;
 }) {
-  const [openAction, setOpenAction] = useState(false);
+  // const [openAction, setOpenAction] = useState(false);
 
   return (
     <Card>
@@ -39,7 +39,7 @@ export default function In({
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <AnimatePresence>
+        {/* <AnimatePresence>
           {openAction ? (
             <motion.div
               layout
@@ -48,11 +48,11 @@ export default function In({
               exit={{ opacity: 0, scale: 0.5, transition: { duration: 0.2 } }}
             >
               <div className="mb-12">
-                {/* <ExplanationIn setOpenAction={setOpenAction} /> */}
+                <ExplanationIn setOpenAction={setOpenAction} />
               </div>
             </motion.div>
           ) : null}
-        </AnimatePresence>
+        </AnimatePresence> */}
 
         {/* ----------------------- Main Container ----------------------- */}
         <div className="flex flex-col gap-4">
