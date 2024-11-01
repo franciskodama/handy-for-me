@@ -207,7 +207,7 @@ export function FunFactCard() {
           <div className="my-4 sm:my-0 sm:w-[10em]">
             <AspectRatio ratio={1 / 1}>
               <Image
-                src={`/fun-fact/fun-fact-${Math.floor(Math.random() * numberOfGifsAvailable)}.webp`}
+                src={`/fun-fact/fun-fact-${Math.floor(Math.random() * numberOfGifsAvailable + 1)}.webp`}
                 alt="Fun Fact Wow Image"
                 className="object-cover"
                 unoptimized
