@@ -268,7 +268,7 @@ export default function BucketList({
                 readOnly
                 className="hidden"
               />
-              <Button type="submit" disabled={isPending}>
+              <Button type="submit" disabled={isPending} className="ml-2">
                 {isPending ? 'Adding...' : 'Add'}
               </Button>
             </form>

@@ -136,7 +136,7 @@ export default function Shortcuts({
           <div
             className={`${barlow.className} flex gap-4 capitalize mt-8 sm:mt-0 w-full sm:w-[18ch]`}
           >
-            <div className="flex gap-2 w-full">
+            <div className="flex gap-4 w-full">
               <div className="w-1/2">
                 <AddCategory uid={uid} categories={categories} />
               </div>

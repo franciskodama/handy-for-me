@@ -136,7 +136,7 @@ export default function Countdown({
           </Button>
 
           <Button
-            className="w-[10ch]"
+            className="w-[10ch] ml-2"
             onClick={handleRestartButton}
             disabled={lastSelectedTime === 0}
           >

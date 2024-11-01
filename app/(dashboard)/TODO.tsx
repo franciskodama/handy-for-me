@@ -1,19 +1,37 @@
 // Our template: https://vercel.com/templates/next.js/admin-dashboard-tailwind-postgres-react-nextjs
 // Google Cloud Credentials: https://console.cloud.google.com/apis/credentials
 
-// TODO: WORK<ING ON + FAST
+// TODO: HELPERS
+// size={24} strokeWidth={1.8}
+// primary color: 222.2 47.4% 11.2% --> rgba(15, 23, 57, 1) --> #0F1739
+
+// style={{
+//     repeating-linear-gradient(
+//         45deg,
+//         transparent,
+//         transparent 2.5px,
+//         black 3px,
+//         black 3px,
+//         transparent 3px,
+//         transparent 3px
+//       ) 15 / 0.75rem
+//   }}
+
+// TODO: WORKING ON
+// Install Analytics
+// TO DO of the week: show on Dashboard
+// Cities I've visited Feature
+// Vision board: zoom library
+
 // Random Questions:Reset All must Reset the Clock as well
 // Random Questions: When it's reseted, don't show the kudos message either
 // Random Questions: everything on one screen
 // Random Questions: Clock must restart on 2 min after Reset
 
+// Dashboard: if it's Dashboard, don't show the avatar on the top
 // Grid: https://www.youtube.com/watch?v=3T0gjtXRNC0
-// Button hover effect: Mariana thinks it's counterintuitive
-// Quotes to long: Solution?
-// Vision board: zoom library
 
 // Bucket List: Filter for done and not done
-// Cities I've visited Feature
 // Thigns to do Frame list that you can cross what was done.
 // Dahsboard: Pppulate the spaces, but think mobile first.
 // My Words: Strutcture...
@@ -44,6 +62,8 @@
 // Button: https://medium.com/@dewamadewira25/how-to-make-a-neo-brutalism-button-using-tailwindcss-91d3faf2b269
 
 // TODO: DONE
+// Quotes to long: Solution?
+// Button hover effect: Mariana thinks it's counterintuitive
 // Responsivity
 // Random Questions: position time button and question
 // Letter Leap everything on one screen

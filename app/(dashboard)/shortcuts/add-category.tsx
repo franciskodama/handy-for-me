@@ -133,7 +133,7 @@ export function AddCategory({
   return (
     <Sheet>
       <SheetTrigger asChild className="w-full">
-        <Button variant="outline">Manage Categories</Button>
+        <Button variant="outline">Add Category</Button>
       </SheetTrigger>
       <SheetContent side="right" className="sm:max-w-xs mt-8 gap-8">
         <div className="flex flex-col gap-2 my-8">
