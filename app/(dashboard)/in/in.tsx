@@ -29,7 +29,7 @@ export default function In({
 
   return (
     <Card>
-      <CardHeader className="mb-12">
+      <CardHeader className="sm:mb-12">
         <CardTitle className="flex justify-between items-center gap-2">
           <p>Dashboard</p>
           {/* {!openAction ? <Help setOpenAction={setOpenAction} /> : <div />} */}
