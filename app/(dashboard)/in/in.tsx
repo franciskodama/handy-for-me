@@ -58,7 +58,7 @@ export default function In({
         <div className="flex flex-col gap-4">
           {/* -----------------------  First Row ----------------------- */}
 
-          {location && weather && user && (
+          {/* {location && weather && user && (
             <>
               <Tabs defaultValue="user" className="w-full sm:hidden mb-8">
                 <TabsList className="flex w-full justify-between mb-4">
@@ -89,7 +89,7 @@ export default function In({
                 </div>
               </div>
             </>
-          )}
+          )} */}
 
           {/* ----------------------- Second Row ----------------------- */}
           <div className="flex flex-col sm:flex-row w-full justify-between gap-8">
