@@ -8,13 +8,14 @@ export default async function InPage() {
   const user = session?.user;
 
   const location: any | null = await getUserLocation();
-  console.log('---  🚀 ---> | location server:', location);
 
   let weather;
   if (location) {
     weather = await getWeather(location.city);
   }
 
+  console.log('---  🚀 ---> | user:', user);
+  console.log('---  🚀 ---> | location server:', location);
   console.log('---  🚀 ---> | weather server:', weather);
 
   return (
