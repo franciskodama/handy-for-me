@@ -14,10 +14,6 @@ export default async function InPage() {
     weather = await getWeather(location.city);
   }
 
-  console.log('---  🚀 ---> | user:', user);
-  console.log('---  🚀 ---> | location server:', location);
-  console.log('---  🚀 ---> | weather server:', weather);
-
   return (
     <>
       {session ? (

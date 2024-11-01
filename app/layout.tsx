@@ -17,7 +17,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        {/* <Script id="google-analytics" strategy="afterInteractive">
+        <Script id="google-analytics" strategy="afterInteractive">
           {`
           function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
           new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -25,20 +25,19 @@ export default function RootLayout({
           'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
           })(window,document,'script','dataLayer','GTM-M5MTJNHT');
           `}
-        </Script> */}
+        </Script>
       </head>
       <body
         className={`${barlow.className} antialiased flex min-h-screen w-full flex-col`}
       >
-        {/* <noscript>
+        <noscript>
           <iframe
             src="https://www.googletagmanager.com/ns.html?id=GTM-M5MTJNHT"
             height="0"
             width="0"
             style={{ display: 'none', visibility: 'hidden' }}
-            // className="hidden"
           ></iframe>
-        </noscript> */}
+        </noscript>
         {children}
       </body>
     </html>
