@@ -56,38 +56,40 @@ export default function In({
 
         {/* ----------------------- Main Container ----------------------- */}
         <div className="flex flex-col gap-4">
-          {/* ----------------------- Mobile First Row ----------------------- */}
+          {/* -----------------------  First Row ----------------------- */}
 
-          <Tabs defaultValue="user" className="w-full sm:hidden mb-8">
-            <TabsList className="flex w-full justify-between mb-4">
-              <TabsTrigger value="user">Hello!</TabsTrigger>
-              <TabsTrigger value="weather">Weather</TabsTrigger>
-              <TabsTrigger value="fun-fact">Fun Fact</TabsTrigger>
-            </TabsList>
-            <TabsContent value="weather">
-              <WeatherCard location={location} weather={weather} />
-            </TabsContent>
-            <TabsContent value="fun-fact">
-              <FunFactCard />
-            </TabsContent>
-            <TabsContent value="user">
-              <UserCard user={user} />
-            </TabsContent>
-          </Tabs>
+          {location && weather && (
+            <>
+              <Tabs defaultValue="user" className="w-full sm:hidden mb-8">
+                <TabsList className="flex w-full justify-between mb-4">
+                  <TabsTrigger value="user">Hello!</TabsTrigger>
+                  <TabsTrigger value="weather">Weather</TabsTrigger>
+                  <TabsTrigger value="fun-fact">Fun Fact</TabsTrigger>
+                </TabsList>
+                <TabsContent value="weather">
+                  <WeatherCard location={location} weather={weather} />
+                </TabsContent>
+                <TabsContent value="fun-fact">
+                  <FunFactCard />
+                </TabsContent>
+                <TabsContent value="user">
+                  <UserCard user={user} />
+                </TabsContent>
+              </Tabs>
 
-          {/* ----------------------- Desktop First Row ----------------------- */}
-
-          <div className="hidden sm:flex flex-col sm:flex-row w-full justify-between gap-8 mb-12">
-            <div className="sm:w-1/3">
-              <UserCard user={user} />
-            </div>
-            <div className="sm:w-1/3">
-              <FunFactCard />
-            </div>
-            <div className="sm:w-1/3">
-              <WeatherCard location={location} weather={weather} />
-            </div>
-          </div>
+              <div className="hidden sm:flex flex-col sm:flex-row w-full justify-between gap-8 mb-12">
+                <div className="sm:w-1/3">
+                  <UserCard user={user} />
+                </div>
+                <div className="sm:w-1/3">
+                  <FunFactCard />
+                </div>
+                <div className="sm:w-1/3">
+                  <WeatherCard location={location} weather={weather} />
+                </div>
+              </div>
+            </>
+          )}
 
           {/* ----------------------- Second Row ----------------------- */}
           <div className="flex flex-col sm:flex-row w-full justify-between gap-8">
