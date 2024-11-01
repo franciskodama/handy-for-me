@@ -18,7 +18,12 @@
 //   }}
 
 // TODO: WORKING ON
-// Install Analytics
+// Install Analytics: https://support.google.com/analytics/answer/9304153#property
+// https://tagmanager.google.com/?authuser=0#/versions/accounts/6256123314/containers/199054622/versions/2
+// https://marketingplatform.google.com/home?utm_campaign=SuiteHeader&utm_source=UniversalPicker&utm_medium=platformHomeButton&authuser=0
+// https://analytics.google.com/analytics/web/#/p391507835/reports/intelligenthome?params=_u..nav%3Dmaui
+// https://www.youtube.com/results?search_query=google+analytics+nextjs+14
+
 // TO DO of the week: show on Dashboard
 // Cities I've visited Feature
 // Vision board: zoom library
@@ -62,6 +67,7 @@
 // Button: https://medium.com/@dewamadewira25/how-to-make-a-neo-brutalism-button-using-tailwindcss-91d3faf2b269
 
 // TODO: DONE
+// Bug of Hydration: it was the Math random inside a useState (getRandomFact())
 // Quotes to long: Solution?
 // Button hover effect: Mariana thinks it's counterintuitive
 // Responsivity
