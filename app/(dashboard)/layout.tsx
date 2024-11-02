@@ -87,7 +87,7 @@ function MobileNav() {
           {menuItems.map((item) => (
             <Link key={item.label} href={item.href}>
               <SheetClose asChild>
-                <button className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground">
+                <button className="flex items-center gap-4 px-2.5 truncate text-left text-muted-foreground hover:text-foreground">
                   {item.icon}
                   {item.label}
                 </button>

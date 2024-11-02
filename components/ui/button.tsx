@@ -16,7 +16,7 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          'text-white font-semibold uppercase bg-primary shadow-[0_0px_0px_0px_inset,#FFF_-3px_3px_0_-1px,#0F1739_-3px_3px] transition-all duration-200 ease-in-out hover:border hover:border-primary hover:bg-accent hover:text-accent-foreground active:-translate-x-[3px] active:translate-y-[3px] active:shadow-[0_0px_0px_0px_inset,#FFF_0px_0px_0_-1px,#000_0px_0px]',
+          'text-white font-semibold uppercase bg-primary shadow-[0_0px_0px_0px_inset,#FFF_-3px_3px_0_-1px,#0F1739_-3px_3px] transition-all duration-200 ease-in-out hover:border hover:border-primary hover:bg-accent hover:text-primary active:-translate-x-[3px] active:translate-y-[3px] active:shadow-[0_0px_0px_0px_inset,#FFF_0px_0px_0_-1px,#000_0px_0px]',
         destructive:
           'bg-destructive text-destructive-foreground hover:bg-destructive/90',
         outline:
