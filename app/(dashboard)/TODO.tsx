@@ -19,6 +19,8 @@
 //   }}
 
 // TODO: WORKING ON
+
+// Vision Board: fields not visible on mobile to see the vision board first
 // Install Analytics: https://support.google.com/analytics/answer/9304153#property
 // https://tagmanager.google.com/?authuser=0#/versions/accounts/6256123314/containers/199054622/versions/2
 // https://marketingplatform.google.com/home?utm_campaign=SuiteHeader&utm_source=UniversalPicker&utm_medium=platformHomeButton&authuser=0
@@ -68,6 +70,7 @@
 // Button: https://medium.com/@dewamadewira25/how-to-make-a-neo-brutalism-button-using-tailwindcss-91d3faf2b269
 
 // TODO: DONE
+// Weather Fix for Sunrise and Sunset
 // Nav Menu random question item was breaking the line
 // Widht of Alert Dialog Content: w-[calc(100%-35px)]
 // Bug of Hydration: it was the Math random inside a useState (getRandomFact())

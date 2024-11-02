@@ -50,14 +50,6 @@ export function WeatherCard({
   location: LocationProps | null;
   weather: any;
 }) {
-  const timezone = weather.timezone;
-  console.log('---  🚀 ---> | timezone:', timezone);
-
-  console.log({
-    rawSunrise: weather.sys.sunrise,
-    timezone: weather.timezone,
-    localTimezone: Intl.DateTimeFormat().resolvedOptions().timeZone
-  });
   return (
     <>
       <div className="relative flex flex-col sm:flex-row gap-4 bg-muted p-6 pt-10 sm:pt-6 sm:bg-transparent sm:border sm:border-slate-300 sm:border-dashed">

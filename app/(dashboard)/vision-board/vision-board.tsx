@@ -103,6 +103,7 @@ export default function VisionBoard({
 }) {
   const [openAction, setOpenAction] = useState(false);
   const [board, setBoard] = useState<VisualBoardItem[]>([]);
+  const [isFieldsVisible, setIsFieldsVisible] = useState(false);
   const [data, action, isPending] = useActionState(handleSubmit, undefined);
 
   useEffect(() => {
