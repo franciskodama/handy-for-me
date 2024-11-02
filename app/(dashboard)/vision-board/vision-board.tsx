@@ -18,6 +18,12 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger
 } from '@/components/ui/alert-dialog';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger
+} from '@/components/ui/accordion';
 import { VisualBoardItem } from '@/lib/types';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -103,7 +109,9 @@ export default function VisionBoard({
 }) {
   const [openAction, setOpenAction] = useState(false);
   const [board, setBoard] = useState<VisualBoardItem[]>([]);
-  const [isFieldsVisible, setIsFieldsVisible] = useState(false);
+  const [isAccordionOpen, setIsAccordionOpen] = useState(
+    visualBoard.length === 0 ? 'item-1' : ''
+  );
   const [data, action, isPending] = useActionState(handleSubmit, undefined);
 
   useEffect(() => {
@@ -185,53 +193,46 @@ export default function VisionBoard({
               desires into reality.
             </p>
           </div>
-          <div
-            className={`${barlow.className} flex gap-4 capitalize mt-8 sm:mt-0`}
-          >
-            <form
-              className="flex flex-col sm:flex-row items-start gap-4 sm:gap-2 font-normal"
+
+          <div className="hidden sm:block">
+            <FormVisionBoard
               action={action}
-            >
-              <div className="flex flex-col gap-1 w-full sm:w-2/5">
-                <Input placeholder="Goal" id="name" name="name" />
-                <p className="text-xs ml-4 lowercase">
-                  <span className="uppercase">N</span>ame your goal in one word
-                  (optional).
-                </p>
-              </div>
-              <div className="flex flex-col gap-1 w-full sm:w-2/5">
-                <Input placeholder="Url" id="url" name="url" />
-                <p className="text-xs ml-4 lowercase">
-                  <span className="uppercase">A</span>dd the URL of a picture
-                  from
-                  <Link
-                    className="mx-1 font-bold underline"
-                    href="https://unsplash.com/"
-                    target="_blank"
-                  >
-                    <span className="uppercase">U</span>nsplash
-                  </Link>
-                  that reflects your vision. *
-                </p>
-              </div>
-              <Input
-                id="uid"
-                name="uid"
-                value={uid}
-                readOnly
-                className="hidden"
-              />
-              <Button type="submit" disabled={isPending} className="ml-2">
-                {isPending ? 'Adding...' : 'Add'}
-              </Button>
-            </form>
+              setOpenAction={setOpenAction}
+              isPending={isPending}
+              uid={uid}
+              openAction={openAction}
+            />
           </div>
           <div className="hidden sm:block">
             {!openAction ? <Help setOpenAction={setOpenAction} /> : <div />}
           </div>
         </CardTitle>
       </CardHeader>
-      <CardContent className="relative p-10 pb-40">
+
+      <CardContent className="relative sm:p-10 pb-40">
+        <Accordion
+          type="single"
+          collapsible
+          className="w-full sm:hidden mb-4"
+          value={isAccordionOpen}
+          onValueChange={(value) => setIsAccordionOpen(value)}
+        >
+          <AccordionItem value="item-1" className="border-0">
+            <AccordionTrigger className="w-full text-xs underline">
+              Add a new Goal
+            </AccordionTrigger>
+            <AccordionContent>
+              <FormVisionBoard
+                action={action}
+                setOpenAction={setOpenAction}
+                isPending={isPending}
+                uid={uid}
+                openAction={openAction}
+              />
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+
         <AnimatePresence>
           {openAction ? (
             <motion.div
@@ -266,7 +267,7 @@ export default function VisionBoard({
           </div>
         )}
 
-        <div className="flex flex-wrap gap-[1px] justify-center">
+        <div className="flex flex-wrap gap-[1px] justify-center my-12 sm:my-0">
           {board.map((item: VisualBoardItem) => (
             <div key={item.id}>
               <div className="relative group">
@@ -299,7 +300,7 @@ export default function VisionBoard({
                   <AlertDialogTrigger className="absolute top-0 right-2 opacity-0 group-hover:opacity-100 bg-white p-1">
                     <Trash2 size={18} strokeWidth={1.8} color="#000" />
                   </AlertDialogTrigger>
-                  <AlertDialogContent>
+                  <AlertDialogContent className="w-[calc(100%-35px)]">
                     <AlertDialogHeader>
                       <AlertDialogTitle className="flex items-center gap-2">
                         <Bomb size={24} strokeWidth={1.8} />
@@ -351,5 +352,58 @@ export default function VisionBoard({
         </div>
       </CardContent>
     </Card>
+  );
+}
+
+function FormVisionBoard({
+  action,
+  setOpenAction,
+  isPending,
+  uid,
+  openAction
+}: {
+  action: (payload: FormData) => void;
+  setOpenAction: (value: boolean) => void;
+  isPending: boolean;
+  uid: string;
+  openAction: boolean;
+}) {
+  return (
+    <>
+      <div
+        className={`${barlow.className} flex gap-4 capitalize mt-4 mb-12 sm:mb-0 sm:mt-0`}
+      >
+        <form
+          className="flex flex-col sm:flex-row items-start gap-4 sm:gap-2 font-normal"
+          action={action}
+        >
+          <div className="flex flex-col gap-1 w-full sm:w-2/5">
+            <Input placeholder="Goal" id="name" name="name" />
+            <p className="text-xs ml-4 lowercase">
+              <span className="uppercase">N</span>ame your goal in one word
+              (optional).
+            </p>
+          </div>
+          <div className="flex flex-col gap-1 w-full sm:w-2/5">
+            <Input placeholder="Url" id="url" name="url" />
+            <p className="text-xs ml-4 lowercase">
+              <span className="uppercase">A</span>dd the URL of a picture from
+              <Link
+                className="mx-1 font-bold underline"
+                href="https://unsplash.com/"
+                target="_blank"
+              >
+                <span className="uppercase">U</span>nsplash
+              </Link>
+              that reflects your vision. *
+            </p>
+          </div>
+          <Input id="uid" name="uid" value={uid} readOnly className="hidden" />
+          <Button type="submit" disabled={isPending} className="ml-2">
+            {isPending ? 'Adding...' : 'Add'}
+          </Button>
+        </form>
+      </div>
+    </>
   );
 }
