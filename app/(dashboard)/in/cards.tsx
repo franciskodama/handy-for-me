@@ -50,6 +50,14 @@ export function WeatherCard({
   location: LocationProps | null;
   weather: any;
 }) {
+  const timezone = weather.timezone;
+  console.log('---  🚀 ---> | timezone:', timezone);
+
+  console.log({
+    rawSunrise: weather.sys.sunrise,
+    timezone: weather.timezone,
+    localTimezone: Intl.DateTimeFormat().resolvedOptions().timeZone
+  });
   return (
     <>
       <div className="relative flex flex-col sm:flex-row gap-4 bg-muted p-6 pt-10 sm:pt-6 sm:bg-transparent sm:border sm:border-slate-300 sm:border-dashed">
@@ -94,16 +102,16 @@ export function WeatherCard({
         </h2>
 
         <div className="flex flex-col gap-4 sm:w-1/2 sm:ml-8">
-          <div className="flex w-full">
+          <div className="flex justify-around w-full">
             <div className="w-1/3 sm:w-1/2">
               <h4 className="text-xs">Wind</h4>
               <p className="font-semibold text-base capitalize">{`${weather.wind.speed} km/h`}</p>
             </div>
 
-            <div className="w-1/3 sm:hidden">
+            {/* <div className="w-1/3 sm:hidden">
               <h4 className="text-xs ">Pressure</h4>
               <p className="font-semibold text-base capitalize">{`${weather.main.pressure} kPa`}</p>
-            </div>
+            </div> */}
 
             <div className="w-1/3 sm:w-1/2">
               <h4 className="text-xs">Humidity</h4>
@@ -111,24 +119,28 @@ export function WeatherCard({
             </div>
           </div>
 
-          <div className="flex w-full">
-            <div className="w-1/3 sm:hidden">
+          <div className="flex justify-around w-full">
+            {/* <div className="w-1/3 sm:hidden">
               <h4 className="text-xs">Visibility</h4>
               <p className="font-semibold text-base capitalize">{`${weather.visibility} Km`}</p>
-            </div>
+            </div> */}
             <div className="w-1/3 sm:w-1/2">
               <h4 className="text-xs">Sunrise</h4>
               <div className="flex gap-1 font-semibold text-base capitalize">
                 {weather.sys ? (
                   <p>
-                    {new Date(
-                      weather.sys.sunrise * 6000 - weather.timezone * 1000
-                    )
-                      .toString()
-                      .slice(17, 21)}
+                    {new Date(weather.sys.sunrise * 1000).toLocaleTimeString(
+                      'en-US',
+                      {
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        hour12: true,
+                        timeZone:
+                          Intl.DateTimeFormat().resolvedOptions().timeZone
+                      }
+                    )}
                   </p>
                 ) : null}
-                <p>a.m.</p>
               </div>
             </div>
             <div className="w-1/3 sm:w-1/2">
@@ -136,14 +148,18 @@ export function WeatherCard({
               <div className="flex gap-1 font-semibold text-base capitalize">
                 {weather.sys ? (
                   <p>
-                    {new Date(
-                      weather.sys.sunrise * 6000 - weather.timezone * 1000
-                    )
-                      .toString()
-                      .slice(17, 21)}
+                    {new Date(weather.sys.sunset * 1000).toLocaleTimeString(
+                      'en-US',
+                      {
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        hour12: true,
+                        timeZone:
+                          Intl.DateTimeFormat().resolvedOptions().timeZone
+                      }
+                    )}
                   </p>
                 ) : null}
-                <p>p.m.</p>
               </div>
             </div>
           </div>
