@@ -126,9 +126,9 @@ export default function Countdown({
         <div className="text-5xl text-left my-2">
           <p>{`${minutes.toString().padStart(2, '0')}m ${seconds.toString().padStart(2, '0')}s`}</p>
         </div>
-        <div className="flex gap-2 mt-4">
+        <div className="flex flex-wrap gap-2 mt-4">
           <Button
-            className="w-[10ch]"
+            className="w-[10ch] mb-2"
             onClick={handlePauseResumeButton}
             disabled={timeRemaining === 0 || (!startCountdown && !isPaused)}
           >
@@ -136,7 +136,7 @@ export default function Countdown({
           </Button>
 
           <Button
-            className="w-[10ch] ml-2"
+            className="w-[10ch] mx-2 mb-2"
             onClick={handleRestartButton}
             disabled={lastSelectedTime === 0}
           >
@@ -145,7 +145,7 @@ export default function Countdown({
 
           <div className="sm:hidden">
             <Button
-              className="w-[10ch]"
+              className="w-[10ch] mb-2"
               variant="outline"
               onClick={handleResetAll}
               disabled={lastSelectedTime === 0}

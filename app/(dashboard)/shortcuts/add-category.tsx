@@ -214,7 +214,7 @@ export function AddCategory({
                   <AlertDialogTrigger>
                     <Trash2 size={18} strokeWidth={1.8} color="black" />
                   </AlertDialogTrigger>
-                  <AlertDialogContent className="w-4/5">
+                  <AlertDialogContent className="w-[calc(100%-35px)]">
                     <AlertDialogHeader>
                       <AlertDialogTitle className="flex items-center gap-2">
                         <Bomb size={24} strokeWidth={1.8} />
