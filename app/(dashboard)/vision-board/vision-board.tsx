@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { Bomb, Check, EyeOff, Grid2x2X, Trash2 } from 'lucide-react';
+import { Bomb, Check, Grid2x2X, Trash2 } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useActionState, useEffect, useState } from 'react';
 
@@ -267,7 +267,7 @@ export default function VisionBoard({
           </div>
         )}
 
-        <div className="flex flex-wrap gap-[1px] justify-center my-12 sm:my-0">
+        <div className="flex flex-wrap gap-[1px] justify-center my-4 sm:my-0">
           {board.map((item: VisualBoardItem) => (
             <div key={item.id}>
               <div className="relative group">

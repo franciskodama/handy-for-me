@@ -14,7 +14,9 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { LocationProps, User } from '@/lib/types';
 import { kumbh_sans } from '@/app/ui/fonts';
-import UserCard, { FunFactCard, WeatherCard } from './cards';
+import { CardWeather } from './card-weather';
+import CardUser from './card-user';
+import { CardFunFact } from './card-fun-fact';
 
 export default function In({
   user,
@@ -67,27 +69,27 @@ export default function In({
               </TabsList>
               <TabsContent value="weather">
                 {weather && location ? (
-                  <WeatherCard location={location} weather={weather} />
+                  <CardWeather location={location} weather={weather} />
                 ) : (
                   <p>No data</p>
                 )}
               </TabsContent>
               <TabsContent value="fun-fact">
-                <FunFactCard />
+                <CardFunFact />
               </TabsContent>
               <TabsContent value="user">
-                {user && <UserCard user={user} />}
+                {user && <CardUser user={user} />}
               </TabsContent>
             </Tabs>
 
             <div className="hidden sm:flex flex-col sm:flex-row w-full justify-between gap-8 mb-12">
-              <div className="sm:w-1/3">{user && <UserCard user={user} />}</div>
+              <div className="sm:w-1/3">{user && <CardUser user={user} />}</div>
               <div className="sm:w-1/3">
-                <FunFactCard />
+                <CardFunFact />
               </div>
               <div className="sm:w-1/3">
                 {weather && location ? (
-                  <WeatherCard location={location} weather={weather} />
+                  <CardWeather location={location} weather={weather} />
                 ) : (
                   <p>No data</p>
                 )}
@@ -135,61 +137,16 @@ export default function In({
             fermentum
           </p>
           <div className="flex flex-col sm:flex-row w-full justify-between gap-8">
-            <div
-              className={`flex flex-col sm:w-1/3 items-center h-[10em] p-4`}
-              style={{
-                borderImage: `repeating-linear-gradient(
-                  45deg,
-                  transparent,
-                  transparent 2.5px,
-                  black 3px,
-                  black 3px,
-                  transparent 3px,
-                  transparent 3px
-                ) 15 / 0.75rem`,
-                borderStyle: 'solid',
-                borderWidth: '1em'
-              }}
-            >
+            <div className="stripe-border flex flex-col sm:w-1/3 items-center h-[10em] p-4">
               <p>Pellentesque est ante</p>
             </div>
-            <div
-              className={`flex flex-col sm:w-1/3 items-center h-[10em] p-4`}
-              style={{
-                borderImage: `repeating-linear-gradient(
-                  45deg,
-                  transparent,
-                  transparent 2.5px,
-                  black 3px,
-                  black 3px,
-                  transparent 3px,
-                  transparent 3px
-                ) 15 / 0.75rem`,
-                borderStyle: 'solid',
-                borderWidth: '1em'
-              }}
-            >
+            <div className="stripe-border flex flex-col sm:w-1/3 items-center h-[10em] p-4">
               <p>
                 Etiam nec mi non felis dapibus aliquam. Nullam tempus odio eget
                 euismod semper.{' '}
               </p>
             </div>
-            <div
-              className={`flex flex-col sm:w-1/3 items-center h-[10em] p-4`}
-              style={{
-                borderImage: `repeating-linear-gradient(
-                  45deg,
-                  transparent,
-                  transparent 2.5px,
-                  black 3px,
-                  black 3px,
-                  transparent 3px,
-                  transparent 3px
-                ) 15 / 0.75rem`,
-                borderStyle: 'solid',
-                borderWidth: '1em'
-              }}
-            >
+            <div className="stripe-border flex flex-col sm:w-1/3 items-center h-[10em] p-4">
               <p className="hidden sm:block">
                 Praesent ante est, facilisis at commodo sit amet, efficitur id
                 diam. Mauris tristique sem consequat, aliquam est eu, sodales
@@ -271,58 +228,13 @@ export default function In({
             elementum
           </p>
           <div className="flex flex-col sm:flex-row w-full justify-between gap-8">
-            <div
-              className={`flex flex-col sm:w-1/3 items-center h-[10em] p-4`}
-              style={{
-                borderImage: `repeating-linear-gradient(
-                  45deg,
-                  transparent,
-                  transparent 2.5px,
-                  black 3px,
-                  black 3px,
-                  transparent 3px,
-                  transparent 3px
-                ) 15 / 0.75rem`,
-                borderStyle: 'solid',
-                borderWidth: '1em'
-              }}
-            >
+            <div className="stripe-border flex flex-col sm:w-1/3 items-center h-[10em] p-4">
               <p>Box</p>
             </div>
-            <div
-              className={`flex flex-col sm:w-1/3 items-center h-[10em] p-4`}
-              style={{
-                borderImage: `repeating-linear-gradient(
-                  45deg,
-                  transparent,
-                  transparent 2.5px,
-                  black 3px,
-                  black 3px,
-                  transparent 3px,
-                  transparent 3px
-                ) 15 / 0.75rem`,
-                borderStyle: 'solid',
-                borderWidth: '1em'
-              }}
-            >
+            <div className="stripe-border flex flex-col sm:w-1/3 items-center h-[10em] p-4">
               <p>Box</p>
             </div>
-            <div
-              className={`flex flex-col sm:w-1/3 items-center h-[10em] p-4`}
-              style={{
-                borderImage: `repeating-linear-gradient(
-                  45deg,
-                  transparent,
-                  transparent 2.5px,
-                  black 3px,
-                  black 3px,
-                  transparent 3px,
-                  transparent 3px
-                ) 15 / 0.75rem`,
-                borderStyle: 'solid',
-                borderWidth: '1em'
-              }}
-            >
+            <div className="stripe-border flex flex-col sm:w-1/3 items-center h-[10em] p-4">
               <p>Box</p>
             </div>
           </div>

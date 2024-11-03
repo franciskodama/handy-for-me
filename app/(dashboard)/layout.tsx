@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { Analytics } from '@vercel/analytics/react';
 
 import {
   BookA,
@@ -55,7 +54,6 @@ export default function DashboardLayout({
             <Toaster />
           </main>
         </div>
-        {/* <Analytics /> */}
       </main>
     </Providers>
   );
