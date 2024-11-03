@@ -279,7 +279,7 @@ export default function DecisionHelper({
             {result && (
               <>
                 <AlertDialog open={result.length > 0}>
-                  <AlertDialogContent className="w-4/5">
+                  <AlertDialogContent className="w-[calc(100%-35px)]">
                     <AlertDialogHeader>
                       <AlertDialogTitle className="flex items-center gap-2 justify-center animate-pulse">
                         <p>

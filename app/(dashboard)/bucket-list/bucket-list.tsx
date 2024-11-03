@@ -356,7 +356,7 @@ export default function BucketList({
                       color={getColorCodes(item.category).color}
                     />
                   </AlertDialogTrigger>
-                  <AlertDialogContent>
+                  <AlertDialogContent className="w-[calc(100%-35px)]">
                     <AlertDialogHeader>
                       <AlertDialogTitle className="flex items-center gap-2">
                         <Bomb size={24} strokeWidth={1.8} />

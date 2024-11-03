@@ -4,7 +4,8 @@
 // TODO: HELPERS
 // size={24} strokeWidth={1.8}
 // primary color: 222.2 47.4% 11.2% --> rgba(15, 23, 57, 1) --> #0F1739
-
+// Alert Dialog Content Width for Mobile: w-[calc(100%-35px)]
+// Accent color in HEX: #DDF906 --> Adidas: '#f3f3e3'
 // style={{
 //     repeating-linear-gradient(
 //         45deg,
@@ -67,6 +68,10 @@
 // Button: https://medium.com/@dewamadewira25/how-to-make-a-neo-brutalism-button-using-tailwindcss-91d3faf2b269
 
 // TODO: DONE
+// Vision Board: fields not visible on mobile to see the vision board first
+// Weather Fix for Sunrise and Sunset
+// Nav Menu random question item was breaking the line
+// Widht of Alert Dialog Content: w-[calc(100%-35px)]
 // Bug of Hydration: it was the Math random inside a useState (getRandomFact())
 // Quotes to long: Solution?
 // Button hover effect: Mariana thinks it's counterintuitive

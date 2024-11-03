@@ -1,0 +1,70 @@
+import Image from 'next/image';
+import { useEffect, useState } from 'react';
+
+import { funFacts } from './fun-facts';
+import { Button } from '@/components/ui/button';
+import { LocationProps, User } from '@/lib/types';
+import { AspectRatio } from '@/components/ui/aspect-ratio';
+import { tagClass } from './cards';
+
+export function CardFunFact() {
+  const [currentFact, setCurrentFact] = useState({
+    start: 'Surprising Fact:',
+    curiosity: 'Avocados are fruit, and they’re technically a berry!'
+  });
+
+  const getRandomFact = () => {
+    const randomIndex = Math.floor(Math.random() * funFacts.length);
+    setCurrentFact(funFacts[randomIndex]);
+  };
+
+  useEffect(() => {
+    getRandomFact();
+  }, []);
+
+  const numberOfGifsAvailable = 20;
+
+  return (
+    <>
+      <div className="relative flex flex-col sm:flex-row gap-2 bg-muted px-6 py-8 pt-12 sm:pt-8 sm:bg-transparent sm:border sm:border-slate-300 sm:border-dashed ">
+        <div className="flex flex-col items-start justify-between gap-2">
+          <p className="text-base sm:text-sm">{currentFact.start}</p>
+          <p className="text-2xl sm:text-xl font-bold sm:pr-4">
+            {currentFact.curiosity}
+          </p>
+          <Button
+            variant="link"
+            className="hidden sm:block text-xs p-0 underline"
+            onClick={getRandomFact}
+          >
+            Show Another Fun Fact
+          </Button>
+        </div>
+
+        <div className="flex flex-col gap-2">
+          <div className="my-4 sm:my-0 sm:w-[10em]">
+            <AspectRatio ratio={1 / 1}>
+              <Image
+                src={`/fun-fact/fun-fact-${Math.floor(Math.random() * numberOfGifsAvailable + 1)}.webp`}
+                alt="Fun Fact Wow Image"
+                className="object-cover"
+                unoptimized
+                priority
+                fill
+                sizes="(max-width: 500px) 100vw"
+              />
+            </AspectRatio>
+          </div>
+          <Button
+            variant="outline"
+            className="sm:hidden mt-2"
+            onClick={getRandomFact}
+          >
+            Show Another Fun Fact
+          </Button>
+        </div>
+        <div className={tagClass}>Fun Fact</div>
+      </div>
+    </>
+  );
+}

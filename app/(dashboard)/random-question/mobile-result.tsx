@@ -31,7 +31,7 @@ export function MobileResultDialog({
   return (
     <>
       <AlertDialog open={result.length > 0 && isMobile}>
-        <AlertDialogContent className="w-4/5">
+        <AlertDialogContent className="w-[calc(100%-35px)]">
           <AlertDialogHeader>
             <AlertDialogDescription>
               <Result result={result} handleResetAll={handleResetAll} />
