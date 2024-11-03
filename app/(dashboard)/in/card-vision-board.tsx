@@ -12,6 +12,7 @@ import { VisualBoardItem } from '@/lib/types';
 import { tagClass } from './cards';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+import Autoplay from 'embla-carousel-autoplay';
 
 export default function CardVisionBoard({
   visionBoardItems
@@ -21,7 +22,14 @@ export default function CardVisionBoard({
   return (
     <>
       <div className="relative flex justify-center bg-muted p-6 pt-10 sm:pt-6 sm:border sm:border-slate-300 sm:border-dashed">
-        <Carousel className="w-[calc(100%-150px)]">
+        <Carousel
+          className="w-[calc(100%-150px)]"
+          plugins={[
+            Autoplay({
+              delay: 2000
+            })
+          ]}
+        >
           <CarouselContent>
             {visionBoardItems.map((item) => (
               <CarouselItem key={item.id} className="flex justify-center ">
