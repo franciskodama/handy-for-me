@@ -22,7 +22,7 @@ export default function CardVisionBoard({
 }) {
   return (
     <>
-      <div className="relative flex justify-center bg-muted p-4 sm:border sm:border-slate-300 sm:border-dashed">
+      <div className="relative flex justify-center p-4 sm:border sm:border-slate-300 sm:border-dashed">
         <Carousel
           //   className="w-[calc(100%-70px)]"
           opts={{
