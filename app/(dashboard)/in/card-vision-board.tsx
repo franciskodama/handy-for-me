@@ -9,10 +9,11 @@ import {
 } from '@/components/ui/carousel';
 import { kumbh_sans } from '@/app/ui/fonts';
 import { VisualBoardItem } from '@/lib/types';
-import { tagClass } from './cards';
+import { tagButtonLink, tagClass } from './cards';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import Autoplay from 'embla-carousel-autoplay';
+import { SquareArrowOutUpRight } from 'lucide-react';
 
 export default function CardVisionBoard({
   visionBoardItems
@@ -23,7 +24,11 @@ export default function CardVisionBoard({
     <>
       <div className="relative flex justify-center bg-muted p-4 sm:border sm:border-slate-300 sm:border-dashed">
         <Carousel
-          className="w-[calc(100%-150px)]"
+          //   className="w-[calc(100%-70px)]"
+          opts={{
+            align: 'start'
+          }}
+          className="w-full max-w-sm"
           plugins={[
             Autoplay({
               delay: 2000
@@ -32,7 +37,11 @@ export default function CardVisionBoard({
         >
           <CarouselContent>
             {visionBoardItems.map((item) => (
-              <CarouselItem key={item.id} className="flex justify-center ">
+              <CarouselItem
+                key={item.id}
+                //   className="flex justify-center"
+                className="basis-1/3 sm:basis-1/3"
+              >
                 <div className="relative group">
                   <Image
                     src={item.url}
@@ -41,11 +50,11 @@ export default function CardVisionBoard({
                     alt={`Picture of ${item.name}`}
                     className="object-cover w-60 h-60 group-hover:opacity-100"
                   />
-                  <p
+                  {/* <p
                     className={`${kumbh_sans.className} bg-white text-left uppercase text-sm leading-none absolute bottom-0 left-2 px-2 py-1`}
                   >
                     {item.name}
-                  </p>
+                  </p> */}
                 </div>
               </CarouselItem>
             ))}
@@ -56,9 +65,12 @@ export default function CardVisionBoard({
         <div className={tagClass}>Vision Board</div>
         <Button
           variant="ghost"
-          className="absolute bottom-2 right-2 text-xs underline"
+          className="absolute bottom-6 sm:bottom-4 right-6 sm:right-2 text-xs underline bg-white sm:bg-transparent p-1 h-4"
         >
-          <Link href="/vision-board">View All</Link>
+          <Link href="/vision-board">
+            {/* <SquareArrowOutUpRight className="w-4 h-4 mr-1" /> */}
+            View All
+          </Link>
         </Button>
       </div>
     </>
