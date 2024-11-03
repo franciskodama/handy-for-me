@@ -12,20 +12,23 @@ import {
   CardTitle
 } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { LocationProps, User } from '@/lib/types';
+import { LocationProps, User, VisualBoardItem } from '@/lib/types';
 import { kumbh_sans } from '@/app/ui/fonts';
 import { CardWeather } from './card-weather';
 import CardUser from './card-user';
 import { CardFunFact } from './card-fun-fact';
+import CardVisionBoard from './card-vision-board';
 
 export default function In({
   user,
   location,
-  weather
+  weather,
+  visionBoardItems
 }: {
   user: User | undefined;
   location: LocationProps | null;
   weather: any;
+  visionBoardItems: VisualBoardItem[];
 }) {
   // const [openAction, setOpenAction] = useState(false);
 
@@ -96,6 +99,23 @@ export default function In({
               </div>
             </div>
           </>
+
+          {/* ----------------------- Second Row ----------------------- */}
+          <div className="sm:flex flex-col sm:flex-row w-full gap-8 mb-12">
+            <div className="sm:w-1/3">
+              {visionBoardItems ? (
+                <CardVisionBoard visionBoardItems={visionBoardItems} />
+              ) : (
+                <p>No data</p>
+              )}
+            </div>
+            <div className="flex justify-center sm:w-1/3">
+              {/* <CardVisionBoard visionBoardItems={visionBoardItems} /> */}
+            </div>
+            <div className="flex justify-center sm:w-1/3">
+              {/* <CardVisionBoard visionBoardItems={visionBoardItems} /> */}
+            </div>
+          </div>
 
           {/* ----------------------- Second Row ----------------------- */}
           <div className="flex flex-col sm:flex-row w-full justify-between gap-8">
