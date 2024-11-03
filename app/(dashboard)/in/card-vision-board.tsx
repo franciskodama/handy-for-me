@@ -21,7 +21,7 @@ export default function CardVisionBoard({
 }) {
   return (
     <>
-      <div className="relative flex justify-center bg-muted p-6 pt-10 sm:pt-6 sm:border sm:border-slate-300 sm:border-dashed">
+      <div className="relative flex justify-center bg-muted p-4 sm:border sm:border-slate-300 sm:border-dashed">
         <Carousel
           className="w-[calc(100%-150px)]"
           plugins={[
@@ -56,7 +56,7 @@ export default function CardVisionBoard({
         <div className={tagClass}>Vision Board</div>
         <Button
           variant="ghost"
-          className="absolute bottom-3 right-3 text-xs underline"
+          className="absolute bottom-2 right-2 text-xs underline"
         >
           <Link href="/vision-board">View All</Link>
         </Button>
