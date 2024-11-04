@@ -18,12 +18,14 @@ export default function CardShortcuts({
         <div className="flex flex-wrap">
           {shortcutsItems.map((item: Shortcut) => (
             <div key={item.id}>
-              <p
-                className="text-sm sm:text-base px-4 py-1 font-semibold"
-                // style={getColorCodes(item.category)}
-              >
-                {item.name}
-              </p>
+              <Link href={item.url} target="_blank">
+                <p
+                  className="text-sm sm:text-base px-4 py-1 font-semibold"
+                  // style={getColorCodes(item.category)}
+                >
+                  {item.name}
+                </p>
+              </Link>
             </div>
           ))}
         </div>

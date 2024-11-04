@@ -20,7 +20,7 @@ export default function CardVisionBoard({
 }) {
   return (
     <>
-      <div className="relative flex justify-center w-[calc(100%-50px)] sm:w-full p-4 sm:border sm:border-slate-300 sm:border-dashed">
+      <div className="relative flex justify-center items-center w-[calc(100%-50px)] sm:w-full p-4 sm:border sm:border-slate-300 sm:border-dashed">
         <Carousel
           className="flex justify-center w-[18em] sm:w-full sm:max-w-sm"
           plugins={[
