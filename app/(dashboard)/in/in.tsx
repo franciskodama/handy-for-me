@@ -65,7 +65,7 @@ export default function In({
 
           <>
             <Tabs defaultValue="user" className="w-full sm:hidden mb-8">
-              <TabsList className="flex w-full justify-between mb-4">
+              <TabsList className="flex w-full justify-between mb-6">
                 <TabsTrigger value="user">Hello!</TabsTrigger>
                 <TabsTrigger value="weather">Weather</TabsTrigger>
                 <TabsTrigger value="fun-fact">Fun Fact</TabsTrigger>
@@ -101,24 +101,25 @@ export default function In({
           </>
 
           {/* ----------------------- Second Row ----------------------- */}
-          <div className="sm:flex flex-col sm:flex-row w-full gap-8 mb-12">
-            <div className="sm:w-1/3">
+          <div className="flex flex-col sm:flex-row w-full gap-8 mb-12">
+            <div className="flex justify-center sm:w-1/3">
               {visionBoardItems ? (
                 <CardVisionBoard visionBoardItems={visionBoardItems} />
               ) : (
+                // <p>No data</p>
                 <p>No data</p>
               )}
             </div>
-            <div className="flex justify-center sm:w-1/3">
-              {/* <CardVisionBoard visionBoardItems={visionBoardItems} /> */}
+            <div className="flex justify-center sm:w-1/3 border-2">
+              Second Row
             </div>
-            <div className="flex justify-center sm:w-1/3">
-              {/* <CardVisionBoard visionBoardItems={visionBoardItems} /> */}
+            <div className="flex justify-center sm:w-1/3 border-2">
+              Third Row
             </div>
           </div>
 
           {/* ----------------------- Second Row ----------------------- */}
-          <div className="flex flex-col sm:flex-row w-full justify-between gap-8">
+          {/* <div className="flex flex-col sm:flex-row w-full justify-between gap-8">
             <div className="flex items-center justify-between sm:w-1/3 border border-dashed border-slate-300 p-4">
               <h3
                 className={`${kumbh_sans.className} uppercase font-bold text-lg leading-none`}
@@ -148,7 +149,7 @@ export default function In({
               </p>
               <ChevronsUpDown size={24} strokeWidth={1.8} />
             </div>
-          </div>
+          </div> */}
           {/* ----------------------- Third Row ----------------------- */}
 
           <p

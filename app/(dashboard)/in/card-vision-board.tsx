@@ -22,13 +22,9 @@ export default function CardVisionBoard({
 }) {
   return (
     <>
-      <div className="relative flex justify-center p-4 sm:border sm:border-slate-300 sm:border-dashed">
+      <div className="relative flex justify-center w-[calc(100%-50px)] sm:w-full p-4 sm:border sm:border-slate-300 sm:border-dashed">
         <Carousel
-          //   className="w-[calc(100%-70px)]"
-          opts={{
-            align: 'start'
-          }}
-          className="w-full max-w-sm"
+          className="flex justify-center w-[18em] sm:w-full sm:max-w-sm"
           plugins={[
             Autoplay({
               delay: 2000
@@ -37,11 +33,7 @@ export default function CardVisionBoard({
         >
           <CarouselContent>
             {visionBoardItems.map((item) => (
-              <CarouselItem
-                key={item.id}
-                //   className="flex justify-center"
-                className="basis-1/3 sm:basis-1/3"
-              >
+              <CarouselItem key={item.id} className="basis-1/3">
                 <div className="relative group">
                   <Image
                     src={item.url}
@@ -67,10 +59,7 @@ export default function CardVisionBoard({
           variant="ghost"
           className="absolute bottom-6 sm:bottom-4 right-6 sm:right-2 text-xs underline bg-white sm:bg-transparent p-1 h-4"
         >
-          <Link href="/vision-board">
-            {/* <SquareArrowOutUpRight className="w-4 h-4 mr-1" /> */}
-            View All
-          </Link>
+          <Link href="/vision-board">View All</Link>
         </Button>
       </div>
     </>

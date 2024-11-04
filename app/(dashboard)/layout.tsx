@@ -26,6 +26,7 @@ import { DashboardBreadcrumb } from './header/breadcrumb';
 import Greeting from './header/greeting';
 import { Toaster } from '@/components/ui/toaster';
 import { NavItem } from '@/components/NavItem';
+import { SearchInput } from './header/search';
 
 export default function DashboardLayout({
   children
@@ -42,7 +43,7 @@ export default function DashboardLayout({
             <header className="sticky top-0 z-30 flex h-14 items-center justify-between gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
               <MobileNav />
               <DashboardBreadcrumb />
-              {/* <SearchInput /> */}
+              <SearchInput />
               <div className="flex items-center gap-4 sm:gap-8">
                 <Greeting />
                 <User />
