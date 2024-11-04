@@ -2,7 +2,7 @@ import { auth } from '@/lib/auth';
 import In from './in';
 import { getWeather } from '@/lib/weather.server';
 import { getUserLocation } from '@/lib/location.server';
-import { getVisualBoardItems } from '@/lib/actions';
+import { getBucketListItems, getVisualBoardItems } from '@/lib/actions';
 
 export default async function InPage() {
   const session = await auth();
@@ -16,6 +16,7 @@ export default async function InPage() {
   }
 
   const visionBoardItems = await getVisualBoardItems(user?.email ?? '');
+  const bucketListItems = await getBucketListItems(user?.email ?? '');
 
   return (
     <>
@@ -25,6 +26,7 @@ export default async function InPage() {
           location={location}
           weather={weather}
           visionBoardItems={visionBoardItems || []}
+          bucketListItems={bucketListItems || []}
         />
       ) : null}
     </>

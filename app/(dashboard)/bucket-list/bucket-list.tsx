@@ -1,23 +1,10 @@
 'use client';
 
 import { AnimatePresence, motion } from 'framer-motion';
-import {
-  Bomb,
-  Check,
-  CircleHelp,
-  FlagOff,
-  LightbulbOff,
-  Trash2
-} from 'lucide-react';
+import { Bomb, Check, FlagOff, Trash2 } from 'lucide-react';
 import { useActionState, useEffect, useState } from 'react';
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle
-} from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   Select,
   SelectContent,
@@ -200,7 +187,7 @@ export default function BucketList({
   };
 
   function getColorCodes(category: string) {
-    const foundCategory = categories.find(
+    const foundCategory = bucketListCategories.find(
       (item: any) => item.name === category
     );
     const bgColorCode = foundCategory?.bgColor || '#000000';
@@ -247,7 +234,7 @@ export default function BucketList({
                     <SelectValue placeholder="Category" id="category" />
                   </SelectTrigger>
                   <SelectContent>
-                    {categories.map((category: Category) => (
+                    {bucketListCategories.map((category: Category) => (
                       <div key={category.name}>
                         <SelectItem value={category.name}>
                           {category.name}
@@ -408,7 +395,7 @@ export default function BucketList({
   );
 }
 
-const categories = [
+export const bucketListCategories = [
   {
     name: 'Adventure',
     color: 'red',

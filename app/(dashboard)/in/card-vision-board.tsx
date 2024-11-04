@@ -7,13 +7,11 @@ import {
   CarouselNext,
   CarouselPrevious
 } from '@/components/ui/carousel';
-import { kumbh_sans } from '@/app/ui/fonts';
 import { VisualBoardItem } from '@/lib/types';
-import { tagButtonLink, tagClass } from './cards';
+import { tagClass } from './cards';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import Autoplay from 'embla-carousel-autoplay';
-import { SquareArrowOutUpRight } from 'lucide-react';
 
 export default function CardVisionBoard({
   visionBoardItems
@@ -42,11 +40,6 @@ export default function CardVisionBoard({
                     alt={`Picture of ${item.name}`}
                     className="object-cover w-60 h-60 group-hover:opacity-100"
                   />
-                  {/* <p
-                    className={`${kumbh_sans.className} bg-white text-left uppercase text-sm leading-none absolute bottom-0 left-2 px-2 py-1`}
-                  >
-                    {item.name}
-                  </p> */}
                 </div>
               </CarouselItem>
             ))}

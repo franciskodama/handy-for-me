@@ -12,23 +12,31 @@ import {
   CardTitle
 } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { LocationProps, User, VisualBoardItem } from '@/lib/types';
+import {
+  BucketListItem,
+  LocationProps,
+  User,
+  VisualBoardItem
+} from '@/lib/types';
 import { kumbh_sans } from '@/app/ui/fonts';
 import { CardWeather } from './card-weather';
 import CardUser from './card-user';
 import { CardFunFact } from './card-fun-fact';
 import CardVisionBoard from './card-vision-board';
+import CardBucketList from './card-bucket-list';
 
 export default function In({
   user,
   location,
   weather,
-  visionBoardItems
+  visionBoardItems,
+  bucketListItems
 }: {
   user: User | undefined;
   location: LocationProps | null;
   weather: any;
   visionBoardItems: VisualBoardItem[];
+  bucketListItems: BucketListItem[];
 }) {
   // const [openAction, setOpenAction] = useState(false);
 
@@ -101,21 +109,22 @@ export default function In({
           </>
 
           {/* ----------------------- Second Row ----------------------- */}
-          <div className="flex flex-col sm:flex-row w-full gap-8 mb-12">
+          <div className="flex flex-col sm:flex-row w-full gap-24 sm:gap-8 mb-12">
             <div className="flex justify-center sm:w-1/3">
               {visionBoardItems ? (
                 <CardVisionBoard visionBoardItems={visionBoardItems} />
               ) : (
-                // <p>No data</p>
                 <p>No data</p>
               )}
             </div>
-            <div className="flex justify-center sm:w-1/3 border-2">
-              Second Row
+            <div className="flex justify-center sm:w-1/3">
+              {visionBoardItems ? (
+                <CardBucketList bucketListItems={bucketListItems} />
+              ) : (
+                <p>No data</p>
+              )}
             </div>
-            <div className="flex justify-center sm:w-1/3 border-2">
-              Third Row
-            </div>
+            <div className="flex justify-center sm:w-1/3">Third Row</div>
           </div>
 
           {/* ----------------------- Second Row ----------------------- */}
