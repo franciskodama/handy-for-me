@@ -15,6 +15,7 @@
 // https://analytics.google.com/analytics/web/#/p391507835/reports/intelligenthome?params=_u..nav%3Dmaui
 // https://www.youtube.com/results?search_query=google+analytics+nextjs+14
 
+// Shortcut on Dashboard
 // TO DO of the week: show on Dashboard
 // Cities I've visited Feature
 // Vision board: zoom library

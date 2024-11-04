@@ -1,17 +1,8 @@
-import Image from 'next/image';
-
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious
-} from '@/components/ui/carousel';
-import { BucketListItem } from '@/lib/types';
-import { tagClass } from './cards';
-import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import Autoplay from 'embla-carousel-autoplay';
+
+import { tagClass } from './cards';
+import { BucketListItem } from '@/lib/types';
+import { Button } from '@/components/ui/button';
 import { bucketListCategories } from '../bucket-list/bucket-list';
 
 export default function CardBucketList({
@@ -23,7 +14,7 @@ export default function CardBucketList({
     const foundCategory = bucketListCategories.find(
       (item: any) => item.name === category
     );
-    const bgColorCode = foundCategory?.bgColor || '#000000';
+    const bgColorCode = foundCategory?.bgColor || '#0F1739';
     const textColorCode = foundCategory?.textColor || '#FFF';
 
     return { color: textColorCode, backgroundColor: bgColorCode };
