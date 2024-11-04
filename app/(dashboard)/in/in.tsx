@@ -15,6 +15,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   BucketListItem,
   LocationProps,
+  Shortcut,
   User,
   VisualBoardItem
 } from '@/lib/types';
@@ -24,19 +25,22 @@ import CardUser from './card-user';
 import { CardFunFact } from './card-fun-fact';
 import CardVisionBoard from './card-vision-board';
 import CardBucketList from './card-bucket-list';
+import CardShortcuts from './card-shortcuts';
 
 export default function In({
   user,
   location,
   weather,
   visionBoardItems,
-  bucketListItems
+  bucketListItems,
+  shortcutsItems
 }: {
   user: User | undefined;
   location: LocationProps | null;
   weather: any;
   visionBoardItems: VisualBoardItem[];
   bucketListItems: BucketListItem[];
+  shortcutsItems: Shortcut[];
 }) {
   // const [openAction, setOpenAction] = useState(false);
 
@@ -118,13 +122,19 @@ export default function In({
               )}
             </div>
             <div className="flex justify-center sm:w-1/3">
+              {shortcutsItems ? (
+                <CardShortcuts shortcutsItems={shortcutsItems} />
+              ) : (
+                <p>No data</p>
+              )}
+            </div>
+            <div className="flex justify-center sm:w-1/3">
               {visionBoardItems ? (
                 <CardBucketList bucketListItems={bucketListItems} />
               ) : (
                 <p>No data</p>
               )}
             </div>
-            <div className="flex justify-center sm:w-1/3">Third Row</div>
           </div>
 
           {/* ----------------------- Second Row ----------------------- */}
