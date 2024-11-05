@@ -33,7 +33,7 @@ import { AddShortcut } from './add-shortcut';
 import { AddCategory } from './add-category';
 import { Button } from '@/components/ui/button';
 import { deleteShortcut } from '@/lib/actions';
-import { colors } from '@/lib/utils';
+import { getColorCode } from '@/lib/utils';
 import MessageEmpty from '@/components/MessageEmpty';
 
 export type CategoryInput = {
@@ -104,15 +104,6 @@ export default function Shortcuts({
       }
       return newOpen;
     });
-  };
-
-  const getColorCode = (colorName: string) => {
-    const color = colors.find((c) => c.name.toUpperCase() === colorName);
-    const result = {
-      color: color?.foreground,
-      backgroundColor: color?.code
-    };
-    return result;
   };
 
   return (

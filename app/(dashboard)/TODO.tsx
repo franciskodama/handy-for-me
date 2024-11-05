@@ -6,17 +6,7 @@
 // primary color: 222.2 47.4% 11.2% --> rgba(15, 23, 57, 1) --> #0F1739
 // Alert Dialog Content Width for Mobile: w-[calc(100%-35px)]
 // Accent color in HEX: #DDF906 --> Adidas: '#f3f3e3'
-// style={{
-//     repeating-linear-gradient(
-//         45deg,
-//         transparent,
-//         transparent 2.5px,
-//         black 3px,
-//         black 3px,
-//         transparent 3px,
-//         transparent 3px
-//       ) 15 / 0.75rem
-//   }}
+// shadow-[0_0px_0px_0px_inset,#FFF_-3px_3px_0_-1px,#0F1739_-3px_3px]
 
 // TODO: WORKING ON
 // Install Analytics: https://support.google.com/analytics/answer/9304153#property
@@ -25,6 +15,7 @@
 // https://analytics.google.com/analytics/web/#/p391507835/reports/intelligenthome?params=_u..nav%3Dmaui
 // https://www.youtube.com/results?search_query=google+analytics+nextjs+14
 
+// On Bucket List Get Colores must be only one function (export)
 // TO DO of the week: show on Dashboard
 // Cities I've visited Feature
 // Vision board: zoom library
@@ -68,6 +59,7 @@
 // Button: https://medium.com/@dewamadewira25/how-to-make-a-neo-brutalism-button-using-tailwindcss-91d3faf2b269
 
 // TODO: DONE
+// Shortcut on Dashboard
 // Vision Board: fields not visible on mobile to see the vision board first
 // Weather Fix for Sunrise and Sunset
 // Nav Menu random question item was breaking the line

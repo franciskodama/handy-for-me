@@ -356,7 +356,7 @@ export const getShortcuts = async (uid: string) => {
     });
     return shortcuts;
   } catch (error) {
-    return { error };
+    return false;
   }
 };
 

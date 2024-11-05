@@ -26,6 +26,7 @@ import { DashboardBreadcrumb } from './header/breadcrumb';
 import Greeting from './header/greeting';
 import { Toaster } from '@/components/ui/toaster';
 import { NavItem } from '@/components/NavItem';
+import { SearchInput } from './header/search';
 
 export default function DashboardLayout({
   children
