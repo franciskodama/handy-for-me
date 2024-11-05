@@ -12,6 +12,7 @@
 
 // Close Quotes
 // Card Vision Board: Still too wide
+// Cards in Black an White, but users can toggle to see categories' colors
 
 // Install Analytics: https://support.google.com/analytics/answer/9304153#property
 // https://tagmanager.google.com/?authuser=0#/versions/accounts/6256123314/containers/199054622/versions/2

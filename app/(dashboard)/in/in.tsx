@@ -142,15 +142,12 @@ export default function In({
           <p
             className={`${kumbh_sans.className} uppercase font-bold text-xl leading-none mt-4`}
           >
-            fermentum
+            Weekly Wins
           </p>
           <div className="flex flex-col sm:flex-row w-full justify-between gap-8">
             <div className="stripe-border flex flex-col sm:w-1/3 items-center h-[10em] p-4">
               <p>
-                Vivamus elementum, eros quis varius fermentum. Vivamus
-                elementum, eros quis varius fermentum. Vivamus elementum, eros
-                quis varius fermentum. Vivamus elementum, eros quis varius
-                fermentum. Pellentesque est ante
+                Stay focused, track progress, and celebrate your wins each week!
               </p>
             </div>
             <div className="stripe-border flex flex-col sm:w-1/3 items-center h-[10em] p-4">
