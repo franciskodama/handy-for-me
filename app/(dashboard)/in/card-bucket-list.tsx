@@ -10,16 +10,6 @@ export default function CardBucketList({
 }: {
   bucketListItems: BucketListItem[];
 }) {
-  function getColorCodes(category: string) {
-    const foundCategory = bucketListCategories.find(
-      (item: any) => item.name === category
-    );
-    const bgColorCode = foundCategory?.bgColor || '#0F1739';
-    const textColorCode = foundCategory?.textColor || '#FFF';
-
-    return { color: textColorCode, backgroundColor: bgColorCode };
-  }
-
   const filteredBucketListItems = bucketListItems.filter(
     (item: BucketListItem) => !item.done
   );
@@ -49,4 +39,14 @@ export default function CardBucketList({
       </div>
     </>
   );
+}
+
+function getColorCodes(category: string) {
+  const foundCategory = bucketListCategories.find(
+    (item: any) => item.name === category
+  );
+  const bgColorCode = foundCategory?.bgColor || '#0F1739';
+  const textColorCode = foundCategory?.textColor || '#FFF';
+
+  return { color: textColorCode, backgroundColor: bgColorCode };
 }
