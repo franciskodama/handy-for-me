@@ -58,8 +58,8 @@ export async function getSpinLists(
     });
     return data;
   } catch (error) {
-    console.error('Error retrieving spin lists:', error);
-    return { error: 'Failed to retrieve spin lists.' };
+    console.error('Error retrieving lists:', error);
+    return { error: 'Failed to retrieve lists.' };
   }
 }
 
@@ -95,7 +95,7 @@ export async function addSpinItem(
     });
     return item;
   } catch (error) {
-    console.error('Error adding spin item:', error);
+    console.error('Error adding item:', error);
     return false;
   }
 }
@@ -173,7 +173,7 @@ export async function addVisualBoardItem(
     });
     return item;
   } catch (error) {
-    console.error('Error adding Affirmation item:', error);
+    console.error('Error adding Visual Board item:', error);
     return false;
   }
 }
@@ -187,7 +187,7 @@ export async function getVisualBoardItems(uid: string) {
     });
     return item;
   } catch (error) {
-    console.error('Error getting Affirmations Array:', error);
+    console.error('Error getting Visual Board Items:', error);
     return false;
   }
 }
@@ -255,7 +255,7 @@ export async function getBucketListItems(uid: string) {
     });
     return item;
   } catch (error) {
-    console.error('Error getting Affirmations Array:', error);
+    console.error('Error getting Bucket List Array:', error);
     return false;
   }
 }
@@ -418,5 +418,69 @@ export async function deleteShortcut(id: string) {
   } catch (error) {
     console.log(error);
     throw new Error('🚨 Failed to delete Shortcut');
+  }
+}
+
+export async function addWeeklyWin(uid: string, task: string, type: string) {
+  try {
+    const item = await prisma.weeklyWin.create({
+      data: {
+        id: v4(),
+        createdAt: new Date(),
+        uid,
+        task,
+        type,
+        done: false
+      }
+    });
+    return item;
+  } catch (error) {
+    console.error('Error adding Weekly Wins item:', error);
+    return false;
+  }
+}
+
+export async function getWeeklyWins(uid: string) {
+  try {
+    const item = await prisma.weeklyWin.findMany({
+      where: {
+        uid
+      }
+    });
+    return item;
+  } catch (error) {
+    console.error('Error getting Weekly Wins Array:', error);
+    return false;
+  }
+}
+
+export async function deleteWeeklyWin(id: string) {
+  try {
+    await prisma.weeklyWin.delete({
+      where: {
+        id
+      }
+    });
+    return true;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+}
+
+export async function setWeeklyWinDone(id: string, selection: boolean) {
+  try {
+    const check = await prisma.weeklyWin.update({
+      where: {
+        id
+      },
+      data: {
+        done: selection
+      }
+    });
+    return check;
+  } catch (error) {
+    console.error('Error setting check to the item:', error);
+    return null;
   }
 }

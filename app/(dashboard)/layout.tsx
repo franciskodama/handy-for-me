@@ -9,7 +9,8 @@ import {
   ListMinus,
   Menu,
   MessageCircleQuestion,
-  RefreshCw
+  RefreshCw,
+  Trophy
 } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
@@ -163,6 +164,11 @@ const menuItems = [
     label: 'Bucket List',
     href: '/bucket-list',
     icon: <ListMinus className="h-5 w-5" />
+  },
+  {
+    label: 'Weekly Wins',
+    href: '/weekly-wins',
+    icon: <Trophy className="h-5 w-5" />
   },
   {
     label: 'Decision Helper',

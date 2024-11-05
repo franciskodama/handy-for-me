@@ -50,7 +50,7 @@ export default function CardVisionBoard({
         <div className={tagClass}>Vision Board</div>
         <Button
           variant="ghost"
-          className="absolute bottom-6 sm:bottom-4 right-1/2 transform translate-x-1/2 sm:right-2 text-xs underline bg-white sm:bg-transparent p-1 h-4"
+          className="absolute bottom-6 right-1/2 transform translate-x-1/2 text-xs underline bg-white p-1 h-4"
         >
           <Link href="/vision-board">View All</Link>
         </Button>
