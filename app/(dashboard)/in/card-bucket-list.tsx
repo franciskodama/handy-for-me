@@ -21,7 +21,7 @@ export default function CardBucketList({
           {filteredBucketListItems.map((item: BucketListItem) => (
             <div key={item.id}>
               <p
-                className="text-sm sm:text-base px-1 py-1 font-semibold opacity-20 hover:opacity-100"
+                className="text-sm sm:text-base px-1 py-1 font-semibold"
                 style={getColorCodes(item.category)}
               >
                 {item.name}

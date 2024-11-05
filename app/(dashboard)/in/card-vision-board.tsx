@@ -22,7 +22,7 @@ export default function CardVisionBoard({
     <>
       <div className="relative flex justify-center items-center w-[calc(100%-50px)] sm:w-full p-4 sm:border sm:border-slate-300 sm:border-dashed">
         <Carousel
-          className="flex justify-center w-[18em] sm:w-full sm:max-w-sm"
+          className="flex justify-center w-[16em] sm:w-full sm:max-w-sm"
           plugins={[
             Autoplay({
               delay: 2000
@@ -50,7 +50,7 @@ export default function CardVisionBoard({
         <div className={tagClass}>Vision Board</div>
         <Button
           variant="ghost"
-          className="absolute bottom-6 sm:bottom-4 right-6 sm:right-2 text-xs underline bg-white sm:bg-transparent p-1 h-4"
+          className="absolute bottom-6 sm:bottom-4 right-1/2 transform translate-x-1/2 sm:right-2 text-xs underline bg-white sm:bg-transparent p-1 h-4"
         >
           <Link href="/vision-board">View All</Link>
         </Button>

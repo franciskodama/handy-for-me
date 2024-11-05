@@ -9,6 +9,10 @@
 // shadow-[0_0px_0px_0px_inset,#FFF_-3px_3px_0_-1px,#0F1739_-3px_3px]
 
 // TODO: WORKING ON
+
+// Close Quotes
+// Card Vision Board: Still too wide
+
 // Install Analytics: https://support.google.com/analytics/answer/9304153#property
 // https://tagmanager.google.com/?authuser=0#/versions/accounts/6256123314/containers/199054622/versions/2
 // https://marketingplatform.google.com/home?utm_campaign=SuiteHeader&utm_source=UniversalPicker&utm_medium=platformHomeButton&authuser=0
