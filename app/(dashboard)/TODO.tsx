@@ -15,7 +15,7 @@
 // https://analytics.google.com/analytics/web/#/p391507835/reports/intelligenthome?params=_u..nav%3Dmaui
 // https://www.youtube.com/results?search_query=google+analytics+nextjs+14
 
-// Shortcut on Dashboard
+// On Bucket List Get Colores must be only one function (export)
 // TO DO of the week: show on Dashboard
 // Cities I've visited Feature
 // Vision board: zoom library
@@ -59,6 +59,7 @@
 // Button: https://medium.com/@dewamadewira25/how-to-make-a-neo-brutalism-button-using-tailwindcss-91d3faf2b269
 
 // TODO: DONE
+// Shortcut on Dashboard
 // Vision Board: fields not visible on mobile to see the vision board first
 // Weather Fix for Sunrise and Sunset
 // Nav Menu random question item was breaking the line

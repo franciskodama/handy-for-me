@@ -27,11 +27,11 @@ export default function CardBucketList({
   return (
     <>
       <div className="relative w-full p-4 sm:border sm:border-slate-300 sm:border-dashed">
-        <div className="flex flex-wrap">
+        <div className="flex flex-wrap gap-1">
           {filteredBucketListItems.map((item: BucketListItem) => (
             <div key={item.id}>
               <p
-                className="text-sm sm:text-xl px-1 py-1 font-semibold"
+                className="text-sm sm:text-base px-1 py-1 font-semibold opacity-20 hover:opacity-100"
                 style={getColorCodes(item.category)}
               >
                 {item.name}
@@ -42,7 +42,7 @@ export default function CardBucketList({
         <div className={tagClass}>Bucket List</div>
         <Button
           variant="ghost"
-          className="absolute bottom-4 sm:bottom-4 right-6 sm:right-2 text-xs underline bg-white sm:bg-transparent p-1 h-4"
+          className="absolute -bottom-2 sm:bottom-4 right-6 sm:right-2 text-xs underline bg-white sm:bg-transparent p-1 h-4"
         >
           <Link href="/buclet-list">View All</Link>
         </Button>

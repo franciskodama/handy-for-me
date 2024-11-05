@@ -18,3 +18,12 @@ export const colors = [
   { name: 'Brown', code: '#A52A2A', foreground: '#FFFFFF' },
   { name: 'Black', code: '#000000', foreground: '#FFFFFF' }
 ];
+
+export const getColorCode = (colorName: string) => {
+  const color = colors.find((c) => c.name.toUpperCase() === colorName);
+  const result = {
+    color: color?.foreground,
+    backgroundColor: color?.code
+  };
+  return result;
+};
