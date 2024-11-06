@@ -1,15 +1,7 @@
 'use client';
 
-import Link from 'next/link';
 import { useActionState, useEffect, useState } from 'react';
-import {
-  ArrowDownWideNarrow,
-  ArrowUpWideNarrow,
-  Bomb,
-  Ghost,
-  MessageCircleX,
-  Trash2
-} from 'lucide-react';
+import { Bomb, Check, Edit, Ghost, Trash2 } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -38,15 +30,15 @@ import { barlow, kumbh_sans } from '@/app/ui/fonts';
 import { Button } from '@/components/ui/button';
 import {
   addWeeklyWin,
-  deleteShortcut,
   deleteWeeklyWin,
   getWeeklyWins,
   setWeeklyWinDone
 } from '@/lib/actions';
-import { getColorCode } from '@/lib/utils';
 import MessageEmpty from '@/components/MessageEmpty';
 import { Input } from '@/components/ui/input';
 import ExplanationWeeklyWins from './explanation-weekly-wins';
+
+type WeeklyWinsTypes = 'Easy' | 'Moderate' | 'Challenging';
 
 const handleSubmit = async (previousState: unknown, formData: FormData) => {
   const task = formData.get('task') as string;
@@ -62,13 +54,13 @@ const handleSubmit = async (previousState: unknown, formData: FormData) => {
     return;
   }
 
-  // if (!type) {
-  //   toast({
-  //     title: 'Type is required!',
-  //     description: 'And the image URL should be sourced from Unsplash, ok?',
-  //     variant: 'destructive'
-  //   });
-  // }
+  if (!type) {
+    toast({
+      title: 'Type is required!',
+      description: 'And the image URL should be sourced from Unsplash, ok?',
+      variant: 'destructive'
+    });
+  }
 
   const weeklyWin = await addWeeklyWin(uid, task, type);
   if (!weeklyWin) {
@@ -99,29 +91,34 @@ export default function WeeklyWins({
   weeklyWins: WeeklyWin[];
 }) {
   const [openAction, setOpenAction] = useState(false);
-  // const [board, setBoard] = useState<WeeklyWin[]>([]);
-
   const [currentWeeklyWins, setCurrentWeeklyWins] =
     useState<WeeklyWin[]>(weeklyWins);
   const [data, action, isPending] = useActionState(handleSubmit, undefined);
 
-  const board: WeeklyWin[][] = Object.values(
-    currentWeeklyWins.reduce(
-      (acc: Record<string, WeeklyWin[]>, curr: WeeklyWin) => {
-        if (acc[curr.type]) {
-          acc[curr.type].push(curr);
-        } else {
-          acc[curr.type] = [curr];
-        }
-        return acc;
-      },
-      {}
-    )
-  );
+  const weeklyWinsTypes: WeeklyWinsTypes[] = [
+    'Easy',
+    'Moderate',
+    'Challenging'
+  ];
+  const weeklyWinsTypesColors: Record<WeeklyWinsTypes, string> = {
+    Easy: 'bg-green-500',
+    Moderate: 'bg-yellow-500',
+    Challenging: 'bg-red-500'
+  };
+
+  const weeklyWinsTypesColorsDone: Record<string, string> = {
+    Easy: 'bg-green-200',
+    Moderate: 'bg-yellow-100',
+    Challenging: 'bg-red-200'
+  };
+
+  const board: WeeklyWin[][] = weeklyWinsTypes
+    .map((type) => currentWeeklyWins.filter((win) => win.type === type))
+    .filter((group) => group.length > 0);
 
   useEffect(() => {
     if (data?.newWeeklyWin && Array.isArray(data.newWeeklyWin)) {
-      setBoard(data.newWeeklyWin as WeeklyWin[]);
+      setCurrentWeeklyWins(data.newWeeklyWin as WeeklyWin[]);
     }
   }, [data]);
 
@@ -148,53 +145,39 @@ export default function WeeklyWins({
     }
   };
 
-  // const handleCheck = async (weeklyWin: WeeklyWin) => {
-  //   try {
-  //     const success = await setWeeklyWinDone(weeklyWin.id, !weeklyWin.done);
-  //     if (success) {
-  //       setBoard((prevBoard) =>
-  //         prevBoard.map((boardItem) =>
-  //           boardItem.id === weeklyWin.id
-  //             ? { ...boardItem, done: !boardItem.done }
-  //             : boardItem
-  //         )
-  //       );
-  //     }
-  //     toast({
-  //       title: 'Weekly Win Progress Updated! 🌟',
-  //       description: `"${weeklyWin.task}" has been marked as ${weeklyWin.done ? 'incomplete' : 'achieved'}. Keep up the good work!`,
-  //       variant: 'success'
-  //     });
-  //   } catch (error) {
-  //     console.error(error);
-  //     toast({
-  //       title: 'Error changing Status! 🚨',
-  //       description:
-  //         'Something went wrong while changing the Status of this Item.',
-  //       variant: 'destructive'
-  //     });
-  //   }
-  // };
-
-  const toggleDescription = (shortcutId: string) => {
-    // setOpenDescriptions((prevOpen) => {
-    //   const newOpen = new Set(prevOpen);
-    //   if (newOpen.has(shortcutId)) {
-    //     newOpen.delete(shortcutId);
-    //   } else {
-    //     newOpen.add(shortcutId);
-    //   }
-    //   return newOpen;
-    // });
+  const handleCheck = async (weeklyWin: WeeklyWin) => {
+    try {
+      const success = await setWeeklyWinDone(weeklyWin.id, !weeklyWin.done);
+      if (success) {
+        setCurrentWeeklyWins((prevBoard) =>
+          prevBoard.map((boardItem) =>
+            boardItem.id === weeklyWin.id
+              ? { ...boardItem, done: !boardItem.done }
+              : boardItem
+          )
+        );
+      }
+      toast({
+        title: 'Weekly Win Progress Updated! 🌟',
+        description: `"${weeklyWin.task}" has been marked as ${weeklyWin.done ? 'incomplete' : 'achieved'}. Keep up the good work!`,
+        variant: 'success'
+      });
+    } catch (error) {
+      console.error(error);
+      toast({
+        title: 'Error changing Status! 🚨',
+        description:
+          'Something went wrong while changing the Status of this Item.',
+        variant: 'destructive'
+      });
+    }
   };
-
-  const weeklyWinsTypes = ['Easy', 'Moderate', 'Challenging'];
 
   return (
     <Card>
       <CardHeader>
         <CardTitle className="flex flex-col sm:flex-row sm:justify-between items-start mb-0">
-          <div className="flex flex-col">
+          <div className="flex flex-col w-full">
             <div className="flex items-center justify-between">
               <p>Weekly Wins</p>
               <div className="block sm:hidden">
@@ -208,21 +191,20 @@ export default function WeeklyWins({
               and celebrate your wins each week!
             </p>
           </div>
-
           <div
-            className={`${barlow.className} flex gap-4 capitalize mt-8 sm:mt-0`}
+            className={`${barlow.className} flex gap-4 capitalize mt-8 sm:mt-0 w-full`}
           >
             <form
-              className="flex flex-col sm:flex-row items-start gap-4 sm:gap-2 font-normal"
+              className="flex flex-col sm:flex-row items-start gap-4 sm:gap-2 font-normal w-full"
               action={action}
             >
-              <div className="flex flex-col gap-1 w-full sm:w-2/5">
+              <div className="flex flex-col gap-1 w-full sm:w-[15ch]">
                 <Input placeholder="Goal" id="task" name="task" />
                 <p className="text-xs ml-4 lowercase">
                   <span className="uppercase">N</span>ame your Goal
                 </p>
               </div>
-              <div className="flex flex-col gap-1 w-full sm:w-2/5">
+              <div className="flex flex-col gap-1 w-full sm:w-[15ch]">
                 <Select name="type">
                   <SelectTrigger className="w-full">
                     <SelectValue placeholder="Type" id="type" />
@@ -252,16 +234,9 @@ export default function WeeklyWins({
               </Button>
             </form>
           </div>
-
-          {/* <div className="hidden sm:block">
-            <FormWeeklyWins
-              action={action}
-              setOpenAction={setOpenAction}
-              isPending={isPending}
-              uid={uid}
-              openAction={openAction}
-            />
-          </div> */}
+          <div className="hidden sm:block">
+            {!openAction ? <Help setOpenAction={setOpenAction} /> : <div />}
+          </div>
         </CardTitle>
       </CardHeader>
       <CardContent className="relative p-6">
@@ -298,57 +273,44 @@ export default function WeeklyWins({
             />
           </div>
         )}
-        <div className="flex flex-col sm:flex-row w-full gap-8">
+        <div className="flex flex-col sm:flex-row w-full justify-center gap-8 mb-20">
           {board.map((groupOfWins: WeeklyWin[]) => (
-            <div key={groupOfWins[0].type} className="sm:w-1/5">
+            <div key={groupOfWins[0].type} className="sm:w-1/3 mt-4">
               <h3
-                className={`${kumbh_sans.className} text-left text-sm font-semibold text-primary px-4 py-3 my-2 uppercase leading-none`}
-                // style={getColorCode(
-                //   groupOfShortcuts[0].category?.color ?? 'grey'
-                // )}
+                className={`${kumbh_sans.className} ${weeklyWinsTypesColors[groupOfWins[0].type as WeeklyWinsTypes]} text-white text-left text-sm font-semibold text-primary px-4 py-3 my-2 uppercase leading-none`}
               >
                 {groupOfWins[0].type}
               </h3>
-
               {groupOfWins.map((win: WeeklyWin) => (
                 <>
-                  <div key={win.id} className="flex border border-primary mt-2">
+                  <div
+                    key={win.id}
+                    className={`${win.done && weeklyWinsTypesColorsDone[win.type]} flex border border-primary mt-2`}
+                  >
                     <div className="w-full px-4 py-3">
-                      {/* <Link
-                        href={win.url}
-                        target="_blank"
-                        className="w-full"
-                      > */}
-                      <p className="text-left uppercase text-sm leading-none">
+                      <p
+                        className={`${win.done && 'line-through'} text-left uppercase text-sm leading-none`}
+                      >
                         {win.task}
                       </p>
-                      {/* </Link> */}
                     </div>
-
-                    <Button
-                      variant="ghost"
-                      onClick={() => {
-                        toggleDescription(win.id);
-                      }}
-                    >
-                      {/* {openDescriptions.has(win.id) ? (
-                        <ArrowUpWideNarrow
-                          size={18}
-                          strokeWidth={1.8}
-                          color="#000"
-                        />
-                      ) : (
-                        <ArrowDownWideNarrow
-                          size={18}
-                          strokeWidth={1.8}
-                          color="#000"
-                        />
-                      )} */}
+                    <Button variant="ghost" onClick={() => handleCheck(win)}>
+                      <Check
+                        size={18}
+                        strokeWidth={1.8}
+                        color="#000"
+                        // color={win.done ? '#FFF' : '#000'}
+                      />
                     </Button>
 
                     <AlertDialog>
                       <AlertDialogTrigger className="px-2 py-1 mr-4">
-                        <Trash2 size={18} strokeWidth={1.8} color="#000" />
+                        <Trash2
+                          size={18}
+                          strokeWidth={1.8}
+                          color="#000"
+                          // color={win.done ? '#FFF' : '#000'}
+                        />
                       </AlertDialogTrigger>
                       <AlertDialogContent className="w-[calc(100%-35px)]">
                         <AlertDialogHeader>
@@ -383,36 +345,6 @@ export default function WeeklyWins({
                       </AlertDialogContent>
                     </AlertDialog>
                   </div>
-
-                  {/* <AnimatePresence>
-                    {openDescriptions.has(win.id) ? (
-                      <motion.div
-                        layout
-                        initial={{ opacity: 0, y: 0, scale: 0.3 }}
-                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                        exit={{
-                          opacity: 0,
-                          scale: 0.5,
-                          transition: { duration: 0.1 }
-                        }}
-                      >
-                        <div className="px-4 py-2 bg-primary text-white text-xs font-semibold">
-                          {shortcut.description ? (
-                            shortcut.description
-                          ) : (
-                            <div className="flex items-center ml-1">
-                              <MessageCircleX
-                                size={18}
-                                strokeWidth={1.8}
-                                color="#fff"
-                              />
-                              <p className="ml-2">No description available.</p>
-                            </div>
-                          )}
-                        </div>
-                      </motion.div>
-                    ) : null}
-                  </AnimatePresence> */}
                 </>
               ))}
             </div>
@@ -422,55 +354,3 @@ export default function WeeklyWins({
     </Card>
   );
 }
-
-// function FormWeeklyWins({
-//   action,
-//   setOpenAction,
-//   isPending,
-//   uid,
-//   openAction
-// }: {
-//   action: (payload: FormData) => void;
-//   setOpenAction: (value: boolean) => void;
-//   isPending: boolean;
-//   uid: string;
-//   openAction: boolean;
-// }) {
-//   return (
-//     <>
-//       <div
-//         className={`${barlow.className} flex gap-4 capitalize mt-4 mb-12 sm:mb-0 sm:mt-0`}
-//       >
-//         <form
-//           className="flex flex-col sm:flex-row items-start gap-4 sm:gap-2 font-normal"
-//           action={action}
-//         >
-//           <div className="flex flex-col gap-1 w-full sm:w-2/5">
-//             <Input placeholder="Goal" id="task" name="task" />
-//             <p className="text-xs ml-4 lowercase">
-//               <span className="uppercase">N</span>ame your Weekly Win
-//             </p>
-//           </div>
-//           <div className="flex flex-col gap-1 w-full sm:w-2/5">
-//             <Input placeholder="Type" id="url" name="url" />
-//             <p className="text-xs ml-4 lowercase">
-//               <span className="uppercase">A</span>dd the URL of a picture from
-//               <Link
-//                 className="mx-1 font-bold underline"
-//                 href="https://unsplash.com/"
-//                 target="_blank"
-//               >
-//                 <span className="uppercase">U</span>nsplash
-//               </Link>
-//               that reflects your vision. *
-//             </p>
-//           </div>
-//           <Input id="uid" name="uid" value={uid} readOnly className="hidden" />
-//           <Button type="submit" disabled={isPending} className="ml-2">
-//             {isPending ? 'Adding...' : 'Add'}
-//           </Button>
-//         </form>
-//       </div>
-//     </>
-//   );
-// }
