@@ -1,18 +1,17 @@
 'use client';
 
-import Link from 'next/link';
-import { useState } from 'react';
-import {
-  ArrowDownWideNarrow,
-  ArrowUpWideNarrow,
-  Bomb,
-  Ghost,
-  MessageCircleX,
-  Trash2
-} from 'lucide-react';
+import { useActionState, useEffect, useState } from 'react';
+import { Bomb, Check, Edit, Ghost, Trash2 } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from '@/components/ui/select';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -24,76 +23,163 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger
 } from '@/components/ui/alert-dialog';
-import { Shortcut, ShortcutCategory } from '@/lib/types';
+import { Shortcut, ShortcutCategory, WeeklyWin } from '@/lib/types';
 import Help from '@/components/Help';
 import { toast } from '@/hooks/use-toast';
 import { barlow, kumbh_sans } from '@/app/ui/fonts';
 import { Button } from '@/components/ui/button';
-import { deleteShortcut } from '@/lib/actions';
-import { getColorCode } from '@/lib/utils';
+import {
+  addWeeklyWin,
+  deleteWeeklyWin,
+  getWeeklyWins,
+  setWeeklyWinDone
+} from '@/lib/actions';
 import MessageEmpty from '@/components/MessageEmpty';
+import { Input } from '@/components/ui/input';
+import ExplanationWeeklyWins from './explanation-weekly-wins';
 
-export default function WeeklyWins({ weeklyWins }: { weeklyWins: any[] }) {
+type WeeklyWinsTypes = 'Easy' | 'Moderate' | 'Challenging';
+
+const handleSubmit = async (previousState: unknown, formData: FormData) => {
+  const task = formData.get('task') as string;
+  const type = formData.get('type') as string;
+  const uid = formData.get('uid') as string;
+
+  if (task.length > 10) {
+    toast({
+      title: 'Maximum 10 characters!',
+      description: 'The task name should be at most 10 characters.',
+      variant: 'destructive'
+    });
+    return;
+  }
+
+  if (!type) {
+    toast({
+      title: 'Type is required!',
+      description: 'And the image URL should be sourced from Unsplash, ok?',
+      variant: 'destructive'
+    });
+  }
+
+  const weeklyWin = await addWeeklyWin(uid, task, type);
+  if (!weeklyWin) {
+    toast({
+      title: 'Ops...',
+      description: 'Something got wrong. 🚨 Try again.',
+      variant: 'destructive'
+    });
+  } else {
+    toast({
+      title: 'Weekly Win added successfully! 🎉',
+      description: 'You have one more goal to conquer.',
+      variant: 'success'
+    });
+  }
+  const newWeeklyWin = await getWeeklyWins(uid);
+
+  return {
+    newWeeklyWin
+  };
+};
+
+export default function WeeklyWins({
+  uid,
+  weeklyWins
+}: {
+  uid: string;
+  weeklyWins: WeeklyWin[];
+}) {
   const [openAction, setOpenAction] = useState(false);
-  //   const [currentWeeklyWins, setCurrentWeeklyWins] =
-  //     useState<WeeklyWins[]>(weeklyWins);
+  const [currentWeeklyWins, setCurrentWeeklyWins] =
+    useState<WeeklyWin[]>(weeklyWins);
+  const [data, action, isPending] = useActionState(handleSubmit, undefined);
 
-  //   const board: Shortcut[][] = Object.values(
-  //     currentWeeklyWins.reduce(
-  //       (acc: Record<string, Shortcut[]>, curr: Shortcut) => {
-  //         if (acc[curr.categoryId]) {
-  //           acc[curr.categoryId].push(curr);
-  //         } else {
-  //           acc[curr.categoryId] = [curr];
-  //         }
-  //         return acc;
-  //       },
-  //       {}
-  //     )
-  //   );
+  const weeklyWinsTypes: WeeklyWinsTypes[] = [
+    'Easy',
+    'Moderate',
+    'Challenging'
+  ];
+  const weeklyWinsTypesColors: Record<WeeklyWinsTypes, string> = {
+    Easy: 'bg-green-500',
+    Moderate: 'bg-yellow-500',
+    Challenging: 'bg-red-500'
+  };
 
-  //   const handleDeleteItem = async (shortcut: Shortcut) => {
-  //     try {
-  //       const success = await deleteShortcut(shortcut.id);
-  //       if (success) {
-  //         setCurrentShortcutsAction(
-  //           currentShortcuts.filter((el) => el.id !== shortcut.id)
-  //         );
-  //       }
-  //       toast({
-  //         title: 'Shortcut gone!',
-  //         description: `The ${shortcut.name} has been successfully deleted.`,
-  //         variant: 'success'
-  //       });
-  //     } catch (error) {
-  //       console.error(error);
-  //       toast({
-  //         title: 'Error deleting Shortcut! 🚨',
-  //         description: 'Something went wrong while deleting the Shortcut.',
-  //         variant: 'destructive'
-  //       });
-  //     }
-  //   };
+  const weeklyWinsTypesColorsDone: Record<string, string> = {
+    Easy: 'bg-green-200',
+    Moderate: 'bg-yellow-100',
+    Challenging: 'bg-red-200'
+  };
 
-  const toggleDescription = (shortcutId: string) => {
-    // setOpenDescriptions((prevOpen) => {
-    //   const newOpen = new Set(prevOpen);
-    //   if (newOpen.has(shortcutId)) {
-    //     newOpen.delete(shortcutId);
-    //   } else {
-    //     newOpen.add(shortcutId);
-    //   }
-    //   return newOpen;
-    // });
+  const board: WeeklyWin[][] = weeklyWinsTypes
+    .map((type) => currentWeeklyWins.filter((win) => win.type === type))
+    .filter((group) => group.length > 0);
+
+  useEffect(() => {
+    if (data?.newWeeklyWin && Array.isArray(data.newWeeklyWin)) {
+      setCurrentWeeklyWins(data.newWeeklyWin as WeeklyWin[]);
+    }
+  }, [data]);
+
+  const handleDeleteItem = async (weeklyWin: WeeklyWin) => {
+    try {
+      const success = await deleteWeeklyWin(weeklyWin.id);
+      if (success) {
+        setCurrentWeeklyWins(
+          currentWeeklyWins.filter((el) => el.id !== weeklyWin.id)
+        );
+      }
+      toast({
+        title: 'Weekly Wins Task gone!',
+        description: `Deleted task: ${weeklyWin.task}!`,
+        variant: 'success'
+      });
+    } catch (error) {
+      console.error(error);
+      toast({
+        title: 'Error deleting Task! 🚨',
+        description: 'Something went wrong while deleting this Task.',
+        variant: 'destructive'
+      });
+    }
+  };
+
+  const handleCheck = async (weeklyWin: WeeklyWin) => {
+    try {
+      const success = await setWeeklyWinDone(weeklyWin.id, !weeklyWin.done);
+      if (success) {
+        setCurrentWeeklyWins((prevBoard) =>
+          prevBoard.map((boardItem) =>
+            boardItem.id === weeklyWin.id
+              ? { ...boardItem, done: !boardItem.done }
+              : boardItem
+          )
+        );
+      }
+      toast({
+        title: 'Weekly Win Progress Updated! 🌟',
+        description: `"${weeklyWin.task}" has been marked as ${weeklyWin.done ? 'incomplete' : 'achieved'}. Keep up the good work!`,
+        variant: 'success'
+      });
+    } catch (error) {
+      console.error(error);
+      toast({
+        title: 'Error changing Status! 🚨',
+        description:
+          'Something went wrong while changing the Status of this Item.',
+        variant: 'destructive'
+      });
+    }
   };
 
   return (
     <Card>
-      {/* <CardHeader>
+      <CardHeader>
         <CardTitle className="flex flex-col sm:flex-row sm:justify-between items-start mb-0">
-          <div className="flex flex-col">
+          <div className="flex flex-col w-full">
             <div className="flex items-center justify-between">
-              <p>Shorcuts</p>
+              <p>Weekly Wins</p>
               <div className="block sm:hidden">
                 {!openAction ? <Help setOpenAction={setOpenAction} /> : <div />}
               </div>
@@ -101,25 +187,52 @@ export default function WeeklyWins({ weeklyWins }: { weeklyWins: any[] }) {
             <p
               className={`${barlow.className} text-sm font-normal lowercase mt-2`}
             >
-              <span className="uppercase">Y</span>our go-to place for quick
-              access to your favorite sites.
+              <span className="uppercase">S</span>tay focused, track progress,
+              and celebrate your wins each week!
             </p>
           </div>
           <div
-            className={`${barlow.className} flex gap-4 capitalize mt-8 sm:mt-0 w-full sm:w-[18ch]`}
+            className={`${barlow.className} flex gap-4 capitalize mt-8 sm:mt-0 w-full`}
           >
-            <div className="flex gap-4 w-full">
-              <div className="w-1/2">
-                <AddCategory uid={uid} categories={categories} />
+            <form
+              className="flex flex-col sm:flex-row items-start gap-4 sm:gap-2 font-normal w-full"
+              action={action}
+            >
+              <div className="flex flex-col gap-1 w-full sm:w-[15ch]">
+                <Input placeholder="Goal" id="task" name="task" />
+                <p className="text-xs ml-4 lowercase">
+                  <span className="uppercase">N</span>ame your Goal
+                </p>
               </div>
-              <div className="w-1/2">
-                <AddShortcut
-                  uid={uid}
-                  categories={categories}
-                  setCurrentShortcutsAction={setCurrentShortcutsAction}
-                />
+              <div className="flex flex-col gap-1 w-full sm:w-[15ch]">
+                <Select name="type">
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Type" id="type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {weeklyWinsTypes.map((type: string) => (
+                      <div key={type}>
+                        <SelectItem value={type}>{type}</SelectItem>
+                      </div>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <p className="text-xs ml-4 lowercase">
+                  <span className="uppercase">C</span>
+                  hoose your task level
+                </p>
               </div>
-            </div>
+              <Input
+                id="uid"
+                name="uid"
+                value={uid}
+                readOnly
+                className="hidden"
+              />
+              <Button type="submit" disabled={isPending} className="ml-2">
+                {isPending ? 'Adding...' : 'Add'}
+              </Button>
+            </form>
           </div>
           <div className="hidden sm:block">
             {!openAction ? <Help setOpenAction={setOpenAction} /> : <div />}
@@ -136,7 +249,7 @@ export default function WeeklyWins({ weeklyWins }: { weeklyWins: any[] }) {
               exit={{ opacity: 0, scale: 0.5, transition: { duration: 0.2 } }}
             >
               <div className="mb-12">
-                <ExplanationShortcuts setOpenAction={setOpenAction} />
+                <ExplanationWeeklyWins setOpenAction={setOpenAction} />
               </div>
             </motion.div>
           ) : null}
@@ -145,75 +258,59 @@ export default function WeeklyWins({ weeklyWins }: { weeklyWins: any[] }) {
         {board.length < 1 && (
           <div className="mt-8">
             <MessageEmpty
-              image={'/shortcut-empty.webp'}
+              image={'/weekly-wins-empty.webp'}
               objectPosition={'50% 10%'}
               alt={'Looking for something'}
               icon={<Ghost size={32} strokeWidth={1.6} />}
               titleOne={'Oops...'}
-              titleTwo={'Shortcut Not Found'}
+              titleTwo={'Weekly Wins Not Found'}
               subtitle={
-                'Start by adding a category for easy organization, then save your first shortcut here. Get ready to access your favorites in a click!'
+                'Looks like your week is wide open! Ready to tackle some wins? Add a task or two and let’s get that progress bar moving!'
               }
               setOpenAction={setOpenAction}
-              buttonCopy={'Learn More'}
+              buttonCopy={'How do I start?'}
               hasButton={true}
             />
           </div>
         )}
-        <div className="flex flex-col sm:flex-row w-full gap-8">
-          {board.map((groupOfShortcuts: Shortcut[]) => (
-            <div key={groupOfShortcuts[0].categoryId} className="sm:w-1/5">
+        <div className="flex flex-col sm:flex-row w-full justify-center gap-8 mb-20">
+          {board.map((groupOfWins: WeeklyWin[]) => (
+            <div key={groupOfWins[0].type} className="sm:w-1/3 mt-4">
               <h3
-                className={`${kumbh_sans.className} text-left text-sm font-semibold text-primary px-4 py-3 my-2 uppercase leading-none`}
-                style={getColorCode(
-                  groupOfShortcuts[0].category?.color ?? 'grey'
-                )}
+                className={`${kumbh_sans.className} ${weeklyWinsTypesColors[groupOfWins[0].type as WeeklyWinsTypes]} text-white text-left text-sm font-semibold text-primary px-4 py-3 my-2 uppercase leading-none`}
               >
-                {groupOfShortcuts[0].category?.name}
+                {groupOfWins[0].type}
               </h3>
-
-              {groupOfShortcuts.map((shortcut: Shortcut) => (
+              {groupOfWins.map((win: WeeklyWin) => (
                 <>
                   <div
-                    key={shortcut.id}
-                    className="flex border border-primary mt-2"
+                    key={win.id}
+                    className={`${win.done && weeklyWinsTypesColorsDone[win.type]} flex border border-primary mt-2`}
                   >
                     <div className="w-full px-4 py-3">
-                      <Link
-                        href={shortcut.url}
-                        target="_blank"
-                        className="w-full"
+                      <p
+                        className={`${win.done && 'line-through'} text-left uppercase text-sm leading-none`}
                       >
-                        <p className="text-left uppercase text-sm leading-none">
-                          {shortcut.name}
-                        </p>
-                      </Link>
+                        {win.task}
+                      </p>
                     </div>
-
-                    <Button
-                      variant="ghost"
-                      onClick={() => {
-                        toggleDescription(shortcut.id);
-                      }}
-                    >
-                      {openDescriptions.has(shortcut.id) ? (
-                        <ArrowUpWideNarrow
-                          size={18}
-                          strokeWidth={1.8}
-                          color="#000"
-                        />
-                      ) : (
-                        <ArrowDownWideNarrow
-                          size={18}
-                          strokeWidth={1.8}
-                          color="#000"
-                        />
-                      )}
+                    <Button variant="ghost" onClick={() => handleCheck(win)}>
+                      <Check
+                        size={18}
+                        strokeWidth={1.8}
+                        color="#000"
+                        // color={win.done ? '#FFF' : '#000'}
+                      />
                     </Button>
 
                     <AlertDialog>
                       <AlertDialogTrigger className="px-2 py-1 mr-4">
-                        <Trash2 size={18} strokeWidth={1.8} color="#000" />
+                        <Trash2
+                          size={18}
+                          strokeWidth={1.8}
+                          color="#000"
+                          // color={win.done ? '#FFF' : '#000'}
+                        />
                       </AlertDialogTrigger>
                       <AlertDialogContent className="w-[calc(100%-35px)]">
                         <AlertDialogHeader>
@@ -223,9 +320,7 @@ export default function WeeklyWins({ weeklyWins }: { weeklyWins: any[] }) {
                           </AlertDialogTitle>
                           <AlertDialogDescription className="py-4">
                             This will permanently delete the vision
-                            <span className="font-bold mx-1">
-                              {shortcut.name}
-                            </span>
+                            <span className="font-bold mx-1">{win.task}</span>
                             from our servers.
                           </AlertDialogDescription>
                         </AlertDialogHeader>
@@ -242,7 +337,7 @@ export default function WeeklyWins({ weeklyWins }: { weeklyWins: any[] }) {
                             Cancel
                           </AlertDialogCancel>
                           <AlertDialogAction
-                            onClick={() => handleDeleteItem(shortcut)}
+                            onClick={() => handleDeleteItem(win)}
                           >
                             Continue
                           </AlertDialogAction>
@@ -250,42 +345,12 @@ export default function WeeklyWins({ weeklyWins }: { weeklyWins: any[] }) {
                       </AlertDialogContent>
                     </AlertDialog>
                   </div>
-
-                  <AnimatePresence>
-                    {openDescriptions.has(shortcut.id) ? (
-                      <motion.div
-                        layout
-                        initial={{ opacity: 0, y: 0, scale: 0.3 }}
-                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                        exit={{
-                          opacity: 0,
-                          scale: 0.5,
-                          transition: { duration: 0.1 }
-                        }}
-                      >
-                        <div className="px-4 py-2 bg-primary text-white text-xs font-semibold">
-                          {shortcut.description ? (
-                            shortcut.description
-                          ) : (
-                            <div className="flex items-center ml-1">
-                              <MessageCircleX
-                                size={18}
-                                strokeWidth={1.8}
-                                color="#fff"
-                              />
-                              <p className="ml-2">No description available.</p>
-                            </div>
-                          )}
-                        </div>
-                      </motion.div>
-                    ) : null}
-                  </AnimatePresence>
                 </>
               ))}
             </div>
           ))}
         </div>
-      </CardContent> */}
+      </CardContent>
     </Card>
   );
 }

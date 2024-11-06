@@ -85,3 +85,12 @@ model Shortcut {
   categoryId  String   
   category    ShortcutCategory @relation(fields: [categoryId], references: [id])
 }
+
+model WeeklyWin {
+  id        String   @id @default(uuid()) @db.VarChar(255)
+  createdAt DateTime @default(now()) @db.Timestamp(6)
+  uid       String   
+  task      String   
+  type      String
+  done      Boolean
+}

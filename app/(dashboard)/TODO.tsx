@@ -9,9 +9,8 @@
 // shadow-[0_0px_0px_0px_inset,#FFF_-3px_3px_0_-1px,#0F1739_-3px_3px]
 
 // TODO: WORKING ON
-
+// Weekly Wins
 // Close Quotes
-// Card Vision Board: Still too wide
 // Cards in Black an White, but users can toggle to see categories' colors
 
 // Install Analytics: https://support.google.com/analytics/answer/9304153#property
@@ -64,6 +63,7 @@
 // Button: https://medium.com/@dewamadewira25/how-to-make-a-neo-brutalism-button-using-tailwindcss-91d3faf2b269
 
 // TODO: DONE
+// Card Vision Board: Still too wide
 // Shortcut on Dashboard
 // Vision Board: fields not visible on mobile to see the vision board first
 // Weather Fix for Sunrise and Sunset

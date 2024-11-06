@@ -74,3 +74,12 @@ export type LocationProps = {
   region: string;
   country: string;
 };
+
+export type WeeklyWin = {
+  id: string;
+  createdAt: Date;
+  uid: string;
+  task: string;
+  type: string;
+  done: boolean;
+};
