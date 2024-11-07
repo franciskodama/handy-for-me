@@ -15,21 +15,21 @@ model User {
   createdAt DateTime @default(now()) @db.Timestamp(6)
 }
 
-model SpinList {
+model DecisionHelperList {
   id        String   @id @default(uuid()) @db.VarChar(255)
   createdAt DateTime @default(now()) @db.Timestamp(6)
   uid       String   
-  name      String   
-  items     SpinItem[]
+  list      String   
+  items     DecisionHelperItem[]
 }
 
-model SpinItem {
+model DecisionHelperItem {
   id        String   @id @default(uuid()) @db.VarChar(255)
   createdAt DateTime @default(now()) @db.Timestamp(6)
   uid       String   
-  name      String   
+  item      String   
   selected  Boolean   @default(true)
-  list      SpinList @relation(fields: [listId], references: [id])
+  list      DecisionHelperList @relation(fields: [listId], references: [id])
   listId    String
 }
 
@@ -37,17 +37,16 @@ model VisualBoardItem {
   id        String   @id @default(uuid()) @db.VarChar(255)
   createdAt DateTime @default(now()) @db.Timestamp(6)
   uid       String   
-  name      String   
+  item      String   
   url       String
   done      Boolean
 }
-
 
 model BucketListItem {
   id        String   @id @default(uuid()) @db.VarChar(255)
   createdAt DateTime @default(now()) @db.Timestamp(6)
   uid       String   
-  name      String   
+  item      String   
   category  String
   done      Boolean
 }
@@ -56,7 +55,7 @@ model ShortcutCategory {
   id        String   @id @default(uuid()) @db.VarChar(255)
   createdAt DateTime @default(now()) @db.Timestamp(6)
   uid       String   
-  name      String   
+  category  String   
   color     shortcut_color_enum    @default(GRAY)
   shortcuts Shortcut[]
 }
@@ -79,7 +78,7 @@ model Shortcut {
   id        String   @id @default(uuid()) @db.VarChar(255)
   createdAt DateTime @default(now()) @db.Timestamp(6)
   uid       String   
-  name      String   
+  shortcut  String   
   url       String
   description String @default("No description yet")
   categoryId  String   
@@ -90,7 +89,7 @@ model WeeklyWin {
   id        String   @id @default(uuid()) @db.VarChar(255)
   createdAt DateTime @default(now()) @db.Timestamp(6)
   uid       String   
-  task      String   
+  goal      String   
   type      String
   done      Boolean
 }

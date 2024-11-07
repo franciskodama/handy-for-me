@@ -13,8 +13,7 @@ import {
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger
+  AlertDialogTitle
 } from '@/components/ui/alert-dialog';
 import {
   Card,
@@ -32,12 +31,12 @@ import {
 } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { SpinList, SpinItem } from '@/lib/types';
+import { DecisionHelperItem, DecisionHelperList } from '@/lib/types';
 import {
-  addSpinItem,
-  addSpinList,
-  deleteSpinItem,
-  selectionSpinItem
+  addDecisionHelperItem,
+  addDecisionHelperList,
+  deleteDecisionHelperItem,
+  selectionDecisionHelperItem
 } from '@/lib/actions';
 import { Checkbox } from '@/components/ui/checkbox';
 import { kumbh_sans } from '@/app/ui/fonts';
@@ -57,11 +56,11 @@ export default function DecisionHelper({
   initialItems
 }: {
   uid: string;
-  initialLists: SpinList[];
-  initialItems: SpinItem[];
+  initialLists: DecisionHelperList[];
+  initialItems: DecisionHelperItem[];
 }) {
-  const [lists, setLists] = useState<SpinList[]>(initialLists);
-  const [allItems, setAllItems] = useState<SpinItem[]>(initialItems);
+  const [lists, setLists] = useState<DecisionHelperList[]>(initialLists);
+  const [allItems, setAllItems] = useState<DecisionHelperItem[]>(initialItems);
   const [listId, setListId] = useState<string>('');
   const [listInput, setListInput] = useState<string>('');
   const [itemInput, setItemInput] = useState<string>('');
@@ -76,9 +75,9 @@ export default function DecisionHelper({
 
   const handleCreateList = async () => {
     setPendingNewList(true);
-    const list = await addSpinList(uid, listInput);
+    const list = await addDecisionHelperList(uid, listInput);
     if (list) {
-      setLists([...lists, list as SpinList]);
+      setLists([...lists, list as DecisionHelperList]);
       setPendingNewList(false);
       setListInput('');
     }
@@ -86,30 +85,30 @@ export default function DecisionHelper({
 
   const handleCreateItem = async () => {
     setPendingNewItem(true);
-    const item = await addSpinItem(uid, listId, itemInput);
-    if (item) {
-      setAllItems([...allItems, item as SpinItem]);
+    const newItem = await addDecisionHelperItem(uid, listId, itemInput);
+    if (newItem) {
+      setAllItems([...allItems, newItem as DecisionHelperItem]);
       setPendingNewItem(false);
       setItemInput('');
     }
   };
 
   const handleItemSelection = async (id: string) => {
-    const success = await selectionSpinItem(id);
+    const success = await selectionDecisionHelperItem(id);
     if (success) {
       setAllItems(
-        allItems.map((item) => {
-          if (item.id === id) {
-            return { ...item, selected: !item.selected };
+        allItems.map((el) => {
+          if (el.id === id) {
+            return { ...el, selected: !el.selected };
           }
-          return item;
+          return el;
         })
       );
     }
   };
 
   const handleDeleteItem = async (id: string) => {
-    const success = await deleteSpinItem(id);
+    const success = await deleteDecisionHelperItem(id);
     if (success) {
       setAllItems(allItems.filter((item) => item.id !== id));
     }
@@ -118,7 +117,7 @@ export default function DecisionHelper({
   const handleSpin = () => {
     setSpinning(true);
     const randomIndex = Math.floor(Math.random() * itemsSelected.length);
-    const randomItem = itemsSelected[randomIndex].name;
+    const randomItem = itemsSelected[randomIndex].item;
     setTimeout(() => {
       setResult(randomItem);
       setSpinning(false);
@@ -178,10 +177,10 @@ export default function DecisionHelper({
                   <SelectValue placeholder="Choose a List" />
                 </SelectTrigger>
                 <SelectContent>
-                  {lists.map((item: SpinList) => (
-                    <div key={item.id}>
-                      {item.name && (
-                        <SelectItem value={item.id}>{item.name}</SelectItem>
+                  {lists.map((el: DecisionHelperList) => (
+                    <div key={el.id}>
+                      {el.list && (
+                        <SelectItem value={el.id}>{el.list}</SelectItem>
                       )}
                     </div>
                   ))}
@@ -206,20 +205,20 @@ export default function DecisionHelper({
             {items.length > 0 && (
               <div className="flex flex-col gap-2">
                 <p className="text-sm font-semibold mt-4">Items:</p>
-                {items.map((item: SpinItem) => (
+                {items.map((el: DecisionHelperItem) => (
                   <div
-                    key={item.id}
+                    key={el.id}
                     className="flex gap-2 items-center justify-between text-sm w-full border px-2"
                   >
-                    <p>{item.name}</p>
+                    <p>{el.item}</p>
                     <div className="flex items-center gap-4 pr-2">
                       <Checkbox
-                        checked={item.selected}
-                        onCheckedChange={() => handleItemSelection(item.id)}
+                        checked={el.selected}
+                        onCheckedChange={() => handleItemSelection(el.id)}
                       />
                       <Button
                         variant={'link'}
-                        onClick={() => handleDeleteItem(item.id)}
+                        onClick={() => handleDeleteItem(el.id)}
                       >
                         <Trash2 size={18} strokeWidth={1.6} />
                       </Button>
@@ -344,7 +343,7 @@ export default function DecisionHelper({
               </div>
             </div>
 
-            {/*handle deleteSpinList(id) */}
+            {/*handle deleteDecisionHelperList(id) */}
 
             {/* 
             <div className="w-[25em] mt-8">

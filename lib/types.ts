@@ -6,20 +6,20 @@ export type User = {
   image?: string | null;
 };
 
-export type SpinList = {
+export type DecisionHelperList = {
   uid: string;
   id: string;
-  name: string;
+  list: string;
   createdAt: Date;
-  items: SpinItem[];
+  items: DecisionHelperItem[];
 };
 
-export type SpinItem = {
+export type DecisionHelperItem = {
   uid: string;
   id: string;
   createdAt: Date;
   listId: string;
-  name: string;
+  item: string;
   selected: boolean;
 };
 
@@ -27,7 +27,7 @@ export type VisualBoardItem = {
   id: string;
   createdAt: Date;
   uid: string;
-  name?: string;
+  item?: string;
   url: string;
   done: boolean;
 };
@@ -36,7 +36,7 @@ export type BucketListItem = {
   id: string;
   createdAt: Date;
   uid: string;
-  name: string;
+  item: string;
   category: string;
   done: boolean;
 };
@@ -45,7 +45,7 @@ export type ShortcutCategory = {
   id: string;
   createdAt: Date;
   uid: string;
-  name: string;
+  category: string;
   color: shortcut_color_enum;
   shortcuts?: Shortcut[];
 };
@@ -54,7 +54,7 @@ export type Shortcut = {
   id: string;
   createdAt: Date;
   uid: string;
-  name: string;
+  shortcut: string;
   url: string;
   description: string;
   categoryId: string;
@@ -63,7 +63,7 @@ export type Shortcut = {
 
 export type AddShortcutParams = {
   uid: string;
-  name: string;
+  shortcut: string;
   url: string;
   description: string;
   categoryId: string;
@@ -79,7 +79,7 @@ export type WeeklyWin = {
   id: string;
   createdAt: Date;
   uid: string;
-  task: string;
+  goal: string;
   type: string;
   done: boolean;
 };
