@@ -9,6 +9,8 @@
 // shadow-[0_0px_0px_0px_inset,#FFF_-3px_3px_0_-1px,#0F1739_-3px_3px]
 
 // TODO: WORKING ON
+// No name fields for any feature: change all name to item, list, category...
+
 // Weekly Wins
 // Close Quotes
 // Cards in Black an White, but users can toggle to see categories' colors

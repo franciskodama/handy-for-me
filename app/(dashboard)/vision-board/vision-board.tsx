@@ -44,6 +44,15 @@ const handleSubmit = async (previousState: unknown, formData: FormData) => {
   const url = formData.get('url') as string;
   const uid = formData.get('uid') as string;
 
+  if (!item) {
+    toast({
+      title: 'Goal is required!',
+      description: 'What do you want to achieve?',
+      variant: 'destructive'
+    });
+    return;
+  }
+
   if (item.length > 10) {
     toast({
       title: 'Maximum 10 characters!',
@@ -378,7 +387,7 @@ function FormVisionBoard({
           action={action}
         >
           <div className="flex flex-col gap-1 w-full sm:w-2/5">
-            <Input placeholder="Goal" id="name" name="name" />
+            <Input placeholder="Goal" id="item" name="item" />
             <p className="text-xs ml-4 lowercase">
               <span className="uppercase">N</span>ame your goal in one word
               (optional).
