@@ -92,18 +92,20 @@ const handleSubmit = async (previousState: unknown, formData: FormData) => {
 
 export function AddCategory({
   uid,
-  categories
+  currentCategories,
+  setCurrentCategoriesAction
 }: {
   uid: string;
-  categories: ShortcutCategory[];
+  currentCategories: ShortcutCategory[];
+  setCurrentCategoriesAction: React.Dispatch<
+    React.SetStateAction<ShortcutCategory[]>
+  >;
 }) {
   const [data, action, isPending] = useActionState(handleSubmit, undefined);
-  const [currentCategories, setCurrentCategories] =
-    useState<ShortcutCategory[]>(categories);
 
   useEffect(() => {
     if (data?._currentCategories && Array.isArray(data._currentCategories)) {
-      setCurrentCategories(data._currentCategories);
+      setCurrentCategoriesAction(data._currentCategories);
     }
   }, [data]);
 
@@ -111,7 +113,7 @@ export function AddCategory({
     try {
       const success = await deleteShortcutCategory(category.id);
       if (success) {
-        setCurrentCategories(
+        setCurrentCategoriesAction(
           currentCategories.filter((el) => el.id !== category.id)
         );
       }

@@ -77,12 +77,12 @@ const handleSubmit = async (previousState: unknown, formData: FormData) => {
 
 export function AddShortcut({
   uid,
-  categories,
+  currentCategories,
   setCurrentShortcutsAction
 }: {
   uid: string;
-  categories: ShortcutCategory[];
-  setCurrentShortcutsAction: (shortcuts: Shortcut[]) => void;
+  currentCategories: ShortcutCategory[];
+  setCurrentShortcutsAction: React.Dispatch<React.SetStateAction<Shortcut[]>>;
 }) {
   const [data, action, isPending] = useActionState(handleSubmit, undefined);
 
@@ -140,7 +140,7 @@ export function AddShortcut({
                 <SelectValue placeholder="Category" id="category" />
               </SelectTrigger>
               <SelectContent>
-                {categories.map((category: ShortcutCategory) => (
+                {currentCategories.map((category: ShortcutCategory) => (
                   <div key={category.id}>
                     {category && (
                       <SelectItem value={category.id}>

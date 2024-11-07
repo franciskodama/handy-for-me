@@ -53,6 +53,8 @@ export default function Shortcuts({
   const [openAction, setOpenAction] = useState(false);
   const [currentShortcuts, setCurrentShortcutsAction] =
     useState<Shortcut[]>(shortcuts);
+  const [currentCategories, setCurrentCategoriesAction] =
+    useState<ShortcutCategory[]>(categories);
   const [openDescriptions, setOpenDescriptions] = useState<Set<string>>(
     new Set()
   );
@@ -129,12 +131,16 @@ export default function Shortcuts({
           >
             <div className="flex gap-4 w-full">
               <div className="w-1/2">
-                <AddCategory uid={uid} categories={categories} />
+                <AddCategory
+                  uid={uid}
+                  currentCategories={currentCategories}
+                  setCurrentCategoriesAction={setCurrentCategoriesAction}
+                />
               </div>
               <div className="w-1/2">
                 <AddShortcut
                   uid={uid}
-                  categories={categories}
+                  currentCategories={currentCategories}
                   setCurrentShortcutsAction={setCurrentShortcutsAction}
                 />
               </div>
