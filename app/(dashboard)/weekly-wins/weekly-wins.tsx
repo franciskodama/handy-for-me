@@ -45,10 +45,10 @@ const handleSubmit = async (previousState: unknown, formData: FormData) => {
   const type = formData.get('type') as string;
   const uid = formData.get('uid') as string;
 
-  if (task.length > 10) {
+  if (!task) {
     toast({
-      title: 'Maximum 10 characters!',
-      description: 'The task name should be at most 10 characters.',
+      title: 'Goal is required!',
+      description: 'What do you want to achieve in 7 days?',
       variant: 'destructive'
     });
     return;
@@ -57,7 +57,7 @@ const handleSubmit = async (previousState: unknown, formData: FormData) => {
   if (!type) {
     toast({
       title: 'Type is required!',
-      description: 'And the image URL should be sourced from Unsplash, ok?',
+      description: 'Is it an easy, moderate, or challenging goal?',
       variant: 'destructive'
     });
   }
@@ -118,6 +118,7 @@ export default function WeeklyWins({
 
   useEffect(() => {
     if (data?.newWeeklyWin && Array.isArray(data.newWeeklyWin)) {
+      ``;
       setCurrentWeeklyWins(data.newWeeklyWin as WeeklyWin[]);
     }
   }, [data]);
