@@ -53,10 +53,10 @@ type Category = {
 
 const handleSubmit = async (previousState: unknown, formData: FormData) => {
   const uid = formData.get('uid') as string;
-  const name = formData.get('name') as string;
+  const item = formData.get('item') as string;
   const category = formData.get('category') as string;
 
-  if (name.length < 3) {
+  if (item.length < 3) {
     toast({
       title: 'The name is too short!',
       description: `The name should be at least 3 characters.`,
@@ -65,7 +65,7 @@ const handleSubmit = async (previousState: unknown, formData: FormData) => {
     return;
   }
 
-  if (!name) {
+  if (!item) {
     toast({
       title: 'Name is required!',
       description: `No Adventure's name, no bucket list item.`,
@@ -84,7 +84,7 @@ const handleSubmit = async (previousState: unknown, formData: FormData) => {
     return;
   }
 
-  const BucketListItem = await addBucketListItem(uid, name, category);
+  const BucketListItem = await addBucketListItem(uid, item, category);
   if (!BucketListItem) {
     toast({
       title: 'Ops...',
@@ -137,15 +137,15 @@ export default function BucketList({
     }
   }, [data]);
 
-  const handleDeleteItem = async (item: BucketListItem) => {
+  const handleDeleteItem = async (el: BucketListItem) => {
     try {
-      const success = await deleteBucketListItem(item.id);
+      const success = await deleteBucketListItem(el.id);
       if (success) {
-        setBoard(board.filter((el) => el.id !== item.id));
+        setBoard(board.filter((element) => element.id !== el.id));
       }
       toast({
         title: 'Item gone!',
-        description: `The ${item.name} has been successfully deleted.`,
+        description: `The ${el.item} has been successfully deleted.`,
         variant: 'success'
       });
     } catch (error) {
@@ -158,13 +158,13 @@ export default function BucketList({
     }
   };
 
-  const handleCheck = async (item: BucketListItem) => {
+  const handleCheck = async (el: BucketListItem) => {
     try {
-      const success = await setBucketListItemDone(item.id, !item.done);
+      const success = await setBucketListItemDone(el.id, !el.done);
       if (success) {
         setBoard((prevBoard) =>
           prevBoard.map((boardItem) =>
-            boardItem.id === item.id
+            boardItem.id === el.id
               ? { ...boardItem, done: !boardItem.done }
               : boardItem
           )
@@ -172,7 +172,7 @@ export default function BucketList({
       }
       toast({
         title: 'Vision Progress Updated! 🌟',
-        description: `"${item.name}" has been marked as ${item.done ? 'incomplete' : 'achieved'}. Keep pushing towards your dreams!`,
+        description: `"${el.item}" has been marked as ${el.done ? 'incomplete' : 'achieved'}. Keep pushing towards your dreams!`,
         variant: 'success'
       });
     } catch (error) {
@@ -188,7 +188,7 @@ export default function BucketList({
 
   function getColorCodes(category: string) {
     const foundCategory = bucketListCategories.find(
-      (item: any) => item.name === category
+      (el: any) => el.name === category
     );
     const bgColorCode = foundCategory?.bgColor || '#000000';
     const textColorCode = foundCategory?.textColor || '#FFF';
@@ -222,7 +222,7 @@ export default function BucketList({
               action={action}
             >
               <div className="flex flex-col gap-1 w-full sm:w-2/5">
-                <Input placeholder="Adventure" id="name" name="name" />
+                <Input placeholder="Adventure" id="item" name="item" />
                 <p className="text-xs ml-4 lowercase">
                   <span className="uppercase">N</span>ame your adventure in one
                   word.
@@ -234,11 +234,9 @@ export default function BucketList({
                     <SelectValue placeholder="Category" id="category" />
                   </SelectTrigger>
                   <SelectContent>
-                    {bucketListCategories.map((category: Category) => (
-                      <div key={category.name}>
-                        <SelectItem value={category.name}>
-                          {category.name}
-                        </SelectItem>
+                    {bucketListCategories.map((el: Category) => (
+                      <div key={el.name}>
+                        <SelectItem value={el.name}>{el.name}</SelectItem>
                       </div>
                     ))}
                   </SelectContent>
@@ -301,32 +299,32 @@ export default function BucketList({
         )}
 
         <div className="flex flex-wrap gap-2 mt-12">
-          {board.map((item: BucketListItem) => (
-            <div key={item.id}>
+          {board.map((el: BucketListItem) => (
+            <div key={el.id}>
               <div className="relative group">
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger>
                       <p
                         className="text-center text-sm sm:text-xl px-4 py-1 font-semibold"
-                        style={getColorCodes(item.category)}
+                        style={getColorCodes(el.category)}
                       >
-                        {item.name}
+                        {el.item}
                       </p>
                     </TooltipTrigger>
                     <TooltipContent>
                       <p className="text-primary ml-2 capitalize font-light">
-                        {item.category}
+                        {el.category}
                       </p>
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
-                {item.done ? (
+                {el.done ? (
                   <>
                     <div
                       className="absolute bottom-1/2 translate-y-[calc(50%+2px)] left-0 opacity-70 h-[2px] w-full"
                       style={{
-                        backgroundColor: getColorCodes(item.category).color
+                        backgroundColor: getColorCodes(el.category).color
                       }}
                     />
                   </>
@@ -335,12 +333,12 @@ export default function BucketList({
                 <AlertDialog>
                   <AlertDialogTrigger
                     className="absolute bottom-full right-0 translate-y-0 opacity-0 group-hover:opacity-100 p-1 z-200"
-                    style={getColorCodes(item.category)}
+                    style={getColorCodes(el.category)}
                   >
                     <Trash2
                       size={18}
                       strokeWidth={1.8}
-                      color={getColorCodes(item.category).color}
+                      color={getColorCodes(el.category).color}
                     />
                   </AlertDialogTrigger>
                   <AlertDialogContent className="w-[calc(100%-35px)]">
@@ -351,7 +349,7 @@ export default function BucketList({
                       </AlertDialogTitle>
                       <AlertDialogDescription className="py-4">
                         This will permanently delete the adventure
-                        <span className="font-bold mx-1">{item.name}</span>
+                        <span className="font-bold mx-1">{el.item}</span>
                         from our servers.
                       </AlertDialogDescription>
                     </AlertDialogHeader>
@@ -367,7 +365,7 @@ export default function BucketList({
                       >
                         Cancel
                       </AlertDialogCancel>
-                      <AlertDialogAction onClick={() => handleDeleteItem(item)}>
+                      <AlertDialogAction onClick={() => handleDeleteItem(el)}>
                         Continue
                       </AlertDialogAction>
                     </AlertDialogFooter>
@@ -376,14 +374,14 @@ export default function BucketList({
 
                 <Button
                   className="absolute bottom-full left-0 -translate-y-0 opacity-0 group-hover:opacity-100 h-6 bg-white p-1 z-200"
-                  style={getColorCodes(item.category)}
-                  onClick={() => handleCheck(item)}
+                  style={getColorCodes(el.category)}
+                  onClick={() => handleCheck(el)}
                   variant={'link'}
                 >
                   <Check
                     size={18}
                     strokeWidth={1.8}
-                    color={getColorCodes(item.category).color}
+                    color={getColorCodes(el.category).color}
                   />
                 </Button>
               </div>

@@ -10,9 +10,6 @@
 
 // TODO: Nadgen Q.A.
 // After user Add a category for Shortcut, it has to be shown immediately on the Tab to Add a new Shortcut
-// Bucket List --> No name fields: change "name" field name
-// Letter Leap --> No name fields: change "name" field name
-// Random Question --> No name fields: change "name" field name
 // Weekly Wins: include Nadgen idea to set how many days a week + progress bar
 // Location: How do we get it and why Nadgen's location was wrong?
 // Is there a way to hide de content of the user in the database by cryptography?
@@ -21,11 +18,18 @@
 // Shortcut (but check other features): Error message needs to be directly on the Tabs with the fields, not on an Alert Dialog
 // Decision Helper: Add categories first on the left side
 // Build feature "My Words" (and "My Phrases") to practice and increase vocabulary
+// Responsivity for smallers screens of Laptops (Weather was tight on Nadgen's screen)
+// No content on the cards, no need to show the cards.
+// Weekly Wins on the Dashboard
+// Dashboard: Accordions?
+// Responsivity for Tablets?
 
 // DONE:
 // Vision Board --> No name fields: change "name" field name
 // Weekly Wins --> No name fields: change "name" field name
 // Decision Helper --> No name fields: change "name" field name
+// Bucket List --> No name fields: change "name" field name
+
 // Weekly Wins: Fix the limit of 10 characters
 
 // TODO: WORKING ON
