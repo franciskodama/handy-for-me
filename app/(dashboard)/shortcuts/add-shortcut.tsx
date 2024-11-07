@@ -23,13 +23,13 @@ import { toast } from '@/hooks/use-toast';
 import { addShortcut, getShortcuts } from '@/lib/actions';
 
 const handleSubmit = async (previousState: unknown, formData: FormData) => {
-  const name = formData.get('name') as string;
+  const shortcut = formData.get('shortcut') as string;
   const url = formData.get('url') as string;
   const categoryId = formData.get('category') as string;
   const description = (formData.get('description') || '') as string;
   const uid = formData.get('uid') as string;
 
-  if (name.length > 20) {
+  if (shortcut.length > 20) {
     toast({
       title: 'Maximum 20 characters!',
       description: 'The name should be at most 20 characters.',
@@ -47,15 +47,15 @@ const handleSubmit = async (previousState: unknown, formData: FormData) => {
     return;
   }
 
-  const shortcut = await addShortcut({
+  const newShortcut = await addShortcut({
     uid,
-    name,
+    shortcut,
     url,
     description,
     categoryId
   });
 
-  if (!shortcut) {
+  if (!newShortcut) {
     toast({
       title: 'Ops...',
       description: 'Something got wrong. 🚨 Try again.',
@@ -111,7 +111,7 @@ export function AddShortcut({
           className="flex flex-col items-start gap-8 font-normal"
         >
           <div className="flex flex-col gap-1 w-full">
-            <Input placeholder="Name" id="name" name="name" />
+            <Input placeholder="Shortcut Name" id="shortcut" name="shortcut" />
             <p className="text-xs ml-4 mt-1">
               Give your shortcut a memorable name.
             </p>
@@ -149,7 +149,7 @@ export function AddShortcut({
                             className="w-4 h-4 rounded-full"
                             style={{ backgroundColor: category.color }}
                           />
-                          <p className="capitalize">{category.name}</p>
+                          <p className="capitalize">{category.category}</p>
                         </div>
                       </SelectItem>
                     )}

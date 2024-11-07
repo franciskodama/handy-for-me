@@ -47,7 +47,7 @@ type Color = {
 };
 
 const handleSubmit = async (previousState: unknown, formData: FormData) => {
-  const name = formData.get('name') as string;
+  const category = formData.get('category') as string;
   const color = formData.get('color');
   const colorUppperCase =
     (typeof color === 'string' &&
@@ -55,7 +55,7 @@ const handleSubmit = async (previousState: unknown, formData: FormData) => {
     ('GREY' as shortcut_color_enum);
   const uid = formData.get('uid') as string;
 
-  if (name.length > 20) {
+  if (category.length > 20) {
     toast({
       title: 'Maximum 20 characters!',
       description: 'The name should be at most 20 characters.',
@@ -66,7 +66,7 @@ const handleSubmit = async (previousState: unknown, formData: FormData) => {
 
   const shortcutCategory = await addShortcutCategory({
     uid,
-    name,
+    category,
     colorUppperCase
   });
 
@@ -117,7 +117,7 @@ export function AddCategory({
       }
       toast({
         title: 'Category gone!',
-        description: `The ${category.name} has been successfully deleted.`,
+        description: `The ${category.category} has been successfully deleted.`,
         variant: 'success'
       });
     } catch (error) {
@@ -149,7 +149,7 @@ export function AddCategory({
           className="flex flex-col items-start gap-8 font-normal"
         >
           <div className="flex flex-col gap-1 w-full">
-            <Input placeholder="Name" id="name" name="name" />
+            <Input placeholder="Category Name" id="category" name="category" />
             <p className="text-xs ml-4 mt-1">Name your category in one word</p>
           </div>
           <div className="flex flex-col gap-1 w-full">
@@ -207,7 +207,7 @@ export function AddCategory({
                     }}
                   />
                   <p className="text-center text-sm capitalize">
-                    {category.name}
+                    {category.category}
                   </p>
                 </div>
                 <AlertDialog>
@@ -222,7 +222,9 @@ export function AddCategory({
                       </AlertDialogTitle>
                       <AlertDialogDescription className="py-4">
                         This will permanently delete this Category
-                        <span className="font-bold mx-1">{category.name}</span>
+                        <span className="font-bold mx-1">
+                          {category.category}
+                        </span>
                         from our servers.
                       </AlertDialogDescription>
                     </AlertDialogHeader>

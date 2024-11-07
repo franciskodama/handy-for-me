@@ -8,10 +8,27 @@
 // Accent color in HEX: #DDF906 --> Adidas: '#f3f3e3'
 // shadow-[0_0px_0px_0px_inset,#FFF_-3px_3px_0_-1px,#0F1739_-3px_3px]
 
-// TODO: WORKING ON
-// No name fields for any feature: change all name to item, list, category...
+// TODO: Nadgen Q.A.
+// After user Add a category for Shortcut, it has to be shown immediately on the Tab to Add a new Shortcut
+// Bucket List --> No name fields: change "name" field name
+// Letter Leap --> No name fields: change "name" field name
+// Random Question --> No name fields: change "name" field name
+// Weekly Wins: include Nadgen idea to set how many days a week + progress bar
+// Location: How do we get it and why Nadgen's location was wrong?
+// Is there a way to hide de content of the user in the database by cryptography?
+// Vision Board: Napoleon Hill's Quote on the top of the page
+// Bucket List: Nadgen likes it categorized in columns
+// Shortcut (but check other features): Error message needs to be directly on the Tabs with the fields, not on an Alert Dialog
+// Decision Helper: Add categories first on the left side
+// Build feature "My Words" (and "My Phrases") to practice and increase vocabulary
 
-// Weekly Wins
+// DONE:
+// Vision Board --> No name fields: change "name" field name
+// Weekly Wins --> No name fields: change "name" field name
+// Decision Helper --> No name fields: change "name" field name
+// Weekly Wins: Fix the limit of 10 characters
+
+// TODO: WORKING ON
 // Close Quotes
 // Cards in Black an White, but users can toggle to see categories' colors
 
@@ -65,6 +82,7 @@
 // Button: https://medium.com/@dewamadewira25/how-to-make-a-neo-brutalism-button-using-tailwindcss-91d3faf2b269
 
 // TODO: DONE
+// Weekly Wins: new feature
 // Card Vision Board: Still too wide
 // Shortcut on Dashboard
 // Vision Board: fields not visible on mobile to see the vision board first

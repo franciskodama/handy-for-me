@@ -37,7 +37,7 @@ import { getColorCode } from '@/lib/utils';
 import MessageEmpty from '@/components/MessageEmpty';
 
 export type CategoryInput = {
-  name: string;
+  category: string;
   color: string;
 };
 
@@ -81,7 +81,7 @@ export default function Shortcuts({
       }
       toast({
         title: 'Shortcut gone!',
-        description: `The ${shortcut.name} has been successfully deleted.`,
+        description: `The ${shortcut.shortcut} has been successfully deleted.`,
         variant: 'success'
       });
     } catch (error) {
@@ -188,7 +188,7 @@ export default function Shortcuts({
                   groupOfShortcuts[0].category?.color ?? 'grey'
                 )}
               >
-                {groupOfShortcuts[0].category?.name}
+                {groupOfShortcuts[0].category?.category}
               </h3>
 
               {groupOfShortcuts.map((shortcut: Shortcut) => (
@@ -204,7 +204,7 @@ export default function Shortcuts({
                         className="w-full"
                       >
                         <p className="text-left uppercase text-sm leading-none">
-                          {shortcut.name}
+                          {shortcut.shortcut}
                         </p>
                       </Link>
                     </div>
@@ -243,7 +243,7 @@ export default function Shortcuts({
                           <AlertDialogDescription className="py-4">
                             This will permanently delete the vision
                             <span className="font-bold mx-1">
-                              {shortcut.name}
+                              {shortcut.shortcut}
                             </span>
                             from our servers.
                           </AlertDialogDescription>
