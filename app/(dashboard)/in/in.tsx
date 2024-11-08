@@ -107,7 +107,10 @@ export default function In({
                 {weather && location ? (
                   <CardWeather location={location} weather={weather} />
                 ) : (
-                  <p>No data</p>
+                  <CardEmpty
+                    title="Weather"
+                    description="Ops... Weather data is out of reach. 👻 Check back soon!"
+                  />
                 )}
               </div>
             </div>
@@ -128,17 +131,27 @@ export default function In({
               )}
             </div>
             <div className="flex justify-center sm:w-1/3">
-              {shortcutsItems ? (
+              {shortcutsItems.length > 0 ? (
                 <CardShortcuts shortcutsItems={shortcutsItems} />
               ) : (
-                <p>No data</p>
+                <CardEmpty
+                  title="Shortcuts"
+                  description="No shortcuts saved yet? Add your top links here!"
+                  buttonText="Create My First Shortcut"
+                  url="shortcuts"
+                />
               )}
             </div>
             <div className="flex justify-center sm:w-1/3">
-              {visionBoardItems ? (
+              {bucketListItems.length > 0 ? (
                 <CardBucketList bucketListItems={bucketListItems} />
               ) : (
-                <p>No data</p>
+                <CardEmpty
+                  title="Bucket List"
+                  description="Add adventures to your Bucket List and watch them show up here!"
+                  buttonText="Build My Bucket List"
+                  url="bucket-list"
+                />
               )}
             </div>
           </div>
@@ -151,7 +164,7 @@ export default function In({
             <CardEmpty
               title="Weekly Wins"
               description=" Stay focused, track progress, and celebrate your wins each week!"
-              buttonText="Let's start this Week!"
+              buttonText="Start Planning Now!"
               url="weekly-wins"
             />
           )}

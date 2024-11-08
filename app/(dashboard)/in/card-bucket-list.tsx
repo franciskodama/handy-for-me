@@ -34,7 +34,7 @@ export default function CardBucketList({
           variant="ghost"
           className="absolute -bottom-2 sm:bottom-4 right-6 sm:right-2 text-xs underline bg-white sm:bg-transparent p-1 h-4"
         >
-          <Link href="/buclet-list">View All</Link>
+          <Link href="/bucket-list">View All</Link>
         </Button>
       </div>
     </>
