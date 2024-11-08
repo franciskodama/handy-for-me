@@ -1,6 +1,6 @@
 'use client';
 
-import { useActionState, useEffect, useState } from 'react';
+import { useActionState, useCallback, useEffect, useState } from 'react';
 import { Bomb, Inbox, Trash2 } from 'lucide-react';
 import { shortcut_color_enum } from '@prisma/client';
 
@@ -46,48 +46,9 @@ type Color = {
   foreground?: string;
 };
 
-const handleSubmit = async (previousState: unknown, formData: FormData) => {
-  const category = formData.get('category') as string;
-  const color = formData.get('color');
-  const colorUppperCase =
-    (typeof color === 'string' &&
-      (color.toUpperCase() as shortcut_color_enum)) ||
-    ('GREY' as shortcut_color_enum);
-  const uid = formData.get('uid') as string;
-
-  if (category.length > 20) {
-    toast({
-      title: 'Maximum 20 characters!',
-      description: 'The name should be at most 20 characters.',
-      variant: 'destructive'
-    });
-    return;
-  }
-
-  const shortcutCategory = await addShortcutCategory({
-    uid,
-    category,
-    colorUppperCase
-  });
-
-  if (!shortcutCategory) {
-    toast({
-      title: 'Ops...',
-      description: 'Something got wrong. 🚨 Try again.',
-      variant: 'destructive'
-    });
-  } else {
-    toast({
-      title: 'URL added successfully! 🎉',
-      description: 'You have one more Category to manage your shortcuts.',
-      variant: 'success'
-    });
-  }
-  const _currentCategories = await getShortcutsCategories(uid);
-
-  return {
-    _currentCategories
-  };
+type FormErrors = {
+  category?: string;
+  color?: string;
 };
 
 export function AddCategory({
@@ -101,6 +62,75 @@ export function AddCategory({
     React.SetStateAction<ShortcutCategory[]>
   >;
 }) {
+  const [open, setOpen] = useState(false);
+  const [formErrors, setFormErrors] = useState<FormErrors>({});
+
+  useEffect(() => {
+    if (!open) {
+      setFormErrors({});
+    }
+  }, [open]);
+
+  const handleSubmit = useCallback(
+    async (previousState: unknown, formData: FormData) => {
+      setFormErrors({});
+
+      const category = formData.get('category') as string;
+      const color = formData.get('color');
+      const colorUppperCase =
+        (typeof color === 'string' &&
+          (color.toUpperCase() as shortcut_color_enum)) ||
+        ('GREY' as shortcut_color_enum);
+      const uid = formData.get('uid') as string;
+
+      const errors: FormErrors = {};
+
+      if (!category) {
+        errors.category = 'Category name is required';
+      } else if (category.length > 20) {
+        errors.category = 'Category name should be 20 characters or fewer';
+      }
+
+      if (!color) {
+        errors.color = 'Please pick a color';
+      }
+
+      if (Object.keys(errors).length > 0) {
+        setFormErrors(errors);
+        return;
+      }
+
+      const shortcutCategory = await addShortcutCategory({
+        uid,
+        category,
+        colorUppperCase
+      });
+
+      if (!shortcutCategory) {
+        toast({
+          title: 'Ops...',
+          description: 'Something got wrong. 🚨 Try again.',
+          variant: 'destructive'
+        });
+        return;
+      }
+
+      setOpen(false);
+      toast({
+        title: 'URL added successfully! 🎉',
+        description: 'You have one more Category to manage your shortcuts.',
+        variant: 'success'
+      });
+
+      const _currentCategories = await getShortcutsCategories(uid);
+
+      return {
+        _currentCategories
+      };
+    },
+    []
+  );
+
   const [data, action, isPending] = useActionState(handleSubmit, undefined);
 
   useEffect(() => {
@@ -133,7 +163,7 @@ export function AddCategory({
   };
 
   return (
-    <Sheet>
+    <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild className="w-full">
         <Button variant="outline">Add Category</Button>
       </SheetTrigger>
@@ -151,12 +181,30 @@ export function AddCategory({
           className="flex flex-col items-start gap-8 font-normal"
         >
           <div className="flex flex-col gap-1 w-full">
-            <Input placeholder="Category Name" id="category" name="category" />
-            <p className="text-xs ml-4 mt-1">Name your category in one word</p>
+            <Input
+              placeholder="Category Name"
+              id="category"
+              name="category"
+              className={formErrors.category ? 'border-2 border-red-500' : ''}
+            />
+            {formErrors.category ? (
+              <p className="text-xs font-bold text-red-500 ml-4 mt-1">
+                {formErrors.category}
+              </p>
+            ) : (
+              <p className="text-xs ml-4 mt-1">
+                Name your category in one word
+              </p>
+            )}
           </div>
+
           <div className="flex flex-col gap-1 w-full">
             <Select name="color">
-              <SelectTrigger className="w-full">
+              <SelectTrigger
+                className={
+                  formErrors.color ? 'w-full border-2 border-red-500' : ''
+                }
+              >
                 <SelectValue placeholder="Category Color" id="color" />
               </SelectTrigger>
               <SelectContent>
@@ -177,14 +225,21 @@ export function AddCategory({
                 ))}
               </SelectContent>
             </Select>
-            <p className="text-xs ml-4 mt-1">Pick a color</p>
+            {formErrors.color ? (
+              <p className="text-xs font-bold text-red-500 ml-4 mt-1">
+                {formErrors.color}
+              </p>
+            ) : (
+              <p className="text-xs ml-4 mt-1">
+                Name your category in one word
+              </p>
+            )}
           </div>
+
           <Input id="uid" name="uid" value={uid} readOnly className="hidden" />
-          <SheetClose asChild>
-            <Button type="submit" disabled={isPending}>
-              {isPending ? 'Adding...' : 'Add'}
-            </Button>
-          </SheetClose>
+          <Button type="submit" disabled={isPending}>
+            {isPending ? 'Adding...' : 'Add'}
+          </Button>
         </form>
 
         <div className="flex flex-col gap-2 my-12">

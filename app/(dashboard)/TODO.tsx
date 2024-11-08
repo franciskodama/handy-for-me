@@ -9,11 +9,6 @@
 // shadow-[0_0px_0px_0px_inset,#FFF_-3px_3px_0_-1px,#0F1739_-3px_3px]
 
 // TODO: Nadgen Q.A.
-// After user Add a category for Shortcut, it has to be shown immediately on the Tab to Add a new Shortcut
-// Weekly Wins: include Nadgen idea to set how many days a week + progress bar
-// Location: How do we get it and why Nadgen's location was wrong?
-// Is there a way to hide de content of the user in the database by cryptography?
-// Vision Board: Napoleon Hill's Quote on the top of the page
 // Bucket List: Nadgen likes it categorized in columns
 // Shortcut (but check other features): Error message needs to be directly on the Tabs with the fields, not on an Alert Dialog
 // Decision Helper: Add categories first on the left side
@@ -22,14 +17,18 @@
 // No content on the cards, no need to show the cards.
 // Weekly Wins on the Dashboard
 // Dashboard: Accordions?
+// Weekly Wins: include Nadgen idea to set how many days a week + progress bar
 // Responsivity for Tablets?
+// Is there a way to hide de content of the user in the database by cryptography?
 
 // DONE:
+// Vision Board: Napoleon Hill's Quote on the top of the page
+// Location: How do we get it and why Nadgen's location was wrong?
+// After user Add a category for Shortcut, it has to be shown immediately on the Tab to Add a new Shortcut
 // Vision Board --> No name fields: change "name" field name
 // Weekly Wins --> No name fields: change "name" field name
 // Decision Helper --> No name fields: change "name" field name
 // Bucket List --> No name fields: change "name" field name
-
 // Weekly Wins: Fix the limit of 10 characters
 
 // TODO: WORKING ON
