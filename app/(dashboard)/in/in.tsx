@@ -26,6 +26,7 @@ import { CardFunFact } from './card-fun-fact';
 import CardVisionBoard from './card-vision-board';
 import CardBucketList from './card-bucket-list';
 import CardShortcuts from './card-shortcuts';
+import CardEmpty from './card-empty';
 
 export default function In({
   user,
@@ -115,10 +116,15 @@ export default function In({
           {/* ----------------------- Second Row ----------------------- */}
           <div className="flex flex-col sm:flex-row w-full gap-24 sm:gap-8 mb-12">
             <div className="flex justify-center sm:w-1/3">
-              {visionBoardItems ? (
+              {visionBoardItems.length > 0 ? (
                 <CardVisionBoard visionBoardItems={visionBoardItems} />
               ) : (
-                <p>No data</p>
+                <CardEmpty
+                  title="Vision Board"
+                  description="Add goals to your Vision Board, and see them shine here!"
+                  buttonText="Create My Vision Board"
+                  url="vision-board"
+                />
               )}
             </div>
             <div className="flex justify-center sm:w-1/3">
@@ -139,31 +145,16 @@ export default function In({
 
           {/* ----------------------- Third Row ----------------------- */}
 
-          <p
-            className={`${kumbh_sans.className} uppercase font-bold text-xl leading-none mt-4`}
-          >
-            Weekly Wins
-          </p>
-          <div className="flex flex-col sm:flex-row w-full justify-between gap-8">
-            <div className="stripe-border flex flex-col sm:w-1/3 items-center h-[10em] p-4">
-              <p>
-                Stay focused, track progress, and celebrate your wins each week!
-              </p>
-            </div>
-            <div className="stripe-border flex flex-col sm:w-1/3 items-center h-[10em] p-4">
-              <p>
-                Etiam nec mi non felis dapibus aliquam. Nullam tempus odio eget
-                euismod semper.{' '}
-              </p>
-            </div>
-            <div className="stripe-border flex flex-col sm:w-1/3 items-center h-[10em] p-4">
-              <p className="hidden sm:block">
-                Praesent ante est, facilisis at commodo sit amet, efficitur id
-                diam. Mauris tristique sem consequat, aliquam est eu, sodales
-                nisi. Vivamus elementum, eros quis varius fermentum.{' '}
-              </p>
-            </div>
-          </div>
+          {visionBoardItems.length > 0 ? (
+            <CardVisionBoard visionBoardItems={visionBoardItems} />
+          ) : (
+            <CardEmpty
+              title="Weekly Wins"
+              description=" Stay focused, track progress, and celebrate your wins each week!"
+              buttonText="Let's start this Week!"
+              url="weekly-wins"
+            />
+          )}
 
           {/* ----------------------- FOOTER ----------------------- */}
         </div>

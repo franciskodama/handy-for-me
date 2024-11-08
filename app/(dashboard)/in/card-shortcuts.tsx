@@ -14,14 +14,14 @@ export default function CardShortcuts({
     <>
       <div className="relative w-full p-4 sm:border sm:border-slate-300 sm:border-dashed">
         <div className="flex flex-wrap gap-1">
-          {shortcutsItems.map((item: Shortcut) => (
-            <div key={item.id}>
-              <Link href={item.url} target="_blank">
+          {shortcutsItems.map((el: Shortcut) => (
+            <div key={el.id}>
+              <Link href={el.url} target="_blank">
                 <p
                   className="text-sm sm:text-base px-2 py-1 font-semibold"
-                  style={getColorCode(item.category?.color ?? 'grey')}
+                  style={getColorCode(el.category?.color ?? 'grey')}
                 >
-                  {item.name}
+                  {el.shortcut}
                 </p>
               </Link>
             </div>

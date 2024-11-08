@@ -30,14 +30,14 @@ export default function CardVisionBoard({
           ]}
         >
           <CarouselContent>
-            {visionBoardItems.map((item) => (
-              <CarouselItem key={item.id} className="basis-1/3">
+            {visionBoardItems.map((el) => (
+              <CarouselItem key={el.id} className="basis-1/3">
                 <div className="relative group">
                   <Image
-                    src={item.url}
+                    src={el.url}
                     width={150}
                     height={150}
-                    alt={`Picture of ${item.name}`}
+                    alt={`Picture of ${el.item}`}
                     className="object-cover w-60 h-60 group-hover:opacity-100"
                   />
                 </div>
