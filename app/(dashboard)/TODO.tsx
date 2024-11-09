@@ -10,7 +10,10 @@
 
 // TODO: Nadgen Q.A.
 // Stoic Support: Build Feature + Create Content
+// Stoic Support: Check the Content
+// Stoic Support: Dashboard Card
 
+// Record a Loom Video to explain how to get a image url
 // Add on the Dashboard: Ads to divulgate other features for practicing English
 // Bucket List: Nadgen likes it categorized in columns
 // Shortcut (but check other features): Error message needs to be directly on the Tabs with the fields, not on an Alert Dialog
