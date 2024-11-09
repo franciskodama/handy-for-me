@@ -1,4 +1,4 @@
-import { Lightbulb, Settings, Snail } from 'lucide-react';
+import { Heart, Lightbulb, Settings, Snail, Wheat } from 'lucide-react';
 import ExplanationBox from '@/components/ExplanationBox';
 
 export default function ExplanationStoicSupport({
@@ -9,14 +9,9 @@ export default function ExplanationStoicSupport({
   const contentOne = (
     <>
       <p>
-        This tool is like your own special list of favorite websites that you
-        can keep online. It helps you easily find and go to the pages you love!
-      </p>
-      <p>
-        Instead of messy bookmarks, you can create organized, color-coded
-        categories for your favorite websites. Whether for work, blogs, or
-        everyday sites, your links are neatly sorted and always accessible, no
-        matter where you are.
+        Navigate life’s challenges with wisdom. Stoic Support offers guidance
+        rooted in Stoic philosophy, helping you find clarity and resilience when
+        facing obstacles, big or small.
       </p>
     </>
   );
@@ -24,31 +19,40 @@ export default function ExplanationStoicSupport({
   const contentTwo = (
     <>
       <p className="font-semibold">
-        - Create Categories:
-        <span className="font-normal">
-          Start by creating categories for your shortcuts
+        - Select a Category:
+        <span className="font-normal ml-1">
+          Begin by choosing an area that resonates with your current situation,
+          such as “Relationships” or “Learning & Growth.”
         </span>
       </p>
       <p className="font-semibold">
-        - Add Shortcuts:
-        <span className="font-normal">
-          For each shortcut, input the name, URL, and assign it to a category.
+        - Identify Your Challenge:
+        <span className="font-normal ml-1">
+          Choose a specific topic that reflects your struggle, like “Feeling
+          unsupported” or “Fear of making mistakes.”
         </span>
       </p>
       <p className="font-semibold">
-        - Access Your Shortcuts:
-        <span className="font-normal">
-          All your shortcuts will appear as buttons, organized by category on
-          your board.
+        - Receive Stoic Insights:
+        <span className="font-normal ml-1">
+          Instantly see Stoic-based advice, complete with a relevant quote and
+          an explanation that illuminates how to apply the philosophy in this
+          context.
+        </span>
+      </p>
+      <p className="font-semibold">
+        - Copy & Share:
+        <span className="font-normal ml-1">
+          Use the “Copy to Clipboard” button to easily save insights for quick
+          reference or to share with others.
         </span>
       </p>
 
       <p className="font-semibold">
-        - Quick Actions:
-        <span className="font-normal">
-          Click to visit the website directly, View the description for a
-          reminder of why you saved it, Delete the shortcut if it’s no longer
-          needed.
+        - Reflect & Apply:
+        <span className="font-normal ml-1">
+          Take a moment to consider the wisdom provided, and think about how you
+          can implement it to face your challenge with resilience and insight.
         </span>
       </p>
     </>
@@ -57,31 +61,30 @@ export default function ExplanationStoicSupport({
   const contentThree = (
     <>
       <p className="font-semibold">
-        - Stay Organized:{' '}
-        <span className="font-normal">
-          Keep all your important URLs in one place, categorized and easy to
-          find.
+        - Gain Perspective:
+        <span className="font-normal ml-1">
+          Shift your viewpoint to approach challenges with calm and clarity.
         </span>
       </p>
       <p className="font-semibold">
-        - Always Available:{' '}
-        <span className="font-normal">
-          Unlike browser bookmarks tied to specific devices, this board is
-          accessible from anywhere.
+        - Build Resilience:
+        <span className="font-normal ml-1">
+          Discover inner strength through ancient wisdom, enhancing your ability
+          to handle adversity.
         </span>
       </p>
       <p className="font-semibold">
-        - Save Time:{' '}
-        <span className="font-normal">
-          Access your favorite sites instantly without searching through a
-          cluttered bookmarks bar.
+        Empower Growth:
+        <span className="font-normal ml-1">
+          Turn obstacles into learning opportunities, fostering a growth
+          mindset.
         </span>
       </p>
       <p className="font-semibold">
-        - Enhance Productivity:{' '}
-        <span className="font-normal">
-          Quickly get to the websites you need for work or leisure, saving you
-          valuable time every day.
+        Practice Mindful Action:
+        <span className="font-normal ml-1">
+          Use each insight as a stepping stone toward becoming your best self,
+          one challenge at a time.
         </span>
       </p>
     </>
@@ -90,16 +93,16 @@ export default function ExplanationStoicSupport({
   return (
     <ExplanationBox
       setOpenAction={setOpenAction}
-      iconOne={<Snail size={24} strokeWidth={1.6} />}
+      iconOne={<Wheat size={24} strokeWidth={1.6} />}
       iconTwo={<Settings size={24} strokeWidth={1.6} />}
-      iconThree={<Lightbulb size={24} strokeWidth={1.6} />}
+      iconThree={<Heart size={24} strokeWidth={1.6} />}
       titleOne="What’s This?"
       titleTwo="How to use"
       titleThree="Why You Need It"
       contentOne={contentOne}
       contentTwo={contentTwo}
       contentThree={contentThree}
-      callToAction="Save your favorites now!"
+      callToAction="Find Your Stoic Path"
     />
   );
 }

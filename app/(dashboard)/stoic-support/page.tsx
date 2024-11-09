@@ -3,7 +3,7 @@ import StoicSupport from './stoic-support';
 
 export default async function StoicSupportPage() {
   const session = await auth();
-  const uid = session?.user?.email;
+  const name = session?.user?.name?.split(' ')[0];
 
-  return <>{uid && <StoicSupport uid={uid} />}</>;
+  return <>{name && <StoicSupport name={name} />}</>;
 }

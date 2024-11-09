@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
@@ -26,12 +27,10 @@ import Help from '@/components/Help';
 import { barlow } from '@/app/ui/fonts';
 import ExplanationStoicSupport from './explanation-stoic-support';
 import {
-  AlertCircle,
   BookOpen,
   Briefcase,
   Compass,
   DollarSign,
-  Globe,
   HeartHandshake,
   HeartPulse,
   HelpCircle,
@@ -41,6 +40,7 @@ import {
   Users,
   Zap
 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 type Topic = {
   topic: string;
@@ -54,22 +54,18 @@ type Category = {
   topics: Topic[];
 };
 
-export default function StoicSupport({ uid }: { uid: string }) {
+export default function StoicSupport({ name }: { name: string }) {
   const [openAction, setOpenAction] = useState(false);
 
-  const handleCopyToClipboard = (topic: Topic) => {
-    // Get the text field
-    // var copyText = document.getElementById("myInput");
+  const sortedStoicResponses = stoicResponses.sort((a, b) => {
+    if (a.category < b.category) return -1;
+    if (a.category > b.category) return 1;
+    return 0;
+  });
 
-    const copyText = topic;
-    console.log('---  🚀 ---> | copyText:', copyText);
-
-    // Select the text field
-    // copyText.select();
-    // copyText.setSelectionRange(0, 99999); // For mobile devices
-
-    //  // Copy the text inside the text field
-    // navigator.clipboard.writeText(copyText.value);
+  const getContent = (category: string, topic: Topic) => {
+    const content = `${category}: ${topic.topic} | Quote: "${topic.quote}" — ${topic.author} | Explanation: ${topic.explanation}`;
+    return content;
   };
 
   return (
@@ -109,11 +105,14 @@ export default function StoicSupport({ uid }: { uid: string }) {
         </AnimatePresence>
 
         <div className="flex flex-col gap-4 w-full sm:w-auto">
-          {stoicResponses.map((el: Category) => (
+          <p className="text-sm mb-2">
+            Click on a category, and choose a topic:
+          </p>
+          {sortedStoicResponses.map((el: Category) => (
             <div key={el.category}>
               <AccordionByButtons type="single" collapsible className="w-full">
                 <AccordionItem value="item-1" className="border-0">
-                  <AccordionTrigger>
+                  <AccordionTrigger className="text-left">
                     {getIcon(el.category, 'accordion')}
                     {el.category}
                   </AccordionTrigger>
@@ -121,7 +120,7 @@ export default function StoicSupport({ uid }: { uid: string }) {
                     {el.topics.map((topic: Topic) => (
                       <div key={topic.topic}>
                         <AlertDialog>
-                          <AlertDialogTrigger className="px-2 py-1 mr-4 w-full">
+                          <AlertDialogTrigger className="px-2 py-1 w-full">
                             <p
                               className={`${accordionContentAsButtonClass} justify-start`}
                             >
@@ -130,7 +129,10 @@ export default function StoicSupport({ uid }: { uid: string }) {
                           </AlertDialogTrigger>
                           <AlertDialogContent className="w-[calc(100%-35px)] sm:p-8">
                             <AlertDialogHeader>
-                              <AlertDialogTitle className="flex items-center gap-4 uppercase font-bold text-xl px-12">
+                              <p className="text-sm font-semibold bg-primary w-full text-white py-1 text-center mb-8">
+                                {el.category}
+                              </p>
+                              <AlertDialogTitle className="flex items-center gap-2 uppercase font-bold text-xl px-12">
                                 {getIcon(el.category, 'dialog')}
                                 {topic.topic}
                               </AlertDialogTitle>
@@ -139,20 +141,25 @@ export default function StoicSupport({ uid }: { uid: string }) {
                                   <p className="text-lg font-semibold italic">
                                     {`"${topic.quote}"`}
                                   </p>
-                                  <p className="font-semibold">{`— ${topic.author}`}</p>
+                                  <p className="font-semibold text-left ml-4 sm:text-right mr-8">{`— ${topic.author}`}</p>
                                 </div>
-                                <p className="text-base mb-8">
-                                  {topic.explanation}
-                                </p>
+                                <div className="p-4 text-left text-base">
+                                  <p>{`${name},`}</p>
+                                  <p className="mb-4 mt-1">
+                                    {topic.explanation}
+                                  </p>
+                                </div>
                               </AlertDialogDescription>
                             </AlertDialogHeader>
                             <AlertDialogFooter>
                               <AlertDialogCancel>Close</AlertDialogCancel>
-                              <AlertDialogAction
-                                onClick={() => handleCopyToClipboard(topic)}
-                              >
-                                Copy to Clipboard
-                              </AlertDialogAction>
+                              <Button variant={'outline'}>
+                                <CopyToClipboard
+                                  text={getContent(el.category, topic)}
+                                >
+                                  <p>Copy to Clipboard</p>
+                                </CopyToClipboard>
+                              </Button>
                             </AlertDialogFooter>
                           </AlertDialogContent>
                         </AlertDialog>
@@ -197,7 +204,7 @@ const iconCategories = [
     iconDialog: <Briefcase className={iconClassDialog} />
   },
   {
-    label: 'Personal Growth & Self-Worth',
+    label: 'Self-Worth',
     icon: <UserCheck className={iconClass} />,
     iconDialog: <UserCheck className={iconClassDialog} />
   },
@@ -413,7 +420,7 @@ const stoicResponses = [
     ]
   },
   {
-    category: 'Personal Growth & Self-Worth',
+    category: 'Self-Worth',
     topics: [
       {
         topic: 'I fear failure when trying something new.',
