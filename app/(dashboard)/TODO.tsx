@@ -9,9 +9,15 @@
 // shadow-[0_0px_0px_0px_inset,#FFF_-3px_3px_0_-1px,#0F1739_-3px_3px]
 
 // TODO: Nadgen Q.A.
-// Stoic Support: Build Feature + Create Content
 // Stoic Support: Check the Content
 // Stoic Support: Dashboard Card
+
+// Decision Helper: Delete category
+
+// Random Questions:Reset All must Reset the Clock as well
+// Random Questions: When it's reseted, don't show the kudos message either
+// Random Questions: everything on one screen
+// Random Questions: Clock must restart on 2 min after Reset
 
 // Record a Loom Video to explain how to get a image url
 // Add on the Dashboard: Ads to divulgate other features for practicing English
@@ -51,11 +57,6 @@
 // TO DO of the week: show on Dashboard
 // Cities I've visited Feature
 // Vision board: zoom library
-
-// Random Questions:Reset All must Reset the Clock as well
-// Random Questions: When it's reseted, don't show the kudos message either
-// Random Questions: everything on one screen
-// Random Questions: Clock must restart on 2 min after Reset
 
 // Dashboard: if it's Dashboard, don't show the avatar on the top
 // Grid: https://www.youtube.com/watch?v=3T0gjtXRNC0

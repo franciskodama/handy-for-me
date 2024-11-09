@@ -165,7 +165,27 @@ export default function DecisionHelper({
         </AnimatePresence>
 
         <div className="flex flex-col sm:flex-row justify-between gap-8 mb-4 w-full">
-          <div className="flex flex-col sm:w-1/3">
+          <div className="flex flex-col gap-4 sm:w-1/2">
+            <div className="flex flex-col items-start gap-2 w-full">
+              <p className="text-sm h-10 py-2">
+                Do you want to start a new list?
+              </p>
+              <div className="flex gap-2 w-full">
+                <Input
+                  placeholder="List's Name"
+                  value={listInput}
+                  onChange={(e) => setListInput(e.target.value)}
+                />
+                <Button
+                  className={pendingNewList ? 'ml-1 bg-primary' : 'ml-1'}
+                  onClick={handleCreateList}
+                  disabled={pendingNewList || listInput.trim() === ''}
+                >
+                  {pendingNewList ? 'Creating...' : 'Create a New List'}
+                </Button>
+              </div>
+            </div>
+            <p className="text-sm">or</p>
             <div className="flex flex-col gap-2">
               <Select
                 onValueChange={(value) => {
@@ -202,6 +222,7 @@ export default function DecisionHelper({
                 </Button>
               </div>
             </div>
+
             {items.length > 0 && (
               <div className="flex flex-col gap-2">
                 <p className="text-sm font-semibold mt-4">Items:</p>
@@ -230,7 +251,7 @@ export default function DecisionHelper({
           </div>
 
           <div
-            className="flex flex-col sm:w-1/3 items-center p-12"
+            className="flex flex-col sm:w-1/2 items-center p-12"
             style={{
               borderImage: `repeating-linear-gradient(
                   45deg,
@@ -322,30 +343,9 @@ export default function DecisionHelper({
 
           {/* ----------------------- Third Column ----------------------- */}
 
-          <div className="flex flex-col sm:w-1/3">
-            <div className="sm:w-[25em]">
-              <p className="text-sm h-10 py-2">
-                Do you want to start a new list?
-              </p>
-              <div className="flex items-center gap-2">
-                <Input
-                  placeholder="List's Name"
-                  value={listInput}
-                  onChange={(e) => setListInput(e.target.value)}
-                />
-                <Button
-                  className={pendingNewList ? 'ml-1 bg-primary' : 'ml-1'}
-                  onClick={handleCreateList}
-                  disabled={pendingNewList || listInput.trim() === ''}
-                >
-                  {pendingNewList ? 'Creating...' : 'Create a New List'}
-                </Button>
-              </div>
-            </div>
+          {/*handle deleteDecisionHelperList(id) */}
 
-            {/*handle deleteDecisionHelperList(id) */}
-
-            {/* 
+          {/* 
             <div className="w-[25em] mt-8">
               <p className="text-sm h-10 py-2">Do you want to delete a list?</p>
               <div className="flex items-center gap-2">
@@ -363,7 +363,6 @@ export default function DecisionHelper({
                 </Button>
               </div>
             </div> */}
-          </div>
         </div>
       </CardContent>
     </Card>
