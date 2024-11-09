@@ -10,7 +10,8 @@ import {
   Menu,
   MessageCircleQuestion,
   RefreshCw,
-  Trophy
+  Trophy,
+  HandHeart
 } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
@@ -174,6 +175,11 @@ const menuItems = [
     label: 'Decision Helper',
     href: '/decision-helper',
     icon: <RefreshCw className="h-5 w-5" />
+  },
+  {
+    label: 'Stoic Support',
+    href: '/stoic-support',
+    icon: <HandHeart className="h-5 w-5" />
   },
   {
     label: 'Random Questions',

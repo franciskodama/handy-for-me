@@ -9,6 +9,8 @@
 // shadow-[0_0px_0px_0px_inset,#FFF_-3px_3px_0_-1px,#0F1739_-3px_3px]
 
 // TODO: Nadgen Q.A.
+// Stoic Support: Build Feature + Create Content
+
 // Add on the Dashboard: Ads to divulgate other features for practicing English
 // Bucket List: Nadgen likes it categorized in columns
 // Shortcut (but check other features): Error message needs to be directly on the Tabs with the fields, not on an Alert Dialog
