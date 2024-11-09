@@ -2,8 +2,12 @@
 
 import { v4 } from 'uuid';
 import { prisma } from './prisma';
-import { AddShortcutParams, SpinItem, SpinList } from './types';
-import { Shortcut, shortcut_color_enum } from '@prisma/client';
+import {
+  AddShortcutParams,
+  DecisionHelperItem,
+  DecisionHelperList
+} from './types';
+import { shortcut_color_enum } from '@prisma/client';
 
 export async function addUser(uid: string, name: string, avatar: string) {
   try {
@@ -28,31 +32,31 @@ export async function addUser(uid: string, name: string, avatar: string) {
   }
 }
 
-export async function addSpinList(uid: string, name: string) {
+export async function addDecisionHelperList(uid: string, list: string) {
   try {
-    const list = await prisma.spinList.create({
+    const newList = await prisma.decisionHelperList.create({
       data: {
         id: v4(),
         createdAt: new Date(),
         uid,
-        name
+        list
       },
       include: {
         items: true
       }
     });
-    return list;
+    return newList;
   } catch (error) {
     console.log(error);
     return false;
   }
 }
 
-export async function getSpinLists(
+export async function getDecisionHelperLists(
   uid: string
-): Promise<SpinList[] | { error: string }> {
+): Promise<DecisionHelperList[] | { error: string }> {
   try {
-    const data = await prisma.spinList.findMany({
+    const data = await prisma.decisionHelperList.findMany({
       where: { uid },
       include: { items: true }
     });
@@ -63,9 +67,9 @@ export async function getSpinLists(
   }
 }
 
-export async function deleteSpinList(id: string) {
+export async function deleteDecisionHelperList(id: string) {
   try {
-    await prisma.spinList.delete({
+    await prisma.decisionHelperList.delete({
       where: {
         id
       }
@@ -77,36 +81,36 @@ export async function deleteSpinList(id: string) {
   }
 }
 
-export async function addSpinItem(
+export async function addDecisionHelperItem(
   uid: string,
   listId: string,
-  name: string
-): Promise<SpinItem | false> {
+  item: string
+): Promise<DecisionHelperItem | false> {
   try {
-    const item = await prisma.spinItem.create({
+    const newItem = await prisma.decisionHelperItem.create({
       data: {
         id: v4(),
         uid,
         createdAt: new Date(),
         listId,
-        name,
+        item,
         selected: true
       }
     });
-    return item;
+    return newItem;
   } catch (error) {
     console.error('Error adding item:', error);
     return false;
   }
 }
 
-export async function getAllSpinItems(uid: string) {
+export async function getAllDecisionHelperItems(uid: string) {
   try {
     const user = await prisma.user.findUnique({ where: { uid } });
     if (!user) {
       return { error: 'User not found.' };
     }
-    const data = await prisma.spinItem.findMany({
+    const data = await prisma.decisionHelperItem.findMany({
       where: {
         uid
       }
@@ -118,9 +122,9 @@ export async function getAllSpinItems(uid: string) {
   }
 }
 
-export async function deleteSpinItem(id: string) {
+export async function deleteDecisionHelperItem(id: string) {
   try {
-    await prisma.spinItem.delete({
+    await prisma.decisionHelperItem.delete({
       where: {
         id
       }
@@ -132,15 +136,15 @@ export async function deleteSpinItem(id: string) {
   }
 }
 
-export async function selectionSpinItem(id: string) {
+export async function selectionDecisionHelperItem(id: string) {
   try {
-    const item = await prisma.spinItem.findUnique({ where: { id } });
+    const item = await prisma.decisionHelperItem.findUnique({ where: { id } });
 
     if (!item) {
       return false;
     }
 
-    await prisma.spinItem.update({
+    await prisma.decisionHelperItem.update({
       where: {
         id
       },
@@ -157,21 +161,21 @@ export async function selectionSpinItem(id: string) {
 
 export async function addVisualBoardItem(
   uid: string,
-  name: string,
+  item: string,
   url: string
 ) {
   try {
-    const item = await prisma.visualBoardItem.create({
+    const newItem = await prisma.visualBoardItem.create({
       data: {
         id: v4(),
         createdAt: new Date(),
         uid,
-        name: name || '',
+        item: item || '',
         url,
         done: false
       }
     });
-    return item;
+    return newItem;
   } catch (error) {
     console.error('Error adding Visual Board item:', error);
     return false;
@@ -180,12 +184,12 @@ export async function addVisualBoardItem(
 
 export async function getVisualBoardItems(uid: string) {
   try {
-    const item = await prisma.visualBoardItem.findMany({
+    const items = await prisma.visualBoardItem.findMany({
       where: {
         uid
       }
     });
-    return item;
+    return items;
   } catch (error) {
     console.error('Error getting Visual Board Items:', error);
     return false;
@@ -225,21 +229,21 @@ export async function setVisualBoardItemDone(id: string, selection: boolean) {
 
 export async function addBucketListItem(
   uid: string,
-  name: string,
+  item: string,
   category: string
 ) {
   try {
-    const item = await prisma.bucketListItem.create({
+    const newItem = await prisma.bucketListItem.create({
       data: {
         id: v4(),
         createdAt: new Date(),
         uid,
-        name,
+        item,
         category,
         done: false
       }
     });
-    return item;
+    return newItem;
   } catch (error) {
     console.error('Error adding Bucket List item:', error);
     return false;
@@ -248,12 +252,12 @@ export async function addBucketListItem(
 
 export async function getBucketListItems(uid: string) {
   try {
-    const item = await prisma.bucketListItem.findMany({
+    const items = await prisma.bucketListItem.findMany({
       where: {
         uid
       }
     });
-    return item;
+    return items;
   } catch (error) {
     console.error('Error getting Bucket List Array:', error);
     return false;
@@ -306,11 +310,11 @@ export const getShortcutsCategories = async (uid: string) => {
 
 export async function addShortcutCategory({
   uid,
-  name,
+  category,
   colorUppperCase
 }: {
   uid: string;
-  name: string;
+  category: string;
   colorUppperCase: shortcut_color_enum;
 }) {
   try {
@@ -319,7 +323,7 @@ export async function addShortcutCategory({
         uid,
         id: v4(),
         createdAt: new Date(),
-        name,
+        category,
         color: colorUppperCase
       }
     });
@@ -361,7 +365,7 @@ export const getShortcuts = async (uid: string) => {
 };
 
 export async function addShortcut(formData: AddShortcutParams) {
-  const { uid, name, url, description, categoryId } = formData;
+  const { uid, shortcut, url, description, categoryId } = formData;
 
   try {
     await prisma.shortcut.create({
@@ -369,7 +373,7 @@ export async function addShortcut(formData: AddShortcutParams) {
         uid,
         id: v4(),
         createdAt: new Date(),
-        name,
+        shortcut,
         url,
         description,
         categoryId
@@ -421,19 +425,19 @@ export async function deleteShortcut(id: string) {
   }
 }
 
-export async function addWeeklyWin(uid: string, task: string, type: string) {
+export async function addWeeklyWin(uid: string, goal: string, type: string) {
   try {
-    const item = await prisma.weeklyWin.create({
+    const newItem = await prisma.weeklyWin.create({
       data: {
         id: v4(),
         createdAt: new Date(),
         uid,
-        task,
+        goal,
         type,
         done: false
       }
     });
-    return item;
+    return newItem;
   } catch (error) {
     console.error('Error adding Weekly Wins item:', error);
     return false;
@@ -442,12 +446,12 @@ export async function addWeeklyWin(uid: string, task: string, type: string) {
 
 export async function getWeeklyWins(uid: string) {
   try {
-    const item = await prisma.weeklyWin.findMany({
+    const items = await prisma.weeklyWin.findMany({
       where: {
         uid
       }
     });
-    return item;
+    return items;
   } catch (error) {
     console.error('Error getting Weekly Wins Array:', error);
     return false;

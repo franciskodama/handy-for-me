@@ -37,7 +37,7 @@ import { getColorCode } from '@/lib/utils';
 import MessageEmpty from '@/components/MessageEmpty';
 
 export type CategoryInput = {
-  name: string;
+  category: string;
   color: string;
 };
 
@@ -53,6 +53,8 @@ export default function Shortcuts({
   const [openAction, setOpenAction] = useState(false);
   const [currentShortcuts, setCurrentShortcutsAction] =
     useState<Shortcut[]>(shortcuts);
+  const [currentCategories, setCurrentCategoriesAction] =
+    useState<ShortcutCategory[]>(categories);
   const [openDescriptions, setOpenDescriptions] = useState<Set<string>>(
     new Set()
   );
@@ -81,7 +83,7 @@ export default function Shortcuts({
       }
       toast({
         title: 'Shortcut gone!',
-        description: `The ${shortcut.name} has been successfully deleted.`,
+        description: `The ${shortcut.shortcut} has been successfully deleted.`,
         variant: 'success'
       });
     } catch (error) {
@@ -129,12 +131,16 @@ export default function Shortcuts({
           >
             <div className="flex gap-4 w-full">
               <div className="w-1/2">
-                <AddCategory uid={uid} categories={categories} />
+                <AddCategory
+                  uid={uid}
+                  currentCategories={currentCategories}
+                  setCurrentCategoriesAction={setCurrentCategoriesAction}
+                />
               </div>
               <div className="w-1/2">
                 <AddShortcut
                   uid={uid}
-                  categories={categories}
+                  currentCategories={currentCategories}
                   setCurrentShortcutsAction={setCurrentShortcutsAction}
                 />
               </div>
@@ -188,7 +194,7 @@ export default function Shortcuts({
                   groupOfShortcuts[0].category?.color ?? 'grey'
                 )}
               >
-                {groupOfShortcuts[0].category?.name}
+                {groupOfShortcuts[0].category?.category}
               </h3>
 
               {groupOfShortcuts.map((shortcut: Shortcut) => (
@@ -204,7 +210,7 @@ export default function Shortcuts({
                         className="w-full"
                       >
                         <p className="text-left uppercase text-sm leading-none">
-                          {shortcut.name}
+                          {shortcut.shortcut}
                         </p>
                       </Link>
                     </div>
@@ -243,7 +249,7 @@ export default function Shortcuts({
                           <AlertDialogDescription className="py-4">
                             This will permanently delete the vision
                             <span className="font-bold mx-1">
-                              {shortcut.name}
+                              {shortcut.shortcut}
                             </span>
                             from our servers.
                           </AlertDialogDescription>

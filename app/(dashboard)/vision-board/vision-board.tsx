@@ -40,11 +40,20 @@ import ExplanationVisionBoard from './explanation-vision-board';
 import MessageEmpty from '@/components/MessageEmpty';
 
 const handleSubmit = async (previousState: unknown, formData: FormData) => {
-  const name = formData.get('name') as string;
+  const item = formData.get('item') as string;
   const url = formData.get('url') as string;
   const uid = formData.get('uid') as string;
 
-  if (name.length > 10) {
+  if (!item) {
+    toast({
+      title: 'Goal is required!',
+      description: 'What do you want to achieve?',
+      variant: 'destructive'
+    });
+    return;
+  }
+
+  if (item.length > 10) {
     toast({
       title: 'Maximum 10 characters!',
       description: 'The name should be at most 10 characters.',
@@ -70,7 +79,7 @@ const handleSubmit = async (previousState: unknown, formData: FormData) => {
     return;
   }
 
-  const visualBoardItem = await addVisualBoardItem(uid, name, url);
+  const visualBoardItem = await addVisualBoardItem(uid, item, url);
   if (!visualBoardItem) {
     toast({
       title: 'Ops...',
@@ -126,15 +135,15 @@ export default function VisionBoard({
     }
   }, [data]);
 
-  const handleDeleteItem = async (item: VisualBoardItem) => {
+  const handleDeleteItem = async (el: VisualBoardItem) => {
     try {
-      const success = await deleteVisualBoardItem(item.id);
+      const success = await deleteVisualBoardItem(el.id);
       if (success) {
-        setBoard(board.filter((el) => el.id !== item.id));
+        setBoard(board.filter((element) => element.id !== el.id));
       }
       toast({
         title: 'Vision Board Item gone!',
-        description: `The ${item.name} has been successfully deleted.`,
+        description: `The ${el.item} has been successfully deleted.`,
         variant: 'success'
       });
     } catch (error) {
@@ -147,13 +156,13 @@ export default function VisionBoard({
     }
   };
 
-  const handleCheck = async (item: VisualBoardItem) => {
+  const handleCheck = async (el: VisualBoardItem) => {
     try {
-      const success = await setVisualBoardItemDone(item.id, !item.done);
+      const success = await setVisualBoardItemDone(el.id, !el.done);
       if (success) {
         setBoard((prevBoard) =>
           prevBoard.map((boardItem) =>
-            boardItem.id === item.id
+            boardItem.id === el.id
               ? { ...boardItem, done: !boardItem.done }
               : boardItem
           )
@@ -161,7 +170,7 @@ export default function VisionBoard({
       }
       toast({
         title: 'Vision Progress Updated! 🌟',
-        description: `"${item.name}" has been marked as ${item.done ? 'incomplete' : 'achieved'}. Keep pushing towards your dreams!`,
+        description: `"${el.item}" has been marked as ${el.done ? 'incomplete' : 'achieved'}. Keep pushing towards your dreams!`,
         variant: 'success'
       });
     } catch (error) {
@@ -267,24 +276,24 @@ export default function VisionBoard({
           </div>
         )}
 
-        <div className="flex flex-wrap gap-[1px] justify-center my-4 sm:my-0">
-          {board.map((item: VisualBoardItem) => (
-            <div key={item.id}>
+        <div className="flex flex-wrap gap-[1px] justify-center my-4 sm:my-0 sm:mb-24">
+          {board.map((el: VisualBoardItem) => (
+            <div key={el.id}>
               <div className="relative group">
                 <Image
-                  src={item.url}
+                  src={el.url}
                   width={150}
                   height={150}
-                  alt={`Picture of ${item.name}`}
+                  alt={`Picture of ${el.item}`}
                   className="object-cover w-20 h-20 sm:w-48 sm:h-48 group-hover:opacity-100"
                 />
                 <p
                   className={`${kumbh_sans.className} bg-white text-left uppercase text-[8px] sm:text-sm leading-none absolute bottom-0 left-0 sm:left-2 px-2 py-1`}
                 >
-                  {item.name}
+                  {el.item}
                 </p>
 
-                {item.done ? (
+                {el.done ? (
                   <>
                     <div className="absolute bottom-0 left-0 opacity-70 h-60 w-60 bg-primary" />
 
@@ -308,7 +317,7 @@ export default function VisionBoard({
                       </AlertDialogTitle>
                       <AlertDialogDescription className="py-4">
                         This will permanently delete the vision
-                        <span className="font-bold mx-1">{item.name}</span>
+                        <span className="font-bold mx-1">{el.item}</span>
                         from our servers.
                       </AlertDialogDescription>
                     </AlertDialogHeader>
@@ -324,7 +333,7 @@ export default function VisionBoard({
                       >
                         Cancel
                       </AlertDialogCancel>
-                      <AlertDialogAction onClick={() => handleDeleteItem(item)}>
+                      <AlertDialogAction onClick={() => handleDeleteItem(el)}>
                         Continue
                       </AlertDialogAction>
                     </AlertDialogFooter>
@@ -333,7 +342,7 @@ export default function VisionBoard({
 
                 <Button
                   className="absolute bottom-0 right-2 opacity-0 group-hover:opacity-100 h-6 bg-white p-1"
-                  onClick={() => handleCheck(item)}
+                  onClick={() => handleCheck(el)}
                   variant={'link'}
                 >
                   <Check size={18} strokeWidth={1.8} color="#000" />
@@ -378,7 +387,7 @@ function FormVisionBoard({
           action={action}
         >
           <div className="flex flex-col gap-1 w-full sm:w-2/5">
-            <Input placeholder="Goal" id="name" name="name" />
+            <Input placeholder="Goal" id="item" name="item" />
             <p className="text-xs ml-4 lowercase">
               <span className="uppercase">N</span>ame your goal in one word
               (optional).

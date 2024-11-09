@@ -1,6 +1,9 @@
 import { auth } from '@/lib/auth';
-import { getAllSpinItems, getSpinLists } from '@/lib/actions';
-import { SpinItem, SpinList } from '@/lib/types';
+import {
+  getAllDecisionHelperItems,
+  getDecisionHelperLists
+} from '@/lib/actions';
+import { DecisionHelperItem, DecisionHelperList } from '@/lib/types';
 import MyWords from './my-words';
 
 export default async function SpinPage() {

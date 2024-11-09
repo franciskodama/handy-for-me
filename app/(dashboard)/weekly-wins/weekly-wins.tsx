@@ -1,7 +1,7 @@
 'use client';
 
 import { useActionState, useEffect, useState } from 'react';
-import { Bomb, Check, Edit, Ghost, Trash2 } from 'lucide-react';
+import { Bomb, Check, Ghost, Trash2 } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -23,7 +23,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger
 } from '@/components/ui/alert-dialog';
-import { Shortcut, ShortcutCategory, WeeklyWin } from '@/lib/types';
+import { WeeklyWin } from '@/lib/types';
 import Help from '@/components/Help';
 import { toast } from '@/hooks/use-toast';
 import { barlow, kumbh_sans } from '@/app/ui/fonts';
@@ -41,11 +41,11 @@ import ExplanationWeeklyWins from './explanation-weekly-wins';
 type WeeklyWinsTypes = 'Easy' | 'Moderate' | 'Challenging';
 
 const handleSubmit = async (previousState: unknown, formData: FormData) => {
-  const task = formData.get('task') as string;
+  const goal = formData.get('goal') as string;
   const type = formData.get('type') as string;
   const uid = formData.get('uid') as string;
 
-  if (!task) {
+  if (!goal) {
     toast({
       title: 'Goal is required!',
       description: 'What do you want to achieve in 7 days?',
@@ -62,7 +62,7 @@ const handleSubmit = async (previousState: unknown, formData: FormData) => {
     });
   }
 
-  const weeklyWin = await addWeeklyWin(uid, task, type);
+  const weeklyWin = await addWeeklyWin(uid, goal, type);
   if (!weeklyWin) {
     toast({
       title: 'Ops...',
@@ -100,6 +100,7 @@ export default function WeeklyWins({
     'Moderate',
     'Challenging'
   ];
+
   const weeklyWinsTypesColors: Record<WeeklyWinsTypes, string> = {
     Easy: 'bg-green-500',
     Moderate: 'bg-yellow-500',
@@ -113,7 +114,7 @@ export default function WeeklyWins({
   };
 
   const board: WeeklyWin[][] = weeklyWinsTypes
-    .map((type) => currentWeeklyWins.filter((win) => win.type === type))
+    .map((type) => currentWeeklyWins.filter((el) => el.type === type))
     .filter((group) => group.length > 0);
 
   useEffect(() => {
@@ -132,15 +133,15 @@ export default function WeeklyWins({
         );
       }
       toast({
-        title: 'Weekly Wins Task gone!',
-        description: `Deleted task: ${weeklyWin.task}!`,
+        title: 'Weekly Wins Goal gone!',
+        description: `Deleted Goal: ${weeklyWin.goal}!`,
         variant: 'success'
       });
     } catch (error) {
       console.error(error);
       toast({
-        title: 'Error deleting Task! 🚨',
-        description: 'Something went wrong while deleting this Task.',
+        title: 'Error deleting Goal! 🚨',
+        description: 'Something went wrong while deleting this Goal.',
         variant: 'destructive'
       });
     }
@@ -160,7 +161,7 @@ export default function WeeklyWins({
       }
       toast({
         title: 'Weekly Win Progress Updated! 🌟',
-        description: `"${weeklyWin.task}" has been marked as ${weeklyWin.done ? 'incomplete' : 'achieved'}. Keep up the good work!`,
+        description: `"${weeklyWin.goal}" has been marked as ${weeklyWin.done ? 'incomplete' : 'achieved'}. Keep up the good work!`,
         variant: 'success'
       });
     } catch (error) {
@@ -200,7 +201,7 @@ export default function WeeklyWins({
               action={action}
             >
               <div className="flex flex-col gap-1 w-full sm:w-[15ch]">
-                <Input placeholder="Goal" id="task" name="task" />
+                <Input placeholder="Goal" id="goal" name="goal" />
                 <p className="text-xs ml-4 lowercase">
                   <span className="uppercase">N</span>ame your Goal
                 </p>
@@ -220,7 +221,7 @@ export default function WeeklyWins({
                 </Select>
                 <p className="text-xs ml-4 lowercase">
                   <span className="uppercase">C</span>
-                  hoose your task level
+                  hoose your goal level
                 </p>
               </div>
               <Input
@@ -266,7 +267,7 @@ export default function WeeklyWins({
               titleOne={'Oops...'}
               titleTwo={'Weekly Wins Not Found'}
               subtitle={
-                'Looks like your week is wide open! Ready to tackle some wins? Add a task or two and let’s get that progress bar moving!'
+                'Looks like your week is wide open! Ready to tackle some wins? Add a Goal or two and let’s get that progress bar moving!'
               }
               setOpenAction={setOpenAction}
               buttonCopy={'How do I start?'}
@@ -282,20 +283,20 @@ export default function WeeklyWins({
               >
                 {groupOfWins[0].type}
               </h3>
-              {groupOfWins.map((win: WeeklyWin) => (
+              {groupOfWins.map((el: WeeklyWin) => (
                 <>
                   <div
-                    key={win.id}
-                    className={`${win.done && weeklyWinsTypesColorsDone[win.type]} flex border border-primary mt-2`}
+                    key={el.id}
+                    className={`${el.done && weeklyWinsTypesColorsDone[el.type]} flex border border-primary mt-2`}
                   >
                     <div className="w-full px-4 py-3">
                       <p
-                        className={`${win.done && 'line-through'} text-left uppercase text-sm leading-none`}
+                        className={`${el.done && 'line-through'} text-left uppercase text-sm leading-none`}
                       >
-                        {win.task}
+                        {el.goal}
                       </p>
                     </div>
-                    <Button variant="ghost" onClick={() => handleCheck(win)}>
+                    <Button variant="ghost" onClick={() => handleCheck(el)}>
                       <Check
                         size={18}
                         strokeWidth={1.8}
@@ -321,7 +322,7 @@ export default function WeeklyWins({
                           </AlertDialogTitle>
                           <AlertDialogDescription className="py-4">
                             This will permanently delete the vision
-                            <span className="font-bold mx-1">{win.task}</span>
+                            <span className="font-bold mx-1">{el.goal}</span>
                             from our servers.
                           </AlertDialogDescription>
                         </AlertDialogHeader>
@@ -338,7 +339,7 @@ export default function WeeklyWins({
                             Cancel
                           </AlertDialogCancel>
                           <AlertDialogAction
-                            onClick={() => handleDeleteItem(win)}
+                            onClick={() => handleDeleteItem(el)}
                           >
                             Continue
                           </AlertDialogAction>

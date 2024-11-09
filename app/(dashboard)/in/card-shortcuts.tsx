@@ -14,14 +14,14 @@ export default function CardShortcuts({
     <>
       <div className="relative w-full p-4 sm:border sm:border-slate-300 sm:border-dashed">
         <div className="flex flex-wrap gap-1">
-          {shortcutsItems.map((item: Shortcut) => (
-            <div key={item.id}>
-              <Link href={item.url} target="_blank">
+          {shortcutsItems.map((el: Shortcut) => (
+            <div key={el.id}>
+              <Link href={el.url} target="_blank">
                 <p
                   className="text-sm sm:text-base px-2 py-1 font-semibold"
-                  style={getColorCode(item.category?.color ?? 'grey')}
+                  style={getColorCode(el.category?.color ?? 'grey')}
                 >
-                  {item.name}
+                  {el.shortcut}
                 </p>
               </Link>
             </div>
@@ -32,7 +32,7 @@ export default function CardShortcuts({
           variant="ghost"
           className="absolute -bottom-2 sm:bottom-4 right-6 sm:right-2 text-xs underline bg-white sm:bg-transparent p-1 h-4"
         >
-          <Link href="/buclet-list">View All</Link>
+          <Link href="/shortcuts">View All</Link>
         </Button>
       </div>
     </>

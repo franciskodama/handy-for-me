@@ -8,8 +8,36 @@
 // Accent color in HEX: #DDF906 --> Adidas: '#f3f3e3'
 // shadow-[0_0px_0px_0px_inset,#FFF_-3px_3px_0_-1px,#0F1739_-3px_3px]
 
+// TODO: Nadgen Q.A.
+// Stoic Support: Build Feature + Create Content
+// Stoic Support: Check the Content
+// Stoic Support: Dashboard Card
+
+// Record a Loom Video to explain how to get a image url
+// Add on the Dashboard: Ads to divulgate other features for practicing English
+// Bucket List: Nadgen likes it categorized in columns
+// Shortcut (but check other features): Error message needs to be directly on the Tabs with the fields, not on an Alert Dialog
+// Decision Helper: Add categories first on the left side
+// Build feature "My Words" (and "My Phrases") to practice and increase vocabulary
+// Responsivity for smallers screens of Laptops (Weather was tight on Nadgen's screen)
+// Weekly Wins on the Dashboard
+// Dashboard: Accordions?
+// Weekly Wins: include Nadgen idea to set how many days a week + progress bar
+// Responsivity for Tablets?
+// Is there a way to hide de content of the user in the database by cryptography?
+
+// DONE:
+// No content on the cards, no need to show the cards.
+// Vision Board: Napoleon Hill's Quote on the top of the page
+// Location: How do we get it and why Nadgen's location was wrong?
+// After user Add a category for Shortcut, it has to be shown immediately on the Tab to Add a new Shortcut
+// Vision Board --> No name fields: change "name" field name
+// Weekly Wins --> No name fields: change "name" field name
+// Decision Helper --> No name fields: change "name" field name
+// Bucket List --> No name fields: change "name" field name
+// Weekly Wins: Fix the limit of 10 characters
+
 // TODO: WORKING ON
-// Weekly Wins
 // Close Quotes
 // Cards in Black an White, but users can toggle to see categories' colors
 
@@ -63,6 +91,7 @@
 // Button: https://medium.com/@dewamadewira25/how-to-make-a-neo-brutalism-button-using-tailwindcss-91d3faf2b269
 
 // TODO: DONE
+// Weekly Wins: new feature
 // Card Vision Board: Still too wide
 // Shortcut on Dashboard
 // Vision Board: fields not visible on mobile to see the vision board first

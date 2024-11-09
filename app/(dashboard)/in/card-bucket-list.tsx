@@ -18,13 +18,13 @@ export default function CardBucketList({
     <>
       <div className="relative w-full p-4 sm:border sm:border-slate-300 sm:border-dashed">
         <div className="flex flex-wrap gap-1">
-          {filteredBucketListItems.map((item: BucketListItem) => (
-            <div key={item.id}>
+          {filteredBucketListItems.map((el: BucketListItem) => (
+            <div key={el.id}>
               <p
                 className="text-sm sm:text-base px-1 py-1 font-semibold"
-                style={getColorCodes(item.category)}
+                style={getColorCodes(el.category)}
               >
-                {item.name}
+                {el.item}
               </p>
             </div>
           ))}
@@ -34,7 +34,7 @@ export default function CardBucketList({
           variant="ghost"
           className="absolute -bottom-2 sm:bottom-4 right-6 sm:right-2 text-xs underline bg-white sm:bg-transparent p-1 h-4"
         >
-          <Link href="/buclet-list">View All</Link>
+          <Link href="/bucket-list">View All</Link>
         </Button>
       </div>
     </>
