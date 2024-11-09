@@ -100,9 +100,37 @@ export default function StoicSupport({ uid }: { uid: string }) {
                   <AccordionContent className="flex flex-col gap-2 px-4">
                     {el.topics.map((topic: Topic) => (
                       <div key={topic.topic}>
-                        <Button variant={'outline'} className="w-full">
-                          <p>{topic.topic}</p>
-                        </Button>
+                        <AlertDialog>
+                          <AlertDialogTrigger className="px-2 py-1 mr-4 w-full">
+                            {/* <Button variant={'outline'} className="w-full"> */}
+                            {topic.topic}
+                            {/* </Button> */}
+                          </AlertDialogTrigger>
+                          <AlertDialogContent className="w-[calc(100%-35px)]">
+                            <AlertDialogHeader>
+                              <AlertDialogTitle className="flex items-center gap-2">
+                                {topic.topic}
+                              </AlertDialogTitle>
+                              <AlertDialogDescription className="py-4">
+                                <div>
+                                  <p>{topic.quote}</p>
+                                  <p>{topic.author}</p>
+                                </div>
+                                <p className="font-bold mx-1">
+                                  {topic.explanation}
+                                </p>
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>Close</AlertDialogCancel>
+                              <AlertDialogAction
+                              // onClick={() => handleDeleteItem(shortcut)}
+                              >
+                                Copy to Clipboard
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
                       </div>
                     ))}
                   </AccordionContent>
@@ -111,153 +139,11 @@ export default function StoicSupport({ uid }: { uid: string }) {
             </div>
           ))}
         </div>
-
-        {/* {board.length < 1 && (
-          <div className="mt-8">
-            <MessageEmpty
-              image={'/shortcut-empty.webp'}
-              objectPosition={'50% 10%'}
-              alt={'Looking for something'}
-              icon={<Ghost size={32} strokeWidth={1.6} />}
-              titleOne={'Oops...'}
-              titleTwo={'Shortcut Not Found'}
-              subtitle={
-                'Start by adding a category for easy organization, then save your first shortcut here. Get ready to access your favorites in a click!'
-              }
-              setOpenAction={setOpenAction}
-              buttonCopy={'Learn More'}
-              hasButton={true}
-            />
-          </div>
-        )} */}
-        <div className="flex flex-col sm:flex-row w-full gap-8">
-          {/* {board.map((groupOfShortcuts: Shortcut[]) => (
-            <div key={groupOfShortcuts[0].categoryId} className="sm:w-1/5">
-              <h3
-                className={`${kumbh_sans.className} text-left text-sm font-semibold text-primary px-4 py-3 my-2 uppercase leading-none`}
-                style={getColorCode(
-                  groupOfShortcuts[0].category?.color ?? 'grey'
-                )}
-              >
-                {groupOfShortcuts[0].category?.category}
-              </h3>
-
-              {groupOfShortcuts.map((shortcut: Shortcut) => (
-                <>
-                  <div
-                    key={shortcut.id}
-                    className="flex border border-primary mt-2"
-                  >
-                    <div className="w-full px-4 py-3">
-                      <Link
-                        href={shortcut.url}
-                        target="_blank"
-                        className="w-full"
-                      >
-                        <p className="text-left uppercase text-sm leading-none">
-                          {shortcut.shortcut}
-                        </p>
-                      </Link>
-                    </div>
-
-                    <Button
-                      variant="ghost"
-                      onClick={() => {
-                      }}
-                    >
-                      {openDescriptions.has(shortcut.id) ? (
-                        <ArrowUpWideNarrow
-                          size={18}
-                          strokeWidth={1.8}
-                          color="#000"
-                        />
-                      ) : (
-                        <ArrowDownWideNarrow
-                          size={18}
-                          strokeWidth={1.8}
-                          color="#000"
-                        />
-                      )}
-                    </Button>
-
-                    <AlertDialog>
-                      <AlertDialogTrigger className="px-2 py-1 mr-4">
-                        <Trash2 size={18} strokeWidth={1.8} color="#000" />
-                      </AlertDialogTrigger>
-                      <AlertDialogContent className="w-[calc(100%-35px)]">
-                        <AlertDialogHeader>
-                          <AlertDialogTitle className="flex items-center gap-2">
-                            <Bomb size={24} strokeWidth={1.8} />
-                            Are you absolutely sure?
-                          </AlertDialogTitle>
-                          <AlertDialogDescription className="py-4">
-                            This will permanently delete the vision
-                            <span className="font-bold mx-1">
-                              {shortcut.shortcut}
-                            </span>
-                            from our servers.
-                          </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                          <AlertDialogCancel
-                            onClick={() => {
-                              toast({
-                                title: 'Operation Cancelled! ❌',
-                                description: `Phew! 😮‍💨 Crisis averted. You successfully cancelled the operation.`,
-                                variant: 'destructive'
-                              });
-                            }}
-                          >
-                            Cancel
-                          </AlertDialogCancel>
-                          <AlertDialogAction
-                          // onClick={() => handleDeleteItem(shortcut)}
-                          >
-                            Continue
-                          </AlertDialogAction>
-                        </AlertDialogFooter>
-                      </AlertDialogContent>
-                    </AlertDialog>
-                  </div>
-
-                  <AnimatePresence>
-                    {openDescriptions.has(shortcut.id) ? (
-                      <motion.div
-                        layout
-                        initial={{ opacity: 0, y: 0, scale: 0.3 }}
-                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                        exit={{
-                          opacity: 0,
-                          scale: 0.5,
-                          transition: { duration: 0.1 }
-                        }}
-                      >
-                        <div className="px-4 py-2 bg-primary text-white text-xs font-semibold">
-                          {shortcut.description ? (
-                            shortcut.description
-                          ) : (
-                            <div className="flex items-center ml-1">
-                              <MessageCircleX
-                                size={18}
-                                strokeWidth={1.8}
-                                color="#fff"
-                              />
-                              <p className="ml-2">No description available.</p>
-                            </div>
-                          )}
-                        </div>
-                      </motion.div>
-                    ) : null}
-                  </AnimatePresence>
-                </>
-              ))}
-            </div>
-          ))} */}
-        </div>
       </CardContent>
     </Card>
   );
 }
+
 const stoicResponses = [
   {
     category: 'Finding Purpose & Meaning',
