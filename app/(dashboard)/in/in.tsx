@@ -27,6 +27,7 @@ import CardVisionBoard from './card-vision-board';
 import CardBucketList from './card-bucket-list';
 import CardShortcuts from './card-shortcuts';
 import CardEmpty from './card-empty';
+import CardStoicSupport from './card-stoic-support';
 
 export default function In({
   user,
@@ -115,6 +116,13 @@ export default function In({
               </div>
             </div>
           </>
+          {/* ----------------------- Divulgation Row ----------------------- */}
+
+          <div className="flex flex-col sm:flex-row w-full gap-24 sm:gap-8 mb-12">
+            <div className="flex justify-center sm:w-1/3">
+              <CardStoicSupport />
+            </div>
+          </div>
 
           {/* ----------------------- Second Row ----------------------- */}
           <div className="flex flex-col sm:flex-row w-full gap-24 sm:gap-8 mb-12">
@@ -130,6 +138,7 @@ export default function In({
                 />
               )}
             </div>
+
             <div className="flex justify-center sm:w-1/3">
               {shortcutsItems.length > 0 ? (
                 <CardShortcuts shortcutsItems={shortcutsItems} />
@@ -142,6 +151,7 @@ export default function In({
                 />
               )}
             </div>
+
             <div className="flex justify-center sm:w-1/3">
               {bucketListItems.length > 0 ? (
                 <CardBucketList bucketListItems={bucketListItems} />
