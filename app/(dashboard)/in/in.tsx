@@ -19,7 +19,6 @@ import {
   User,
   VisualBoardItem
 } from '@/lib/types';
-import { kumbh_sans } from '@/app/ui/fonts';
 import { CardWeather } from './card-weather';
 import CardUser from './card-user';
 import { CardFunFact } from './card-fun-fact';
@@ -27,7 +26,7 @@ import CardVisionBoard from './card-vision-board';
 import CardBucketList from './card-bucket-list';
 import CardShortcuts from './card-shortcuts';
 import CardEmpty from './card-empty';
-import CardStoicSupport from './card-stoic-support';
+import CardDivulgation from './card-divulgation';
 
 export default function In({
   user,
@@ -120,7 +119,14 @@ export default function In({
 
           <div className="flex flex-col sm:flex-row w-full gap-24 sm:gap-8 mb-12">
             <div className="flex justify-center sm:w-1/3">
-              <CardStoicSupport />
+              <CardDivulgation
+                image={'/thumbnail/tn-stoic-support.webp'}
+                title={'Find Calm in the Chaos'}
+                description={
+                  'Life’s challenges meet ancient wisdom. Discover tailored Stoic insights to help you tackle everyday issues with resilience.'
+                }
+                cta={'Gain Stoic Insights'}
+              />
             </div>
           </div>
 
