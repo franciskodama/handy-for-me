@@ -2,34 +2,49 @@ import Link from 'next/link';
 
 import { tagClass } from './cards';
 import { Button } from '@/components/ui/button';
+import { AspectRatio } from '@radix-ui/react-aspect-ratio';
+import Image from 'next/image';
 
 export default function CardDivulgation({
+  feature,
   image,
   title,
-  description,
-  cta
+  copy,
+  cta,
+  url
 }: {
+  feature: string;
   image: string;
   title: string;
-  description: string;
+  copy: string;
   cta: string;
+  url: string;
 }) {
   return (
     <>
-      <div className="relative w-full p-4 sm:border sm:border-slate-300 sm:border-dashed">
-        <div className="flex flex-wrap gap-1">
-          <h3 className="text-sm sm:text-base px-1 py-1 font-semibold">
-            {title}
-          </h3>
-          <p>{description}</p>
+      <div className="relative flex flex-col sm:flex-row items-center w-full border border-slate-300 border-dashed">
+        <div className="w-full mx-auto">
+          <AspectRatio ratio={1 / 1}>
+            <Image
+              src={image}
+              alt={feature}
+              className="object-cover border-primary"
+              priority
+              fill
+              sizes="(max-width: 400px) 100vw"
+            />
+          </AspectRatio>
         </div>
-        {/* <div className={tagClass}>Bucket List</div> */}
-        <Button
-          variant="ghost"
-          className="absolute -bottom-2 sm:bottom-4 right-6 sm:right-2 text-xs underline bg-white sm:bg-transparent p-1 h-4"
-        >
-          <Link href="/bucket-list">{cta}</Link>
-        </Button>
+        <div className="flex flex-col items-center sm:items-start w-full gap-1 px-4 py-4 sm:py-0 sm:pl-4">
+          <h3 className="text-lg uppercase font-bold my-2">{title}</h3>
+          <p className="my-2 pl-4 pr-4 sm:pl-0 text-sm text-center sm:text-left">
+            {copy}
+          </p>
+          <Button variant="outline" size={'sm'} className="text-xs my-4">
+            <Link href={`/${url}`}>{cta}</Link>
+          </Button>
+        </div>
+        <div className={tagClass}>{feature}</div>
       </div>
     </>
   );
