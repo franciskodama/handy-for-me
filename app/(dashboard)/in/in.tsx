@@ -117,7 +117,7 @@ export default function In({
 
           {/* ----------------------- Second Row ----------------------- */}
 
-          <div className="flex flex-col sm:flex-row w-full gap-24 sm:gap-8 mb-12">
+          <div className="flex flex-col sm:flex-row w-full gap-24 sm:gap-8 my-12">
             <div className="flex justify-center sm:w-1/3">
               {visionBoardItems.length > 0 ? (
                 <CardVisionBoard visionBoardItems={visionBoardItems} />
@@ -160,7 +160,7 @@ export default function In({
 
           {/* ----------------------- Divulgation Row ----------------------- */}
 
-          <div className="flex flex-col sm:flex-row w-full gap-24 sm:gap-8 mb-12">
+          <div className="flex flex-col sm:flex-row w-full gap-24 sm:gap-8 my-12">
             <div className="flex justify-center sm:w-1/3">
               <CardDivulgation
                 feature={'Random Questions'}
@@ -202,14 +202,18 @@ export default function In({
           {/* ----------------------- Third Row ----------------------- */}
 
           {visionBoardItems.length > 0 ? (
-            <CardVisionBoard visionBoardItems={visionBoardItems} />
+            <div className="flex flex-col sm:flex-row w-full gap-24 sm:gap-8 my-12">
+              <CardVisionBoard visionBoardItems={visionBoardItems} />
+            </div>
           ) : (
-            <CardEmpty
-              title="Weekly Wins"
-              description=" Stay focused, track progress, and celebrate your wins each week!"
-              buttonText="Start Planning Now!"
-              url="weekly-wins"
-            />
+            <div className="flex flex-col sm:flex-row w-full gap-24 sm:gap-8 my-12">
+              <CardEmpty
+                title="Weekly Wins"
+                description=" Stay focused, track progress, and celebrate your wins each week!"
+                buttonText="Start Planning Now!"
+                url="weekly-wins"
+              />
+            </div>
           )}
 
           {/* ----------------------- FOOTER ----------------------- */}

@@ -26,7 +26,7 @@ export function CardFunFact() {
 
   return (
     <>
-      <div className="relative flex flex-col sm:flex-row gap-2 bg-muted px-6 py-8 pt-12 sm:pt-8 sm:bg-transparent sm:border sm:border-slate-300 sm:border-dashed ">
+      <div className="relative flex justify-between flex-col sm:flex-row gap-2 bg-muted px-6 py-8 pt-12 sm:pt-8 sm:bg-transparent sm:border sm:border-slate-300 sm:border-dashed ">
         <div className="flex flex-col items-start justify-between gap-2">
           <p className="text-base sm:text-sm">{currentFact.start}</p>
           <p className="text-2xl sm:text-xl font-bold sm:pr-4">
