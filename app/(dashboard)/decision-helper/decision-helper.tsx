@@ -2,7 +2,15 @@
 
 import { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { PartyPopper, RefreshCw, SquareX, Trash2 } from 'lucide-react';
+import {
+  CornerLeftUp,
+  CornerRightDown,
+  CornerRightUp,
+  PartyPopper,
+  RefreshCw,
+  SquareX,
+  Trash2
+} from 'lucide-react';
 import { Foldit } from 'next/font/google';
 import confetti from 'canvas-confetti';
 
@@ -183,7 +191,11 @@ export default function DecisionHelper({
                 </Button>
               </div>
             </div>
-            <p className="text-sm">or</p>
+            <div className="flex items-center gap-2">
+              <CornerLeftUp size={18} strokeWidth={1.4} />
+              <p className="text-sm">or</p>
+              <CornerRightDown size={18} strokeWidth={1.4} />
+            </div>
             <div className="flex flex-col gap-2">
               <Select
                 onValueChange={(value) => {
@@ -248,7 +260,7 @@ export default function DecisionHelper({
             )}
           </div>
 
-          <div className="stripe-border flex flex-col sm:w-1/2 items-center p-12">
+          <div className="stripe-border flex flex-col items-center sm:w-1/2 justify-center p-12 mt-8">
             {items.length > 0 ? (
               <>
                 <div className="flex flex-col">
