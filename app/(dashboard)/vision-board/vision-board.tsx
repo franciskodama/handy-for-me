@@ -227,7 +227,7 @@ export default function VisionBoard({
           onValueChange={(value) => setIsAccordionOpen(value)}
         >
           <AccordionItem value="item-1" className="border-0">
-            <AccordionTrigger className="w-full text-xs underline">
+            <AccordionTrigger className="w-full text-xs underline uppercase">
               Add a new Goal
             </AccordionTrigger>
             <AccordionContent>

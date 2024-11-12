@@ -55,6 +55,12 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { kumbh_sans } from '@/app/ui/fonts';
 import Help from '@/components/Help';
 import ExplanationDecisionHelper from './explanation-decision-helper';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger
+} from '@/components/ui/accordion';
 
 export const foldit = Foldit({
   weight: ['700'],
@@ -128,10 +134,6 @@ export default function DecisionHelper({
   };
 
   const handleDeleteList = async (id: string) => {
-    alert(
-      'Are you sure you want to delete this list? This action cannot be undone.'
-    );
-
     const success = await deleteDecisionHelperList(id);
     if (success) {
       setLists(lists.filter((list) => list.id !== id));
@@ -139,6 +141,12 @@ export default function DecisionHelper({
         title: 'List gone! 🎉',
         description: 'Your list has been successfully deleted.',
         variant: 'success'
+      });
+    } else {
+      toast({
+        title: 'Error deleting List! 🚨',
+        description: 'Something went wrong while deleting the List.',
+        variant: 'destructive'
       });
     }
   };
@@ -212,10 +220,12 @@ export default function DecisionHelper({
                 </Button>
               </div>
             </div>
-            <div className="flex items-center gap-2">
-              <CornerLeftUp size={18} strokeWidth={1.4} />
-              <p className="text-sm">or</p>
-              <CornerRightDown size={18} strokeWidth={1.4} />
+            <div className="flex items-center justify-between gap-2">
+              <div className="flex items-center gap-2">
+                <CornerLeftUp size={18} strokeWidth={1.4} />
+                <p className="text-sm">or</p>
+                <CornerRightDown size={18} strokeWidth={1.4} />
+              </div>
             </div>
             <div className="flex flex-col gap-2">
               <Select
@@ -233,13 +243,50 @@ export default function DecisionHelper({
                       {el.list && (
                         <div className="flex items-center justify-between gap-2">
                           <SelectItem value={el.id}>{el.list}</SelectItem>
-                          <Button
-                            variant={'ghost'}
-                            className="w-12 h-12my-4"
-                            onClick={() => handleDeleteList(el.id)}
-                          >
-                            <Trash size={18} strokeWidth={1.4} />
-                          </Button>
+                          <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                              <Button
+                                variant="ghost"
+                                className="w-12 h-12 my-4"
+                              >
+                                <Trash size={18} strokeWidth={1.4} />
+                              </Button>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent className="w-[calc(100%-35px)]">
+                              <AlertDialogHeader>
+                                <AlertDialogTitle className="flex items-center gap-2">
+                                  <Bomb size={24} strokeWidth={1.8} />
+                                  Are you absolutely sure?
+                                </AlertDialogTitle>
+                                <AlertDialogDescription className="py-4">
+                                  This action cannot be undone. This will
+                                  permanently delete the list
+                                  <span className="font-bold mx-1">
+                                    {el.list}
+                                  </span>
+                                  all its contents.
+                                </AlertDialogDescription>
+                              </AlertDialogHeader>
+                              <AlertDialogFooter>
+                                <AlertDialogCancel
+                                  onClick={() => {
+                                    toast({
+                                      title: 'Operation Cancelled! ❌',
+                                      description: `Phew! 😮‍💨 Crisis averted. You successfully cancelled the operation.`,
+                                      variant: 'destructive'
+                                    });
+                                  }}
+                                >
+                                  Cancel
+                                </AlertDialogCancel>
+                                <AlertDialogAction
+                                  onClick={() => handleDeleteList(el.id)}
+                                >
+                                  Delete
+                                </AlertDialogAction>
+                              </AlertDialogFooter>
+                            </AlertDialogContent>
+                          </AlertDialog>
                         </div>
                       )}
                     </div>
