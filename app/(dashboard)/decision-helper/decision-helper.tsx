@@ -2,26 +2,30 @@
 
 import { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
+import { Foldit } from 'next/font/google';
 import {
+  Bomb,
   CornerLeftUp,
   CornerRightDown,
-  CornerRightUp,
   PartyPopper,
   RefreshCw,
   SquareX,
+  Trash,
   Trash2
 } from 'lucide-react';
-import { Foldit } from 'next/font/google';
 import confetti from 'canvas-confetti';
 
+import { toast } from '@/hooks/use-toast';
 import {
   AlertDialog,
+  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
-  AlertDialogTitle
+  AlertDialogTitle,
+  AlertDialogTrigger
 } from '@/components/ui/alert-dialog';
 import {
   Card,
@@ -44,6 +48,7 @@ import {
   addDecisionHelperItem,
   addDecisionHelperList,
   deleteDecisionHelperItem,
+  deleteDecisionHelperList,
   selectionDecisionHelperItem
 } from '@/lib/actions';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -119,6 +124,22 @@ export default function DecisionHelper({
     const success = await deleteDecisionHelperItem(id);
     if (success) {
       setAllItems(allItems.filter((item) => item.id !== id));
+    }
+  };
+
+  const handleDeleteList = async (id: string) => {
+    alert(
+      'Are you sure you want to delete this list? This action cannot be undone.'
+    );
+
+    const success = await deleteDecisionHelperList(id);
+    if (success) {
+      setLists(lists.filter((list) => list.id !== id));
+      toast({
+        title: 'List gone! 🎉',
+        description: 'Your list has been successfully deleted.',
+        variant: 'success'
+      });
     }
   };
 
@@ -210,7 +231,16 @@ export default function DecisionHelper({
                   {lists.map((el: DecisionHelperList) => (
                     <div key={el.id}>
                       {el.list && (
-                        <SelectItem value={el.id}>{el.list}</SelectItem>
+                        <div className="flex items-center justify-between gap-2">
+                          <SelectItem value={el.id}>{el.list}</SelectItem>
+                          <Button
+                            variant={'ghost'}
+                            className="w-12 h-12my-4"
+                            onClick={() => handleDeleteList(el.id)}
+                          >
+                            <Trash size={18} strokeWidth={1.4} />
+                          </Button>
+                        </div>
                       )}
                     </div>
                   ))}
