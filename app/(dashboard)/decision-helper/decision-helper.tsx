@@ -164,12 +164,10 @@ export default function DecisionHelper({
           ) : null}
         </AnimatePresence>
 
-        <div className="flex flex-col sm:flex-row justify-between gap-8 mb-4 w-full">
+        <div className="flex flex-col sm:flex-row justify-start gap-8 mb-4 w-full">
           <div className="flex flex-col gap-4 sm:w-1/2">
-            <div className="flex flex-col items-start gap-2 w-full">
-              <p className="text-sm h-10 py-2">
-                Do you want to start a new list?
-              </p>
+            <div className="flex flex-col items-start w-full">
+              <p className="text-sm mb-2">Do you want to start a new list?</p>
               <div className="flex gap-2 w-full">
                 <Input
                   placeholder="List's Name"
@@ -250,22 +248,7 @@ export default function DecisionHelper({
             )}
           </div>
 
-          <div
-            className="flex flex-col sm:w-1/2 items-center p-12"
-            style={{
-              borderImage: `repeating-linear-gradient(
-                  45deg,
-                  transparent,
-                  transparent 2.5px,
-                  black 3px,
-                  black 3px,
-                  transparent 3px,
-                  transparent 3px
-                ) 15 / 0.75rem`,
-              borderStyle: 'solid',
-              borderWidth: '1em'
-            }}
-          >
+          <div className="stripe-border flex flex-col sm:w-1/2 items-center p-12">
             {items.length > 0 ? (
               <>
                 <div className="flex flex-col">
@@ -291,7 +274,7 @@ export default function DecisionHelper({
             ) : (
               <>
                 <p className="text-3xl text-slate-300 p-4 text-center animate-pulse w-full">
-                  waiting for items...
+                  Waiting for items...
                 </p>
               </>
             )}

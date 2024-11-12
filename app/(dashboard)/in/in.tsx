@@ -165,7 +165,7 @@ export default function In({
               <CardDivulgation
                 feature={'Random Questions'}
                 image={'/thumbnail/tn-random-questions.webp'}
-                title={'Surprise Yourself Today!'}
+                title={'Surprise Yourself!'}
                 copy={
                   'Break the routine with unexpected questions to spark thought and conversation. Perfect for reflection or fun interactions!'
                 }
@@ -173,18 +173,7 @@ export default function In({
                 url={'random-questions'}
               />
             </div>
-            <div className="flex justify-center sm:w-1/3">
-              <CardDivulgation
-                feature={'Stoic Support'}
-                image={'/thumbnail/tn-stoic-support.webp'}
-                title={'Find Calm in the Chaos'}
-                copy={
-                  'Life’s challenges meet ancient wisdom. Discover tailored Stoic insights to help you tackle everyday issues with resilience.'
-                }
-                cta={'Show me Stoic Insights'}
-                url={'stoic-support'}
-              />
-            </div>
+
             <div className="flex justify-center sm:w-1/3">
               <CardDivulgation
                 feature={'Decision Helper'}
@@ -195,6 +184,19 @@ export default function In({
                 }
                 cta={'Spin to Decide'}
                 url={'decision-helper'}
+              />
+            </div>
+
+            <div className="flex justify-center sm:w-1/3">
+              <CardDivulgation
+                feature={'Stoic Support'}
+                image={'/thumbnail/tn-stoic-support.webp'}
+                title={'Find Calm in the Chaos'}
+                copy={
+                  'Life’s challenges meet ancient wisdom. Discover tailored Stoic insights to help you tackle everyday issues with resilience.'
+                }
+                cta={'Show me Stoic Insights'}
+                url={'stoic-support'}
               />
             </div>
           </div>

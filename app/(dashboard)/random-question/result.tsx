@@ -9,22 +9,7 @@ export default function Result({
   handleResetAll: () => void;
 }) {
   return (
-    <div
-      className={`relative flex flex-col w-full items-center`}
-      style={{
-        borderImage: `repeating-linear-gradient(
-                            45deg,
-                            transparent,
-                            transparent 2.5px,
-                            black 3px,
-                            black 3px,
-                            transparent 3px,
-                            transparent 3px
-                        ) 15 / 0.75rem`,
-        borderStyle: 'solid',
-        borderWidth: '1em'
-      }}
-    >
+    <div className="relative stripe-border flex flex-col w-full items-center">
       {result ? (
         <>
           <p className="flex flex-col justify-center p-12 text-2xl sm:text-5xl font-semibold text-primary sm:leading-normal text-center">

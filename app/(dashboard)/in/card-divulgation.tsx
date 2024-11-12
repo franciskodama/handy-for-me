@@ -35,12 +35,16 @@ export default function CardDivulgation({
             />
           </AspectRatio>
         </div>
-        <div className="flex flex-col items-center sm:items-start w-full gap-1 px-4 py-4 sm:py-0 sm:pl-4">
-          <h3 className="text-lg uppercase font-bold my-2">{title}</h3>
-          <p className="my-2 pl-4 pr-4 sm:pl-0 text-sm text-center sm:text-left">
+        <div className="flex flex-col items-center sm:items-start w-full gap-1 sm:gap-4 px-4 py-4 sm:py-0 sm:pl-4">
+          <h3 className="text-lg uppercase font-bold my-2 sm:my-0">{title}</h3>
+          <p className="my-2 sm:my-0 pl-4 pr-4 sm:pl-0 text-sm text-center sm:text-left">
             {copy}
           </p>
-          <Button variant="outline" size={'sm'} className="text-xs my-4">
+          <Button
+            variant="outline"
+            size={'sm'}
+            className="text-xs my-4 sm:my-0"
+          >
             <Link href={`/${url}`}>{cta}</Link>
           </Button>
         </div>

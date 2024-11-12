@@ -11,7 +11,6 @@
 // TODO: Nadgen Q.A.
 // Stoic Support: Check the Content
 // Stoic Support: Dashboard Card
-
 // Decision Helper: Delete category
 
 // Random Questions:Reset All must Reset the Clock as well
@@ -44,6 +43,7 @@
 // Weekly Wins: Fix the limit of 10 characters
 
 // TODO: WORKING ON
+// Feature to Relax: https://codepen.io/fionchadd/pen/OJKaNxV
 // Close Quotes
 // Cards in Black an White, but users can toggle to see categories' colors
 

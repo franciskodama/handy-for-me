@@ -98,22 +98,7 @@ export default function LetterLeap({ name }: { name: string }) {
             </Button>
           </div>
 
-          <div
-            className="flex flex-col justify-center items-center sm:w-3/5 my-2 sm:my-0"
-            style={{
-              borderImage: `repeating-linear-gradient(
-                  45deg,
-                  transparent,
-                  transparent 2.5px,
-                  black 3px,
-                  black 3px,
-                  transparent 3px,
-                  transparent 3px
-                ) 15 / 0.75rem`,
-              borderStyle: 'solid',
-              borderWidth: '1em'
-            }}
-          >
+          <div className="stripe-border flex flex-col justify-center items-center sm:w-3/5 my-2 sm:my-0">
             {result ? (
               <>
                 <p
