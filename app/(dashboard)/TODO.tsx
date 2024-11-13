@@ -9,8 +9,6 @@
 // shadow-[0_0px_0px_0px_inset,#FFF_-3px_3px_0_-1px,#0F1739_-3px_3px]
 
 // TODO: Nadgen Q.A.
-// Decision Helper: Delete category --> Change the Alert from System Error to a Alert Dialog
-
 // Stoic Support: Check the Content
 // Stoic Support: Dashboard Card
 
@@ -20,7 +18,6 @@
 // Random Questions: Clock must restart on 2 min after Reset
 
 // Record a Loom Video to explain how to get a image url
-// Add on the Dashboard: Ads to divulgate other features for practicing English
 // Bucket List: Nadgen likes it categorized in columns
 // Shortcut (but check other features): Error message needs to be directly on the Tabs with the fields, not on an Alert Dialog
 // Decision Helper: Add categories first on the left side
@@ -33,6 +30,8 @@
 // Is there a way to hide de content of the user in the database by cryptography?
 
 // DONE:
+// Add on the Dashboard: Ads to divulgate other features for practicing English
+// Decision Helper: Delete category --> Change the Alert from System Error to a Alert Dialog
 // No content on the cards, no need to show the cards.
 // Vision Board: Napoleon Hill's Quote on the top of the page
 // Location: How do we get it and why Nadgen's location was wrong?
