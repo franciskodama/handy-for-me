@@ -145,7 +145,8 @@ export default function DecisionHelper({
     } else {
       toast({
         title: 'Error deleting List! 🚨',
-        description: 'Something went wrong while deleting the List.',
+        description:
+          'Please remove all items from the list first, then try again.',
         variant: 'destructive'
       });
     }
@@ -241,15 +242,16 @@ export default function DecisionHelper({
                   {lists.map((el: DecisionHelperList) => (
                     <div key={el.id}>
                       {el.list && (
-                        <div className="flex items-center justify-between gap-2">
+                        <div className="flex items-center justify-between">
                           <SelectItem value={el.id}>{el.list}</SelectItem>
                           <AlertDialog>
                             <AlertDialogTrigger asChild>
-                              <Button
-                                variant="ghost"
-                                className="w-12 h-12 my-4"
-                              >
-                                <Trash size={18} strokeWidth={1.4} />
+                              <Button variant="ghost">
+                                <Trash
+                                  className="text-primary"
+                                  size={18}
+                                  strokeWidth={1.4}
+                                />
                               </Button>
                             </AlertDialogTrigger>
                             <AlertDialogContent className="w-[calc(100%-35px)]">
@@ -258,9 +260,8 @@ export default function DecisionHelper({
                                   <Bomb size={24} strokeWidth={1.8} />
                                   Are you absolutely sure?
                                 </AlertDialogTitle>
-                                <AlertDialogDescription className="py-4">
-                                  This action cannot be undone. This will
-                                  permanently delete the list
+                                <AlertDialogDescription className="py-4 text-base text-primary">
+                                  This will permanently delete the list
                                   <span className="font-bold mx-1">
                                     {el.list}
                                   </span>
