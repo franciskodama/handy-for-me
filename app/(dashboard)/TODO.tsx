@@ -19,19 +19,19 @@
 
 // Record a Loom Video to explain how to get a image url
 // Bucket List: Nadgen likes it categorized in columns
-// Shortcut (but check other features): Error message needs to be directly on the Tabs with the fields, not on an Alert Dialog
-// Decision Helper: Add categories first on the left side
-// Build feature "My Words" (and "My Phrases") to practice and increase vocabulary
 // Responsivity for smallers screens of Laptops (Weather was tight on Nadgen's screen)
 // Weekly Wins on the Dashboard
 // Dashboard: Accordions?
 // Weekly Wins: include Nadgen idea to set how many days a week + progress bar
-// Responsivity for Tablets?
+// Build feature "My Words" (and "My Phrases") to practice and increase vocabulary
 // Is there a way to hide de content of the user in the database by cryptography?
+// Responsivity for Tablets?
 
 // DONE:
 // Add on the Dashboard: Ads to divulgate other features for practicing English
+// Decision Helper: Add categories first on the left side
 // Decision Helper: Delete category --> Change the Alert from System Error to a Alert Dialog
+// Shortcut (but check other features): Error message needs to be directly on the Tabs with the fields, not on an Alert Dialog
 // No content on the cards, no need to show the cards.
 // Vision Board: Napoleon Hill's Quote on the top of the page
 // Location: How do we get it and why Nadgen's location was wrong?

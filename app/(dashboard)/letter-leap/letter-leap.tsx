@@ -2,16 +2,7 @@
 
 import { useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import {
-  AArrowDown,
-  Clover,
-  Compass,
-  CornerDownLeft,
-  CornerRightDown,
-  LifeBuoy,
-  SquareX,
-  Zap
-} from 'lucide-react';
+import { CornerRightDown, LifeBuoy, SquareX } from 'lucide-react';
 import { Foldit } from 'next/font/google';
 
 export const foldit = Foldit({
