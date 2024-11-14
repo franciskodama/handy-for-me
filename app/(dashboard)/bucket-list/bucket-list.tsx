@@ -1,7 +1,14 @@
 'use client';
 
 import { AnimatePresence, motion } from 'framer-motion';
-import { Bomb, Check, FlagOff, Trash2 } from 'lucide-react';
+import {
+  ArrowDownWideNarrow,
+  ArrowUpWideNarrow,
+  Bomb,
+  Check,
+  FlagOff,
+  Trash2
+} from 'lucide-react';
 import { useActionState, useEffect, useState } from 'react';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -38,11 +45,13 @@ import {
   getBucketListItems,
   setBucketListItemDone
 } from '@/lib/actions';
-import { barlow } from '@/app/ui/fonts';
+import { barlow, kumbh_sans } from '@/app/ui/fonts';
 import { toast } from '@/hooks/use-toast';
 import ExplanationBucketList from './explanation-bucket-list';
 import Help from '@/components/Help';
 import MessageEmpty from '@/components/MessageEmpty';
+import { getColorCode } from '@/lib/utils';
+import Link from 'next/link';
 
 type Category = {
   name: string;
@@ -50,6 +59,13 @@ type Category = {
   bgColor: string;
   textColor: string;
 };
+
+// type GroupedByCategory = Record<string, BucketListItem[]>;
+
+// type CategoryArray = {
+//   category: string;
+//   items: BucketListItem[];
+// };
 
 const handleSubmit = async (previousState: unknown, formData: FormData) => {
   const uid = formData.get('uid') as string;
@@ -105,14 +121,14 @@ const handleSubmit = async (previousState: unknown, formData: FormData) => {
   };
 };
 
-const sortBucketList = (bucketList: BucketListItem[]) => {
-  const sortedBucketList = bucketList.sort((a, b) => {
-    if (a.category < b.category) return -1;
-    if (a.category > b.category) return 1;
-    return 0;
-  });
-  return sortedBucketList;
-};
+// const sortBucketList = (bucketList: BucketListItem[]) => {
+//   const sortedBucketList = bucketList.sort((a, b) => {
+//     if (a.category < b.category) return -1;
+//     if (a.category > b.category) return 1;
+//     return 0;
+//   });
+//   return sortedBucketList;
+// };
 
 export default function BucketList({
   uid,
@@ -124,12 +140,86 @@ export default function BucketList({
   const [openAction, setOpenAction] = useState(false);
   const [board, setBoard] = useState<BucketListItem[]>([]);
   const [data, action, isPending] = useActionState(handleSubmit, undefined);
+  const [currentCategories, setCurrentCategoriesAction] =
+    useState<Category[]>(categories);
+  console.log('---  🚀 ---> | board:', board);
+
+  // const organizedBoardByCategory = bucketList.reduce(
+  //   (acc: BucketListItem[], el: BucketListItem) => {
+  //     if (!acc[el.category]) {
+  //       acc[el.category] = [];
+  //     }
+  //     acc[el.category].push(el);
+  //     return acc;
+  //   },
+  //   {}
+  // );
+
+  const board: Shortcut[][] = Object.values(
+    currentShortcuts.reduce(
+      (acc: Record<string, Shortcut[]>, curr: Shortcut) => {
+        if (acc[curr.categoryId]) {
+          acc[curr.categoryId].push(curr);
+        } else {
+          acc[curr.categoryId] = [curr];
+        }
+        return acc;
+      },
+      {}
+    )
+  );
+
+  const organizedBoardByCategory: BucketListItem[][] = Object.values(
+    bucketList.reduce(
+      (acc: Record<string, BucketListItem[]>, curr: BucketListItem) => {
+        if (acc[curr.category]) {
+          acc[curr.category].push(curr);
+        } else {
+          acc[curr.category] = [curr];
+        }
+        return acc;
+      },
+      {}
+    )
+  );
+  console.log(
+    '---  🚀 ---> | organizedBoardByCategory:',
+    organizedBoardByCategory
+  );
+
+  const groupedByCategory = bucketList.reduce(
+    (acc: any, item: BucketListItem) => {
+      if (!acc[item.category]) {
+        acc[item.category] = [];
+      }
+
+      acc[item.category].push(item);
+
+      return acc;
+    },
+    {}
+  );
+  console.log('---  🚀 ---> | groupedByCategory:', groupedByCategory);
+
+  // const categoryArrays = Object.entries(groupedByCategory).map(
+  //   ([category, items]) => ({
+  //     category,
+  //     items
+  //   })
+  // );
+  // console.log('---  🚀 ---> | categoryArrays:', categoryArrays);
 
   useEffect(() => {
     if (bucketList) {
-      setBoard(sortBucketList(bucketList));
+      setBoard(bucketList);
     }
   }, []);
+
+  // useEffect(() => {
+  //   if (bucketList) {
+  //     setBoard(sortBucketList(bucketList));
+  //   }
+  // }, []);
 
   useEffect(() => {
     if (data?.newBucketListItem && Array.isArray(data.newBucketListItem)) {
@@ -186,15 +276,15 @@ export default function BucketList({
     }
   };
 
-  function getColorCodes(category: string) {
-    const foundCategory = bucketListCategories.find(
-      (el: any) => el.name === category
-    );
-    const bgColorCode = foundCategory?.bgColor || '#000000';
-    const textColorCode = foundCategory?.textColor || '#FFF';
+  // function getColorCodes(category: string) {
+  //   const foundCategory = bucketListCategories.find(
+  //     (el: any) => el.name === category
+  //   );
+  //   const bgColorCode = foundCategory?.bgColor || '#000000';
+  //   const textColorCode = foundCategory?.textColor || '#FFF';
 
-    return { color: textColorCode, backgroundColor: bgColorCode };
-  }
+  //   return { color: textColorCode, backgroundColor: bgColorCode };
+  // }
 
   return (
     <Card>
@@ -298,7 +388,246 @@ export default function BucketList({
           </div>
         )}
 
-        <div className="flex flex-wrap gap-2 my-12">
+        <div className="flex flex-col sm:flex-row w-full gap-8">
+          {board.map((groupOfShortcuts: Shortcut[]) => (
+            <div key={groupOfShortcuts[0].categoryId} className="sm:w-1/5">
+              <h3
+              // className={`${kumbh_sans.className} text-left text-sm font-semibold text-primary px-4 py-3 my-2 uppercase leading-none`}
+              // style={getColorCode(
+              //   groupOfShortcuts[0].category?.color ?? 'grey'
+              // )}
+              >
+                {groupOfShortcuts[0].category?.category}
+              </h3>
+
+              {groupOfShortcuts.map((shortcut: Shortcut) => (
+                <>
+                  <div
+                    key={shortcut.id}
+                    className="flex border border-primary mt-2"
+                  >
+                    <div className="w-full px-4 py-3">
+                      <Link
+                        href={shortcut.url}
+                        target="_blank"
+                        className="w-full"
+                      >
+                        <p className="text-left uppercase text-sm leading-none">
+                          {shortcut.shortcut}
+                        </p>
+                      </Link>
+                    </div>
+
+                    <Button
+                      variant="ghost"
+                      onClick={() => {
+                        toggleDescription(shortcut.id);
+                      }}
+                    >
+                      {openDescriptions.has(shortcut.id) ? (
+                        <ArrowUpWideNarrow
+                          size={18}
+                          strokeWidth={1.8}
+                          color="#000"
+                        />
+                      ) : (
+                        <ArrowDownWideNarrow
+                          size={18}
+                          strokeWidth={1.8}
+                          color="#000"
+                        />
+                      )}
+                    </Button>
+
+                    <AlertDialog>
+                      <AlertDialogTrigger className="px-2 py-1 mr-4">
+                        <Trash2 size={18} strokeWidth={1.8} color="#000" />
+                      </AlertDialogTrigger>
+                      <AlertDialogContent className="w-[calc(100%-35px)]">
+                        <AlertDialogHeader>
+                          <AlertDialogTitle className="flex items-center gap-2">
+                            <Bomb size={24} strokeWidth={1.8} />
+                            Are you absolutely sure?
+                          </AlertDialogTitle>
+                          <AlertDialogDescription className="py-4">
+                            This will permanently delete the vision
+                            <span className="font-bold mx-1">
+                              {shortcut.shortcut}
+                            </span>
+                            from our servers.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel
+                            onClick={() => {
+                              toast({
+                                title: 'Operation Cancelled! ❌',
+                                description: `Phew! 😮‍💨 Crisis averted. You successfully cancelled the operation.`,
+                                variant: 'destructive'
+                              });
+                            }}
+                          >
+                            Cancel
+                          </AlertDialogCancel>
+                          <AlertDialogAction
+                            onClick={() => handleDeleteItem(shortcut)}
+                          >
+                            Continue
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                  </div>
+
+                  <AnimatePresence>
+                    {openDescriptions.has(shortcut.id) ? (
+                      <motion.div
+                        layout
+                        initial={{ opacity: 0, y: 0, scale: 0.3 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{
+                          opacity: 0,
+                          scale: 0.5,
+                          transition: { duration: 0.1 }
+                        }}
+                      >
+                        <div className="px-4 py-2 bg-primary text-white text-xs font-semibold">
+                          {shortcut.description ? (
+                            shortcut.description
+                          ) : (
+                            <div className="flex items-center ml-1">
+                              <MessageCircleX
+                                size={18}
+                                strokeWidth={1.8}
+                                color="#fff"
+                              />
+                              <p className="ml-2">No description available.</p>
+                            </div>
+                          )}
+                        </div>
+                      </motion.div>
+                    ) : null}
+                  </AnimatePresence>
+                </>
+              ))}
+            </div>
+          ))}
+        </div>
+
+        {/* <div className="flex flex-col sm:flex-row w-full gap-8">
+          {categoryArrays.map((categoryArray: any) => (
+            <div key={categoryArray.items[0].id} className="sm:w-1/5">
+              <h3
+                className={`${kumbh_sans.className} text-left text-sm font-semibold text-primary px-4 py-3 my-2 uppercase leading-none`}
+                style={getColorCode(categoryArray[0].category?.color ?? 'grey')}
+              >
+                {categoryArray[0].category?.category}
+              </h3>
+
+              {categoryArray.map((el: BucketListItem) => (
+                <>
+                  <div key={el.id} className="flex border border-primary mt-2">
+                    <div className="w-full px-4 py-3">
+                      <p className="text-left uppercase text-sm leading-none">
+                        {el.item}
+                      </p>
+                    </div>
+
+                    <Button
+                      variant="ghost"
+                      onClick={() => {
+                        toggleDescription(shortcut.id);
+                      }}
+                    >
+                      {openDescriptions.has(shortcut.id) ? (
+                        <ArrowUpWideNarrow
+                          size={18}
+                          strokeWidth={1.8}
+                          color="#000"
+                        />
+                      ) : (
+                        <ArrowDownWideNarrow
+                          size={18}
+                          strokeWidth={1.8}
+                          color="#000"
+                        />
+                      )}
+                    </Button>
+
+                    <AlertDialog>
+                      <AlertDialogTrigger className="px-2 py-1 mr-4">
+                        <Trash2 size={18} strokeWidth={1.8} color="#000" />
+                      </AlertDialogTrigger>
+                      <AlertDialogContent className="w-[calc(100%-35px)]">
+                        <AlertDialogHeader>
+                          <AlertDialogTitle className="flex items-center gap-2">
+                            <Bomb size={24} strokeWidth={1.8} />
+                            Are you absolutely sure?
+                          </AlertDialogTitle>
+                          <AlertDialogDescription className="py-4">
+                            This will permanently delete the vision
+                            <span className="font-bold mx-1">{el.item}</span>
+                            from our servers.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel
+                            onClick={() => {
+                              toast({
+                                title: 'Operation Cancelled! ❌',
+                                description: `Phew! 😮‍💨 Crisis averted. You successfully cancelled the operation.`,
+                                variant: 'destructive'
+                              });
+                            }}
+                          >
+                            Cancel
+                          </AlertDialogCancel>
+                          <AlertDialogAction
+                            onClick={() => handleDeleteItem(el)}
+                          >
+                            Continue
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                  </div>
+
+                  <AnimatePresence>
+                    {openDescriptions.has(shortcut.id) ? (
+                      <motion.div
+                        layout
+                        initial={{ opacity: 0, y: 0, scale: 0.3 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{
+                          opacity: 0,
+                          scale: 0.5,
+                          transition: { duration: 0.1 }
+                        }}
+                      >
+                        <div className="px-4 py-2 bg-primary text-white text-xs font-semibold">
+                          {shortcut.description ? (
+                            shortcut.description
+                          ) : (
+                            <div className="flex items-center ml-1">
+                              <MessageCircleX
+                                size={18}
+                                strokeWidth={1.8}
+                                color="#fff"
+                              />
+                              <p className="ml-2">No description available.</p>
+                            </div>
+                          )}
+                        </div>
+                      </motion.div>
+                    ) : null}
+                  </AnimatePresence>
+                </>
+              ))}
+            </div>
+          ))}
+        </div> */}
+
+        {/* <div className="flex flex-wrap gap-2 my-12">
           {board.map((el: BucketListItem) => (
             <div key={el.id}>
               <div className="relative group">
@@ -387,7 +716,7 @@ export default function BucketList({
               </div>
             </div>
           ))}
-        </div>
+        </div> */}
       </CardContent>
     </Card>
   );
