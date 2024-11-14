@@ -298,7 +298,7 @@ export default function BucketList({
           </div>
         )}
 
-        <div className="flex flex-wrap gap-2 mt-12">
+        <div className="flex flex-wrap gap-2 my-12">
           {board.map((el: BucketListItem) => (
             <div key={el.id}>
               <div className="relative group">

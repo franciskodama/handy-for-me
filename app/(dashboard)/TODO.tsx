@@ -17,8 +17,8 @@
 // Random Questions: everything on one screen
 // Random Questions: Clock must restart on 2 min after Reset
 
-// Record a Loom Video to explain how to get a image url
 // Bucket List: Nadgen likes it categorized in columns
+// Bucket List: Select must be restarted after Adding a new item. It's returning alwqays the last selected item
 // Responsivity for smallers screens of Laptops (Weather was tight on Nadgen's screen)
 // Weekly Wins on the Dashboard
 // Dashboard: Accordions?
@@ -28,6 +28,7 @@
 // Responsivity for Tablets?
 
 // DONE:
+// Record a Loom Video to explain how to get a image url
 // Add on the Dashboard: Ads to divulgate other features for practicing English
 // Decision Helper: Add categories first on the left side
 // Decision Helper: Delete category --> Change the Alert from System Error to a Alert Dialog
