@@ -8,6 +8,8 @@ import {
   Check,
   FlagOff,
   MessageCircleX,
+  Square,
+  SquareCheckBig,
   Trash2
 } from 'lucide-react';
 import { useActionState, useEffect, useState } from 'react';
@@ -51,10 +53,15 @@ import { toast } from '@/hooks/use-toast';
 import ExplanationBucketList from './explanation-bucket-list';
 import Help from '@/components/Help';
 import MessageEmpty from '@/components/MessageEmpty';
-import { getColorCode } from '@/lib/utils';
-import Link from 'next/link';
 
 type Category = {
+  name: string;
+  color: string;
+  bgColor: string;
+  textColor: string;
+};
+
+type BucketListCategory = {
   name: string;
   color: string;
   bgColor: string;
@@ -160,7 +167,15 @@ export default function BucketList({
     try {
       const success = await deleteBucketListItem(el.id);
       if (success) {
-        setBoard(board.filter((element) => element.id !== el.id));
+        setBoard((prevBoard) =>
+          prevBoard
+            .map((categoryArray) =>
+              categoryArray[0].category === el.category
+                ? categoryArray.filter((item) => item.id !== el.id)
+                : categoryArray
+            )
+            .filter((categoryArray) => categoryArray.length > 0)
+        );
       }
       toast({
         title: 'Item gone!',
@@ -182,15 +197,19 @@ export default function BucketList({
       const success = await setBucketListItemDone(el.id, !el.done);
       if (success) {
         setBoard((prevBoard) =>
-          prevBoard.map((boardItem) =>
-            boardItem.id === el.id
-              ? { ...boardItem, done: !boardItem.done }
-              : boardItem
+          prevBoard.map((categoryArray) =>
+            categoryArray[0].category === el.category
+              ? categoryArray.map((boardItem) =>
+                  boardItem.id === el.id
+                    ? { ...boardItem, done: !boardItem.done }
+                    : boardItem
+                )
+              : categoryArray
           )
         );
       }
       toast({
-        title: 'Vision Progress Updated! 🌟',
+        title: 'Bucket List Updated! 🌟',
         description: `"${el.item}" has been marked as ${el.done ? 'incomplete' : 'achieved'}. Keep pushing towards your dreams!`,
         variant: 'success'
       });
@@ -205,15 +224,15 @@ export default function BucketList({
     }
   };
 
-  function getColorCodes(category: string) {
+  const getColorCodes = (category: string) => {
     const foundCategory = bucketListCategories.find(
-      (el: any) => el.name === category
+      (el: BucketListCategory) => el.name === category
     );
     const bgColorCode = foundCategory?.bgColor || '#000000';
     const textColorCode = foundCategory?.textColor || '#FFF';
 
     return { color: textColorCode, backgroundColor: bgColorCode };
-  }
+  };
 
   return (
     <Card>
@@ -317,12 +336,12 @@ export default function BucketList({
           </div>
         )}
 
-        <div className="flex flex-col sm:flex-row w-full gap-8">
-          {boardByCategory.map((categoryArray: BucketListItem[]) => (
+        <div className="flex flex-col sm:flex-row w-full gap-8 mt-8">
+          {board.map((categoryArray: BucketListItem[]) => (
             <div key={categoryArray[0].category} className="sm:w-1/5">
               <h3
                 className={`${kumbh_sans.className} text-left text-sm font-semibold text-primary px-4 py-3 my-2 uppercase leading-none`}
-                style={getColorCode(categoryArray[0].category ?? 'grey')}
+                style={getColorCodes(categoryArray[0].category ?? 'grey')}
               >
                 {categoryArray[0].category}
               </h3>
@@ -331,12 +350,11 @@ export default function BucketList({
                 <>
                   <div key={el.id} className="flex border border-primary mt-2">
                     <div className="w-full px-4 py-3">
-                      {/* <Link href={el.url} target="_blank" className="w-full"> */}
-                      <p className="text-left uppercase text-sm leading-none">
-                        {/* line-through */}
+                      <p
+                        className={`${el.done && 'line-through'} text-left uppercase text-sm leading-none`}
+                      >
                         {el.item}
                       </p>
-                      {/* </Link> */}
                     </div>
 
                     {/* <Button
@@ -365,7 +383,11 @@ export default function BucketList({
                       onClick={() => handleCheck(el)}
                       variant={'link'}
                     >
-                      <Check size={18} strokeWidth={1.8} />
+                      {el.done ? (
+                        <SquareCheckBig size={18} strokeWidth={1.8} />
+                      ) : (
+                        <Square size={18} strokeWidth={1.8} />
+                      )}
                     </Button>
 
                     <AlertDialog>
@@ -379,7 +401,7 @@ export default function BucketList({
                             Are you absolutely sure?
                           </AlertDialogTitle>
                           <AlertDialogDescription className="py-4">
-                            This will permanently delete the Bucket List item
+                            This will permanently delete the adventure
                             <span className="font-bold mx-1">{el.item}</span>
                             from our servers.
                           </AlertDialogDescription>
