@@ -111,22 +111,7 @@ export default function MyWords({
 
           {/* ----------------------- Second Column ----------------------- */}
 
-          <div
-            className={`flex flex-col w-3/5 items-center h-[40em]`}
-            style={{
-              borderImage: `repeating-linear-gradient(
-                  45deg,
-                  transparent,
-                  transparent 2.5px,
-                  black 3px,
-                  black 3px,
-                  transparent 3px,
-                  transparent 3px
-                ) 15 / 0.75rem`,
-              borderStyle: 'solid',
-              borderWidth: '1em'
-            }}
-          >
+          <div className="stripe-border flex flex-col w-3/5 items-center h-[40em]">
             {result ? (
               <>
                 <p

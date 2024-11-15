@@ -2,7 +2,18 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { Bomb, Check, Grid2x2X, Trash2 } from 'lucide-react';
+import {
+  Bomb,
+  Check,
+  Copy,
+  Grid2x2X,
+  Lightbulb,
+  Link2,
+  LinkIcon,
+  Trash2,
+  TvMinimalPlay,
+  Youtube
+} from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useActionState, useEffect, useState } from 'react';
 
@@ -38,6 +49,7 @@ import { toast } from '@/hooks/use-toast';
 import { barlow, kumbh_sans } from '@/app/ui/fonts';
 import ExplanationVisionBoard from './explanation-vision-board';
 import MessageEmpty from '@/components/MessageEmpty';
+import VideoTutorial from './video-tutorial';
 
 const handleSubmit = async (previousState: unknown, formData: FormData) => {
   const item = formData.get('item') as string;
@@ -47,7 +59,7 @@ const handleSubmit = async (previousState: unknown, formData: FormData) => {
   if (!item) {
     toast({
       title: 'Goal is required!',
-      description: 'What do you want to achieve?',
+      description: 'Please enter a goal name.',
       variant: 'destructive'
     });
     return;
@@ -227,7 +239,7 @@ export default function VisionBoard({
           onValueChange={(value) => setIsAccordionOpen(value)}
         >
           <AccordionItem value="item-1" className="border-0">
-            <AccordionTrigger className="w-full text-xs underline">
+            <AccordionTrigger className="w-full text-xs underline uppercase">
               Add a new Goal
             </AccordionTrigger>
             <AccordionContent>
@@ -389,8 +401,7 @@ function FormVisionBoard({
           <div className="flex flex-col gap-1 w-full sm:w-2/5">
             <Input placeholder="Goal" id="item" name="item" />
             <p className="text-xs ml-4 lowercase">
-              <span className="uppercase">N</span>ame your goal in one word
-              (optional).
+              <span className="uppercase">N</span>ame your goal in one word.
             </p>
           </div>
           <div className="flex flex-col gap-1 w-full sm:w-2/5">
@@ -406,6 +417,40 @@ function FormVisionBoard({
               </Link>
               that reflects your vision. *
             </p>
+            <div className="ml-4 my-2">
+              <AlertDialog>
+                <AlertDialogTrigger className="flex items-center">
+                  <Copy size={14} strokeWidth={1.8} className="mr-1" />
+                  <p className="text-xs underline">How to copy the Image Url</p>
+                </AlertDialogTrigger>
+                <AlertDialogContent className="max-w-5xl">
+                  <AlertDialogHeader>
+                    <AlertDialogTitle className="flex items-center gap-2 uppercase">
+                      <TvMinimalPlay size={24} strokeWidth={1.8} />
+                      How to Copy Image Links
+                    </AlertDialogTitle>
+                    <AlertDialogDescription className="py-4 text-sm">
+                      Quick steps to copy image links from Unsplash for your
+                      Vision Board.
+                    </AlertDialogDescription>
+                    <VideoTutorial />
+                  </AlertDialogHeader>
+                  <ul className="flex flex-col gap-2 text-sm mb-4">
+                    <p className="font-semibold my-2">Step-by-Step:</p>
+                    <ol>
+                      1) Go to unsplash.com and find an image that aligns with
+                      your vision.
+                    </ol>
+                    <ol>2) Right-click on the image.</ol>
+                    <ol>3) Select “Copy Image Address” from the menu.</ol>
+                    <ol>4) Paste the copied URL into your Vision Board.</ol>
+                  </ul>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Got it!</AlertDialogCancel>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            </div>
           </div>
           <Input id="uid" name="uid" value={uid} readOnly className="hidden" />
           <Button type="submit" disabled={isPending} className="ml-2">

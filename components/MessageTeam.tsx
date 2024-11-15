@@ -41,21 +41,7 @@ export default function MessageTeam() {
 
   return (
     <div className="relative">
-      <Alert
-        style={{
-          borderImage: `repeating-linear-gradient(
-              45deg,
-              transparent,
-              transparent 2.5px,
-              black 3px,
-              black 3px,
-              transparent 3px,
-              transparent 3px
-            ) 15 / 0.75rem`,
-          borderStyle: 'solid',
-          borderWidth: '1em'
-        }}
-      >
+      <Alert className="stripe-border">
         <AlertDescription className="relative text-sm flex items-start justify-between p-2">
           <div className="flex flex-col w-1/3 py-2 px-12">
             <div className="flex items-center gap-2 mb-4">

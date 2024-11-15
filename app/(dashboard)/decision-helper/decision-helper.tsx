@@ -2,18 +2,30 @@
 
 import { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { PartyPopper, RefreshCw, SquareX, Trash2 } from 'lucide-react';
 import { Foldit } from 'next/font/google';
+import {
+  Bomb,
+  CornerLeftUp,
+  CornerRightDown,
+  PartyPopper,
+  RefreshCw,
+  SquareX,
+  Trash,
+  Trash2
+} from 'lucide-react';
 import confetti from 'canvas-confetti';
 
+import { toast } from '@/hooks/use-toast';
 import {
   AlertDialog,
+  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
-  AlertDialogTitle
+  AlertDialogTitle,
+  AlertDialogTrigger
 } from '@/components/ui/alert-dialog';
 import {
   Card,
@@ -36,12 +48,19 @@ import {
   addDecisionHelperItem,
   addDecisionHelperList,
   deleteDecisionHelperItem,
+  deleteDecisionHelperList,
   selectionDecisionHelperItem
 } from '@/lib/actions';
 import { Checkbox } from '@/components/ui/checkbox';
 import { kumbh_sans } from '@/app/ui/fonts';
 import Help from '@/components/Help';
 import ExplanationDecisionHelper from './explanation-decision-helper';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger
+} from '@/components/ui/accordion';
 
 export const foldit = Foldit({
   weight: ['700'],
@@ -114,6 +133,25 @@ export default function DecisionHelper({
     }
   };
 
+  const handleDeleteList = async (id: string) => {
+    const success = await deleteDecisionHelperList(id);
+    if (success) {
+      setLists(lists.filter((list) => list.id !== id));
+      toast({
+        title: 'List gone! 🎉',
+        description: 'Your list has been successfully deleted.',
+        variant: 'success'
+      });
+    } else {
+      toast({
+        title: 'Error deleting List! 🚨',
+        description:
+          'Please remove all items from the list first, then try again.',
+        variant: 'destructive'
+      });
+    }
+  };
+
   const handleSpin = () => {
     setSpinning(true);
     const randomIndex = Math.floor(Math.random() * itemsSelected.length);
@@ -164,8 +202,32 @@ export default function DecisionHelper({
           ) : null}
         </AnimatePresence>
 
-        <div className="flex flex-col sm:flex-row justify-between gap-8 mb-4 w-full">
-          <div className="flex flex-col sm:w-1/3">
+        <div className="flex flex-col sm:flex-row justify-start gap-8 mb-4 w-full">
+          <div className="flex flex-col gap-4 sm:w-1/2">
+            <div className="flex flex-col items-start w-full">
+              <p className="text-sm mb-2">Do you want to start a new list?</p>
+              <div className="flex gap-2 w-full">
+                <Input
+                  placeholder="List's Name"
+                  value={listInput}
+                  onChange={(e) => setListInput(e.target.value)}
+                />
+                <Button
+                  className={pendingNewList ? 'ml-1 bg-primary' : 'ml-1'}
+                  onClick={handleCreateList}
+                  disabled={pendingNewList || listInput.trim() === ''}
+                >
+                  {pendingNewList ? 'Creating...' : 'Create a New List'}
+                </Button>
+              </div>
+            </div>
+            <div className="flex items-center justify-between gap-2">
+              <div className="flex items-center gap-2">
+                <CornerLeftUp size={18} strokeWidth={1.4} />
+                <p className="text-sm">or</p>
+                <CornerRightDown size={18} strokeWidth={1.4} />
+              </div>
+            </div>
             <div className="flex flex-col gap-2">
               <Select
                 onValueChange={(value) => {
@@ -180,7 +242,53 @@ export default function DecisionHelper({
                   {lists.map((el: DecisionHelperList) => (
                     <div key={el.id}>
                       {el.list && (
-                        <SelectItem value={el.id}>{el.list}</SelectItem>
+                        <div className="flex items-center justify-between">
+                          <SelectItem value={el.id}>{el.list}</SelectItem>
+                          <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                              <Button variant="ghost">
+                                <Trash
+                                  className="text-primary"
+                                  size={18}
+                                  strokeWidth={1.4}
+                                />
+                              </Button>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent className="w-[calc(100%-35px)]">
+                              <AlertDialogHeader>
+                                <AlertDialogTitle className="flex items-center gap-2">
+                                  <Bomb size={24} strokeWidth={1.8} />
+                                  Are you absolutely sure?
+                                </AlertDialogTitle>
+                                <AlertDialogDescription className="py-4 text-base text-primary">
+                                  This will permanently delete the list
+                                  <span className="font-bold mx-1">
+                                    {el.list}
+                                  </span>
+                                  all its contents.
+                                </AlertDialogDescription>
+                              </AlertDialogHeader>
+                              <AlertDialogFooter>
+                                <AlertDialogCancel
+                                  onClick={() => {
+                                    toast({
+                                      title: 'Operation Cancelled! ❌',
+                                      description: `Phew! 😮‍💨 Crisis averted. You successfully cancelled the operation.`,
+                                      variant: 'destructive'
+                                    });
+                                  }}
+                                >
+                                  Cancel
+                                </AlertDialogCancel>
+                                <AlertDialogAction
+                                  onClick={() => handleDeleteList(el.id)}
+                                >
+                                  Delete
+                                </AlertDialogAction>
+                              </AlertDialogFooter>
+                            </AlertDialogContent>
+                          </AlertDialog>
+                        </div>
                       )}
                     </div>
                   ))}
@@ -202,6 +310,7 @@ export default function DecisionHelper({
                 </Button>
               </div>
             </div>
+
             {items.length > 0 && (
               <div className="flex flex-col gap-2">
                 <p className="text-sm font-semibold mt-4">Items:</p>
@@ -229,22 +338,7 @@ export default function DecisionHelper({
             )}
           </div>
 
-          <div
-            className="flex flex-col sm:w-1/3 items-center p-12"
-            style={{
-              borderImage: `repeating-linear-gradient(
-                  45deg,
-                  transparent,
-                  transparent 2.5px,
-                  black 3px,
-                  black 3px,
-                  transparent 3px,
-                  transparent 3px
-                ) 15 / 0.75rem`,
-              borderStyle: 'solid',
-              borderWidth: '1em'
-            }}
-          >
+          <div className="stripe-border flex flex-col items-center sm:w-1/2 justify-center p-12 mt-8">
             {items.length > 0 ? (
               <>
                 <div className="flex flex-col">
@@ -270,7 +364,7 @@ export default function DecisionHelper({
             ) : (
               <>
                 <p className="text-3xl text-slate-300 p-4 text-center animate-pulse w-full">
-                  waiting for items...
+                  Waiting for items...
                 </p>
               </>
             )}
@@ -322,30 +416,9 @@ export default function DecisionHelper({
 
           {/* ----------------------- Third Column ----------------------- */}
 
-          <div className="flex flex-col sm:w-1/3">
-            <div className="sm:w-[25em]">
-              <p className="text-sm h-10 py-2">
-                Do you want to start a new list?
-              </p>
-              <div className="flex items-center gap-2">
-                <Input
-                  placeholder="List's Name"
-                  value={listInput}
-                  onChange={(e) => setListInput(e.target.value)}
-                />
-                <Button
-                  className={pendingNewList ? 'ml-1 bg-primary' : 'ml-1'}
-                  onClick={handleCreateList}
-                  disabled={pendingNewList || listInput.trim() === ''}
-                >
-                  {pendingNewList ? 'Creating...' : 'Create a New List'}
-                </Button>
-              </div>
-            </div>
+          {/*handle deleteDecisionHelperList(id) */}
 
-            {/*handle deleteDecisionHelperList(id) */}
-
-            {/* 
+          {/* 
             <div className="w-[25em] mt-8">
               <p className="text-sm h-10 py-2">Do you want to delete a list?</p>
               <div className="flex items-center gap-2">
@@ -363,7 +436,6 @@ export default function DecisionHelper({
                 </Button>
               </div>
             </div> */}
-          </div>
         </div>
       </CardContent>
     </Card>

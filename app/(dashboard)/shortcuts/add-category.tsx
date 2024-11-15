@@ -155,8 +155,9 @@ export function AddCategory({
     } catch (error) {
       console.error(error);
       toast({
-        title: 'Error deleting Shortcut Category! 🚨',
-        description: 'Something went wrong while deleting this Category.',
+        title: 'Error deleting Category! 🚨',
+        description:
+          'Please remove all items from this Category first, then try again.',
         variant: 'destructive'
       });
     }

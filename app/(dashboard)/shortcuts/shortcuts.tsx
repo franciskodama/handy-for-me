@@ -72,6 +72,7 @@ export default function Shortcuts({
       {}
     )
   );
+  console.log('---  🚀 ---> | board shortcut:', board);
 
   const handleDeleteItem = async (shortcut: Shortcut) => {
     try {
@@ -114,7 +115,7 @@ export default function Shortcuts({
         <CardTitle className="flex flex-col sm:flex-row sm:justify-between items-start mb-0">
           <div className="flex flex-col">
             <div className="flex items-center justify-between">
-              <p>Shorcuts</p>
+              <p>Shortcuts</p>
               <div className="block sm:hidden">
                 {!openAction ? <Help setOpenAction={setOpenAction} /> : <div />}
               </div>
