@@ -225,7 +225,7 @@ export default function BucketList({
   };
 
   const getColorCodes = (category: string) => {
-    const foundCategory = bucketListCategories.find(
+    const foundCategory = bucketListCategoriesBlackWhite.find(
       (el: BucketListCategory) => el.name === category
     );
     const bgColorCode = foundCategory?.bgColor || '#000000';
@@ -340,7 +340,7 @@ export default function BucketList({
           {board.map((categoryArray: BucketListItem[]) => (
             <div key={categoryArray[0].category} className="sm:w-1/5">
               <h3
-                className={`${kumbh_sans.className} text-left text-sm font-semibold text-primary px-4 py-3 my-2 uppercase leading-none`}
+                className={`${kumbh_sans.className} text-left text-sm font-semibold text-primary px-4 py-3 my-2 uppercase leading-none border border-primary`}
                 style={getColorCodes(categoryArray[0].category ?? 'grey')}
               >
                 {categoryArray[0].category}
@@ -462,97 +462,6 @@ export default function BucketList({
             </div>
           ))}
         </div>
-
-        {/* <div className="flex flex-wrap gap-2 my-12">
-          {organizedBoardByCategory.map((el: BucketListItem[]) => (
-            <div key={el[0].category}>
-              <div className="relative group">
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger>
-                      <p
-                        className="text-center text-sm sm:text-xl px-4 py-1 font-semibold"
-                        // style={getColorCodes(el.category)}
-                      >
-                        {el.item}
-                      </p>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p className="text-primary ml-2 capitalize font-light">
-                        {el.category}
-                      </p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-                {el.done ? (
-                  <>
-                    <div
-                      className="absolute bottom-1/2 translate-y-[calc(50%+2px)] left-0 opacity-70 h-[2px] w-full"
-                      // style={{
-                      //   backgroundColor: getColorCodes(el.category).color
-                      // }}
-                    />
-                  </>
-                ) : null}
-
-                <AlertDialog>
-                  <AlertDialogTrigger
-                    className="absolute bottom-full right-0 translate-y-0 opacity-0 group-hover:opacity-100 p-1 z-200"
-                    // style={getColorCodes(el.category)}
-                  >
-                    <Trash2
-                      size={18}
-                      strokeWidth={1.8}
-                      // color={getColorCodes(el.category).color}
-                    />
-                  </AlertDialogTrigger>
-                  <AlertDialogContent className="w-[calc(100%-35px)]">
-                    <AlertDialogHeader>
-                      <AlertDialogTitle className="flex items-center gap-2">
-                        <Bomb size={24} strokeWidth={1.8} />
-                        Are you absolutely sure?
-                      </AlertDialogTitle>
-                      <AlertDialogDescription className="py-4">
-                        This will permanently delete the adventure
-                        <span className="font-bold mx-1">{el.item}</span>
-                        from our servers.
-                      </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                      <AlertDialogCancel
-                        onClick={() => {
-                          toast({
-                            title: 'Operation Cancelled! ❌',
-                            description: `Phew! 😮‍💨 Crisis averted. You successfully cancelled the operation.`,
-                            variant: 'destructive'
-                          });
-                        }}
-                      >
-                        Cancel
-                      </AlertDialogCancel>
-                      <AlertDialogAction onClick={() => handleDeleteItem(el)}>
-                        Continue
-                      </AlertDialogAction>
-                    </AlertDialogFooter>
-                  </AlertDialogContent>
-                </AlertDialog>
-
-                <Button
-                  className="absolute bottom-full left-0 -translate-y-0 opacity-0 group-hover:opacity-100 h-6 bg-white p-1 z-200"
-                  // style={getColorCodes(el.category)}
-                  onClick={() => handleCheck(el)}
-                  variant={'link'}
-                >
-                  <Check
-                    size={18}
-                    strokeWidth={1.8}
-                    // color={getColorCodes(el.category).color}
-                  />
-                </Button>
-              </div>
-            </div>
-          ))}
-        </div> */}
       </CardContent>
     </Card>
   );
@@ -561,93 +470,426 @@ export default function BucketList({
 export const bucketListCategories = [
   {
     name: 'Adventure',
-    color: 'red',
-    bgColor: '#FF0000',
-    textColor: '#FFFF00'
+    color: 'bright turquoise',
+    bgColor: '#00D9FF',
+    textColor: '#004A60'
   },
-  { name: 'Bar', color: 'orange', bgColor: '#FF7F00', textColor: '#FFFFFF' },
+  {
+    name: 'Bar',
+    color: 'bright orange',
+    bgColor: '#FF8C42',
+    textColor: '#5D2A02'
+  },
   {
     name: 'Cultural',
-    color: 'yellow',
-    bgColor: '#FFFF00',
-    textColor: '#FF7F00'
+    color: 'sunshine yellow',
+    bgColor: '#FFD700',
+    textColor: '#664400'
   },
   {
     name: 'Destinations',
-    color: 'green',
-    bgColor: '#00FF00',
-    textColor: '#8B00FF'
+    color: 'ocean green',
+    bgColor: '#00CC99',
+    textColor: '#004F3D'
   },
   {
     name: 'Educational',
-    color: 'blue',
-    bgColor: '#0000FF',
-    textColor: '#FFFF00'
+    color: 'electric blue',
+    bgColor: '#3399FF',
+    textColor: '#00274D'
   },
   {
     name: 'Entertainment',
-    color: 'indigo',
-    bgColor: '#8B00FF',
-    textColor: '#FFFFFF'
+    color: 'lavender purple',
+    bgColor: '#C266FF',
+    textColor: '#330066'
   },
-  { name: 'Event', color: 'violet', bgColor: '#EE82EE', textColor: '#8B00FF' },
+  {
+    name: 'Event',
+    color: 'fiery red',
+    bgColor: '#FF5555',
+    textColor: '#660000'
+  },
   {
     name: 'Festival',
-    color: 'red',
-    bgColor: '#FF0000',
-    textColor: '#FFFFFF'
+    color: 'spring green',
+    bgColor: '#6DFF66',
+    textColor: '#335B33'
   },
   {
     name: 'Historical',
-    color: 'orange',
-    bgColor: '#FF7F00',
+    color: 'stone gray',
+    bgColor: '#9A9A9A',
+    textColor: '#2F2F2F'
+  },
+  {
+    name: 'Landmark',
+    color: 'tangerine',
+    bgColor: '#FFAA33',
+    textColor: '#4D2A00'
+  },
+  {
+    name: 'Nature',
+    color: 'leaf green',
+    bgColor: '#33D133',
+    textColor: '#004D00'
+  },
+  {
+    name: 'Nightlife',
+    color: 'vivid violet',
+    bgColor: '#AA33FF',
+    textColor: '#2B0052'
+  },
+  {
+    name: 'Outdoor Activity',
+    color: 'sky blue',
+    bgColor: '#00BFFF',
+    textColor: '#003366'
+  },
+  {
+    name: 'Restaurant',
+    color: 'deep plum',
+    bgColor: '#9900CC',
+    textColor: '#3D003D'
+  },
+  {
+    name: 'Romantic',
+    color: 'blush rose',
+    bgColor: '#FF5E9F',
+    textColor: '#5C1A3A'
+  },
+  {
+    name: 'Shopping',
+    color: 'neon pink',
+    bgColor: '#FF3B8F',
+    textColor: '#500030'
+  },
+  {
+    name: 'Sport',
+    color: 'flaming orange',
+    bgColor: '#FF7733',
+    textColor: '#4D2600'
+  },
+  {
+    name: 'Wellness',
+    color: 'mint green',
+    bgColor: '#33FF99',
+    textColor: '#006642'
+  }
+];
+
+export const bucketListCategoriesPastel = [
+  {
+    name: 'Adventure',
+    color: 'teal',
+    bgColor: '#5CDB95',
+    textColor: '#05396B'
+  },
+  {
+    name: 'Bar',
+    color: 'coral',
+    bgColor: '#FF6F61',
+    textColor: '#FFFFFF'
+  },
+  {
+    name: 'Cultural',
+    color: 'ochre',
+    bgColor: '#FFAA5C',
+    textColor: '#553C1C'
+  },
+  {
+    name: 'Destinations',
+    color: 'ocean blue',
+    bgColor: '#2A9D8F',
+    textColor: '#FFFFFF'
+  },
+  {
+    name: 'Educational',
+    color: 'slate blue',
+    bgColor: '#779ECB',
+    textColor: '#05396B'
+  },
+  {
+    name: 'Entertainment',
+    color: 'lavender',
+    bgColor: '#B39BC8',
+    textColor: '#553C1C'
+  },
+  {
+    name: 'Event',
+    color: 'deep rose',
+    bgColor: '#C94C4C',
+    textColor: '#FFFFFF'
+  },
+  {
+    name: 'Festival',
+    color: 'bright green',
+    bgColor: '#8BC34A',
+    textColor: '#05396B'
+  },
+  {
+    name: 'Historical',
+    color: 'warm gray',
+    bgColor: '#9E9E9E',
     textColor: '#FFFFFF'
   },
   {
     name: 'Landmark',
-    color: 'yellow',
-    bgColor: '#FFFF00',
-    textColor: '#FF7F00'
+    color: 'sandy yellow',
+    bgColor: '#FFD166',
+    textColor: '#553C1C'
   },
-  { name: 'Nature', color: 'green', bgColor: '#00FF00', textColor: '#8B00FF' },
+  {
+    name: 'Nature',
+    color: 'forest green',
+    bgColor: '#4CAF50',
+    textColor: '#FFFFFF'
+  },
   {
     name: 'Nightlife',
-    color: 'blue',
-    bgColor: '#0000FF',
-    textColor: '#FFFF00'
+    color: 'electric purple',
+    bgColor: '#9C27B0',
+    textColor: '#FFFFFF'
   },
   {
     name: 'Outdoor Activity',
-    color: 'blue',
-    bgColor: '#0000FF',
+    color: 'sea blue',
+    bgColor: '#4C98D9',
     textColor: '#FFFFFF'
   },
   {
     name: 'Restaurant',
-    color: 'indigo',
-    bgColor: '#8B00FF',
+    color: 'deep plum',
+    bgColor: '#673AB7',
     textColor: '#FFFFFF'
   },
   {
     name: 'Romantic',
-    color: 'violet',
-    bgColor: '#EE82EE',
-    textColor: '#8B00FF'
+    color: 'blush pink',
+    bgColor: '#E57373',
+    textColor: '#FFFFFF'
   },
   {
     name: 'Shopping',
-    color: 'red',
-    bgColor: '#FF0000',
-    textColor: '#FFFF00'
+    color: 'vivid pink',
+    bgColor: '#F06292',
+    textColor: '#FFFFFF'
   },
-  { name: 'Sport', color: 'orange', bgColor: '#FF7F00', textColor: '#FFFFFF' },
+  {
+    name: 'Sport',
+    color: 'burnt orange',
+    bgColor: '#FF7043',
+    textColor: '#FFFFFF'
+  },
   {
     name: 'Wellness',
-    color: 'yellow',
-    bgColor: '#FFFF00',
-    textColor: '#FF7F00'
+    color: 'light mint',
+    bgColor: '#81C784',
+    textColor: '#05396B'
   }
 ];
+
+export const bucketListCategoriesBlackWhite = [
+  {
+    name: 'Adventure',
+    color: 'charcoal',
+    bgColor: '#333333',
+    textColor: '#E6E6E6'
+  },
+  {
+    name: 'Bar',
+    color: 'dark gray',
+    bgColor: '#4D4D4D',
+    textColor: '#FFFFFF'
+  },
+  {
+    name: 'Cultural',
+    color: 'slate gray',
+    bgColor: '#666666',
+    textColor: '#FFFFFF'
+  },
+  {
+    name: 'Destinations',
+    color: 'dim gray',
+    bgColor: '#808080',
+    textColor: '#FFFFFF'
+  },
+  {
+    name: 'Educational',
+    color: 'light slate gray',
+    bgColor: '#999999',
+    textColor: '#333333'
+  },
+  {
+    name: 'Entertainment',
+    color: 'gray',
+    bgColor: '#B3B3B3',
+    textColor: '#333333'
+  },
+  {
+    name: 'Event',
+    color: 'light gray',
+    bgColor: '#CCCCCC',
+    textColor: '#333333'
+  },
+  {
+    name: 'Festival',
+    color: 'silver',
+    bgColor: '#E6E6E6',
+    textColor: '#333333'
+  },
+  {
+    name: 'Historical',
+    color: 'gainsboro',
+    bgColor: '#F2F2F2',
+    textColor: '#4D4D4D'
+  },
+  {
+    name: 'Landmark',
+    color: 'whisper gray',
+    bgColor: '#FAFAFA',
+    textColor: '#333333'
+  },
+  {
+    name: 'Nature',
+    color: 'ash gray',
+    bgColor: '#F5F5F5',
+    textColor: '#333333'
+  },
+  {
+    name: 'Nightlife',
+    color: 'frost gray',
+    bgColor: '#E8E8E8',
+    textColor: '#4D4D4D'
+  },
+  {
+    name: 'Outdoor Activity',
+    color: 'smoke gray',
+    bgColor: '#D1D1D1',
+    textColor: '#333333'
+  },
+  {
+    name: 'Restaurant',
+    color: 'light steel gray',
+    bgColor: '#BBBBBB',
+    textColor: '#333333'
+  },
+  {
+    name: 'Romantic',
+    color: 'pearl gray',
+    bgColor: '#F0F0F0',
+    textColor: '#333333'
+  },
+  {
+    name: 'Shopping',
+    color: 'mist gray',
+    bgColor: '#E0E0E0',
+    textColor: '#333333'
+  },
+  {
+    name: 'Sport',
+    color: 'platinum',
+    bgColor: '#D9D9D9',
+    textColor: '#333333'
+  },
+  {
+    name: 'Wellness',
+    color: 'ivory',
+    bgColor: '#FBFBFB',
+    textColor: '#333333'
+  }
+];
+
+// export const bucketListCategories = [
+//   {
+//     name: 'Adventure',
+//     color: 'red',
+//     bgColor: '#1BE7FF',
+//     textColor: '#FFFF00'
+//   },
+//   { name: 'Bar', color: 'orange', bgColor: '#6EEB83', textColor: '#FFFFFF' },
+//   {
+//     name: 'Cultural',
+//     color: 'yellow',
+//     bgColor: '#E4FF1A',
+//     textColor: '#FF7F00'
+//   },
+//   {
+//     name: 'Destinations',
+//     color: 'green',
+//     bgColor: '#FFB800',
+//     textColor: '#8B00FF'
+//   },
+//   {
+//     name: 'Educational',
+//     color: 'blue',
+//     bgColor: '#FF5714',
+//     textColor: '#FFFF00'
+//   },
+//   {
+//     name: 'Entertainment',
+//     color: 'indigo',
+//     bgColor: '#8B00FF',
+//     textColor: '#FFFFFF'
+//   },
+//   { name: 'Event', color: 'violet', bgColor: '#EE82EE', textColor: '#8B00FF' },
+//   {
+//     name: 'Festival',
+//     color: 'red',
+//     bgColor: '#FF0000',
+//     textColor: '#FFFFFF'
+//   },
+//   {
+//     name: 'Historical',
+//     color: 'orange',
+//     bgColor: '#FF7F00',
+//     textColor: '#FFFFFF'
+//   },
+//   {
+//     name: 'Landmark',
+//     color: 'yellow',
+//     bgColor: '#FFFF00',
+//     textColor: '#FF7F00'
+//   },
+//   { name: 'Nature', color: 'green', bgColor: '#00FF00', textColor: '#8B00FF' },
+//   {
+//     name: 'Nightlife',
+//     color: 'blue',
+//     bgColor: '#0000FF',
+//     textColor: '#FFFF00'
+//   },
+//   {
+//     name: 'Outdoor Activity',
+//     color: 'blue',
+//     bgColor: '#0000FF',
+//     textColor: '#FFFFFF'
+//   },
+//   {
+//     name: 'Restaurant',
+//     color: 'indigo',
+//     bgColor: '#8B00FF',
+//     textColor: '#FFFFFF'
+//   },
+//   {
+//     name: 'Romantic',
+//     color: 'violet',
+//     bgColor: '#EE82EE',
+//     textColor: '#8B00FF'
+//   },
+//   {
+//     name: 'Shopping',
+//     color: 'red',
+//     bgColor: '#FF0000',
+//     textColor: '#FFFF00'
+//   },
+//   { name: 'Sport', color: 'orange', bgColor: '#FF7F00', textColor: '#FFFFFF' },
+//   {
+//     name: 'Wellness',
+//     color: 'yellow',
+//     bgColor: '#FFFF00',
+//     textColor: '#FF7F00'
+//   }
+// ];
 
 function createRainbowCategories(categories: string[]) {
   // Sort the categories alphabetically
