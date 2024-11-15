@@ -72,7 +72,6 @@ export default function Shortcuts({
       {}
     )
   );
-  console.log('---  🚀 ---> | board shortcut:', board);
 
   const handleDeleteItem = async (shortcut: Shortcut) => {
     try {

@@ -1,17 +1,7 @@
 'use client';
 
 import { AnimatePresence, motion } from 'framer-motion';
-import {
-  ArrowDownWideNarrow,
-  ArrowUpWideNarrow,
-  Bomb,
-  Check,
-  FlagOff,
-  MessageCircleX,
-  Square,
-  SquareCheckBig,
-  Trash2
-} from 'lucide-react';
+import { Bomb, FlagOff, Square, SquareCheckBig, Trash2 } from 'lucide-react';
 import { useActionState, useEffect, useState } from 'react';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -22,12 +12,6 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger
-} from '@/components/ui/tooltip';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -68,7 +52,14 @@ type BucketListCategory = {
   textColor: string;
 };
 
-const handleSubmit = async (previousState: unknown, formData: FormData) => {
+type SubmitResult = {
+  newBucketListItem: BucketListItem[];
+};
+
+const handleSubmit = async (
+  previousState: unknown,
+  formData: FormData
+): Promise<SubmitResult | undefined> => {
   const uid = formData.get('uid') as string;
   const item = formData.get('item') as string;
   const category = formData.get('category') as string;
@@ -116,6 +107,9 @@ const handleSubmit = async (previousState: unknown, formData: FormData) => {
     });
   }
   const newBucketListItem = await getBucketListItems(uid);
+  if (!newBucketListItem) {
+    return;
+  }
 
   return {
     newBucketListItem
@@ -133,23 +127,28 @@ export default function BucketList({
   const [board, setBoard] = useState<BucketListItem[][]>([]);
   const [data, action, isPending] = useActionState(handleSubmit, undefined);
 
-  const boardByCategory: BucketListItem[][] = Object.values(
-    bucketList.reduce(
-      (acc: Record<string, BucketListItem[]>, curr: BucketListItem) => {
-        if (acc[curr.category]) {
-          acc[curr.category].push(curr);
-        } else {
-          acc[curr.category] = [curr];
-        }
-        return acc;
-      },
-      {}
+  const organizeBoardByCategory = (bucketList: BucketListItem[]) => {
+    const organizedBoard: BucketListItem[][] = Object.values(
+      bucketList.reduce(
+        (acc: Record<string, BucketListItem[]>, curr: BucketListItem) => {
+          if (acc[curr.category]) {
+            acc[curr.category].push(curr);
+          } else {
+            acc[curr.category] = [curr];
+          }
+          return acc;
+        },
+        {}
+      )
     )
-  )
-    .sort((a, b) => a[0].category.localeCompare(b[0].category))
-    .map((categoryArray) =>
-      categoryArray.sort((a, b) => a.item.localeCompare(b.item))
-    );
+      .sort((a, b) => a[0].category.localeCompare(b[0].category))
+      .map((categoryArray) =>
+        categoryArray.sort((a, b) => a.item.localeCompare(b.item))
+      );
+    return organizedBoard;
+  };
+
+  const boardByCategory = organizeBoardByCategory(bucketList);
 
   useEffect(() => {
     if (boardByCategory) {
@@ -157,11 +156,11 @@ export default function BucketList({
     }
   }, []);
 
-  // useEffect(() => {
-  //   if (data?.newBucketListItem && Array.isArray(data.newBucketListItem)) {
-  //     setBoard(data.newBucketListItem as BucketListItem[]);
-  //   }
-  // }, [data]);
+  useEffect(() => {
+    if (data?.newBucketListItem && Array.isArray(data.newBucketListItem)) {
+      setBoard(organizeBoardByCategory(data.newBucketListItem));
+    }
+  }, [data]);
 
   const handleDeleteItem = async (el: BucketListItem) => {
     try {
@@ -225,6 +224,7 @@ export default function BucketList({
   };
 
   const getColorCodes = (category: string) => {
+    // when we change the name of the BlackWhite here we need to change it below where we call the function
     const foundCategory = bucketListCategoriesBlackWhite.find(
       (el: BucketListCategory) => el.name === category
     );
@@ -347,117 +347,62 @@ export default function BucketList({
               </h3>
 
               {categoryArray.map((el: BucketListItem) => (
-                <>
-                  <div key={el.id} className="flex border border-primary mt-2">
-                    <div className="w-full px-4 py-3">
-                      <p
-                        className={`${el.done && 'line-through'} text-left uppercase text-sm leading-none`}
-                      >
-                        {el.item}
-                      </p>
-                    </div>
-
-                    {/* <Button
-                      variant="ghost"
-                      onClick={() => {
-                        toggleDescription(shortcut.id);
-                      }}
+                <div key={el.id} className="flex border border-primary mt-2">
+                  <div className="w-full px-4 py-3">
+                    <p
+                      className={`${el.done && 'line-through'} text-left uppercase text-sm leading-none`}
                     >
-                      {openDescriptions.has(shortcut.id) ? (
-                        <ArrowUpWideNarrow
-                          size={18}
-                          strokeWidth={1.8}
-                          color="#000"
-                        />
-                      ) : (
-                        <ArrowDownWideNarrow
-                          size={18}
-                          strokeWidth={1.8}
-                          color="#000"
-                        />
-                      )}
-                    </Button> */}
-
-                    <Button
-                      className=""
-                      onClick={() => handleCheck(el)}
-                      variant={'link'}
-                    >
-                      {el.done ? (
-                        <SquareCheckBig size={18} strokeWidth={1.8} />
-                      ) : (
-                        <Square size={18} strokeWidth={1.8} />
-                      )}
-                    </Button>
-
-                    <AlertDialog>
-                      <AlertDialogTrigger className="px-2 py-1 mr-4">
-                        <Trash2 size={18} strokeWidth={1.8} />
-                      </AlertDialogTrigger>
-                      <AlertDialogContent className="w-[calc(100%-35px)]">
-                        <AlertDialogHeader>
-                          <AlertDialogTitle className="flex items-center gap-2">
-                            <Bomb size={24} strokeWidth={1.8} />
-                            Are you absolutely sure?
-                          </AlertDialogTitle>
-                          <AlertDialogDescription className="py-4">
-                            This will permanently delete the adventure
-                            <span className="font-bold mx-1">{el.item}</span>
-                            from our servers.
-                          </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                          <AlertDialogCancel
-                            onClick={() => {
-                              toast({
-                                title: 'Operation Cancelled! ❌',
-                                description: `Phew! 😮‍💨 Crisis averted. You successfully cancelled the operation.`,
-                                variant: 'destructive'
-                              });
-                            }}
-                          >
-                            Cancel
-                          </AlertDialogCancel>
-                          <AlertDialogAction
-                            onClick={() => handleDeleteItem(el)}
-                          >
-                            Continue
-                          </AlertDialogAction>
-                        </AlertDialogFooter>
-                      </AlertDialogContent>
-                    </AlertDialog>
+                      {el.item}
+                    </p>
                   </div>
 
-                  {/* <AnimatePresence>
-                    {openDescriptions.has(el.id) ? (
-                      <motion.div
-                        layout
-                        initial={{ opacity: 0, y: 0, scale: 0.3 }}
-                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                        exit={{
-                          opacity: 0,
-                          scale: 0.5,
-                          transition: { duration: 0.1 }
-                        }}
-                      >
-                        <div className="px-4 py-2 bg-primary text-white text-xs font-semibold">
-                          {el.description ? (
-                            el.description
-                          ) : (
-                            <div className="flex items-center ml-1">
-                              <MessageCircleX
-                                size={18}
-                                strokeWidth={1.8}
-                                color="#fff"
-                              />
-                              <p className="ml-2">No description available.</p>
-                            </div>
-                          )}
-                        </div>
-                      </motion.div>
-                    ) : null}
-                  </AnimatePresence> */}
-                </>
+                  <Button
+                    className="px-0 mx-0"
+                    onClick={() => handleCheck(el)}
+                    variant={'link'}
+                  >
+                    {el.done ? (
+                      <SquareCheckBig size={18} strokeWidth={1.8} />
+                    ) : (
+                      <Square size={18} strokeWidth={1.8} />
+                    )}
+                  </Button>
+
+                  <AlertDialog>
+                    <AlertDialogTrigger className="px-2 py-1 mr-2">
+                      <Trash2 size={18} strokeWidth={1.8} />
+                    </AlertDialogTrigger>
+                    <AlertDialogContent className="w-[calc(100%-35px)]">
+                      <AlertDialogHeader>
+                        <AlertDialogTitle className="flex items-center gap-2">
+                          <Bomb size={24} strokeWidth={1.8} />
+                          Are you absolutely sure?
+                        </AlertDialogTitle>
+                        <AlertDialogDescription className="py-4">
+                          This will permanently delete the adventure
+                          <span className="font-bold mx-1">{el.item}</span>
+                          from our servers.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel
+                          onClick={() => {
+                            toast({
+                              title: 'Operation Cancelled! ❌',
+                              description: `Phew! 😮‍💨 Crisis averted. You successfully cancelled the operation.`,
+                              variant: 'destructive'
+                            });
+                          }}
+                        >
+                          Cancel
+                        </AlertDialogCancel>
+                        <AlertDialogAction onClick={() => handleDeleteItem(el)}>
+                          Continue
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
+                </div>
               ))}
             </div>
           ))}
@@ -718,7 +663,7 @@ export const bucketListCategoriesBlackWhite = [
     name: 'Educational',
     color: 'light slate gray',
     bgColor: '#999999',
-    textColor: '#333333'
+    textColor: '#FFFFFF'
   },
   {
     name: 'Entertainment',
