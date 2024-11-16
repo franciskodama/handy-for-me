@@ -225,7 +225,7 @@ export default function BucketList({
 
   const getColorCodes = (category: string) => {
     // when we change the name of the BlackWhite here we need to change it below where we call the function
-    const foundCategory = bucketListCategoriesBlackWhite.find(
+    const foundCategory = bucketListCategories.find(
       (el: BucketListCategory) => el.name === category
     );
     const bgColorCode = foundCategory?.bgColor || '#000000';
@@ -336,11 +336,11 @@ export default function BucketList({
           </div>
         )}
 
-        <div className="flex flex-col sm:flex-row w-full gap-8 mt-8">
+        <div className="flex flex-wrap w-full justify-center gap-8 mt-8">
           {board.map((categoryArray: BucketListItem[]) => (
-            <div key={categoryArray[0].category} className="sm:w-1/5">
+            <div key={categoryArray[0].category} className="w-full sm:w-1/6">
               <h3
-                className={`${kumbh_sans.className} text-left text-sm font-semibold text-primary px-4 py-3 my-2 uppercase leading-none border border-primary`}
+                className={`${kumbh_sans.className} text-left text-sm font-semibold text-primary px-4 py-3 my-2 uppercase leading-none`}
                 style={getColorCodes(categoryArray[0].category ?? 'grey')}
               >
                 {categoryArray[0].category}
@@ -441,7 +441,7 @@ export const bucketListCategories = [
     name: 'Educational',
     color: 'electric blue',
     bgColor: '#3399FF',
-    textColor: '#00274D'
+    textColor: '#FFFFFF'
   },
   {
     name: 'Entertainment',
@@ -465,7 +465,7 @@ export const bucketListCategories = [
     name: 'Historical',
     color: 'stone gray',
     bgColor: '#9A9A9A',
-    textColor: '#2F2F2F'
+    textColor: '#FFFFFF'
   },
   {
     name: 'Landmark',
@@ -483,7 +483,7 @@ export const bucketListCategories = [
     name: 'Nightlife',
     color: 'vivid violet',
     bgColor: '#AA33FF',
-    textColor: '#2B0052'
+    textColor: '#FFFFFF'
   },
   {
     name: 'Outdoor Activity',
@@ -744,414 +744,3 @@ export const bucketListCategoriesBlackWhite = [
     textColor: '#333333'
   }
 ];
-
-// export const bucketListCategories = [
-//   {
-//     name: 'Adventure',
-//     color: 'red',
-//     bgColor: '#1BE7FF',
-//     textColor: '#FFFF00'
-//   },
-//   { name: 'Bar', color: 'orange', bgColor: '#6EEB83', textColor: '#FFFFFF' },
-//   {
-//     name: 'Cultural',
-//     color: 'yellow',
-//     bgColor: '#E4FF1A',
-//     textColor: '#FF7F00'
-//   },
-//   {
-//     name: 'Destinations',
-//     color: 'green',
-//     bgColor: '#FFB800',
-//     textColor: '#8B00FF'
-//   },
-//   {
-//     name: 'Educational',
-//     color: 'blue',
-//     bgColor: '#FF5714',
-//     textColor: '#FFFF00'
-//   },
-//   {
-//     name: 'Entertainment',
-//     color: 'indigo',
-//     bgColor: '#8B00FF',
-//     textColor: '#FFFFFF'
-//   },
-//   { name: 'Event', color: 'violet', bgColor: '#EE82EE', textColor: '#8B00FF' },
-//   {
-//     name: 'Festival',
-//     color: 'red',
-//     bgColor: '#FF0000',
-//     textColor: '#FFFFFF'
-//   },
-//   {
-//     name: 'Historical',
-//     color: 'orange',
-//     bgColor: '#FF7F00',
-//     textColor: '#FFFFFF'
-//   },
-//   {
-//     name: 'Landmark',
-//     color: 'yellow',
-//     bgColor: '#FFFF00',
-//     textColor: '#FF7F00'
-//   },
-//   { name: 'Nature', color: 'green', bgColor: '#00FF00', textColor: '#8B00FF' },
-//   {
-//     name: 'Nightlife',
-//     color: 'blue',
-//     bgColor: '#0000FF',
-//     textColor: '#FFFF00'
-//   },
-//   {
-//     name: 'Outdoor Activity',
-//     color: 'blue',
-//     bgColor: '#0000FF',
-//     textColor: '#FFFFFF'
-//   },
-//   {
-//     name: 'Restaurant',
-//     color: 'indigo',
-//     bgColor: '#8B00FF',
-//     textColor: '#FFFFFF'
-//   },
-//   {
-//     name: 'Romantic',
-//     color: 'violet',
-//     bgColor: '#EE82EE',
-//     textColor: '#8B00FF'
-//   },
-//   {
-//     name: 'Shopping',
-//     color: 'red',
-//     bgColor: '#FF0000',
-//     textColor: '#FFFF00'
-//   },
-//   { name: 'Sport', color: 'orange', bgColor: '#FF7F00', textColor: '#FFFFFF' },
-//   {
-//     name: 'Wellness',
-//     color: 'yellow',
-//     bgColor: '#FFFF00',
-//     textColor: '#FF7F00'
-//   }
-// ];
-
-function createRainbowCategories(categories: string[]) {
-  // Sort the categories alphabetically
-  categories.sort();
-
-  // Calculate the number of categories
-  const numCategories = categories.length;
-
-  // Determine the color step for the rainbow effect
-  const colorStep = 360 / numCategories;
-
-  // Create an array to store the formatted categories
-  const rainbowCategories = [];
-
-  // Iterate over each category and create a formatted object
-  for (let i = 0; i < numCategories; i++) {
-    const categoryName = categories[i];
-    const hue = i * colorStep;
-    const saturation = 100;
-    const lightness = 50;
-
-    // Convert HSL color to RGB
-    const rgb = hslToRgb(hue, saturation, lightness);
-    const colorCode = `#${rgb.r.toString(16).padStart(2, '0')}${rgb.g.toString(16).padStart(2, '0')}${rgb.b.toString(16).padStart(2, '0')}`;
-
-    rainbowCategories.push({
-      name: categoryName,
-      color: `hsl(${hue}, ${saturation}%, ${lightness}%)`,
-      colorCode: colorCode
-    });
-  }
-
-  return rainbowCategories;
-}
-
-// Helper function to convert HSL to RGB
-function hslToRgb(h: number, s: number, l: number) {
-  s /= 100;
-  l /= 100;
-  const c = (1 - Math.abs(2 * l - 1)) * s;
-  const x = c * (1 - Math.abs(((h / 60) % 2) - 1));
-  const m = l - c / 2;
-
-  let r, g, b;
-
-  if (h < 60) {
-    r = c;
-    g = x;
-    b = 0;
-  } else if (h < 120) {
-    r = x;
-    g = c;
-    b = 0;
-  } else if (h < 180) {
-    r = 0;
-    g = c;
-    b = x;
-  } else if (h < 240) {
-    r = 0;
-    g = x;
-    b = c;
-  } else if (h < 300) {
-    r = x;
-    g = 0;
-    b = c;
-  } else {
-    r = c;
-    g = 0;
-    b = x;
-  }
-
-  r = Math.round((r + m) * 255);
-  g = Math.round((g + m) * 255);
-  b = Math.round((b + m) * 255);
-
-  return { r, g, b };
-}
-
-{
-  /* <div className="flex flex-col sm:flex-row w-full gap-8">
-          {board.map((groupOfShortcuts: BucketListItem[]) => (
-            <div key={groupOfShortcuts[0].categoryId} className="sm:w-1/5">
-              <h3
-              // className={`${kumbh_sans.className} text-left text-sm font-semibold text-primary px-4 py-3 my-2 uppercase leading-none`}
-              // style={getColorCode(
-              //   groupOfShortcuts[0].category?.color ?? 'grey'
-              // )}
-              >
-                {groupOfShortcuts[0].category?.category}
-              </h3>
-
-              {groupOfShortcuts.map((shortcut: Shortcut) => (
-                <>
-                  <div
-                    key={shortcut.id}
-                    className="flex border border-primary mt-2"
-                  >
-                    <div className="w-full px-4 py-3">
-                      <Link
-                        href={shortcut.url}
-                        target="_blank"
-                        className="w-full"
-                      >
-                        <p className="text-left uppercase text-sm leading-none">
-                          {shortcut.shortcut}
-                        </p>
-                      </Link>
-                    </div>
-
-                    <Button
-                      variant="ghost"
-                      onClick={() => {
-                        toggleDescription(shortcut.id);
-                      }}
-                    >
-                      {openDescriptions.has(shortcut.id) ? (
-                        <ArrowUpWideNarrow
-                          size={18}
-                          strokeWidth={1.8}
-                          color="#000"
-                        />
-                      ) : (
-                        <ArrowDownWideNarrow
-                          size={18}
-                          strokeWidth={1.8}
-                          color="#000"
-                        />
-                      )}
-                    </Button>
-
-                    <AlertDialog>
-                      <AlertDialogTrigger className="px-2 py-1 mr-4">
-                        <Trash2 size={18} strokeWidth={1.8} color="#000" />
-                      </AlertDialogTrigger>
-                      <AlertDialogContent className="w-[calc(100%-35px)]">
-                        <AlertDialogHeader>
-                          <AlertDialogTitle className="flex items-center gap-2">
-                            <Bomb size={24} strokeWidth={1.8} />
-                            Are you absolutely sure?
-                          </AlertDialogTitle>
-                          <AlertDialogDescription className="py-4">
-                            This will permanently delete the vision
-                            <span className="font-bold mx-1">
-                              {shortcut.shortcut}
-                            </span>
-                            from our servers.
-                          </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                          <AlertDialogCancel
-                            onClick={() => {
-                              toast({
-                                title: 'Operation Cancelled! ❌',
-                                description: `Phew! 😮‍💨 Crisis averted. You successfully cancelled the operation.`,
-                                variant: 'destructive'
-                              });
-                            }}
-                          >
-                            Cancel
-                          </AlertDialogCancel>
-                          <AlertDialogAction
-                            onClick={() => handleDeleteItem(shortcut)}
-                          >
-                            Continue
-                          </AlertDialogAction>
-                        </AlertDialogFooter>
-                      </AlertDialogContent>
-                    </AlertDialog>
-                  </div>
-
-                  <AnimatePresence>
-                    {openDescriptions.has(shortcut.id) ? (
-                      <motion.div
-                        layout
-                        initial={{ opacity: 0, y: 0, scale: 0.3 }}
-                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                        exit={{
-                          opacity: 0,
-                          scale: 0.5,
-                          transition: { duration: 0.1 }
-                        }}
-                      >
-                        <div className="px-4 py-2 bg-primary text-white text-xs font-semibold">
-                          {shortcut.description ? (
-                            shortcut.description
-                          ) : (
-                            <div className="flex items-center ml-1">
-                              <MessageCircleX
-                                size={18}
-                                strokeWidth={1.8}
-                                color="#fff"
-                              />
-                              <p className="ml-2">No description available.</p>
-                            </div>
-                          )}
-                        </div>
-                      </motion.div>
-                    ) : null}
-                  </AnimatePresence>
-                </>
-              ))}
-            </div>
-          ))}
-        </div> */
-}
-
-{
-  /* <div className="flex flex-col sm:flex-row w-full gap-8">
-          {categoryArrays.map((categoryArray: any) => (
-            <div key={categoryArray.items[0].id} className="sm:w-1/5">
-              <h3
-                className={`${kumbh_sans.className} text-left text-sm font-semibold text-primary px-4 py-3 my-2 uppercase leading-none`}
-                style={getColorCode(categoryArray[0].category?.color ?? 'grey')}
-              >
-                {categoryArray[0].category?.category}
-              </h3>
-
-              {categoryArray.map((el: BucketListItem) => (
-                <>
-                  <div key={el.id} className="flex border border-primary mt-2">
-                    <div className="w-full px-4 py-3">
-                      <p className="text-left uppercase text-sm leading-none">
-                        {el.item}
-                      </p>
-                    </div>
-
-                    <Button
-                      variant="ghost"
-                      onClick={() => {
-                        toggleDescription(shortcut.id);
-                      }}
-                    >
-                      {openDescriptions.has(shortcut.id) ? (
-                        <ArrowUpWideNarrow
-                          size={18}
-                          strokeWidth={1.8}
-                          color="#000"
-                        />
-                      ) : (
-                        <ArrowDownWideNarrow
-                          size={18}
-                          strokeWidth={1.8}
-                          color="#000"
-                        />
-                      )}
-                    </Button>
-
-                    <AlertDialog>
-                      <AlertDialogTrigger className="px-2 py-1 mr-4">
-                        <Trash2 size={18} strokeWidth={1.8} color="#000" />
-                      </AlertDialogTrigger>
-                      <AlertDialogContent className="w-[calc(100%-35px)]">
-                        <AlertDialogHeader>
-                          <AlertDialogTitle className="flex items-center gap-2">
-                            <Bomb size={24} strokeWidth={1.8} />
-                            Are you absolutely sure?
-                          </AlertDialogTitle>
-                          <AlertDialogDescription className="py-4">
-                            This will permanently delete the vision
-                            <span className="font-bold mx-1">{el.item}</span>
-                            from our servers.
-                          </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                          <AlertDialogCancel
-                            onClick={() => {
-                              toast({
-                                title: 'Operation Cancelled! ❌',
-                                description: `Phew! 😮‍💨 Crisis averted. You successfully cancelled the operation.`,
-                                variant: 'destructive'
-                              });
-                            }}
-                          >
-                            Cancel
-                          </AlertDialogCancel>
-                          <AlertDialogAction
-                            onClick={() => handleDeleteItem(el)}
-                          >
-                            Continue
-                          </AlertDialogAction>
-                        </AlertDialogFooter>
-                      </AlertDialogContent>
-                    </AlertDialog>
-                  </div>
-
-                  <AnimatePresence>
-                    {openDescriptions.has(shortcut.id) ? (
-                      <motion.div
-                        layout
-                        initial={{ opacity: 0, y: 0, scale: 0.3 }}
-                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                        exit={{
-                          opacity: 0,
-                          scale: 0.5,
-                          transition: { duration: 0.1 }
-                        }}
-                      >
-                        <div className="px-4 py-2 bg-primary text-white text-xs font-semibold">
-                          {shortcut.description ? (
-                            shortcut.description
-                          ) : (
-                            <div className="flex items-center ml-1">
-                              <MessageCircleX
-                                size={18}
-                                strokeWidth={1.8}
-                                color="#fff"
-                              />
-                              <p className="ml-2">No description available.</p>
-                            </div>
-                          )}
-                        </div>
-                      </motion.div>
-                    ) : null}
-                  </AnimatePresence>
-                </>
-              ))}
-            </div>
-          ))}
-        </div> */
-}
