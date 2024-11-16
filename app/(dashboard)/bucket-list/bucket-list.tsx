@@ -127,6 +127,29 @@ export default function BucketList({
   const [board, setBoard] = useState<BucketListItem[][]>([]);
   const [data, action, isPending] = useActionState(handleSubmit, undefined);
 
+  // Sort Alphabetically ------------------------
+  // const organizeBoardByCategory = (bucketList: BucketListItem[]) => {
+  //   const organizedBoard: BucketListItem[][] = Object.values(
+  //     bucketList.reduce(
+  //       (acc: Record<string, BucketListItem[]>, curr: BucketListItem) => {
+  //         if (acc[curr.category]) {
+  //           acc[curr.category].push(curr);
+  //         } else {
+  //           acc[curr.category] = [curr];
+  //         }
+  //         return acc;
+  //       },
+  //       {}
+  //     )
+  //   )
+  //     .sort((a, b) => a[0].category.localeCompare(b[0].category))
+  //     .map((categoryArray) =>
+  //       categoryArray.sort((a, b) => a.item.localeCompare(b.item))
+  //     );
+  //   return organizedBoard;
+  // };
+
+  // Sort By Number of items ------------------------
   const organizeBoardByCategory = (bucketList: BucketListItem[]) => {
     const organizedBoard: BucketListItem[][] = Object.values(
       bucketList.reduce(
@@ -141,7 +164,16 @@ export default function BucketList({
         {}
       )
     )
-      .sort((a, b) => a[0].category.localeCompare(b[0].category))
+      .sort((a, b) => {
+        const sizeComparison = b.length - a.length;
+
+        // If categories have the same number of items, sort alphabetically
+        if (sizeComparison === 0) {
+          return a[0].category.localeCompare(b[0].category);
+        }
+
+        return sizeComparison;
+      })
       .map((categoryArray) =>
         categoryArray.sort((a, b) => a.item.localeCompare(b.item))
       );
@@ -224,7 +256,6 @@ export default function BucketList({
   };
 
   const getColorCodes = (category: string) => {
-    // when we change the name of the BlackWhite here we need to change it below where we call the function
     const foundCategory = bucketListCategories.find(
       (el: BucketListCategory) => el.name === category
     );
