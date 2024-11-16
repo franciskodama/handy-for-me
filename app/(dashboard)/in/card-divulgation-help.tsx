@@ -1,14 +1,7 @@
-import Link from 'next/link';
-import Image from 'next/image';
-import { CircleHelp, HelpCircle, MoveUpRight } from 'lucide-react';
-
-import { tagClass } from './cards';
-import { Button } from '@/components/ui/button';
-import { AspectRatio } from '@radix-ui/react-aspect-ratio';
+import { CircleHelp, MoveUpRight } from 'lucide-react';
 
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -22,16 +15,16 @@ export default function CardDivulgationHelp() {
   return (
     <>
       <AlertDialog>
-        <AlertDialogTrigger>Open</AlertDialogTrigger>
-        <AlertDialogContent>
+        <AlertDialogTrigger>?</AlertDialogTrigger>
+        <AlertDialogContent className="w-[calc(100%-35px)]">
           <AlertDialogHeader>
             <AlertDialogTitle>
               <div className="flex items-center text-lg uppercase font-bold my-2">
-                <CircleHelp size={32} strokeWidth={1} className="mx-2" />
+                <CircleHelp size={32} strokeWidth={1} className="mr-2" />
                 <p>Need a hand?</p>
               </div>
             </AlertDialogTitle>
-            <AlertDialogDescription className="flex flex-col gap-2 text-primary">
+            <AlertDialogDescription className="flex flex-col gap-2 text-primary text-left">
               <p>
                 Look for the Help Icon to explore how the feature works and its
                 benefits (top-right of each feature page).
@@ -40,7 +33,7 @@ export default function CardDivulgationHelp() {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel className="flex items-center">
+            <AlertDialogCancel className="flex items-center mb-4">
               <p className="mr-2">Curious? You can test it right here</p>
               <MoveUpRight size={16} strokeWidth={2} />
             </AlertDialogCancel>

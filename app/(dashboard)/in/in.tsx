@@ -2,12 +2,6 @@
 
 import { AnimatePresence, motion } from 'framer-motion';
 import { useState } from 'react';
-import {
-  ChevronsUpDown,
-  CircleHelp,
-  MoveUpRight,
-  Terminal
-} from 'lucide-react';
 
 import {
   Card,
@@ -17,18 +11,6 @@ import {
   CardTitle
 } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger
-} from '@/components/ui/alert-dialog';
 import {
   BucketListItem,
   LocationProps,
