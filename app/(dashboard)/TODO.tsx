@@ -9,6 +9,9 @@
 // shadow-[0_0px_0px_0px_inset,#FFF_-3px_3px_0_-1px,#0F1739_-3px_3px]
 
 // TODO: Nadgen Q.A.
+
+// Dashboard Help Card: Explain that there is a helper there in every feature
+
 // Stoic Support: Check the Content
 // Stoic Support: Dashboard Card
 

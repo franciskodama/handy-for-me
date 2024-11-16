@@ -2,7 +2,12 @@
 
 import { AnimatePresence, motion } from 'framer-motion';
 import { useState } from 'react';
-import { ChevronsUpDown } from 'lucide-react';
+import {
+  ChevronsUpDown,
+  CircleHelp,
+  MoveUpRight,
+  Terminal
+} from 'lucide-react';
 
 import {
   Card,
@@ -12,6 +17,18 @@ import {
   CardTitle
 } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger
+} from '@/components/ui/alert-dialog';
 import {
   BucketListItem,
   LocationProps,
@@ -27,6 +44,9 @@ import CardBucketList from './card-bucket-list';
 import CardShortcuts from './card-shortcuts';
 import CardEmpty from './card-empty';
 import CardDivulgation from './card-divulgation';
+import CardDivulgationHelp from './card-divulgation-help';
+import ExplanationIn from './explanation-in';
+import Help from '@/components/Help';
 
 export default function In({
   user,
@@ -43,21 +63,21 @@ export default function In({
   bucketListItems: BucketListItem[];
   shortcutsItems: Shortcut[];
 }) {
-  // const [openAction, setOpenAction] = useState(false);
+  const [openAction, setOpenAction] = useState(false);
 
   return (
-    <Card>
+    <Card className="relative">
       <CardHeader className="sm:mb-12">
         <CardTitle className="flex justify-between items-center gap-2">
           <p>Dashboard</p>
-          {/* {!openAction ? <Help setOpenAction={setOpenAction} /> : <div />} */}
+          {!openAction ? <Help setOpenAction={setOpenAction} /> : <div />}
         </CardTitle>
         <CardDescription>
           Everything you need, right at your fingertips.
         </CardDescription>
       </CardHeader>
       <CardContent>
-        {/* <AnimatePresence>
+        <AnimatePresence>
           {openAction ? (
             <motion.div
               layout
@@ -70,7 +90,9 @@ export default function In({
               </div>
             </motion.div>
           ) : null}
-        </AnimatePresence> */}
+        </AnimatePresence>
+
+        {!openAction ? <CardDivulgationHelp /> : null}
 
         <div className="flex flex-col gap-4">
           {/* -----------------------  First Row ----------------------- */}
