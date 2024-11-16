@@ -338,7 +338,7 @@ export default function BucketList({
 
         <div className="flex flex-wrap w-full justify-center gap-8 mt-8">
           {board.map((categoryArray: BucketListItem[]) => (
-            <div key={categoryArray[0].category} className="w-full sm:w-1/6">
+            <div key={categoryArray[0].category} className="w-full sm:w-[30ch]">
               <h3
                 className={`${kumbh_sans.className} text-left text-sm font-semibold text-primary px-4 py-3 my-2 uppercase leading-none`}
                 style={getColorCodes(categoryArray[0].category ?? 'grey')}
@@ -347,10 +347,13 @@ export default function BucketList({
               </h3>
 
               {categoryArray.map((el: BucketListItem) => (
-                <div key={el.id} className="flex border border-primary mt-2">
+                <div
+                  key={el.id}
+                  className="flex items-center border border-primary mt-2"
+                >
                   <div className="w-full px-4 py-3">
                     <p
-                      className={`${el.done && 'line-through'} text-left uppercase text-sm leading-none`}
+                      className={`${el.done && 'line-through'} text-left uppercase text-sm leading-5`}
                     >
                       {el.item}
                     </p>
