@@ -74,8 +74,6 @@ export default function In({
           ) : null}
         </AnimatePresence>
 
-        {!openAction ? <CardDivulgationHelp /> : null}
-
         <div className="flex flex-col gap-4">
           {/* -----------------------  First Row ----------------------- */}
 
@@ -207,7 +205,7 @@ export default function In({
 
           {/* ----------------------- Third Row ----------------------- */}
 
-          {visionBoardItems.length > 0 ? (
+          {/* {visionBoardItems.length > 0 ? (
             <div className="flex flex-col sm:flex-row w-full gap-24 sm:gap-8 my-12">
               <CardVisionBoard visionBoardItems={visionBoardItems} />
             </div>
@@ -220,9 +218,7 @@ export default function In({
                 url="weekly-wins"
               />
             </div>
-          )}
-
-          {/* ----------------------- FOOTER ----------------------- */}
+          )} */}
         </div>
       </CardContent>
     </Card>

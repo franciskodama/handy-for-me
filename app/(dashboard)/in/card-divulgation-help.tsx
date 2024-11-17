@@ -1,4 +1,4 @@
-import { CircleHelp, MoveUpRight } from 'lucide-react';
+import { CircleHelp, LifeBuoy, MoveUpRight } from 'lucide-react';
 
 import {
   AlertDialog,
@@ -15,7 +15,9 @@ export default function CardDivulgationHelp() {
   return (
     <>
       <AlertDialog>
-        <AlertDialogTrigger>?</AlertDialogTrigger>
+        <AlertDialogTrigger>
+          <LifeBuoy className="h-5 w-5" />
+        </AlertDialogTrigger>
         <AlertDialogContent className="w-[calc(100%-35px)]">
           <AlertDialogHeader>
             <AlertDialogTitle>
