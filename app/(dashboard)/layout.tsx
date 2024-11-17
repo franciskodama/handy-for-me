@@ -52,9 +52,9 @@ export default function DashboardLayout({
           <main className="grid flex-1 items-start gap-2 p-4 sm:px-6 sm:py-0 md:gap-4 bg-muted/40">
             {children}
             <Toaster />
+            <Footer />
           </main>
         </div>
-        <Footer />
       </main>
     </Providers>
   );
@@ -93,7 +93,6 @@ function MobileNav() {
               </SheetClose>
             </Link>
           ))}
-
           {/* <Link
             href="#"
             className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"

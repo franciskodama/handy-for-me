@@ -1,28 +1,18 @@
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle
-} from '@/components/ui/card';
 import Link from 'next/link';
-import { Button } from './ui/button';
+import Image from 'next/image';
+
+import { Card, CardContent } from '@/components/ui/card';
 import { menuItems } from '@/lib/menu';
 
 export default function Footer() {
   return (
-    <Card className="px-4 mx-[5em]">
-      {/* <CardHeader>
-        <CardTitle>HandyFor.Me Inc., 2024</CardTitle>
-        <CardDescription>Card Description</CardDescription>
-      </CardHeader> */}
-      <CardContent className="flex flex-col sm:flex-row gap-12 items-start justify-between text-sm p-4">
-        <div className="flex flex-col w-1/5 gap-2">
-          <h4 className="font-semibold uppercase text-sm mb-2">
+    <Card className="px-4 py-4 bg-primary text-white text-sm w-full">
+      <CardContent className="flex flex-col sm:flex-row gap-12 items-start justify-between p-4">
+        <div className="flex flex-col sm:w-1/5 gap-2">
+          <h4 className="font-semibold text-red-500 uppercase mb-2">
             Behind the Code
           </h4>
-          <p className="pr-4">
+          <p className="pr-4 max-w-80">
             {/* Designed to simplify your journey, inspire growth, and help you
             achieve more. Your go-to companion for a mindful and productive
             life. */}
@@ -31,24 +21,47 @@ export default function Footer() {
             help you do the same. One feature at a time. Enjoy!
           </p>
         </div>
-        <div className="flex flex-col w-4/5 gap-2">
-          <h4 className="font-semibold uppercase text-base mb-2">Features</h4>
-          <div className="flex flex-wrap gap-4">
+        <div className="flex flex-col w-full sm:w-2/5 gap-2">
+          <h4 className="text-red-500 font-semibold uppercase mb-2">
+            Features
+          </h4>
+          <div className="flex flex-wrap content-start leading-6 gap-1">
             {menuItems.map((item) => (
               <Link key={item.label} href={item.href}>
-                <Button variant="link" className="p-0 font-normal m-0">
+                <p className="text-white text-left w-[20ch] underline-offset-4 hover:underline">
                   {item.label}
-                </Button>
+                </p>
               </Link>
             ))}
           </div>
         </div>
+        <div className="flex justify-end sm:w-1/5">
+          <Image
+            // src={'/logos/kodes-logo-bg-dark.png'}
+            src={'/logos/HandyForMe_OnlyText-1200x1200.png'}
+            width={36}
+            height={36}
+            alt="Logo of HandyFor.Me"
+            className="w-[6em]"
+          />
+        </div>
       </CardContent>
-      <div className="flex items-center justify-between text-xs gap-4 p-4">
-        <p>HandyFor.Me Inc., 2024 © All rights reserved.</p>
-        <div className="flex gap-4">
-          <p>Policy</p>
-          <p>Terms of Service</p>
+      <div className="flex items-end justify-between text-right text-xs gap-4 p-4">
+        <div className="flex gap-8">
+          <Link href={'/policy'} target="_blank">
+            <p className="text-xs text-white text-left underline-offset-4 hover:underline mr-4">
+              Policy
+            </p>
+          </Link>
+          <Link href={'/terms'} target="_blank">
+            <p className="text-xs text-white text-left underline-offset-4 hover:underline">
+              Terms of Service
+            </p>
+          </Link>
+        </div>
+        <div className="flex flex-col gap-1">
+          <p>HandyFor.Me Inc., 2024</p>
+          <p>© All rights reserved.</p>
         </div>
       </div>
     </Card>
