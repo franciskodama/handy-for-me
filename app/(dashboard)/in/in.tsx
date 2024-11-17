@@ -2,7 +2,6 @@
 
 import { AnimatePresence, motion } from 'framer-motion';
 import { useState } from 'react';
-import { ChevronsUpDown } from 'lucide-react';
 
 import {
   Card,
@@ -27,6 +26,9 @@ import CardBucketList from './card-bucket-list';
 import CardShortcuts from './card-shortcuts';
 import CardEmpty from './card-empty';
 import CardDivulgation from './card-divulgation';
+import CardDivulgationHelp from './card-divulgation-help';
+import ExplanationIn from './explanation-in';
+import Help from '@/components/Help';
 
 export default function In({
   user,
@@ -43,21 +45,21 @@ export default function In({
   bucketListItems: BucketListItem[];
   shortcutsItems: Shortcut[];
 }) {
-  // const [openAction, setOpenAction] = useState(false);
+  const [openAction, setOpenAction] = useState(false);
 
   return (
-    <Card>
+    <Card className="relative">
       <CardHeader className="sm:mb-12">
         <CardTitle className="flex justify-between items-center gap-2">
           <p>Dashboard</p>
-          {/* {!openAction ? <Help setOpenAction={setOpenAction} /> : <div />} */}
+          {!openAction ? <Help setOpenAction={setOpenAction} /> : <div />}
         </CardTitle>
         <CardDescription>
           Everything you need, right at your fingertips.
         </CardDescription>
       </CardHeader>
       <CardContent>
-        {/* <AnimatePresence>
+        <AnimatePresence>
           {openAction ? (
             <motion.div
               layout
@@ -70,7 +72,7 @@ export default function In({
               </div>
             </motion.div>
           ) : null}
-        </AnimatePresence> */}
+        </AnimatePresence>
 
         <div className="flex flex-col gap-4">
           {/* -----------------------  First Row ----------------------- */}
@@ -203,7 +205,7 @@ export default function In({
 
           {/* ----------------------- Third Row ----------------------- */}
 
-          {visionBoardItems.length > 0 ? (
+          {/* {visionBoardItems.length > 0 ? (
             <div className="flex flex-col sm:flex-row w-full gap-24 sm:gap-8 my-12">
               <CardVisionBoard visionBoardItems={visionBoardItems} />
             </div>
@@ -216,9 +218,7 @@ export default function In({
                 url="weekly-wins"
               />
             </div>
-          )}
-
-          {/* ----------------------- FOOTER ----------------------- */}
+          )} */}
         </div>
       </CardContent>
     </Card>

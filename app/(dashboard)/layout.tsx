@@ -1,19 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
 
-import {
-  BookA,
-  Grid3x3,
-  Home,
-  ExternalLink,
-  ListMinus,
-  Menu,
-  MessageCircleQuestion,
-  RefreshCw,
-  Trophy,
-  HandHeart
-} from 'lucide-react';
-
 import { Button } from '@/components/ui/button';
 import {
   Sheet,
@@ -21,6 +8,12 @@ import {
   SheetContent,
   SheetTrigger
 } from '@/components/ui/sheet';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger
+} from '@/components/ui/tooltip';
 import { User } from './header/user';
 import Providers from './providers';
 import PencilBanner from './header/pencil-banner';
@@ -29,6 +22,10 @@ import Greeting from './header/greeting';
 import { Toaster } from '@/components/ui/toaster';
 import { NavItem } from '@/components/NavItem';
 import { SearchInput } from './header/search';
+import CardDivulgationHelp from './in/card-divulgation-help';
+import Footer from '@/components/Footer';
+import { menuItems } from '@/lib/menu';
+import { Menu } from 'lucide-react';
 
 export default function DashboardLayout({
   children
@@ -55,6 +52,7 @@ export default function DashboardLayout({
           <main className="grid flex-1 items-start gap-2 p-4 sm:px-6 sm:py-0 md:gap-4 bg-muted/40">
             {children}
             <Toaster />
+            <Footer />
           </main>
         </div>
       </main>
@@ -95,7 +93,6 @@ function MobileNav() {
               </SheetClose>
             </Link>
           ))}
-
           {/* <Link
             href="#"
             className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
@@ -131,8 +128,20 @@ export function DesktopNav() {
           </NavItem>
         ))}
       </nav>
-      {/* <nav className="mt-auto flex flex-col items-center gap-4 px-2 sm:py-5">
+      <nav className="mt-auto flex flex-col items-center gap-4 px-2 sm:py-5">
         <Tooltip>
+          <TooltipTrigger asChild>
+            <Link
+              href="#"
+              className="flex h-9 w-9 items-center justify-center text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
+            >
+              <CardDivulgationHelp />
+              <span className="sr-only">Need a hand?</span>
+            </Link>
+          </TooltipTrigger>
+          <TooltipContent side="right">Need a hand?</TooltipContent>
+        </Tooltip>
+        {/* <Tooltip>
           <TooltipTrigger asChild>
             <Link
               href="#"
@@ -143,59 +152,8 @@ export function DesktopNav() {
             </Link>
           </TooltipTrigger>
           <TooltipContent side="right">Settings</TooltipContent>
-        </Tooltip>
-      </nav> */}
+        </Tooltip> */}
+      </nav>
     </aside>
   );
 }
-
-const menuItems = [
-  { label: 'Dashboard', href: '/in', icon: <Home className="h-5 w-5" /> },
-  {
-    label: 'Vision Board',
-    href: '/vision-board',
-    icon: <Grid3x3 className="h-5 w-5" />
-  },
-  {
-    label: 'Shortcuts',
-    href: '/shortcuts',
-    icon: <ExternalLink className="h-5 w-5" />
-  },
-  {
-    label: 'Bucket List',
-    href: '/bucket-list',
-    icon: <ListMinus className="h-5 w-5" />
-  },
-  {
-    label: 'Weekly Wins',
-    href: '/weekly-wins',
-    icon: <Trophy className="h-5 w-5" />
-  },
-  {
-    label: 'Decision Helper',
-    href: '/decision-helper',
-    icon: <RefreshCw className="h-5 w-5" />
-  },
-  {
-    label: 'Stoic Support',
-    href: '/stoic-support',
-    icon: <HandHeart className="h-5 w-5" />
-  },
-  {
-    label: 'Random Questions',
-    href: '/random-question',
-    icon: <MessageCircleQuestion className="h-5 w-5" />
-  },
-  {
-    label: 'Letter Leap',
-    href: '/letter-leap',
-    icon: <BookA className="h-5 w-5" />
-  }
-  // {
-  //   label: 'My Words',
-  //   href: '/my-words',
-  //   icon: <WholeWord className="h-5 w-5" />
-  // }
-  // { label: 'Artificial Intelligence', href: '/ai', icon: Bot },
-  // { label: 'Products', href: '/products', icon: Ghost },
-];

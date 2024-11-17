@@ -2,6 +2,7 @@ import Script from 'next/script';
 
 import './globals.css';
 import { barlow } from './ui/fonts';
+import Footer from '@/components/Footer';
 
 export const metadata = {
   title: 'HandyFor.Me',

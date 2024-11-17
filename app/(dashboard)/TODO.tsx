@@ -9,16 +9,16 @@
 // shadow-[0_0px_0px_0px_inset,#FFF_-3px_3px_0_-1px,#0F1739_-3px_3px]
 
 // TODO: Nadgen Q.A.
-// Stoic Support: Check the Content
-// Stoic Support: Dashboard Card
+// Bucket List: Select must be restarted after Adding a new item. It's returning alwqays the last selected item
+// Bucket List: Change form to useReactForm
 
-// Random Questions:Reset All must Reset the Clock as well
+// Stoic Support: Check the Content
+
+// Random Questions: Reset All must Reset the Clock as well
 // Random Questions: When it's reseted, don't show the kudos message either
 // Random Questions: everything on one screen
 // Random Questions: Clock must restart on 2 min after Reset
 
-// Bucket List: Nadgen likes it categorized in columns
-// Bucket List: Select must be restarted after Adding a new item. It's returning alwqays the last selected item
 // Responsivity for smallers screens of Laptops (Weather was tight on Nadgen's screen)
 // Weekly Wins on the Dashboard
 // Dashboard: Accordions?
@@ -28,6 +28,11 @@
 // Responsivity for Tablets?
 
 // DONE:
+// Footer
+// Stoic Support: Dashboard Card
+// Dashboard Help Card: Explain that there is a helper there in every feature
+// Bucket List: Flex Wrap the cards
+// Bucket List: Nadgen likes it categorized in columns
 // Record a Loom Video to explain how to get a image url
 // Add on the Dashboard: Ads to divulgate other features for practicing English
 // Decision Helper: Add categories first on the left side

@@ -239,7 +239,7 @@ export default function VisionBoard({
           onValueChange={(value) => setIsAccordionOpen(value)}
         >
           <AccordionItem value="item-1" className="border-0">
-            <AccordionTrigger className="w-full text-xs underline uppercase">
+            <AccordionTrigger className="w-full text-xs underline underline-offset-4 uppercase">
               Add a new Goal
             </AccordionTrigger>
             <AccordionContent>
@@ -409,7 +409,7 @@ function FormVisionBoard({
             <p className="text-xs ml-4 lowercase">
               <span className="uppercase">A</span>dd the URL of a picture from
               <Link
-                className="mx-1 font-bold underline"
+                className="mx-1 font-bold underline underline-offset-4"
                 href="https://unsplash.com/"
                 target="_blank"
               >
@@ -421,7 +421,9 @@ function FormVisionBoard({
               <AlertDialog>
                 <AlertDialogTrigger className="flex items-center">
                   <Copy size={14} strokeWidth={1.8} className="mr-1" />
-                  <p className="text-xs underline">How to copy the Image Url</p>
+                  <p className="text-xs underline underline-offset-4">
+                    How to copy the Image Url
+                  </p>
                 </AlertDialogTrigger>
                 <AlertDialogContent className="max-w-5xl">
                   <AlertDialogHeader>
