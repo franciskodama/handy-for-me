@@ -3,15 +3,19 @@ import Image from 'next/image';
 
 import { Card, CardContent } from '@/components/ui/card';
 import { menuItems } from '@/lib/menu';
+import { List, PocketKnife, Rocket, Terminal } from 'lucide-react';
 
 export default function Footer() {
   return (
     <Card className="px-4 py-4 bg-primary text-white text-sm w-full">
       <CardContent className="flex flex-col sm:flex-row gap-12 items-start justify-between p-4">
         <div className="flex flex-col sm:w-1/5 gap-2">
-          <h4 className="font-semibold text-red-500 uppercase mb-2">
-            Behind the Code
-          </h4>
+          <div className="flex items-center gap-2 mb-2">
+            <Terminal size={16} color="red" />
+            <h4 className="font-semibold text-red-500 uppercase">
+              Behind the Code
+            </h4>
+          </div>
           <p className="pr-4 max-w-80">
             {/* Designed to simplify your journey, inspire growth, and help you
             achieve more. Your go-to companion for a mindful and productive
@@ -21,10 +25,13 @@ export default function Footer() {
             help you do the same. One feature at a time. Enjoy!
           </p>
         </div>
+
         <div className="flex flex-col w-full sm:w-2/5 gap-2">
-          <h4 className="text-red-500 font-semibold uppercase mb-2">
-            Features
-          </h4>
+          <div className="flex items-center gap-2 mb-2">
+            {/* <PocketKnife size={18} color="red" /> */}
+            <List size={16} color="red" />
+            <h4 className="font-semibold text-red-500 uppercase">Features</h4>
+          </div>
           <div className="flex flex-wrap content-start leading-6 gap-1">
             {menuItems.map((item) => (
               <Link key={item.label} href={item.href}>
@@ -35,6 +42,7 @@ export default function Footer() {
             ))}
           </div>
         </div>
+
         <div className="flex justify-end sm:w-1/5">
           <Image
             // src={'/logos/kodes-logo-bg-dark.png'}

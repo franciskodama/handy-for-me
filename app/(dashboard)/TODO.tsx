@@ -9,7 +9,6 @@
 // shadow-[0_0px_0px_0px_inset,#FFF_-3px_3px_0_-1px,#0F1739_-3px_3px]
 
 // TODO: Nadgen Q.A.
-// Footer
 // Bucket List: Select must be restarted after Adding a new item. It's returning alwqays the last selected item
 // Bucket List: Change form to useReactForm
 
@@ -29,6 +28,7 @@
 // Responsivity for Tablets?
 
 // DONE:
+// Footer
 // Stoic Support: Dashboard Card
 // Dashboard Help Card: Explain that there is a helper there in every feature
 // Bucket List: Flex Wrap the cards
