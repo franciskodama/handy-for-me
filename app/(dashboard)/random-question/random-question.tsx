@@ -30,10 +30,10 @@ import Countdown from './countdown';
 import Result from './result';
 
 export default function RandomQuestion({ name }: { name: string }) {
+  const [openAction, setOpenAction] = useState(false);
   const [topic, setTopic] = useState<string>('');
   const [questions, setQuestions] = useState<string[]>([]);
   const [result, setResult] = useState<string>('');
-  const [openAction, setOpenAction] = useState(false);
   const [startCountdown, setStartCountdown] = useState(false);
   const [resetAll, setResetAll] = useState(false);
 

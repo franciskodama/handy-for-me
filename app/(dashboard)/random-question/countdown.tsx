@@ -25,7 +25,7 @@ export default function Countdown({
   setStartCountdown: (value: boolean) => void;
   handleResetAll: () => void;
 }) {
-  const minutesOptions = [1, 2, 3, 4, 5];
+  const minutesOptions = [0.1, 1, 2, 3, 4, 5];
   const [isPaused, setIsPaused] = useState(false);
   const [timeRemaining, setTimeRemaining] = useState(0);
   const [selectedValue, setSelectedValue] = useState('');
