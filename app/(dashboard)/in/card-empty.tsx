@@ -21,7 +21,7 @@ export default function CardEmpty({
           <p className="text-xs mb-4">{description}</p>
           <Button
             variant="ghost"
-            className="text-xs underline bg-white sm:bg-transparent p-1 h-4"
+            className="text-xs underline underline-offset-4 bg-white sm:bg-transparent p-1 h-4"
           >
             <Link href={`/${url}`}>{buttonText}</Link>
           </Button>

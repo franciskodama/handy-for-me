@@ -39,7 +39,7 @@ export default function ExplanationMyWords({
                 having fun!
               </p>
               <p className="mt-4">
-                <span className="underline mr-2">
+                <span className="underline underline-offset-4 mr-2">
                   Great for Solo or Group Practice:
                 </span>
                 You can play this game alone or with friends for a fun and

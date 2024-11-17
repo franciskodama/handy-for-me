@@ -30,7 +30,7 @@ export default function CardShortcuts({
         <div className={tagClass}>Shortcuts</div>
         <Button
           variant="ghost"
-          className="absolute -bottom-2 sm:bottom-4 right-6 sm:right-2 text-xs underline bg-white sm:bg-transparent p-1 h-4"
+          className="absolute -bottom-2 sm:bottom-4 right-6 sm:right-2 text-xs underline underline-offset-4 bg-white sm:bg-transparent p-1 h-4"
         >
           <Link href="/shortcuts">View All</Link>
         </Button>
