@@ -14,11 +14,6 @@
 
 // Stoic Support: Check the Content
 
-// Random Questions: Reset All must Reset the Clock as well
-// Random Questions: When it's reseted, don't show the kudos message either
-// Random Questions: everything on one screen
-// Random Questions: Clock must restart on 2 min after Reset
-
 // Responsivity for smallers screens of Laptops (Weather was tight on Nadgen's screen)
 // Weekly Wins on the Dashboard
 // Dashboard: Accordions?
@@ -28,6 +23,10 @@
 // Responsivity for Tablets?
 
 // DONE:
+// Random Questions: Reset All must Reset the Clock as well
+// Random Questions: When it's reseted, don't show the kudos message either
+// Random Questions: everything on one screen
+// Random Questions: Clock must restart on 2 min after Reset
 // Footer
 // Stoic Support: Dashboard Card
 // Dashboard Help Card: Explain that there is a helper there in every feature

@@ -9,6 +9,7 @@ import { X } from 'lucide-react';
 import useIsMobile from '@/hooks/use-is-mobile';
 import Result from './result';
 import Countdown from './countdown';
+import { Dispatch, SetStateAction } from 'react';
 
 export function MobileResultDialog({
   result,
@@ -16,16 +17,32 @@ export function MobileResultDialog({
   resetAll,
   startCountdown,
   setStartCountdown,
+  setSelectedValue,
+  selectedValue,
   handleResetAll,
-  setResult
+  setResult,
+  setTimeRemaining,
+  timeRemaining,
+  setLastSelectedTime,
+  lastSelectedTime,
+  setIsPaused,
+  isPaused
 }: {
   result: string;
   name: string;
   resetAll: boolean;
   startCountdown: boolean;
   setStartCountdown: (value: boolean) => void;
+  setSelectedValue: (value: string) => void;
+  selectedValue: string;
   handleResetAll: () => void;
   setResult: (value: string) => void;
+  setTimeRemaining: Dispatch<SetStateAction<number>>;
+  timeRemaining: number;
+  setLastSelectedTime: (value: number) => void;
+  lastSelectedTime: number;
+  setIsPaused: (value: boolean) => void;
+  isPaused: boolean;
 }) {
   const isMobile = useIsMobile();
   return (
@@ -42,7 +59,15 @@ export function MobileResultDialog({
                   result={result}
                   setStartCountdown={setStartCountdown}
                   startCountdown={startCountdown}
+                  setSelectedValue={setSelectedValue}
+                  selectedValue={selectedValue}
                   handleResetAll={handleResetAll}
+                  setTimeRemaining={setTimeRemaining}
+                  timeRemaining={timeRemaining}
+                  setLastSelectedTime={setLastSelectedTime}
+                  lastSelectedTime={lastSelectedTime}
+                  setIsPaused={setIsPaused}
+                  isPaused={isPaused}
                 />
               </div>
             </AlertDialogDescription>
