@@ -28,6 +28,7 @@ import Help from '@/components/Help';
 import ExplanationRandomQuestion from './explanation-random-question';
 import Countdown from './countdown';
 import Result from './result';
+import { BookOpen, Layers, List, Search } from 'lucide-react';
 
 export default function RandomQuestion({ name }: { name: string }) {
   const [openAction, setOpenAction] = useState(false);
@@ -35,7 +36,11 @@ export default function RandomQuestion({ name }: { name: string }) {
   const [questions, setQuestions] = useState<string[]>([]);
   const [result, setResult] = useState<string>('');
   const [startCountdown, setStartCountdown] = useState(false);
+  const [selectedValue, setSelectedValue] = useState('');
   const [resetAll, setResetAll] = useState(false);
+  const [timeRemaining, setTimeRemaining] = useState<number>(0);
+  const [lastSelectedTime, setLastSelectedTime] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
 
   useEffect(() => {
     const arrayOfQuestions = getQuestions(topic);
@@ -61,9 +66,17 @@ export default function RandomQuestion({ name }: { name: string }) {
 
   const handleResetAll = () => {
     setResetAll(true);
+    setSelectedValue('');
     setResult('');
   };
 
+  const minutesOptions = [0.1, 1, 2, 3, 4, 5];
+  const handleValueChange = (value: string) => {
+    const timeInSeconds = +value * 60;
+    setSelectedValue(value);
+    setTimeRemaining(timeInSeconds);
+    setLastSelectedTime(timeInSeconds);
+  };
   return (
     <Card>
       <CardHeader className="mb-12">
@@ -93,10 +106,38 @@ export default function RandomQuestion({ name }: { name: string }) {
 
         <div className="flex flex-col sm:flex-row justify-between gap-8 mb-4 w-full">
           <div className="flex flex-col sm:w-1/5 gap-4">
-            <p className="text-lg font-semibold">
-              {`${name.split(' ')[0]}, let's get started! `}
+            <p className="sm:hidden text-lg font-semibold mb-4">
+              Let's get started!
             </p>
             <div className="flex flex-col gap-2">
+              <div className="sm:hidden flex flex-col gap-2">
+                <p className="text-sm">Minutes to answer</p>
+                <Select value={selectedValue} onValueChange={handleValueChange}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Time" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {minutesOptions.map((min: number) => (
+                      <SelectItem
+                        key={min}
+                        value={min.toString()}
+                      >{`${min} min`}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="flex items-center gap-2 mt-4 sm:mt-0">
+                <p className="text-sm sm:text-lg sm:font-semibold">
+                  Pick a Topic
+                </p>
+                <Search
+                  size={24}
+                  strokeWidth={1.6}
+                  className="hidden sm:block"
+                />
+              </div>
+
               <Select
                 onValueChange={(value) => {
                   setResult('');
@@ -104,7 +145,7 @@ export default function RandomQuestion({ name }: { name: string }) {
                 }}
               >
                 <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Pick a Topic" />
+                  <SelectValue placeholder="Topic" />
                 </SelectTrigger>
                 <SelectContent>
                   {topicsRandomQuestions.map(
@@ -147,14 +188,22 @@ export default function RandomQuestion({ name }: { name: string }) {
             <Result result={result} handleResetAll={handleResetAll} />
           </div>
 
-          <div className="hidden sm:flex flex-col mt-0 w-1/5">
+          <div className="hidden sm:flex flex-col mt-0 sm:w-1/5">
             <Countdown
               name={name}
               resetAll={resetAll}
               result={result}
               setStartCountdown={setStartCountdown}
               startCountdown={startCountdown}
+              setSelectedValue={setSelectedValue}
+              selectedValue={selectedValue}
               handleResetAll={handleResetAll}
+              setTimeRemaining={setTimeRemaining}
+              timeRemaining={timeRemaining}
+              setLastSelectedTime={setLastSelectedTime}
+              lastSelectedTime={lastSelectedTime}
+              setIsPaused={setIsPaused}
+              isPaused={isPaused}
             />
           </div>
 
@@ -165,7 +214,15 @@ export default function RandomQuestion({ name }: { name: string }) {
             startCountdown={startCountdown}
             setStartCountdown={setStartCountdown}
             handleResetAll={handleResetAll}
+            setSelectedValue={setSelectedValue}
+            selectedValue={selectedValue}
             setResult={setResult}
+            setTimeRemaining={setTimeRemaining}
+            timeRemaining={timeRemaining}
+            setLastSelectedTime={setLastSelectedTime}
+            lastSelectedTime={lastSelectedTime}
+            setIsPaused={setIsPaused}
+            isPaused={isPaused}
           />
         </div>
       </CardContent>
