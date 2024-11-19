@@ -132,7 +132,7 @@ export default function StoicSupport({ name }: { name: string }) {
                               <p className="text-sm font-semibold bg-primary w-full text-white py-1 text-center mb-8">
                                 {el.category}
                               </p>
-                              <AlertDialogTitle className="flex items-center gap-2 uppercase font-bold text-xl px-12">
+                              <AlertDialogTitle className="flex items-center gap-2 uppercase font-bold text-left text-xl px-12">
                                 {getIcon(el.category, 'dialog')}
                                 {topic.topic}
                               </AlertDialogTitle>

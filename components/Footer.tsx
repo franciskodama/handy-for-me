@@ -28,8 +28,8 @@ export default function Footer() {
 
         <div className="flex flex-col w-full sm:w-2/5 gap-2">
           <div className="flex items-center gap-2 mb-2">
-            {/* <PocketKnife size={18} color="red" /> */}
-            <List size={16} color="red" />
+            <PocketKnife size={18} color="red" />
+            {/* <List size={16} color="red" /> */}
             <h4 className="font-semibold text-red-500 uppercase">Features</h4>
           </div>
           <div className="flex flex-wrap content-start leading-6 gap-1">
@@ -50,14 +50,14 @@ export default function Footer() {
             width={36}
             height={36}
             alt="Logo of HandyFor.Me"
-            className="w-[6em]"
+            className="w-[5em] sm:mr-4 sm:mt-4"
           />
         </div>
       </CardContent>
       <div className="flex items-end justify-between text-right text-xs gap-4 p-4">
-        <div className="flex gap-8">
+        <div className="flex gap-4 sm:gap-8">
           <Link href={'/policy'} target="_blank">
-            <p className="text-xs text-white text-left underline-offset-4 hover:underline mr-4">
+            <p className="text-xs text-white text-left underline-offset-4 hover:underline">
               Policy
             </p>
           </Link>
@@ -68,7 +68,7 @@ export default function Footer() {
           </Link>
         </div>
         <div className="flex flex-col gap-1">
-          <p>HandyFor.Me Inc., 2024</p>
+          <p>HandyFor.Me - 2024</p>
           <p>© All rights reserved.</p>
         </div>
       </div>
