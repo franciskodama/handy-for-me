@@ -104,7 +104,7 @@ export default function StoicSupport({ name }: { name: string }) {
           ) : null}
         </AnimatePresence>
 
-        <div className="flex flex-col gap-4 w-full sm:w-auto">
+        <div className="flex flex-col gap-4 w-full sm:w-auto mb-12">
           <p className="text-sm mb-2">
             Click on a category, and choose a topic:
           </p>

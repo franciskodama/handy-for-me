@@ -288,7 +288,7 @@ export default function VisionBoard({
           </div>
         )}
 
-        <div className="flex flex-wrap gap-[1px] justify-center my-4 sm:my-0 sm:mb-24">
+        <div className="flex flex-wrap gap-[1px] justify-center my-4 sm:my-0 sm:mb-32">
           {board.map((el: VisualBoardItem) => (
             <div key={el.id}>
               <div className="relative group">

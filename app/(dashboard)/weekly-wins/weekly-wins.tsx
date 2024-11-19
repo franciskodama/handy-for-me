@@ -275,7 +275,7 @@ export default function WeeklyWins({
             />
           </div>
         )}
-        <div className="flex flex-col sm:flex-row w-full justify-center gap-8 mb-20">
+        <div className="flex flex-col sm:flex-row w-full justify-center gap-8 mb-12">
           {board.map((groupOfWins: WeeklyWin[]) => (
             <div key={groupOfWins[0].type} className="sm:w-1/3 mt-4">
               <h3

@@ -88,7 +88,7 @@ export default function RandomQuestion({ name }: { name: string }) {
           Boost your English with fun, random prompts!
         </CardDescription>
       </CardHeader>
-      <CardContent className="h-screen">
+      <CardContent>
         <AnimatePresence>
           {openAction ? (
             <motion.div
@@ -104,7 +104,7 @@ export default function RandomQuestion({ name }: { name: string }) {
           ) : null}
         </AnimatePresence>
 
-        <div className="flex flex-col sm:flex-row justify-between gap-8 mb-4 w-full">
+        <div className="flex flex-col sm:flex-row justify-between gap-8 w-full mb-12">
           <div className="flex flex-col sm:w-1/5 gap-4">
             <p className="sm:hidden text-lg font-semibold mb-4">
               Let's get started!

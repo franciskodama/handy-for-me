@@ -55,12 +55,6 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { kumbh_sans } from '@/app/ui/fonts';
 import Help from '@/components/Help';
 import ExplanationDecisionHelper from './explanation-decision-helper';
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger
-} from '@/components/ui/accordion';
 
 export const foldit = Foldit({
   weight: ['700'],
@@ -338,7 +332,7 @@ export default function DecisionHelper({
             )}
           </div>
 
-          <div className="stripe-border flex flex-col items-center sm:w-1/2 justify-center p-12 mt-8">
+          <div className="stripe-border flex flex-col items-center sm:w-1/2 justify-center p-12 mt-8 mb-8">
             {items.length > 0 ? (
               <>
                 <div className="flex flex-col">

@@ -185,7 +185,7 @@ export default function Shortcuts({
             />
           </div>
         )}
-        <div className="flex flex-col sm:flex-row w-full gap-8">
+        <div className="flex flex-col sm:flex-row w-full gap-8 mb-12">
           {board.map((groupOfShortcuts: Shortcut[]) => (
             <div key={groupOfShortcuts[0].categoryId} className="sm:w-1/5">
               <h3

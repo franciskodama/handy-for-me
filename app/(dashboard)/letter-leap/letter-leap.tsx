@@ -62,7 +62,7 @@ export default function LetterLeap({ name }: { name: string }) {
           Master conversations, one letter at a time!
         </CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="mb-8">
         <AnimatePresence>
           {openAction ? (
             <motion.div
