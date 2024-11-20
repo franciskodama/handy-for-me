@@ -2,7 +2,7 @@
 
 import { AnimatePresence, motion } from 'framer-motion';
 import { Bomb, FlagOff, Square, SquareCheckBig, Trash2 } from 'lucide-react';
-import { useActionState, useEffect, useRef, useState } from 'react';
+import { useActionState, useEffect, useState } from 'react';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
@@ -128,8 +128,6 @@ export default function BucketList({
   const [data, action, isPending] = useActionState(handleSubmit, undefined);
   const [selectedCategory, setSelectedCategory] = useState<string>('');
 
-  // const formRef = useRef<HTMLFormElement>(null);
-
   const organizeBoardByCategory = (bucketList: BucketListItem[]) => {
     const organizedBoard: BucketListItem[][] = Object.values(
       bucketList.reduce(
@@ -171,9 +169,7 @@ export default function BucketList({
   useEffect(() => {
     if (data?.newBucketListItem && Array.isArray(data.newBucketListItem)) {
       setBoard(organizeBoardByCategory(data.newBucketListItem));
-      // if (formRef.current) {
-      //   formRef.current.reset();
-      // }
+      setSelectedCategory('');
     }
   }, [data]);
 
@@ -270,7 +266,6 @@ export default function BucketList({
             className={`${barlow.className} flex gap-4 capitalize mt-8 sm:mt-0`}
           >
             <form
-              // ref={formRef}
               className="flex flex-col sm:flex-row items-start gap-4 sm:gap-2 font-normal"
               action={action}
             >
