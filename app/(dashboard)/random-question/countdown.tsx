@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Dispatch, SetStateAction } from 'react';
+import React, { useEffect, Dispatch, SetStateAction } from 'react';
 import { Timer } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import {
@@ -43,7 +43,7 @@ export default function Countdown({
   setIsPaused,
   isPaused
 }: CountdownProps) {
-  const minutesOptions = [0.1, 1, 2, 3, 4, 5];
+  const minutesOptions = [1, 2, 3, 4, 5];
 
   useEffect(() => {
     handleValueChange('2');
