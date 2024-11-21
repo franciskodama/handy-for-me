@@ -28,7 +28,7 @@ import Help from '@/components/Help';
 import ExplanationRandomQuestion from './explanation-random-question';
 import Countdown from './countdown';
 import Result from './result';
-import { BookOpen, Layers, List, Search } from 'lucide-react';
+import { Search } from 'lucide-react';
 
 export default function RandomQuestion({ name }: { name: string }) {
   const [openAction, setOpenAction] = useState(false);

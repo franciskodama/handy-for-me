@@ -18,6 +18,8 @@
 // Bucket List: Select must be restarted after Adding a new item. It's returning alwqays the last selected item
 // Bucket List: Change form to useReactForm
 
+// Sigout
+
 // Stoic Support: Check the Content
 // Responsivity for smallers screens of Laptops (Weather was tight on Nadgen's screen)
 // Weekly Wins on the Dashboard
