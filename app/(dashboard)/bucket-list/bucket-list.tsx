@@ -1,8 +1,16 @@
 'use client';
 
 import { AnimatePresence, motion } from 'framer-motion';
-import { Bomb, FlagOff, Square, SquareCheckBig, Trash2 } from 'lucide-react';
-import { useActionState, useEffect, useRef, useState } from 'react';
+import {
+  Bomb,
+  FlagOff,
+  Shuffle,
+  Square,
+  SquareCheckBig,
+  Trash2
+} from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { useForm, SubmitHandler, Controller } from 'react-hook-form';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
@@ -52,68 +60,10 @@ type BucketListCategory = {
   textColor: string;
 };
 
-type SubmitResult = {
-  newBucketListItem: BucketListItem[];
-};
-
-const handleSubmit = async (
-  previousState: unknown,
-  formData: FormData
-): Promise<SubmitResult | undefined> => {
-  const uid = formData.get('uid') as string;
-  const item = formData.get('item') as string;
-  const category = formData.get('category') as string;
-
-  if (item.length < 3) {
-    toast({
-      title: 'The name is too short!',
-      description: `The name should be at least 3 characters.`,
-      variant: 'destructive'
-    });
-    return;
-  }
-
-  if (!item) {
-    toast({
-      title: 'Name is required!',
-      description: `No Adventure's name, no bucket list item.`,
-      variant: 'destructive'
-    });
-    return;
-  }
-
-  if (!category) {
-    toast({
-      title: 'Category is required!',
-      description:
-        'The categories will give a nice overview of the Bucket List. Trust me! :)',
-      variant: 'destructive'
-    });
-    return;
-  }
-
-  const BucketListItem = await addBucketListItem(uid, item, category);
-  if (!BucketListItem) {
-    toast({
-      title: 'Ops...',
-      description: 'Something got wrong. 🚨 Try again.',
-      variant: 'destructive'
-    });
-  } else {
-    toast({
-      title: 'Category added successfully! 🎉',
-      description: 'You have one more item to conquer!',
-      variant: 'success'
-    });
-  }
-  const newBucketListItem = await getBucketListItems(uid);
-  if (!newBucketListItem) {
-    return;
-  }
-
-  return {
-    newBucketListItem
-  };
+type Inputs = {
+  item: string;
+  category: string;
+  uid: string;
 };
 
 export default function BucketList({
@@ -125,10 +75,41 @@ export default function BucketList({
 }) {
   const [openAction, setOpenAction] = useState(false);
   const [board, setBoard] = useState<BucketListItem[][]>([]);
-  const [data, action, isPending] = useActionState(handleSubmit, undefined);
-  const [selectedCategory, setSelectedCategory] = useState<string>('');
 
-  // const formRef = useRef<HTMLFormElement>(null);
+  const {
+    register,
+    handleSubmit,
+    control,
+    reset,
+    formState: { errors, isSubmitting }
+  } = useForm<Inputs>();
+
+  const onSubmit: SubmitHandler<Inputs> = async (data) => {
+    const { item, category } = data;
+
+    try {
+      await addBucketListItem(uid, item, category);
+      const newBucketLists = await getBucketListItems(uid);
+      newBucketLists && setBoard(organizeBoardByCategory(newBucketLists));
+      toast({
+        title: 'Adventure Added!',
+        description: `"${data.item}" has been added to your bucket list.`,
+        variant: 'success'
+      });
+
+      reset({
+        item: '',
+        category: ''
+      });
+    } catch (error) {
+      console.error(error);
+      toast({
+        title: 'Error Adding Adventure',
+        description: 'Something went wrong while adding your adventure.',
+        variant: 'destructive'
+      });
+    }
+  };
 
   const organizeBoardByCategory = (bucketList: BucketListItem[]) => {
     const organizedBoard: BucketListItem[][] = Object.values(
@@ -146,7 +127,6 @@ export default function BucketList({
     )
       .sort((a, b) => {
         const sizeComparison = b.length - a.length;
-
         // If categories have the same number of items, sort alphabetically
         if (sizeComparison === 0) {
           return a[0].category.localeCompare(b[0].category);
@@ -167,15 +147,6 @@ export default function BucketList({
       setBoard(boardByCategory);
     }
   }, []);
-
-  useEffect(() => {
-    if (data?.newBucketListItem && Array.isArray(data.newBucketListItem)) {
-      setBoard(organizeBoardByCategory(data.newBucketListItem));
-      // if (formRef.current) {
-      //   formRef.current.reset();
-      // }
-    }
-  }, [data]);
 
   const handleDeleteItem = async (el: BucketListItem) => {
     try {
@@ -270,44 +241,64 @@ export default function BucketList({
             className={`${barlow.className} flex gap-4 capitalize mt-8 sm:mt-0`}
           >
             <form
-              // ref={formRef}
               className="flex flex-col sm:flex-row items-start gap-4 sm:gap-2 font-normal"
-              action={action}
+              onSubmit={handleSubmit(onSubmit)}
             >
               <div className="flex flex-col gap-1 w-full sm:w-2/5">
-                <Input placeholder="Adventure" id="item" name="item" />
+                <Input
+                  placeholder="Adventure"
+                  {...register('item', {
+                    required: 'Adventure name is required',
+                    maxLength: {
+                      value: 50,
+                      message: 'Adventure name must be 50 characters or less'
+                    }
+                  })}
+                />
+                {errors.item && (
+                  <span className="bg-red-500 text-white text-xs text-center font-semibold w-full py-1 my-1">
+                    {errors.item.message}
+                  </span>
+                )}
+
                 <p className="text-xs ml-4 lowercase">
                   <span className="uppercase">N</span>ame your adventure in one
                   word.
                 </p>
               </div>
               <div className="flex flex-col gap-1 w-full sm:w-2/5">
-                <Select name="category">
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Category" id="category" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {bucketListCategories.map((el: Category) => (
-                      <div key={el.name}>
-                        <SelectItem value={el.name}>{el.name}</SelectItem>
-                      </div>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <Controller
+                  name="category"
+                  control={control}
+                  rules={{ required: 'Category is required' }}
+                  render={({ field }) => (
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Category" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {bucketListCategories.map((el: Category) => (
+                          <SelectItem key={el.name} value={el.name}>
+                            {el.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
+                {errors.category && (
+                  <span className="bg-red-500 text-white text-xs text-center font-semibold w-full py-1 my-1">
+                    {errors.category.message}
+                  </span>
+                )}
                 <p className="text-xs ml-4 lowercase">
                   <span className="uppercase">C</span>
                   hoose a category that best describes your adventure.
                 </p>
               </div>
-              <Input
-                id="uid"
-                name="uid"
-                value={uid}
-                readOnly
-                className="hidden"
-              />
-              <Button type="submit" disabled={isPending} className="ml-2">
-                {isPending ? 'Adding...' : 'Add'}
+              <Input value={uid} className="hidden" {...register('uid')} />
+              <Button type="submit" className="ml-2" disabled={isSubmitting}>
+                {isSubmitting ? 'Adding...' : 'Add'}
               </Button>
             </form>
           </div>
@@ -350,6 +341,14 @@ export default function BucketList({
             />
           </div>
         )}
+
+        <div className="flex items-center justify-center gap-2 w-full mt-8">
+          <Shuffle size={18} strokeWidth={1.4} />
+          <p className="text-sm italic">
+            Categories dynamically reorder as you add adventures, always
+            grouping from the most populated categories first.
+          </p>
+        </div>
 
         <div className="flex flex-wrap w-full justify-center gap-8 mt-8 mb-12">
           {board.map((categoryArray: BucketListItem[]) => (
