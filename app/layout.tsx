@@ -3,6 +3,7 @@ import Script from 'next/script';
 import './globals.css';
 import { barlow } from './ui/fonts';
 import Footer from '@/components/Footer';
+import { CSPostHogProvider } from './(dashboard)/providers';
 
 export const metadata = {
   title: 'HandyFor.Me',
@@ -28,19 +29,21 @@ export default function RootLayout({
           `}
         </Script>
       </head>
-      <body
-        className={`${barlow.className} antialiased flex min-h-screen w-full flex-col`}
-      >
-        <noscript>
-          <iframe
-            src="https://www.googletagmanager.com/ns.html?id=GTM-M5MTJNHT"
-            height="0"
-            width="0"
-            style={{ display: 'none', visibility: 'hidden' }}
-          ></iframe>
-        </noscript>
-        {children}
-      </body>
+      <CSPostHogProvider>
+        <body
+          className={`${barlow.className} antialiased flex min-h-screen w-full flex-col`}
+        >
+          <noscript>
+            <iframe
+              src="https://www.googletagmanager.com/ns.html?id=GTM-M5MTJNHT"
+              height="0"
+              width="0"
+              style={{ display: 'none', visibility: 'hidden' }}
+            ></iframe>
+          </noscript>
+          {children}
+        </body>
+      </CSPostHogProvider>
     </html>
   );
 }
