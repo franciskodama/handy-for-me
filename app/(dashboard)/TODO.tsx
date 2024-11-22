@@ -9,11 +9,7 @@
 // shadow-[0_0px_0px_0px_inset,#FFF_-3px_3px_0_-1px,#0F1739_-3px_3px]
 
 // TODO: Nadgen Q.A.
-// Install Analytics: https://support.google.com/analytics/answer/9304153#property
-// https://tagmanager.google.com/?authuser=0#/versions/accounts/6256123314/containers/199054622/versions/2
-// https://marketingplatform.google.com/home?utm_campaign=SuiteHeader&utm_source=UniversalPicker&utm_medium=platformHomeButton&authuser=0
-// https://analytics.google.com/analytics/web/#/p391507835/reports/intelligenthome?params=_u..nav%3Dmaui
-// https://www.youtube.com/results?search_query=google+analytics+nextjs+14
+// NextJs 15 update: https://www.youtube.com/watch?v=fqabW3WRUbw&list=WL&index=39
 
 // Bucket List: Select must be restarted after Adding a new item. It's returning alwqays the last selected item
 // Bucket List: Change form to useReactForm
