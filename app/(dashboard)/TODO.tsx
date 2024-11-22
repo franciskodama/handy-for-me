@@ -27,6 +27,7 @@
 // Responsivity for Tablets?
 
 // DONE:
+// Install Analytics: Posthog
 // All Features: mb-12
 // Random Questions: Reset All must Reset the Clock as well
 // Random Questions: When it's reseted, don't show the kudos message either
