@@ -17,15 +17,15 @@ export default function ExplanationBox({
   callToAction,
   setOpenAction
 }: {
-  iconOne: JSX.Element;
+  iconOne: React.ReactElement;
   titleOne: string;
-  contentOne: JSX.Element;
-  iconTwo: JSX.Element;
+  contentOne: React.ReactNode;
+  iconTwo: React.ReactElement;
   titleTwo: string;
-  contentTwo: JSX.Element;
-  iconThree: JSX.Element;
+  contentTwo: React.ReactNode;
+  iconThree: React.ReactElement;
   titleThree: string;
-  contentThree: JSX.Element;
+  contentThree: React.ReactNode;
   callToAction: string;
   setOpenAction: (value: boolean) => void;
 }) {
