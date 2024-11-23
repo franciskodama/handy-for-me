@@ -1,8 +1,12 @@
 import './globals.css';
 import { barlow } from './ui/fonts';
 import { CSPostHogProvider } from './(dashboard)/providers';
+import { Metadata } from 'next';
 
-export const metadata = {
+export const metadata: Metadata = {
+  icons: {
+    icon: '/icon.png'
+  },
   title: 'HandyFor.Me',
   description:
     'Your personal hub for organizing daily tasks is just one click away! Configured with Next.js, Postgres, NextAuth, Tailwind CSS, TypeScript, and Prettier.'

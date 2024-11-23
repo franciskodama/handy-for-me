@@ -1,21 +1,22 @@
+'use client';
+
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 
 import { funFacts } from './fun-facts';
 import { Button } from '@/components/ui/button';
-import { LocationProps, User } from '@/lib/types';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
 import { tagClass } from './cards';
 
 export function CardFunFact() {
-  const [currentFact, setCurrentFact] = useState({
-    start: 'Surprising Fact:',
-    curiosity: 'Avocados are fruit, and they’re technically a berry!'
-  });
+  const [currentFact, setCurrentFact] = useState(funFacts[0]);
+  const [imageNumber, setImageNumber] = useState(1);
 
   const getRandomFact = () => {
     const randomIndex = Math.floor(Math.random() * funFacts.length);
+    const randomImage = Math.floor(Math.random() * numberOfGifsAvailable + 1);
     setCurrentFact(funFacts[randomIndex]);
+    setImageNumber(randomImage);
   };
 
   useEffect(() => {
@@ -45,7 +46,7 @@ export function CardFunFact() {
           <div className="my-4 sm:my-0 sm:w-[10em]">
             <AspectRatio ratio={1 / 1}>
               <Image
-                src={`/fun-fact/fun-fact-${Math.floor(Math.random() * numberOfGifsAvailable + 1)}.webp`}
+                src={`/fun-fact/fun-fact-${imageNumber}.webp`}
                 alt="Fun Fact Wow Image"
                 className="object-cover"
                 unoptimized

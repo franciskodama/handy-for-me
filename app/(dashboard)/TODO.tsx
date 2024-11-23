@@ -9,11 +9,6 @@
 // shadow-[0_0px_0px_0px_inset,#FFF_-3px_3px_0_-1px,#0F1739_-3px_3px]
 
 // TODO: Nadgen Q.A.
-// NextJs 15 update: https://www.youtube.com/watch?v=fqabW3WRUbw&list=WL&index=39
-
-// Bucket List: Select must be restarted after Adding a new item. It's returning alwqays the last selected item
-// Bucket List: Change form to useReactForm
-
 // Next Auth: Sigout after some time without signing in: https://next-auth.js.org/configuration/providers/oauth
 // Next Auth: for email and password
 
@@ -27,6 +22,9 @@
 // Responsivity for Tablets?
 
 // DONE:
+// Bucket List: Change form to useReactForm
+// Bucket List: Select must be restarted after Adding a new item. It's returning alwqays the last selected item
+// NextJs 15 update: https://www.youtube.com/watch?v=fqabW3WRUbw&list=WL&index=39
 // Install Analytics: Posthog
 // All Features: mb-12
 // Random Questions: Reset All must Reset the Clock as well

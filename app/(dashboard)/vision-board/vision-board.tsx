@@ -307,8 +307,7 @@ export default function VisionBoard({
 
                 {el.done ? (
                   <>
-                    <div className="absolute bottom-0 left-0 opacity-70 h-60 w-60 bg-primary" />
-
+                    <div className="absolute bottom-0 left-0 opacity-70 w-20 h-20 sm:h-48 sm:w-48 bg-primary" />
                     <Check
                       size={18}
                       strokeWidth={1.8}
@@ -448,7 +447,7 @@ function FormVisionBoard({
                     <ol>4) Paste the copied URL into your Vision Board.</ol>
                   </ul>
                   <AlertDialogFooter>
-                    <AlertDialogCancel>Got it!</AlertDialogCancel>
+                    <AlertDialogAction>Got it!</AlertDialogAction>
                   </AlertDialogFooter>
                 </AlertDialogContent>
               </AlertDialog>
