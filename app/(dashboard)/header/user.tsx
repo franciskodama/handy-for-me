@@ -11,7 +11,6 @@ import {
 } from '@/components/ui/dropdown-menu';
 import Link from 'next/link';
 import { UserIcon } from 'lucide-react';
-import { redirect, useRouter } from 'next/navigation';
 
 export async function User() {
   let session = await auth();
