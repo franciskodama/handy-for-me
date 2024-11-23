@@ -1,7 +1,6 @@
 'use client';
 
 import posthog from 'posthog-js';
-// import { SessionProvider } from 'next-auth/react';
 import { PostHogProvider } from 'posthog-js/react';
 import { TooltipProvider } from '@/components/ui/tooltip';
 
@@ -18,10 +17,8 @@ export function CSPostHogProvider({ children }: { children: React.ReactNode }) {
 
 export default function Providers({ children }: { children: React.ReactNode }) {
   return (
-    // <SessionProvider>
     <CSPostHogProvider>
       <TooltipProvider>{children}</TooltipProvider>
     </CSPostHogProvider>
-    // </SessionProvider>
   );
 }
