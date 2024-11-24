@@ -103,16 +103,17 @@ export default function StoicSupport({ name }: { name: string }) {
             </motion.div>
           ) : null}
         </AnimatePresence>
-
-        <div className="flex flex-col gap-4 w-full sm:w-auto mb-12">
-          <p className="text-sm mb-2">
+        <div className="flex justify-center">
+          <p className="text-base font-semibold mb-12">
             Click on a category, and choose a topic:
           </p>
+        </div>
+        <div className="flex flex-wrap justify-center gap-4 w-full sm:w-auto mb-12">
           {sortedStoicResponses.map((el: Category) => (
             <div key={el.category}>
-              <AccordionByButtons type="single" collapsible className="w-full">
+              <AccordionByButtons type="single" collapsible className="">
                 <AccordionItem value="item-1" className="border-0">
-                  <AccordionTrigger className="text-left">
+                  <AccordionTrigger className="text-left w-[20em]">
                     {getIcon(el.category, 'accordion')}
                     {el.category}
                   </AccordionTrigger>
@@ -129,30 +130,29 @@ export default function StoicSupport({ name }: { name: string }) {
                           </AlertDialogTrigger>
                           <AlertDialogContent className="w-[calc(100%-35px)] sm:p-8">
                             <AlertDialogHeader>
-                              <p className="text-sm font-semibold bg-primary w-full text-white py-1 text-center mb-8">
+                              <span className="text-sm font-semibold bg-primary w-full text-white py-1 text-center mb-8">
                                 {el.category}
-                              </p>
+                              </span>
                               <AlertDialogTitle className="flex items-center gap-2 uppercase font-bold text-left text-xl px-12">
                                 {getIcon(el.category, 'dialog')}
                                 {topic.topic}
                               </AlertDialogTitle>
                               <AlertDialogDescription className="py-4 text-primary">
                                 <div className="flex flex-col gap-2 my-8 p-4 bg-muted">
-                                  <p className="text-lg font-semibold italic">
+                                  <span className="text-lg font-semibold italic">
                                     {`"${topic.quote}"`}
-                                  </p>
+                                  </span>
                                   <p className="font-semibold text-left ml-4 sm:text-right mr-8">{`— ${topic.author}`}</p>
                                 </div>
                                 <div className="p-4 text-left text-base">
-                                  <p>{`${name},`}</p>
-                                  <p className="mb-4 mt-1">
+                                  <div>{`${name}, `}</div>
+                                  <span className="mb-4 mt-1">
                                     {topic.explanation}
-                                  </p>
+                                  </span>
                                 </div>
                               </AlertDialogDescription>
                             </AlertDialogHeader>
-                            <AlertDialogFooter>
-                              <AlertDialogCancel>Close</AlertDialogCancel>
+                            <AlertDialogFooter className="flex flex-col gap-4">
                               <Button variant={'outline'}>
                                 <CopyToClipboard
                                   text={getContent(el.category, topic)}
@@ -160,6 +160,7 @@ export default function StoicSupport({ name }: { name: string }) {
                                   <p>Copy to Clipboard</p>
                                 </CopyToClipboard>
                               </Button>
+                              <AlertDialogAction>Close</AlertDialogAction>
                             </AlertDialogFooter>
                           </AlertDialogContent>
                         </AlertDialog>
