@@ -172,7 +172,7 @@ export default function In({
                   'Break the routine with unexpected questions to spark thought and conversation. Perfect for reflection or fun interactions!'
                 }
                 cta={'Get a Random Question'}
-                url={'random-questions'}
+                url={'random-question'}
               />
             </div>
 
