@@ -22,6 +22,7 @@
 // Responsivity for Tablets?
 
 // DONE:
+// Stoic Support: Wrap the button titles
 // Bucket List: Change form to useReactForm
 // Bucket List: Select must be restarted after Adding a new item. It's returning alwqays the last selected item
 // NextJs 15 update: https://www.youtube.com/watch?v=fqabW3WRUbw&list=WL&index=39
