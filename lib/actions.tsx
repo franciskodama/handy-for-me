@@ -32,6 +32,18 @@ export async function addUser(uid: string, name: string, avatar: string) {
   }
 }
 
+export async function getUser(uid: string) {
+  try {
+    const data = await prisma.user.findUnique({
+      where: { uid }
+    });
+    return data;
+  } catch (error) {
+    console.error('Error retrieving user:', error);
+    return { error: 'Failed to retrieve user.' };
+  }
+}
+
 export async function addDecisionHelperList(uid: string, list: string) {
   try {
     const newList = await prisma.decisionHelperList.create({
