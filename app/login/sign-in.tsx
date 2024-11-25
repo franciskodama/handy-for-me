@@ -5,20 +5,20 @@ import { signIn } from '@/lib/auth';
 export function SignIn() {
   return (
     <form
-      className="flex flex-col gap-4 w-full"
+      className="flex flex-col gap-2 w-full"
       action={async (formData) => {
         'use server';
         await signIn('credentials', formData);
       }}
     >
-      <label className="text-sm">
-        Email
-        <Input name="email" type="email" />
-      </label>
-      <label className="text-sm">
-        Password
-        <Input name="password" type="password" />
-      </label>
+      {/* <label className="text-sm"> */}
+      {/* Email */}
+      <Input name="email" type="email" placeholder="Name" />
+      {/* </label> */}
+      {/* <label className="text-sm"> */}
+      {/* Password */}
+      <Input name="password" type="password" placeholder="Password" />
+      {/* </label> */}
       <Button>Sign In</Button>
     </form>
   );

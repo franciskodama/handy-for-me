@@ -11,6 +11,9 @@ import {
 } from '@/components/ui/card';
 import { signIn } from '@/lib/auth';
 import Image from 'next/image';
+import { SignIn } from './sign-in';
+import Link from 'next/link';
+import { LogoGitHub, LogoGoogle } from '@/lib/svgs';
 
 export default async function Login() {
   return (
@@ -33,11 +36,11 @@ export default async function Login() {
           />
           <div className="flex flex-col uppercase w-full">
             <p
-              className={`${kumbh_sans.className} text-5xl sm:text-8xl font-extrabold sm:leading-[5.5rem]`}
+              className={`${kumbh_sans.className} text-4xl sm:text-8xl font-extrabold sm:leading-[5.5rem]`}
             >
               Goodbye 👋 overwhelm!
             </p>
-            <div className="flex w-full sm:justify-end text-xl sm:text-4xl font-medium sm:text-right opacity-50 sm:leading-10 mt-12">
+            <div className="flex w-full sm:justify-end text-base font-semibold sm:text-2xl font-medium sm:text-right opacity-50 sm:leading-10 mt-6">
               <p className="w-[20ch]">
                 Your personal hub for organizing daily tasks is just one click
                 away!
@@ -53,7 +56,7 @@ export default async function Login() {
               Life’s better when it’s handy – Let’s sign in!
             </CardDescription>
           </CardHeader>
-          <CardContent className="flex flex-col items-center my-4 sm:my-[6em]">
+          <CardContent className="flex flex-col items-center my-2 sm:my-[3em]">
             <form
               action={async () => {
                 'use server';
@@ -64,14 +67,14 @@ export default async function Login() {
               className="w-full"
             >
               <Button
-                size="xl"
+                size={'lg'}
                 type="submit"
-                className="w-full text-base font-normal"
+                className="flex items-center gap-4 w-full text-base font-normal mb-4"
               >
-                Sign in with Google
+                <LogoGoogle />
+                <p>Sign in with Google</p>
               </Button>
             </form>
-            <p className="my-4 text-sm">or</p>
             <form
               action={async () => {
                 'use server';
@@ -82,13 +85,18 @@ export default async function Login() {
               className="w-full"
             >
               <Button
-                size="xl"
+                size={'lg'}
                 type="submit"
-                className="w-full text-base font-normal"
+                className="flex items-center gap-4 w-full text-base font-normal"
               >
-                Sign in with GitHub
+                <LogoGitHub />
+                <p>Sign in with GitHub</p>
               </Button>
             </form>
+            <p className="my-4 text-sm">or</p>
+            <div className="w-full">
+              <SignIn />
+            </div>
           </CardContent>
 
           <CardFooter className="text-sm">
@@ -96,9 +104,12 @@ export default async function Login() {
               <p className="font-semibold">Not a member yet?</p>
               Don’t worry, life gets better from here!
               <span>
-                {/* <Button variant={'link'} className="" href={'/login/signup'}>
-                Sign up
-              </Button> */}
+                <Link
+                  href="/login/sign-up"
+                  className="underline underline-offset-4 ml-2"
+                >
+                  Sign up
+                </Link>
               </span>
             </div>
           </CardFooter>

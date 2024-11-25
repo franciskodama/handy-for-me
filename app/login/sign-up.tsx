@@ -12,7 +12,7 @@ export function SignUp() {
     //   }}
     // >
     <>
-      Bye World!
+      Hello World! This page is under construction.
       {/* <label className="text-sm">
         Email
         <Input name="email" type="email" />
