@@ -1,8 +1,9 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { createUser } from '@/lib/actions';
+import { redirect } from 'next/navigation';
 
-export function SignUp() {
+export default function SignUp() {
   return (
     <form
       className="flex flex-col gap-2 w-full"
@@ -16,7 +17,8 @@ export function SignUp() {
           await createUser({ email, password, name });
 
           // Redirect to sign-in page or dashboard
-          window.location.href = '/login';
+          redirect('/login');
+          // window.location.href = '/login';
         } catch (error) {
           console.error('Error creating user:', error);
         }

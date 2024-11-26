@@ -15,7 +15,7 @@ import {
   BucketListItem,
   LocationProps,
   Shortcut,
-  User,
+  UserNameEmailImage,
   VisualBoardItem
 } from '@/lib/types';
 import { CardWeather } from './card-weather';
@@ -38,7 +38,7 @@ export default function In({
   bucketListItems,
   shortcutsItems
 }: {
-  user: User | undefined;
+  user: UserNameEmailImage | undefined;
   location: LocationProps | null;
   weather: any;
   visionBoardItems: VisualBoardItem[];

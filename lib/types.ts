@@ -1,19 +1,19 @@
 import { shortcut_color_enum } from '@prisma/client';
 
-export type User = {
+export type UserNameEmailImage = {
   name?: string | null;
   email?: string | null;
   image?: string | null;
 };
 
-export type UserProps = {
-  id: string;
-  uid: string;
-  name?: string;
-  avatar?: string;
-  hashedPassword?: string;
-  createdAt: Date;
-};
+// export type User = {
+//   id: string;
+//   uid: string;
+//   name?: string;
+//   avatar?: string;
+//   hashedPassword?: string;
+//   createdAt: Date;
+// };
 
 export type DecisionHelperList = {
   uid: string;
