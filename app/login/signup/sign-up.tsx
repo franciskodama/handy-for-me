@@ -14,11 +14,13 @@ export default function SignUp() {
           const password = formData.get('password')?.toString() || '';
           const name = formData.get('name')?.toString() || '';
 
-          await createUser({ email, password, name });
+          const newUser = await createUser({ email, password, name });
 
-          // Redirect to sign-in page or dashboard
-          redirect('/login');
-          // window.location.href = '/login';
+          if (!newUser) {
+            return null;
+          } else {
+            redirect('/login');
+          }
         } catch (error) {
           console.error('Error creating user:', error);
         }

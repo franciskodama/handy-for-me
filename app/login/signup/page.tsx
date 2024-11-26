@@ -24,8 +24,8 @@ export default async function SignUpPage() {
           'repeating-linear-gradient(45deg, #000000 0, #030303 1px, #ffffff 0, #ffffff 50%)'
       }}
     >
-      {/* <div className="flex flex-col sm:flex-row items-center">
-        <div className="flex flex-col p-4 sm:p-12 border-red-500bg bg-white sm:mr-12 mb-8 sm:mb-0 sm:w-[90ch] border border-primary shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+      <div className="flex flex-col sm:flex-row items-center">
+        <div className="flex flex-col py-8 px-4 sm:p-12 border-red-500bg bg-white sm:mr-12 mb-8 sm:mb-0 sm:w-[90ch] border border-primary shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
           <Image
             className="mb-6 sm:mb-12 w-20 h-20 sm:w-32 sm:h-32"
             src="/logos/HandyForMe_Cog200x200.png"
@@ -33,26 +33,27 @@ export default async function SignUpPage() {
             width={150}
             height={150}
           />
-          <div className="flex flex-col uppercase w-full">
+          <div className="flex flex-col">
             <p
-              className={`${kumbh_sans.className} text-4xl sm:text-8xl font-extrabold sm:leading-[5.5rem]`}
+              className={`${kumbh_sans.className} uppercase text-2xl sm:text-8xl font-extrabold sm:leading-[5.5rem]`}
             >
-              Goodbye 👋 overwhelm!
+              Welcome aboard! 🥳
             </p>
-            <div className="flex w-full sm:justify-end text-base font-semibold sm:text-2xl sm:text-right opacity-50 sm:leading-10 mt-6">
-              <p className="w-[20ch]">
-                Your personal hub for organizing daily tasks is just one click
-                away!
+            <div className="flex w-full sm:justify-end sm:text-2xl sm:text-right sm:leading-10 my-2">
+              <p>
+                We’re glad you’ve made it this far! Let’s take the next step
+                together!
               </p>
             </div>
           </div>
-        </div> */}
+        </div>
+      </div>
 
       <Card className="flex flex-col justify-center w-full max-w-sm border border-primary shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
         <CardHeader>
-          <CardTitle className="text-4xl text-black">Login</CardTitle>
+          <CardTitle className="text-4xl text-black">Sign Up</CardTitle>
           <CardDescription>
-            Life’s better when it’s handy – Let’s sign in!
+            Join a platform designed to help you organize, achieve, and grow.
           </CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col items-center my-2 sm:my-[3em]">
