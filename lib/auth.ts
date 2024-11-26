@@ -16,29 +16,35 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       },
       authorize: async (credentials) => {
         try {
-          let user = null;
+          if (!credentials) {
+            return null;
+          }
 
           const { email, password } =
             await signInSchema.parseAsync(credentials);
 
-          // logic to salt and hash password
-          const pwHash = await saltAndHashPassword(password);
-
-          // logic to verify if the user exists
-          user = await getUser(email, pwHash);
-          // user = await getUser(email);
+          const hashedPassword = await saltAndHashPassword(password);
+          const user = await getUser(email, hashedPassword);
 
           if (!user) {
-            throw new Error('Invalid credentials.');
-          }
-
-          // return JSON object with the user data
-          return user;
-        } catch (error) {
-          if (error instanceof ZodError) {
-            // Return `null` to indicate that the credentials are invalid
             return null;
           }
+
+          return {
+            id: user.id,
+            uid: user.uid,
+            name: user.name,
+            avatar: user.avatar,
+            hashedPassword: user.hashedPassword,
+            createdAt: user.createdAt
+          };
+        } catch (error) {
+          if (error instanceof ZodError) {
+            console.error('Validation error:', error.errors);
+          } else {
+            console.error('Error in authorize:', error);
+          }
+          return null;
         }
       }
     }),

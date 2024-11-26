@@ -40,7 +40,7 @@ export default async function Login() {
             >
               Goodbye 👋 overwhelm!
             </p>
-            <div className="flex w-full sm:justify-end text-base font-semibold sm:text-2xl font-medium sm:text-right opacity-50 sm:leading-10 mt-6">
+            <div className="flex w-full sm:justify-end text-base font-semibold sm:text-2xl sm:text-right opacity-50 sm:leading-10 mt-6">
               <p className="w-[20ch]">
                 Your personal hub for organizing daily tasks is just one click
                 away!

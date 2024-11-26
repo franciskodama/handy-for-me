@@ -6,6 +6,15 @@ export type User = {
   image?: string | null;
 };
 
+export type UserProps = {
+  id: string;
+  uid: string;
+  name?: string;
+  avatar?: string;
+  hashedPassword?: string;
+  createdAt: Date;
+};
+
 export type DecisionHelperList = {
   uid: string;
   id: string;
