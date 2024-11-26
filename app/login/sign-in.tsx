@@ -11,14 +11,18 @@ export function SignIn() {
         await signIn('credentials', formData);
       }}
     >
-      {/* <label className="text-sm"> */}
-      {/* Email */}
-      <Input name="email" type="email" placeholder="Name" />
-      {/* </label> */}
-      {/* <label className="text-sm"> */}
-      {/* Password */}
-      <Input name="password" type="password" placeholder="Password" />
-      {/* </label> */}
+      <Input
+        name="email"
+        type="email"
+        placeholder="Name"
+        className="border-primary"
+      />
+      <Input
+        name="password"
+        type="password"
+        placeholder="Password"
+        className="border-primary"
+      />
       <Button>Sign In</Button>
     </form>
   );
