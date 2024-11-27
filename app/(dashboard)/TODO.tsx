@@ -14,6 +14,8 @@
 // Next Auth: Sign in fields + Sign up page
 // Next Auth: https://www.youtube.com/watch?v=1MTyCvS05V4
 
+// Emails: https://sendgrid.com/en-us/free
+
 // Stoic Support: Check the Content
 // Responsivity for smallers screens of Laptops (Weather was tight on Nadgen's screen)
 // Weekly Wins on the Dashboard
