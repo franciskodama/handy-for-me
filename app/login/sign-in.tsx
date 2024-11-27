@@ -1,59 +1,30 @@
 'use client';
 
+import { signIn } from 'next-auth/react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
-// import { signIn } from 'next-auth/react';
-// export function SignIn() {
-//   const credentialsAction = async (formData: FormData) => {
-//     const data: Record<string, string> = {};
-//     formData.forEach((value, key) => {
-//       data[key] = value.toString();
-//     });
-
-//     const result = await signIn('credentials', {
-//       ...data,
-//       redirect: true
-//     });
-
-//     if (result?.error) {
-//       console.error('Error signing in:', result.error);
-//     } else {
-//       console.log('Successfully signed in');
-//     }
-//   };
-
-//   return (
-//     <form action={credentialsAction} className="flex flex-col gap-2 w-full">
-//       <Input
-//         name="email"
-//         type="email"
-//         placeholder="Name"
-//         className="border-primary"
-//       />
-//       <Input
-//         name="password"
-//         type="password"
-//         placeholder="Password"
-//         className="border-primary"
-//       />
-//       <Button>Sign In</Button>
-//     </form>
-//   );
-// }
-
-import { signIn } from '@/lib/auth';
-
 export function SignIn() {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+
+    const email = formData.get('email') as string;
+    const password = formData.get('password') as string;
+
+    const result = await signIn('credentials', {
+      email,
+      password,
+      redirect: true
+    });
+
+    if (result?.error) {
+      console.error('Sign-in error:', result.error);
+    }
+  };
+
   return (
-    <form
-      className="flex flex-col gap-2 w-full"
-      action={async (formData) => {
-        console.log('---  🚀 ---> | formData:', formData);
-        ('use server');
-        await signIn('credentials', formData);
-      }}
-    >
+    <form className="flex flex-col gap-2 w-full" onSubmit={handleSubmit}>
       <Input
         name="email"
         type="email"
@@ -66,7 +37,7 @@ export function SignIn() {
         placeholder="Password"
         className="border-primary"
       />
-      <Button>Sign In</Button>
+      <Button type="submit">Sign In</Button>
     </form>
   );
 }
