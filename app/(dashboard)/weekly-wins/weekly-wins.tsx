@@ -278,7 +278,7 @@ export default function WeeklyWins({
         )}
         <div className="flex flex-col sm:flex-row w-full justify-center gap-8 mb-12">
           {board.map((groupOfWins: WeeklyWin[]) => (
-            <div key={v4()} className="sm:w-1/3 mt-4">
+            <div key={v4()} className="sm:w-1/3 max-w-96 mt-4">
               <h3
                 className={`${kumbh_sans.className} ${weeklyWinsTypesColors[groupOfWins[0].type as WeeklyWinsTypes]} text-white text-left text-sm font-semibold text-primary px-4 py-3 my-2 uppercase leading-none`}
               >

@@ -93,4 +93,18 @@ model WeeklyWin {
   goal      String   
   type      String
   done      Boolean
+  weekDays  WeekDay[]
+}
+
+model WeekDay {
+  id           String    @id @default(uuid()) @db.VarChar(255)
+  weeklyWinId  String   
+  weeklyWin    WeeklyWin @relation(fields: [weeklyWinId], references: [id], onDelete: Cascade)
+  monday       Boolean   @default(false)
+  tuesday      Boolean   @default(false)
+  wednesday    Boolean   @default(false)
+  thursday     Boolean   @default(false)
+  friday       Boolean   @default(false)
+  saturday     Boolean   @default(false)
+  sunday       Boolean   @default(false)
 }
