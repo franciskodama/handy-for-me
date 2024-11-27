@@ -3,6 +3,7 @@
 import { useActionState, useEffect, useState } from 'react';
 import { Bomb, Check, Ghost, Trash2 } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
+import { v4 } from 'uuid';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
@@ -277,77 +278,73 @@ export default function WeeklyWins({
         )}
         <div className="flex flex-col sm:flex-row w-full justify-center gap-8 mb-12">
           {board.map((groupOfWins: WeeklyWin[]) => (
-            <div key={groupOfWins[0].type} className="sm:w-1/3 mt-4">
+            <div key={v4()} className="sm:w-1/3 mt-4">
               <h3
                 className={`${kumbh_sans.className} ${weeklyWinsTypesColors[groupOfWins[0].type as WeeklyWinsTypes]} text-white text-left text-sm font-semibold text-primary px-4 py-3 my-2 uppercase leading-none`}
               >
                 {groupOfWins[0].type}
               </h3>
               {groupOfWins.map((el: WeeklyWin) => (
-                <>
-                  <div
-                    key={el.id}
-                    className={`${el.done && weeklyWinsTypesColorsDone[el.type]} flex border border-primary mt-2`}
-                  >
-                    <div className="w-full px-4 py-3">
-                      <p
-                        className={`${el.done && 'line-through'} text-left uppercase text-sm leading-none`}
-                      >
-                        {el.goal}
-                      </p>
-                    </div>
-                    <Button variant="ghost" onClick={() => handleCheck(el)}>
-                      <Check
+                <div
+                  key={el.id}
+                  className={`${el.done && weeklyWinsTypesColorsDone[el.type]} flex border border-primary mt-2`}
+                >
+                  <div className="w-full px-4 py-3">
+                    <p
+                      className={`${el.done && 'line-through'} text-left uppercase text-sm leading-none`}
+                    >
+                      {el.goal}
+                    </p>
+                  </div>
+                  <Button variant="ghost" onClick={() => handleCheck(el)}>
+                    <Check
+                      size={18}
+                      strokeWidth={1.8}
+                      color="#000"
+                      // color={win.done ? '#FFF' : '#000'}
+                    />
+                  </Button>
+
+                  <AlertDialog>
+                    <AlertDialogTrigger className="px-2 py-1 mr-4">
+                      <Trash2
                         size={18}
                         strokeWidth={1.8}
                         color="#000"
                         // color={win.done ? '#FFF' : '#000'}
                       />
-                    </Button>
-
-                    <AlertDialog>
-                      <AlertDialogTrigger className="px-2 py-1 mr-4">
-                        <Trash2
-                          size={18}
-                          strokeWidth={1.8}
-                          color="#000"
-                          // color={win.done ? '#FFF' : '#000'}
-                        />
-                      </AlertDialogTrigger>
-                      <AlertDialogContent className="w-[calc(100%-35px)]">
-                        <AlertDialogHeader>
-                          <AlertDialogTitle className="flex items-center gap-2">
-                            <Bomb size={24} strokeWidth={1.8} />
-                            Are you absolutely sure?
-                          </AlertDialogTitle>
-                          <AlertDialogDescription className="py-4">
-                            This will permanently delete the vision
-                            <span className="font-bold mx-1">{el.goal}</span>
-                            from our servers.
-                          </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                          <AlertDialogCancel
-                            onClick={() => {
-                              toast({
-                                title: 'Operation Cancelled! ❌',
-                                description: `Phew! 😮‍💨 Crisis averted. You successfully cancelled the operation.`,
-                                variant: 'destructive'
-                              });
-                            }}
-                          >
-                            Cancel
-                          </AlertDialogCancel>
-                          <AlertDialogAction
-                            onClick={() => handleDeleteItem(el)}
-                          >
-                            Continue
-                          </AlertDialogAction>
-                        </AlertDialogFooter>
-                      </AlertDialogContent>
-                    </AlertDialog>
-                  </div>
-                </>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent className="w-[calc(100%-35px)]">
+                      <AlertDialogHeader>
+                        <AlertDialogTitle className="flex items-center gap-2">
+                          <Bomb size={24} strokeWidth={1.8} />
+                          Are you absolutely sure?
+                        </AlertDialogTitle>
+                        <AlertDialogDescription className="py-4">
+                          This will permanently delete the vision
+                          <span className="font-bold mx-1">{el.goal}</span>
+                          from our servers.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel
+                          onClick={() => {
+                            toast({
+                              title: 'Operation Cancelled! ❌',
+                              description: `Phew! 😮‍💨 Crisis averted. You successfully cancelled the operation.`,
+                              variant: 'destructive'
+                            });
+                          }}
+                        >
+                          Cancel
+                        </AlertDialogCancel>
+                        <AlertDialogAction onClick={() => handleDeleteItem(el)}>
+                          Continue
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
+                </div>
               ))}
             </div>
           ))}

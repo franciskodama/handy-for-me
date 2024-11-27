@@ -1,26 +1,46 @@
+'use client';
+
+// import { signIn } from 'next-auth/react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { signIn } from '@/lib/auth';
+import { redirect } from 'next/navigation';
 
-// Not using this for now
 export function SignIn() {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+
+    const email = formData.get('email') as string;
+    const password = formData.get('password') as string;
+
+    const result = await signIn('credentials', {
+      email,
+      password,
+      redirect: true
+    });
+    if (result) redirect('/in');
+
+    // if (result?.error) {
+    //   console.error('Sign-in error:', result.error);
+    // }
+  };
+
   return (
-    <form
-      className="flex flex-col gap-4 w-full"
-      action={async (formData) => {
-        'use server';
-        await signIn('credentials', formData);
-      }}
-    >
-      <label className="text-sm">
-        Email
-        <Input name="email" type="email" />
-      </label>
-      <label className="text-sm">
-        Password
-        <Input name="password" type="password" />
-      </label>
-      <Button>Sign In</Button>
+    <form className="flex flex-col gap-2 w-full" onSubmit={handleSubmit}>
+      <Input
+        name="email"
+        type="email"
+        placeholder="Name"
+        className="border-primary"
+      />
+      <Input
+        name="password"
+        type="password"
+        placeholder="Password"
+        className="border-primary"
+      />
+      <Button type="submit">Sign In</Button>
     </form>
   );
 }

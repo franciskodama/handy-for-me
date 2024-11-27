@@ -8,6 +8,7 @@ import {
   DecisionHelperList
 } from './types';
 import { shortcut_color_enum } from '@prisma/client';
+import { saltAndHashPassword } from './passwords';
 
 export async function addUser(uid: string, name: string, avatar: string) {
   try {
@@ -25,9 +26,44 @@ export async function addUser(uid: string, name: string, avatar: string) {
         createdAt: new Date()
       }
     });
+
     return user;
   } catch (error) {
     console.error('Error adding user:', error);
+    return null;
+  }
+}
+
+export async function createUser({
+  email,
+  password,
+  name
+}: {
+  email: string;
+  password: string;
+  name: string;
+}) {
+  const hashedPassword = await saltAndHashPassword(password);
+  const user = await prisma.user.create({
+    data: {
+      uid: email,
+      name,
+      hashedPassword
+    }
+  });
+
+  return user;
+}
+
+export async function getUser(uid: string, hashedPassword: string) {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { uid }
+    });
+
+    return user;
+  } catch (error) {
+    console.error('Error retrieving user:', error);
     return null;
   }
 }
@@ -45,6 +81,7 @@ export async function addDecisionHelperList(uid: string, list: string) {
         items: true
       }
     });
+
     return newList;
   } catch (error) {
     console.log(error);
@@ -60,6 +97,7 @@ export async function getDecisionHelperLists(
       where: { uid },
       include: { items: true }
     });
+
     return data;
   } catch (error) {
     console.error('Error retrieving lists:', error);
@@ -74,6 +112,7 @@ export async function deleteDecisionHelperList(id: string) {
         id
       }
     });
+
     return true;
   } catch (error) {
     console.log(error);
@@ -97,6 +136,7 @@ export async function addDecisionHelperItem(
         selected: true
       }
     });
+
     return newItem;
   } catch (error) {
     console.error('Error adding item:', error);
@@ -115,6 +155,7 @@ export async function getAllDecisionHelperItems(uid: string) {
         uid
       }
     });
+
     return data;
   } catch (error) {
     console.log(error);
@@ -129,6 +170,7 @@ export async function deleteDecisionHelperItem(id: string) {
         id
       }
     });
+
     return true;
   } catch (error) {
     console.log(error);
@@ -152,6 +194,7 @@ export async function selectionDecisionHelperItem(id: string) {
         selected: !item.selected
       }
     });
+
     return true;
   } catch (error) {
     console.log(error);
@@ -175,6 +218,7 @@ export async function addVisualBoardItem(
         done: false
       }
     });
+
     return newItem;
   } catch (error) {
     console.error('Error adding Visual Board item:', error);
@@ -189,6 +233,7 @@ export async function getVisualBoardItems(uid: string) {
         uid
       }
     });
+
     return items;
   } catch (error) {
     console.error('Error getting Visual Board Items:', error);
@@ -203,6 +248,7 @@ export async function deleteVisualBoardItem(id: string) {
         id
       }
     });
+
     return true;
   } catch (error) {
     console.log(error);
@@ -220,6 +266,7 @@ export async function setVisualBoardItemDone(id: string, selection: boolean) {
         done: selection
       }
     });
+
     return check;
   } catch (error) {
     console.error('Error setting check to the item:', error);

@@ -10,7 +10,11 @@
 
 // TODO: Nadgen Q.A.
 // Next Auth: Sigout after some time without signing in: https://next-auth.js.org/configuration/providers/oauth
-// Next Auth: for email and password
+// Next Auth: Credentials (Email and Password)
+// Next Auth: Sign in fields + Sign up page
+// Next Auth: https://www.youtube.com/watch?v=1MTyCvS05V4
+
+// Emails: https://sendgrid.com/en-us/free
 
 // Stoic Support: Check the Content
 // Responsivity for smallers screens of Laptops (Weather was tight on Nadgen's screen)

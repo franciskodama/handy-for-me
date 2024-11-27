@@ -1,7 +1,11 @@
-import { User } from '@/lib/types';
+import { UserNameEmailImage } from '@/lib/types';
 import Image from 'next/image';
 
-export default function CardUser({ user }: { user: User | undefined }) {
+export default function CardUser({
+  user
+}: {
+  user: UserNameEmailImage | undefined;
+}) {
   return (
     <div className="flex flex-col items-center justify-center h-full gap-2 relative mt-16 sm:mt-0 mb-8">
       {user?.image ? (
