@@ -105,7 +105,7 @@ export default async function Login() {
               Don’t worry, life gets better from here!
               <span>
                 <Link
-                  href="/login/signup/sign-up"
+                  href="/login/signup"
                   className="underline underline-offset-4 ml-2"
                 >
                   Sign up

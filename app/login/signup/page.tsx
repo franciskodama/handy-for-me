@@ -13,6 +13,7 @@ import { signIn } from '@/lib/auth';
 import Image from 'next/image';
 import { LogoGitHub, LogoGoogle } from '@/lib/svgs';
 import SignUp from './sign-up';
+import Link from 'next/link';
 
 export default async function SignUpPage() {
   return (
@@ -61,18 +62,14 @@ export default async function SignUpPage() {
         </CardContent>
 
         <CardFooter className="text-sm">
-          {/* <div>
-              <p className="font-semibold">Not a member yet?</p>
-              Don’t worry, life gets better from here!
-              <span>
-                <Link
-                  href="/login/signup/sign-up"
-                  className="underline underline-offset-4 ml-2"
-                >
-                  Sign up
-                </Link>
-              </span>
-            </div> */}
+          <div className="flex">
+            <p className="font-semibold">Already have an account?</p>
+            <span>
+              <Link href="/login" className="underline underline-offset-4 ml-2">
+                Sign in here
+              </Link>
+            </span>
+          </div>
         </CardFooter>
       </Card>
     </div>
