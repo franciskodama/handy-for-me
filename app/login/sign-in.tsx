@@ -1,8 +1,10 @@
 'use client';
 
-import { signIn } from 'next-auth/react';
+// import { signIn } from 'next-auth/react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { signIn } from '@/lib/auth';
+import { redirect } from 'next/navigation';
 
 export function SignIn() {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -17,10 +19,11 @@ export function SignIn() {
       password,
       redirect: true
     });
+    if (result) redirect('/in');
 
-    if (result?.error) {
-      console.error('Sign-in error:', result.error);
-    }
+    // if (result?.error) {
+    //   console.error('Sign-in error:', result.error);
+    // }
   };
 
   return (

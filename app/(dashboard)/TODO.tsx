@@ -12,6 +12,7 @@
 // Next Auth: Sigout after some time without signing in: https://next-auth.js.org/configuration/providers/oauth
 // Next Auth: Credentials (Email and Password)
 // Next Auth: Sign in fields + Sign up page
+// Next Auth: https://www.youtube.com/watch?v=1MTyCvS05V4
 
 // Stoic Support: Check the Content
 // Responsivity for smallers screens of Laptops (Weather was tight on Nadgen's screen)

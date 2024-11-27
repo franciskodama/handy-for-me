@@ -93,13 +93,13 @@ export default async function Login() {
                 <p>Sign in with GitHub</p>
               </Button>
             </form>
-            <p className="my-4 text-sm">or</p>
+            {/* <p className="my-4 text-sm">or</p>
             <div className="w-full">
               <SignIn />
-            </div>
+            </div> */}
           </CardContent>
 
-          <CardFooter className="text-sm">
+          {/* <CardFooter className="text-sm">
             <div>
               <p className="font-semibold">Not a member yet?</p>
               Don’t worry, life gets better from here!
@@ -112,7 +112,7 @@ export default async function Login() {
                 </Link>
               </span>
             </div>
-          </CardFooter>
+          </CardFooter> */}
         </Card>
       </div>
     </div>
