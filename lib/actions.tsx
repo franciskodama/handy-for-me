@@ -5,7 +5,8 @@ import { prisma } from './prisma';
 import {
   AddShortcutParams,
   DecisionHelperItem,
-  DecisionHelperList
+  DecisionHelperList,
+  weekDays
 } from './types';
 import { shortcut_color_enum } from '@prisma/client';
 import { saltAndHashPassword } from './passwords';
@@ -472,7 +473,12 @@ export async function deleteShortcut(id: string) {
   }
 }
 
-export async function addWeeklyWin(uid: string, goal: string, type: string) {
+export async function addWeeklyWin(
+  uid: string,
+  goal: string,
+  type: string,
+  weekDays: weekDays
+) {
   try {
     const newItem = await prisma.weeklyWin.create({
       data: {
@@ -481,18 +487,18 @@ export async function addWeeklyWin(uid: string, goal: string, type: string) {
         uid,
         goal,
         type,
-        done: false
-        // weekDays: {
-        //   create: {
-        //     monday,
-        //     tuesday,
-        //     wednesday,
-        //     thursday,
-        //     friday,
-        //     saturday,
-        //     sunday
-        //   }
-        // }
+        done: false,
+        weekDays: {
+          create: {
+            monday: weekDays.monday,
+            tuesday: weekDays.tuesday,
+            wednesday: weekDays.wednesday,
+            thursday: weekDays.thursday,
+            friday: weekDays.friday,
+            saturday: weekDays.saturday,
+            sunday: weekDays.sunday
+          }
+        }
       }
     });
     return newItem;

@@ -5,7 +5,13 @@ import { Bomb, Check, Ghost, Trash2 } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { v4 } from 'uuid';
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle
+} from '@/components/ui/card';
 import {
   Select,
   SelectContent,
@@ -39,6 +45,7 @@ import MessageEmpty from '@/components/MessageEmpty';
 import { Input } from '@/components/ui/input';
 import ExplanationWeeklyWins from './explanation-weekly-wins';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
+import { Checkbox } from '@/components/ui/checkbox';
 
 type WeeklyWinsTypes = 'Easy' | 'Moderate' | 'Challenging';
 
@@ -88,10 +95,10 @@ export default function WeeklyWins({
   } = useForm<Inputs>();
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
-    const { goal, type, uid } = data;
+    const { goal, type, uid, weekDays } = data;
 
     try {
-      await addWeeklyWin(uid, goal, type);
+      await addWeeklyWin(uid, goal, type, weekDays);
       const fetchedWeeklyWins = await getWeeklyWins(uid);
       fetchedWeeklyWins &&
         setBoard(organizeBoardByType(fetchedWeeklyWins as WeeklyWin[]));
@@ -202,85 +209,16 @@ export default function WeeklyWins({
                 {!openAction ? <Help setOpenAction={setOpenAction} /> : <div />}
               </div>
             </div>
-            <p
-              className={`${barlow.className} text-sm font-normal lowercase mt-2`}
-            >
-              <span className="uppercase">S</span>tay focused, track progress,
-              and celebrate your wins each week!
-            </p>
           </div>
-          <div
-            className={`${barlow.className} flex gap-4 capitalize mt-8 sm:mt-0 w-full`}
-          >
-            <form
-              className="flex flex-col sm:flex-row items-start gap-4 sm:gap-2 font-normal w-full"
-              onSubmit={handleSubmit(onSubmit)}
-            >
-              <div className="flex flex-col gap-1 w-full sm:w-[15ch]">
-                <Input
-                  placeholder="Goal"
-                  {...register('goal', {
-                    required: 'Goal name is required',
-                    maxLength: {
-                      value: 50,
-                      message: 'Goal name must be 50 characters or less'
-                    }
-                  })}
-                />
-                {errors.goal && (
-                  <span className="bg-red-500 text-white text-xs text-center font-semibold w-full py-1 my-1">
-                    {errors.goal.message}
-                  </span>
-                )}
-                <p className="text-xs ml-4 lowercase">
-                  <span className="uppercase">N</span>ame your Goal
-                </p>
-              </div>
-              <div className="flex flex-col gap-1 w-full sm:w-[15ch]">
-                <Controller
-                  name="type"
-                  control={control}
-                  rules={{ required: 'Type is required' }}
-                  render={({ field }) => (
-                    <Select onValueChange={field.onChange} value={field.value}>
-                      <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Type" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {weeklyWinsTypes.map((type: string) => (
-                          <SelectItem key={type} value={type}>
-                            {type}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  )}
-                />
-                {errors.type && (
-                  <span className="bg-red-500 text-white text-xs text-center font-semibold w-full py-1 my-1">
-                    {errors.type.message}
-                  </span>
-                )}
-                <p className="text-xs ml-4 lowercase">
-                  <span className="uppercase">C</span>
-                  hoose your goal level
-                </p>
-              </div>
-              <Input
-                {...register('uid')}
-                value={uid}
-                readOnly
-                className="hidden"
-              />
-              <Button type="submit" disabled={isSubmitting} className="ml-2">
-                {isSubmitting ? 'Adding...' : 'Add'}
-              </Button>
-            </form>
-          </div>
+
           <div className="hidden sm:block">
             {!openAction ? <Help setOpenAction={setOpenAction} /> : <div />}
           </div>
         </CardTitle>
+
+        <CardDescription>
+          Stay focused, track progress, and celebrate your wins each week!
+        </CardDescription>
       </CardHeader>
       <CardContent className="relative p-6">
         <AnimatePresence>
@@ -297,6 +235,128 @@ export default function WeeklyWins({
             </motion.div>
           ) : null}
         </AnimatePresence>
+
+        <form
+          className="flex flex-col sm:flex-row items-start justify-center gap-8 sm:gap-2 font-normal w-full my-8 sm:mt-0"
+          onSubmit={handleSubmit(onSubmit)}
+        >
+          <div className="flex flex-col gap-1 w-full sm:w-[35ch]">
+            <Input
+              placeholder="Goal"
+              {...register('goal', {
+                required: 'Goal name is required',
+                maxLength: {
+                  value: 50,
+                  message: 'Goal name must be 50 characters or less'
+                }
+              })}
+            />
+            {errors.goal && (
+              <span className="bg-red-500 text-white text-xs text-center font-semibold w-full py-1 my-1">
+                {errors.goal.message}
+              </span>
+            )}
+            <p className="text-xs ml-4 lowercase">
+              <span className="uppercase">N</span>ame your Goal
+            </p>
+          </div>
+          <div className="flex flex-col gap-1 w-full sm:w-[35ch]">
+            <Controller
+              name="type"
+              control={control}
+              rules={{ required: 'Type is required' }}
+              render={({ field }) => (
+                <Select onValueChange={field.onChange} value={field.value}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {weeklyWinsTypes.map((type: string) => (
+                      <SelectItem key={type} value={type}>
+                        {type}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
+            />
+            {errors.type && (
+              <span className="bg-red-500 text-white text-xs text-center font-semibold w-full py-1 my-1">
+                {errors.type.message}
+              </span>
+            )}
+            <p className="text-xs ml-4 lowercase">
+              <span className="uppercase">C</span>
+              hoose your goal level
+            </p>
+          </div>
+          <Input {...register('uid')} value={uid} readOnly className="hidden" />
+
+          <div className="flex-col items-center justify-items-center sm:mx-12 w-full sm:w-[14em]">
+            <div className="flex justify-between w-full px-4 sm:gap-4">
+              <div className="flex flex-col items-center gap-1">
+                <p className="text-xs">M</p>
+                <Checkbox
+                  defaultValue="false"
+                  {...register('weekDays.monday')}
+                />
+              </div>
+              <div className="flex flex-col items-center gap-1">
+                <p className="text-xs">T</p>
+                <Checkbox
+                  defaultValue="false"
+                  {...register('weekDays.tuesday')}
+                />
+              </div>
+              <div className="flex flex-col items-center gap-1">
+                <p className="text-xs">W</p>
+                <Checkbox
+                  defaultValue="false"
+                  {...register('weekDays.wednesday')}
+                />
+              </div>
+              <div className="flex flex-col items-center gap-1">
+                <p className="text-xs">T</p>
+                <Checkbox
+                  defaultValue="false"
+                  {...register('weekDays.thursday')}
+                />
+              </div>
+              <div className="flex flex-col items-center gap-1">
+                <p className="text-xs">F</p>
+                <Checkbox
+                  defaultValue="false"
+                  {...register('weekDays.friday')}
+                />
+              </div>
+              <div className="flex flex-col items-center gap-1">
+                <p className="text-xs">S</p>
+                <Checkbox
+                  defaultValue="false"
+                  {...register('weekDays.saturday')}
+                />
+              </div>
+              <div className="flex flex-col items-center gap-1">
+                <p className="text-xs">S</p>
+                <Checkbox
+                  defaultValue="false"
+                  {...register('weekDays.sunday')}
+                />
+              </div>
+            </div>
+            <p className="text-xs mt-2">
+              Weekdays you want to work on this goal
+            </p>
+          </div>
+
+          <Button
+            type="submit"
+            disabled={isSubmitting}
+            className="w-full sm:w-auto mb-4 ml-2"
+          >
+            {isSubmitting ? 'Adding...' : 'Add'}
+          </Button>
+        </form>
 
         {board.length < 1 && (
           <div className="mt-8">
