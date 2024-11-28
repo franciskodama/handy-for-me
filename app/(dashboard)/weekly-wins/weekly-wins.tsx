@@ -1,6 +1,6 @@
 'use client';
 
-import { useActionState, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Bomb, Check, Ghost, Trash2 } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { v4 } from 'uuid';
@@ -24,7 +24,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger
 } from '@/components/ui/alert-dialog';
-import { WeeklyWin } from '@/lib/types';
+import { weekDays, WeeklyWin } from '@/lib/types';
 import Help from '@/components/Help';
 import { toast } from '@/hooks/use-toast';
 import { barlow, kumbh_sans } from '@/app/ui/fonts';
@@ -38,50 +38,16 @@ import {
 import MessageEmpty from '@/components/MessageEmpty';
 import { Input } from '@/components/ui/input';
 import ExplanationWeeklyWins from './explanation-weekly-wins';
+import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 
 type WeeklyWinsTypes = 'Easy' | 'Moderate' | 'Challenging';
 
-const handleSubmit = async (previousState: unknown, formData: FormData) => {
-  const goal = formData.get('goal') as string;
-  const type = formData.get('type') as string;
-  const uid = formData.get('uid') as string;
-
-  if (!goal) {
-    toast({
-      title: 'Goal is required!',
-      description: 'What do you want to achieve in 7 days?',
-      variant: 'destructive'
-    });
-    return;
-  }
-
-  if (!type) {
-    toast({
-      title: 'Type is required!',
-      description: 'Is it an easy, moderate, or challenging goal?',
-      variant: 'destructive'
-    });
-  }
-
-  const weeklyWin = await addWeeklyWin(uid, goal, type);
-  if (!weeklyWin) {
-    toast({
-      title: 'Ops...',
-      description: 'Something got wrong. 🚨 Try again.',
-      variant: 'destructive'
-    });
-  } else {
-    toast({
-      title: 'Weekly Win added successfully! 🎉',
-      description: 'You have one more goal to conquer.',
-      variant: 'success'
-    });
-  }
-  const newWeeklyWin = await getWeeklyWins(uid);
-
-  return {
-    newWeeklyWin
-  };
+type Inputs = {
+  goal: string;
+  type: string;
+  uid: string;
+  done: boolean;
+  weekDays: weekDays;
 };
 
 export default function WeeklyWins({
@@ -92,9 +58,7 @@ export default function WeeklyWins({
   weeklyWins: WeeklyWin[];
 }) {
   const [openAction, setOpenAction] = useState(false);
-  const [currentWeeklyWins, setCurrentWeeklyWins] =
-    useState<WeeklyWin[]>(weeklyWins);
-  const [data, action, isPending] = useActionState(handleSubmit, undefined);
+  const [board, setBoard] = useState<WeeklyWin[][]>([]);
 
   const weeklyWinsTypes: WeeklyWinsTypes[] = [
     'Easy',
@@ -114,23 +78,70 @@ export default function WeeklyWins({
     Challenging: 'bg-red-200'
   };
 
-  const board: WeeklyWin[][] = weeklyWinsTypes
-    .map((type) => currentWeeklyWins.filter((el) => el.type === type))
-    .filter((group) => group.length > 0);
+  const {
+    register,
+    handleSubmit,
+    watch,
+    control,
+    reset,
+    formState: { errors, isSubmitting }
+  } = useForm<Inputs>();
+
+  const onSubmit: SubmitHandler<Inputs> = async (data) => {
+    const { goal, type, uid } = data;
+
+    try {
+      await addWeeklyWin(uid, goal, type);
+      const fetchedWeeklyWins = await getWeeklyWins(uid);
+      fetchedWeeklyWins &&
+        setBoard(organizeBoardByType(fetchedWeeklyWins as WeeklyWin[]));
+      toast({
+        title: 'Goal Added!',
+        description: `"${data.goal}" has been added to Weekly Wins Board.`,
+        variant: 'success'
+      });
+
+      reset({
+        goal: '',
+        type: ''
+      });
+    } catch (error) {
+      console.error(error);
+      toast({
+        title: 'Error Adding Goal!',
+        description: 'Something went wrong while adding your goal.',
+        variant: 'destructive'
+      });
+    }
+  };
+
+  const organizeBoardByType = (weeklyWins: WeeklyWin[]) => {
+    const boardByType: WeeklyWin[][] = weeklyWinsTypes
+      .map((type) => weeklyWins.filter((el) => el.type === type))
+      .filter((group) => group.length > 0);
+    return boardByType;
+  };
+
+  const boardByType = organizeBoardByType(weeklyWins);
 
   useEffect(() => {
-    if (data?.newWeeklyWin && Array.isArray(data.newWeeklyWin)) {
-      ``;
-      setCurrentWeeklyWins(data.newWeeklyWin as WeeklyWin[]);
+    if (boardByType) {
+      setBoard(boardByType);
     }
-  }, [data]);
+  }, []);
 
   const handleDeleteItem = async (weeklyWin: WeeklyWin) => {
     try {
       const success = await deleteWeeklyWin(weeklyWin.id);
       if (success) {
-        setCurrentWeeklyWins(
-          currentWeeklyWins.filter((el) => el.id !== weeklyWin.id)
+        setBoard((prevBoard) =>
+          prevBoard
+            .map((typeArray) =>
+              typeArray[0].type === weeklyWin.type
+                ? typeArray.filter((item) => item.id !== weeklyWin.id)
+                : typeArray
+            )
+            .filter((categoryArray) => categoryArray.length > 0)
         );
       }
       toast({
@@ -152,11 +163,15 @@ export default function WeeklyWins({
     try {
       const success = await setWeeklyWinDone(weeklyWin.id, !weeklyWin.done);
       if (success) {
-        setCurrentWeeklyWins((prevBoard) =>
-          prevBoard.map((boardItem) =>
-            boardItem.id === weeklyWin.id
-              ? { ...boardItem, done: !boardItem.done }
-              : boardItem
+        setBoard((prevBoard) =>
+          prevBoard.map((typeArray) =>
+            typeArray[0].type === weeklyWin.type
+              ? typeArray.map((boardItem) =>
+                  boardItem.id === weeklyWin.id
+                    ? { ...boardItem, done: !boardItem.done }
+                    : boardItem
+                )
+              : typeArray
           )
         );
       }
@@ -199,41 +214,66 @@ export default function WeeklyWins({
           >
             <form
               className="flex flex-col sm:flex-row items-start gap-4 sm:gap-2 font-normal w-full"
-              action={action}
+              onSubmit={handleSubmit(onSubmit)}
             >
               <div className="flex flex-col gap-1 w-full sm:w-[15ch]">
-                <Input placeholder="Goal" id="goal" name="goal" />
+                <Input
+                  placeholder="Goal"
+                  {...register('goal', {
+                    required: 'Goal name is required',
+                    maxLength: {
+                      value: 50,
+                      message: 'Goal name must be 50 characters or less'
+                    }
+                  })}
+                />
+                {errors.goal && (
+                  <span className="bg-red-500 text-white text-xs text-center font-semibold w-full py-1 my-1">
+                    {errors.goal.message}
+                  </span>
+                )}
                 <p className="text-xs ml-4 lowercase">
                   <span className="uppercase">N</span>ame your Goal
                 </p>
               </div>
               <div className="flex flex-col gap-1 w-full sm:w-[15ch]">
-                <Select name="type">
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Type" id="type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {weeklyWinsTypes.map((type: string) => (
-                      <div key={type}>
-                        <SelectItem value={type}>{type}</SelectItem>
-                      </div>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <Controller
+                  name="type"
+                  control={control}
+                  rules={{ required: 'Type is required' }}
+                  render={({ field }) => (
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Type" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {weeklyWinsTypes.map((type: string) => (
+                          <SelectItem key={type} value={type}>
+                            {type}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
+                {errors.type && (
+                  <span className="bg-red-500 text-white text-xs text-center font-semibold w-full py-1 my-1">
+                    {errors.type.message}
+                  </span>
+                )}
                 <p className="text-xs ml-4 lowercase">
                   <span className="uppercase">C</span>
                   hoose your goal level
                 </p>
               </div>
               <Input
-                id="uid"
-                name="uid"
+                {...register('uid')}
                 value={uid}
                 readOnly
                 className="hidden"
               />
-              <Button type="submit" disabled={isPending} className="ml-2">
-                {isPending ? 'Adding...' : 'Add'}
+              <Button type="submit" disabled={isSubmitting} className="ml-2">
+                {isSubmitting ? 'Adding...' : 'Add'}
               </Button>
             </form>
           </div>

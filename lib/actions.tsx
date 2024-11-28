@@ -482,6 +482,17 @@ export async function addWeeklyWin(uid: string, goal: string, type: string) {
         goal,
         type,
         done: false
+        // weekDays: {
+        //   create: {
+        //     monday,
+        //     tuesday,
+        //     wednesday,
+        //     thursday,
+        //     friday,
+        //     saturday,
+        //     sunday
+        //   }
+        // }
       }
     });
     return newItem;
