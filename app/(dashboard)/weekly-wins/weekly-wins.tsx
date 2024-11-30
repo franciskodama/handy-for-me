@@ -120,7 +120,7 @@ export default function WeeklyWins({
       console.error(error);
       toast({
         title: 'Error Adding Goal!',
-        description: 'Something went wrong while adding your goal.',
+        description: 'Something went wrong while adding your Goal.',
         variant: 'destructive'
       });
     }
@@ -260,9 +260,7 @@ export default function WeeklyWins({
                 {errors.goal.message}
               </span>
             )}
-            <p className="text-xs ml-4 lowercase">
-              <span className="uppercase">N</span>ame your Goal
-            </p>
+            <p className="text-xs ml-4">Name your Goal</p>
           </div>
           <div className="flex flex-col gap-1 w-full sm:w-[35ch]">
             <Controller
@@ -289,10 +287,7 @@ export default function WeeklyWins({
                 {errors.type.message}
               </span>
             )}
-            <p className="text-xs ml-4 lowercase">
-              <span className="uppercase">C</span>
-              hoose your goal level
-            </p>
+            <p className="text-xs ml-4">Choose your Goal level</p>
           </div>
           <Input {...register('uid')} value={uid} readOnly className="hidden" />
 
@@ -391,7 +386,7 @@ export default function WeeklyWins({
               </div>
             </div>
             <p className="text-xs mt-2">
-              Weekdays you want to work on this goal
+              Weekdays you want to work on this Goal
             </p>
           </div>
 
@@ -431,7 +426,7 @@ export default function WeeklyWins({
                 {groupOfWins[0].type}
               </h3>
               {groupOfWins.map((el: WeeklyWin) => (
-                <div key={el.id}>
+                <div key={v4()}>
                   <div
                     className={`${el.done && weeklyWinsTypesColorsDone[el.type]} flex border border-primary mt-2`}
                   >
