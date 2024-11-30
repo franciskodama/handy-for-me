@@ -96,6 +96,7 @@ export default function WeeklyWins({
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     const { goal, type, uid, weekDays } = data;
+    console.log('---  🚀 ---> | data:', data);
 
     try {
       await addWeeklyWin(uid, goal, type, weekDays);
@@ -296,51 +297,93 @@ export default function WeeklyWins({
             <div className="flex justify-between w-full px-4 sm:gap-4">
               <div className="flex flex-col items-center gap-1">
                 <p className="text-xs">M</p>
-                <Checkbox
-                  defaultValue="false"
-                  {...register('weekDays.monday')}
+                <Controller
+                  name="weekDays.monday"
+                  control={control}
+                  render={({ field: { value, onChange } }) => (
+                    <Checkbox
+                      checked={value}
+                      onCheckedChange={(checked) => onChange(checked)}
+                    />
+                  )}
                 />
               </div>
               <div className="flex flex-col items-center gap-1">
                 <p className="text-xs">T</p>
-                <Checkbox
-                  defaultValue="false"
-                  {...register('weekDays.tuesday')}
+                <Controller
+                  name="weekDays.tuesday"
+                  control={control}
+                  render={({ field: { value, onChange } }) => (
+                    <Checkbox
+                      checked={value}
+                      onCheckedChange={(checked) => onChange(checked)}
+                    />
+                  )}
                 />
               </div>
               <div className="flex flex-col items-center gap-1">
                 <p className="text-xs">W</p>
-                <Checkbox
-                  defaultValue="false"
-                  {...register('weekDays.wednesday')}
+                <Controller
+                  name="weekDays.wednesday"
+                  control={control}
+                  render={({ field: { value, onChange } }) => (
+                    <Checkbox
+                      checked={value}
+                      onCheckedChange={(checked) => onChange(checked)}
+                    />
+                  )}
                 />
               </div>
               <div className="flex flex-col items-center gap-1">
                 <p className="text-xs">T</p>
-                <Checkbox
-                  defaultValue="false"
-                  {...register('weekDays.thursday')}
+                <Controller
+                  name="weekDays.thursday"
+                  control={control}
+                  render={({ field: { value, onChange } }) => (
+                    <Checkbox
+                      checked={value}
+                      onCheckedChange={(checked) => onChange(checked)}
+                    />
+                  )}
                 />
               </div>
               <div className="flex flex-col items-center gap-1">
                 <p className="text-xs">F</p>
-                <Checkbox
-                  defaultValue="false"
-                  {...register('weekDays.friday')}
+                <Controller
+                  name="weekDays.friday"
+                  control={control}
+                  render={({ field: { value, onChange } }) => (
+                    <Checkbox
+                      checked={value}
+                      onCheckedChange={(checked) => onChange(checked)}
+                    />
+                  )}
                 />
               </div>
               <div className="flex flex-col items-center gap-1">
                 <p className="text-xs">S</p>
-                <Checkbox
-                  defaultValue="false"
-                  {...register('weekDays.saturday')}
+                <Controller
+                  name="weekDays.saturday"
+                  control={control}
+                  render={({ field: { value, onChange } }) => (
+                    <Checkbox
+                      checked={value}
+                      onCheckedChange={(checked) => onChange(checked)}
+                    />
+                  )}
                 />
               </div>
               <div className="flex flex-col items-center gap-1">
                 <p className="text-xs">S</p>
-                <Checkbox
-                  defaultValue="false"
-                  {...register('weekDays.sunday')}
+                <Controller
+                  name="weekDays.sunday"
+                  control={control}
+                  render={({ field: { value, onChange } }) => (
+                    <Checkbox
+                      checked={value}
+                      onCheckedChange={(checked) => onChange(checked)}
+                    />
+                  )}
                 />
               </div>
             </div>
