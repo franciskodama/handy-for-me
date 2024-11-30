@@ -87,16 +87,19 @@ export default function WeeklyWins({
 
   const {
     register,
-    handleSubmit,
-    watch,
-    control,
+    handleSubmit: handleSubmitAddGoal,
+    control: controlAddGoal,
     reset,
     formState: { errors, isSubmitting }
   } = useForm<Inputs>();
 
+  const {
+    handleSubmit: handleSubmitAccomplishedDays,
+    control: controlAccomplishedDays
+  } = useForm<weekDays>();
+
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     const { goal, type, uid, weekDays } = data;
-    console.log('---  🚀 ---> | data:', data);
 
     try {
       await addWeeklyWin(uid, goal, type, weekDays);
@@ -239,7 +242,7 @@ export default function WeeklyWins({
 
         <form
           className="flex flex-col sm:flex-row items-start justify-center gap-8 sm:gap-2 font-normal w-full my-8 sm:mt-0"
-          onSubmit={handleSubmit(onSubmit)}
+          onSubmit={handleSubmitAddGoal(onSubmit)}
         >
           <div className="flex flex-col gap-1 w-full sm:w-[35ch]">
             <Input
@@ -264,7 +267,7 @@ export default function WeeklyWins({
           <div className="flex flex-col gap-1 w-full sm:w-[35ch]">
             <Controller
               name="type"
-              control={control}
+              control={controlAddGoal}
               rules={{ required: 'Type is required' }}
               render={({ field }) => (
                 <Select onValueChange={field.onChange} value={field.value}>
@@ -299,7 +302,7 @@ export default function WeeklyWins({
                 <p className="text-xs">M</p>
                 <Controller
                   name="weekDays.monday"
-                  control={control}
+                  control={controlAddGoal}
                   render={({ field: { value, onChange } }) => (
                     <Checkbox
                       checked={value}
@@ -312,7 +315,7 @@ export default function WeeklyWins({
                 <p className="text-xs">T</p>
                 <Controller
                   name="weekDays.tuesday"
-                  control={control}
+                  control={controlAddGoal}
                   render={({ field: { value, onChange } }) => (
                     <Checkbox
                       checked={value}
@@ -325,7 +328,7 @@ export default function WeeklyWins({
                 <p className="text-xs">W</p>
                 <Controller
                   name="weekDays.wednesday"
-                  control={control}
+                  control={controlAddGoal}
                   render={({ field: { value, onChange } }) => (
                     <Checkbox
                       checked={value}
@@ -338,7 +341,7 @@ export default function WeeklyWins({
                 <p className="text-xs">T</p>
                 <Controller
                   name="weekDays.thursday"
-                  control={control}
+                  control={controlAddGoal}
                   render={({ field: { value, onChange } }) => (
                     <Checkbox
                       checked={value}
@@ -351,7 +354,7 @@ export default function WeeklyWins({
                 <p className="text-xs">F</p>
                 <Controller
                   name="weekDays.friday"
-                  control={control}
+                  control={controlAddGoal}
                   render={({ field: { value, onChange } }) => (
                     <Checkbox
                       checked={value}
@@ -364,7 +367,7 @@ export default function WeeklyWins({
                 <p className="text-xs">S</p>
                 <Controller
                   name="weekDays.saturday"
-                  control={control}
+                  control={controlAddGoal}
                   render={({ field: { value, onChange } }) => (
                     <Checkbox
                       checked={value}
@@ -377,7 +380,7 @@ export default function WeeklyWins({
                 <p className="text-xs">S</p>
                 <Controller
                   name="weekDays.sunday"
-                  control={control}
+                  control={controlAddGoal}
                   render={({ field: { value, onChange } }) => (
                     <Checkbox
                       checked={value}
@@ -428,65 +431,69 @@ export default function WeeklyWins({
                 {groupOfWins[0].type}
               </h3>
               {groupOfWins.map((el: WeeklyWin) => (
-                <div
-                  key={el.id}
-                  className={`${el.done && weeklyWinsTypesColorsDone[el.type]} flex border border-primary mt-2`}
-                >
-                  <div className="w-full px-4 py-3">
-                    <p
-                      className={`${el.done && 'line-through'} text-left uppercase text-sm leading-none`}
-                    >
-                      {el.goal}
-                    </p>
-                  </div>
-                  <Button variant="ghost" onClick={() => handleCheck(el)}>
-                    <Check
-                      size={18}
-                      strokeWidth={1.8}
-                      color="#000"
-                      // color={win.done ? '#FFF' : '#000'}
-                    />
-                  </Button>
-
-                  <AlertDialog>
-                    <AlertDialogTrigger className="px-2 py-1 mr-4">
-                      <Trash2
+                <div key={el.id}>
+                  <div
+                    className={`${el.done && weeklyWinsTypesColorsDone[el.type]} flex border border-primary mt-2`}
+                  >
+                    <div className="w-full px-4 py-3">
+                      <p
+                        className={`${el.done && 'line-through'} text-left uppercase text-sm leading-none`}
+                      >
+                        {el.goal}
+                      </p>
+                    </div>
+                    <Button variant="ghost" onClick={() => handleCheck(el)}>
+                      <Check
                         size={18}
                         strokeWidth={1.8}
                         color="#000"
                         // color={win.done ? '#FFF' : '#000'}
                       />
-                    </AlertDialogTrigger>
-                    <AlertDialogContent className="w-[calc(100%-35px)]">
-                      <AlertDialogHeader>
-                        <AlertDialogTitle className="flex items-center gap-2">
-                          <Bomb size={24} strokeWidth={1.8} />
-                          Are you absolutely sure?
-                        </AlertDialogTitle>
-                        <AlertDialogDescription className="py-4">
-                          This will permanently delete the vision
-                          <span className="font-bold mx-1">{el.goal}</span>
-                          from our servers.
-                        </AlertDialogDescription>
-                      </AlertDialogHeader>
-                      <AlertDialogFooter>
-                        <AlertDialogCancel
-                          onClick={() => {
-                            toast({
-                              title: 'Operation Cancelled! ❌',
-                              description: `Phew! 😮‍💨 Crisis averted. You successfully cancelled the operation.`,
-                              variant: 'destructive'
-                            });
-                          }}
-                        >
-                          Cancel
-                        </AlertDialogCancel>
-                        <AlertDialogAction onClick={() => handleDeleteItem(el)}>
-                          Continue
-                        </AlertDialogAction>
-                      </AlertDialogFooter>
-                    </AlertDialogContent>
-                  </AlertDialog>
+                    </Button>
+
+                    <AlertDialog>
+                      <AlertDialogTrigger className="px-2 py-1 mr-4">
+                        <Trash2
+                          size={18}
+                          strokeWidth={1.8}
+                          color="#000"
+                          // color={win.done ? '#FFF' : '#000'}
+                        />
+                      </AlertDialogTrigger>
+                      <AlertDialogContent className="w-[calc(100%-35px)]">
+                        <AlertDialogHeader>
+                          <AlertDialogTitle className="flex items-center gap-2">
+                            <Bomb size={24} strokeWidth={1.8} />
+                            Are you absolutely sure?
+                          </AlertDialogTitle>
+                          <AlertDialogDescription className="py-4">
+                            This will permanently delete the vision
+                            <span className="font-bold mx-1">{el.goal}</span>
+                            from our servers.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel
+                            onClick={() => {
+                              toast({
+                                title: 'Operation Cancelled! ❌',
+                                description: `Phew! 😮‍💨 Crisis averted. You successfully cancelled the operation.`,
+                                variant: 'destructive'
+                              });
+                            }}
+                          >
+                            Cancel
+                          </AlertDialogCancel>
+                          <AlertDialogAction
+                            onClick={() => handleDeleteItem(el)}
+                          >
+                            Continue
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                  </div>
+                  <div></div>
                 </div>
               ))}
             </div>
