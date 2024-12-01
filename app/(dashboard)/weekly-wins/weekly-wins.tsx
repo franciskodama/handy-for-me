@@ -418,10 +418,21 @@ export default function WeeklyWins({
             />
           </div>
         )}
-        <div className="my-12 text-center text-lg font-semibold p-2 bg-primary text-red-500">
-          <span className="mr-2 text-white text-xl uppercase">{today}:</span>
 
-          {dailyPhrases[today]}
+        <div className="flex justify-between my-12 text-lg font-semibold px-12 py-2 bg-primary text-white">
+          <div className="text-red-500">
+            <span className="mr-2 text-white text-xl font-semibold uppercase">
+              {today}:
+            </span>
+            {dailyPhrases[today]}
+          </div>
+          <div className="flex gap-8 items-center">
+            <div className="flex">
+              <div className="h-3 w-8 bg-white"></div>
+              <div className="h-3 w-32 bg-slate-400"></div>
+            </div>
+            <p>{progressPhrases[today]}</p>
+          </div>
         </div>
 
         <div className="flex flex-col sm:flex-row w-full justify-center gap-8 mb-12">
@@ -514,4 +525,14 @@ const dailyPhrases: Record<string, string> = {
   Friday: 'Friday: Finish Strong! Wrap up the week with a win!',
   Saturday: 'Saturday: Supercharged Saturday—enjoy and stay productive!',
   Sunday: 'Reflect & Recharge—prepare for a bright week ahead!'
+};
+
+const progressPhrases: Record<string, string> = {
+  Monday: '10% in, keep the energy flowing this Monday!',
+  Tuesday: '10% complete, the journey continues this Tuesday!',
+  Wednesday: "10% done, you're on your way this Wednesday!",
+  Thursday: '10% achieved, keep climbing higher this Thursday!',
+  Friday: '10% progress—momentum is building this Friday!',
+  Saturday: '10% of the way there—enjoy the weekend grind this Saturday!',
+  Sunday: '10% down, greatness is ahead this Sunday!'
 };
