@@ -66,6 +66,7 @@ export default function WeeklyWins({
 }) {
   const [openAction, setOpenAction] = useState(false);
   const [board, setBoard] = useState<WeeklyWin[][]>([]);
+  const today = new Date().toLocaleDateString('en-US', { weekday: 'long' });
 
   const weeklyWinsTypes: WeeklyWinsTypes[] = [
     'Easy',
@@ -417,6 +418,12 @@ export default function WeeklyWins({
             />
           </div>
         )}
+        <div className="my-12 text-center text-lg font-semibold p-2 bg-primary text-red-500">
+          <span className="mr-2 text-white text-xl uppercase">{today}:</span>
+
+          {dailyPhrases[today]}
+        </div>
+
         <div className="flex flex-col sm:flex-row w-full justify-center gap-8 mb-12">
           {board.map((groupOfWins: WeeklyWin[]) => (
             <div key={v4()} className="sm:w-1/3 max-w-96 mt-4">
@@ -498,3 +505,13 @@ export default function WeeklyWins({
     </Card>
   );
 }
+
+const dailyPhrases: Record<string, string> = {
+  Monday: 'Monday: Fresh Start, New Goals! Let’s tackle this week head-on!',
+  Tuesday: 'Tuesday: Momentum Tuesday—keep building on yesterday’s wins!',
+  Wednesday: 'Wednesday: Midweek Magic! You’re halfway to greatness!',
+  Thursday: 'Thursday: Thrives—just a little more to go!',
+  Friday: 'Friday: Finish Strong! Wrap up the week with a win!',
+  Saturday: 'Saturday: Supercharged Saturday—enjoy and stay productive!',
+  Sunday: 'Reflect & Recharge—prepare for a bright week ahead!'
+};
