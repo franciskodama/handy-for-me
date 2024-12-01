@@ -429,7 +429,7 @@ export default function WeeklyWins({
           <div className="flex gap-8 items-center">
             <div className="flex">
               <div className="h-3 w-8 bg-white"></div>
-              <div className="h-3 w-32 bg-slate-400"></div>
+              <div className="h-3 w-32 bg-red-500s"></div>
             </div>
             <p>{progressPhrases[today]}</p>
           </div>
