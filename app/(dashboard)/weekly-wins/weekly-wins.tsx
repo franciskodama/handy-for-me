@@ -518,13 +518,13 @@ export default function WeeklyWins({
 }
 
 const dailyPhrases: Record<string, string> = {
-  Monday: 'Monday: Fresh Start, New Goals! Let’s tackle this week head-on!',
-  Tuesday: 'Tuesday: Momentum Tuesday—keep building on yesterday’s wins!',
-  Wednesday: 'Wednesday: Midweek Magic! You’re halfway to greatness!',
-  Thursday: 'Thursday: Thrives—just a little more to go!',
-  Friday: 'Friday: Finish Strong! Wrap up the week with a win!',
-  Saturday: 'Saturday: Supercharged Saturday—enjoy and stay productive!',
-  Sunday: 'Reflect & Recharge—prepare for a bright week ahead!'
+  Monday: 'Monday: Fresh Start, New Goals! 🏁 Let’s tackle this week head-on!',
+  Tuesday: 'Tuesday: Momentum! 🚀 Keep building on yesterday’s wins!',
+  Wednesday: 'Wednesday: Midweek Magic! 🪄 You’re halfway to greatness!',
+  Thursday: 'Thursday: Thrives—just a little more to go! 💪🏻',
+  Friday: 'Friday: Finish Strong! Wrap up the week with a win! 👏🏻👏🏻👏🏻',
+  Saturday: 'Saturday: Supercharged Saturday—enjoy and stay productive! 🔋',
+  Sunday: 'Reflect & Recharge—prepare for a bright week ahead! 🧘🏻 '
 };
 
 const progressPhrases: Record<string, string> = {
