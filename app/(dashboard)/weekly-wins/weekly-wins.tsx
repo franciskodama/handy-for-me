@@ -418,10 +418,13 @@ export default function WeeklyWins({
             />
           </div>
         )}
-
-        <div className="flex justify-between my-12 text-lg font-semibold px-12 py-2 bg-primary text-white">
-          <div className="text-red-500">
-            <span className="mr-2 text-white text-xl font-semibold uppercase">
+        <div
+          className="flex justify-between my-12 text-lg font-semibold px-24 py-2 border border-primary bg-background shadow-[0_0px_0px_0px_inset,#FFF_-3px_3px_0_-1px,#0F1739_-3px_3px]
+        
+        "
+        >
+          <div>
+            <span className="mr-2 text-red-500 text-xl font-semibold uppercase">
               {today}:
             </span>
             {dailyPhrases[today]}
