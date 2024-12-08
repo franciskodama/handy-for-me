@@ -4,12 +4,6 @@ import { cva, type VariantProps } from 'class-variance-authority';
 
 import { cn } from '@/lib/utils';
 
-// before my styles:
-// default: 'text-primary hover:text-white hover:bg-purple-500 transalte border border-primary shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]',
-// outline: 'border border-primary bg-background hover:bg-accent hover:text-accent-foreground',
-
-// hover:shadow-[0_0px_0px_0px_inset,#FFF_-5px_5px_0_-1px,#000_-5px_5px]
-
 const buttonVariants = cva(
   'inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
   {
