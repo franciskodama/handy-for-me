@@ -39,6 +39,7 @@ export default function CardVisionBoard({
                     height={150}
                     alt={`Picture of ${el.item}`}
                     className="object-cover w-60 h-60 group-hover:opacity-100"
+                    priority
                   />
                 </div>
               </CarouselItem>

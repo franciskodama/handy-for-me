@@ -297,6 +297,7 @@ export default function VisionBoard({
                   width={150}
                   height={150}
                   alt={`Picture of ${el.item}`}
+                  priority
                   className="object-cover w-20 h-20 sm:w-48 sm:h-48 group-hover:opacity-100"
                 />
                 <p
