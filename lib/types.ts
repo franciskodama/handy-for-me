@@ -47,6 +47,8 @@ export type BucketListItem = {
   uid: string;
   item: string;
   category: string;
+  description: string;
+  url: string;
   done: boolean;
 };
 
@@ -78,11 +80,7 @@ export type AddShortcutParams = {
   categoryId: string;
 };
 
-export type LocationProps = {
-  city: string;
-  region: string;
-  country: string;
-};
+export type LocationProps = { city: string; region: string; country: string };
 
 export type WeeklyWin = {
   id: string;

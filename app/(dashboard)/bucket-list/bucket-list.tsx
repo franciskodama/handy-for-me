@@ -64,6 +64,8 @@ type Inputs = {
   item: string;
   category: string;
   uid: string;
+  description: string;
+  url: string;
 };
 
 export default function BucketList({
@@ -88,7 +90,7 @@ export default function BucketList({
     const { item, category } = data;
 
     try {
-      await addBucketListItem(uid, item, category);
+      await addBucketListItem(uid, item, category, description, url);
       const newBucketLists = await getBucketListItems(uid);
       newBucketLists && setBoard(organizeBoardByCategory(newBucketLists));
       toast({
@@ -97,10 +99,7 @@ export default function BucketList({
         variant: 'success'
       });
 
-      reset({
-        item: '',
-        category: ''
-      });
+      reset({ item: '', category: '' });
     } catch (error) {
       console.error(error);
       toast({
@@ -260,12 +259,37 @@ export default function BucketList({
                     {errors.item.message}
                   </span>
                 )}
-
                 <p className="text-xs ml-4 lowercase">
                   <span className="uppercase">N</span>ame your adventure in one
                   word.
                 </p>
               </div>
+
+              <div className="flex flex-col gap-1 w-full sm:w-2/5">
+                <Input
+                  placeholder="Description"
+                  {...register('description', {
+                    maxLength: { value: 150, message: 'Description' }
+                  })}
+                />
+                <p className="text-xs ml-4 lowercase">
+                  <span className="uppercase">T</span>ell me more about this...
+                </p>
+              </div>
+
+              <div className="flex flex-col gap-1 w-full sm:w-2/5">
+                <Input
+                  placeholder="Links"
+                  {...register('url', {
+                    maxLength: { value: 150, message: 'Urls for reference?' }
+                  })}
+                />
+                <p className="text-xs ml-4 lowercase">
+                  <span className="uppercase">I</span>f you have more than 1,
+                  separate them with comma.
+                </p>
+              </div>
+
               <div className="flex flex-col gap-1 w-full sm:w-2/5">
                 <Controller
                   name="category"
@@ -547,12 +571,7 @@ export const bucketListCategoriesPastel = [
     bgColor: '#5CDB95',
     textColor: '#05396B'
   },
-  {
-    name: 'Bar',
-    color: 'coral',
-    bgColor: '#FF6F61',
-    textColor: '#FFFFFF'
-  },
+  { name: 'Bar', color: 'coral', bgColor: '#FF6F61', textColor: '#FFFFFF' },
   {
     name: 'Cultural',
     color: 'ochre',
@@ -658,12 +677,7 @@ export const bucketListCategoriesBlackWhite = [
     bgColor: '#333333',
     textColor: '#E6E6E6'
   },
-  {
-    name: 'Bar',
-    color: 'dark gray',
-    bgColor: '#4D4D4D',
-    textColor: '#FFFFFF'
-  },
+  { name: 'Bar', color: 'dark gray', bgColor: '#4D4D4D', textColor: '#FFFFFF' },
   {
     name: 'Cultural',
     color: 'slate gray',
@@ -754,10 +768,5 @@ export const bucketListCategoriesBlackWhite = [
     bgColor: '#D9D9D9',
     textColor: '#333333'
   },
-  {
-    name: 'Wellness',
-    color: 'ivory',
-    bgColor: '#FBFBFB',
-    textColor: '#333333'
-  }
+  { name: 'Wellness', color: 'ivory', bgColor: '#FBFBFB', textColor: '#333333' }
 ];

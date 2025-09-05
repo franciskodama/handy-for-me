@@ -1,6 +1,9 @@
 // Our template: https://vercel.com/templates/next.js/admin-dashboard-tailwind-postgres-react-nextjs
 // Google Cloud Credentials: https://console.cloud.google.com/apis/credentials
 
+// TODO: WIP!
+// Bucket list must have a description and space for urls
+
 // TODO: HELPERS
 // size={24} strokeWidth={1.8}
 // primary color: 222.2 47.4% 11.2% --> rgba(15, 23, 57, 1) --> #0F1739

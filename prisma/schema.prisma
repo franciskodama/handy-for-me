@@ -49,6 +49,8 @@ model BucketListItem {
   uid       String   
   item      String   
   category  String
+  description String @default("No description yet")
+  url       String
   done      Boolean
 }
 
