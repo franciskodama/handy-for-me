@@ -266,31 +266,6 @@ export default function BucketList({
               </div>
 
               <div className="flex flex-col gap-1 w-full sm:w-2/5">
-                <Input
-                  placeholder="Description"
-                  {...register('description', {
-                    maxLength: { value: 150, message: 'Description' }
-                  })}
-                />
-                <p className="text-xs ml-4 lowercase">
-                  <span className="uppercase">T</span>ell me more about this...
-                </p>
-              </div>
-
-              <div className="flex flex-col gap-1 w-full sm:w-2/5">
-                <Input
-                  placeholder="Links"
-                  {...register('url', {
-                    maxLength: { value: 150, message: 'Urls for reference?' }
-                  })}
-                />
-                <p className="text-xs ml-4 lowercase">
-                  <span className="uppercase">I</span>f you have more than 1,
-                  separate them with comma.
-                </p>
-              </div>
-
-              <div className="flex flex-col gap-1 w-full sm:w-2/5">
                 <Controller
                   name="category"
                   control={control}
@@ -320,6 +295,38 @@ export default function BucketList({
                   hoose a category that best describes your adventure.
                 </p>
               </div>
+
+              <div className="flex flex-col gap-1 w-full sm:w-2/5">
+                <Input
+                  placeholder="Description"
+                  {...register('description', {
+                    maxLength: {
+                      value: 300,
+                      message: 'The Description must be 300 characters or less'
+                    }
+                  })}
+                />
+                <p className="text-xs ml-4 lowercase">
+                  <span className="uppercase">T</span>ell me more about it...
+                </p>
+              </div>
+
+              <div className="flex flex-col gap-1 w-full sm:w-2/5">
+                <Input
+                  placeholder="Links"
+                  {...register('url', {
+                    maxLength: {
+                      value: 500,
+                      message: 'The urls must be 500 characters or less'
+                    }
+                  })}
+                />
+                <p className="text-xs ml-4 lowercase">
+                  <span className="uppercase">I</span>f you have more than one
+                  url, separate them with comma.
+                </p>
+              </div>
+
               <Input value={uid} className="hidden" {...register('uid')} />
               <Button type="submit" className="ml-2" disabled={isSubmitting}>
                 {isSubmitting ? 'Adding...' : 'Add'}

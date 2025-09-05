@@ -240,7 +240,7 @@ export async function addBucketListItem(
         item,
         category,
         description,
-        link,
+        url,
         done: false
       }
     });
