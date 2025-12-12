@@ -9,7 +9,8 @@
   },
   "dependencies": {
     "@neondatabase/serverless": "^0.9.4",
-    "@prisma/client": "5.19.1",
+    "@prisma/adapter-pg": "^7.1.0",
+    "@prisma/client": "^7.1.0",
     "@radix-ui/react-accordion": "^1.2.1",
     "@radix-ui/react-alert-dialog": "^1.1.2",
     "@radix-ui/react-aspect-ratio": "^1.1.0",
@@ -37,13 +38,14 @@
     "embla-carousel-react": "^8.3.1",
     "framer-motion": "^11.11.0",
     "lucide-react": "^0.400.0",
-    "next": "15.0.3",
+    "next": "15.0.6",
     "next-auth": "^5.0.0-beta.25",
     "next-themes": "^0.3.0",
+    "pg": "^8.16.3",
     "postcss": "^8.4.39",
     "posthog-js": "^1.187.2",
     "prettier": "^3.3.2",
-    "prisma": "^5.19.1",
+    "prisma": "^7.1.0",
     "prop-types": "^15.8.1",
     "react": "19.0.0-rc-66855b96-20241106",
     "react-canvas-confetti": "^2.0.7",
@@ -68,5 +70,8 @@
   "resolutions": {
     "@types/react": "npm:types-react@19.0.0-rc.1",
     "@types/react-dom": "npm:types-react-dom@19.0.0-rc.1"
+  },
+  "devDependencies": {
+    "@types/pg": "^8.16.0"
   }
 }

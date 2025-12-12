@@ -1,7 +1,8 @@
 'use server';
 
 import { v4 } from 'uuid';
-import { prisma } from './prisma';
+import prisma from './prisma';
+
 import {
   AddShortcutParams,
   DecisionHelperItem,

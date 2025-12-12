@@ -1,21 +1,21 @@
 import { PrismaClient } from '@prisma/client';
+import { PrismaPg } from '@prisma/adapter-pg';
+import { Pool } from 'pg';
 
-export const prisma = new PrismaClient();
-// import { PrismaClient } from '@prisma/client';
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL
+});
 
-// declare global {
-//   var prisma: PrismaClient | undefined;
-// }
+const adapter = new PrismaPg(pool);
 
-// let prisma: PrismaClient;
+declare global {
+  var prisma: PrismaClient | undefined;
+}
 
-// if (process.env.NODE_ENV === 'production') {
-//   prisma = new PrismaClient();
-// } else {
-//   if (!global.prisma) {
-//     global.prisma = new PrismaClient();
-//   }
-//   prisma = global.prisma;
-// }
+const prisma = global.prisma || new PrismaClient({ adapter });
 
-// export default prisma;
+if (process.env.NODE_ENV !== 'production') {
+  global.prisma = prisma;
+}
+
+export default prisma;
