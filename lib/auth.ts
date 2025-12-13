@@ -1,14 +1,16 @@
 import NextAuth from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
-import GitHub from 'next-auth/providers/github';
-import Google from 'next-auth/providers/google';
 import { signInSchema } from '@/lib/zod';
 import { ZodError } from 'zod';
 import { getUser } from './actions';
 import { saltAndHashPassword } from './passwords';
+import { authConfig } from './auth.config';
 
 export const { auth, handlers, signIn, signOut } = NextAuth({
+  ...authConfig,
   providers: [
+    ...authConfig.providers,
+
     Credentials({
       credentials: {
         email: {},
@@ -19,25 +21,14 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
           if (!credentials) {
             return null;
           }
-
           const { email, password } =
             await signInSchema.parseAsync(credentials);
-
           const hashedPassword = await saltAndHashPassword(password);
           const user = await getUser(email, hashedPassword);
-
           if (!user) {
             return null;
           }
-
-          return {
-            id: user.id,
-            uid: user.uid,
-            name: user.name,
-            avatar: user.avatar,
-            hashedPassword: user.hashedPassword,
-            createdAt: user.createdAt
-          };
+          return {};
         } catch (error) {
           if (error instanceof ZodError) {
             console.error('Validation error:', error.errors);
@@ -47,8 +38,62 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
           return null;
         }
       }
-    }),
-    GitHub,
-    Google
+    })
   ]
 });
+
+// import NextAuth from 'next-auth';
+// import Credentials from 'next-auth/providers/credentials';
+// import GitHub from 'next-auth/providers/github';
+// import Google from 'next-auth/providers/google';
+// import { signInSchema } from '@/lib/zod';
+// import { ZodError } from 'zod';
+// import { getUser } from './actions';
+// import { saltAndHashPassword } from './passwords';
+
+// export const { auth, handlers, signIn, signOut } = NextAuth({
+//   session: { strategy: 'jwt' },
+//   providers: [
+//     Credentials({
+//       credentials: {
+//         email: {},
+//         password: {}
+//       },
+//       authorize: async (credentials) => {
+//         try {
+//           if (!credentials) {
+//             return null;
+//           }
+
+//           const { email, password } =
+//             await signInSchema.parseAsync(credentials);
+
+//           const hashedPassword = await saltAndHashPassword(password);
+//           const user = await getUser(email, hashedPassword);
+
+//           if (!user) {
+//             return null;
+//           }
+
+//           return {
+//             id: user.id,
+//             uid: user.uid,
+//             name: user.name,
+//             avatar: user.avatar,
+//             hashedPassword: user.hashedPassword,
+//             createdAt: user.createdAt
+//           };
+//         } catch (error) {
+//           if (error instanceof ZodError) {
+//             console.error('Validation error:', error.errors);
+//           } else {
+//             console.error('Error in authorize:', error);
+//           }
+//           return null;
+//         }
+//       }
+//     }),
+//     GitHub,
+//     Google
+//   ]
+// });
