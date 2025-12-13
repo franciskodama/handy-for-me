@@ -1,26 +1,22 @@
-// auth.ts (Modified)
-
 import NextAuth from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
 import { signInSchema } from '@/lib/zod';
 import { ZodError } from 'zod';
 import { getUser } from './actions';
 import { saltAndHashPassword } from './passwords';
-import { authConfig } from './auth.config'; // <-- Import the base config
+import { authConfig } from './auth.config';
 
 export const { auth, handlers, signIn, signOut } = NextAuth({
-  ...authConfig, // <-- Spread the Edge-safe config
+  ...authConfig,
   providers: [
-    ...authConfig.providers, // <-- Include OAuth providers
+    ...authConfig.providers,
 
-    // 3. Add the Node.js-dependent Credentials provider here
     Credentials({
       credentials: {
         email: {},
         password: {}
       },
       authorize: async (credentials) => {
-        // ... (Your original authorize logic remains here)
         try {
           if (!credentials) {
             return null;
@@ -32,9 +28,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
           if (!user) {
             return null;
           }
-          return {
-            /* ... user object ... */
-          };
+          return {};
         } catch (error) {
           if (error instanceof ZodError) {
             console.error('Validation error:', error.errors);
