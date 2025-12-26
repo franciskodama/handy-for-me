@@ -14,7 +14,7 @@ export const getLuckyChoice = () => {
   const questions = getQuestions(randomTopic);
   const randomIndex = Math.floor(Math.random() * questions.length);
   const randomItem = questions[randomIndex];
-  return randomItem;
+  return { question: randomItem, topicId: randomTopic };
 };
 
 export const topicsRandomQuestions = [

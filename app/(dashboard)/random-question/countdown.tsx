@@ -25,6 +25,7 @@ export type CountdownProps = {
   lastSelectedTime: number;
   setIsPaused: (value: boolean) => void;
   isPaused: boolean;
+  setResetAll?: (value: boolean) => void;
 };
 
 export default function Countdown({
@@ -41,7 +42,8 @@ export default function Countdown({
   setLastSelectedTime,
   lastSelectedTime,
   setIsPaused,
-  isPaused
+  isPaused,
+  setResetAll
 }: CountdownProps) {
   const minutesOptions = [1, 2, 3, 4, 5];
 
@@ -52,10 +54,12 @@ export default function Countdown({
   useEffect(() => {
     let timerInterval: NodeJS.Timeout;
 
+    // Only countdown if: countdown is started, result exists, time is greater than 0, and not paused
     if (startCountdown && result && timeRemaining > 0 && !isPaused) {
       timerInterval = setInterval(() => {
         setTimeRemaining((prevTime: number) => {
           if (prevTime <= 1) {
+            // Timer reached 0 - stop countdown and stay at 0
             clearInterval(timerInterval);
             setStartCountdown(false);
             confetti({
@@ -69,6 +73,7 @@ export default function Countdown({
       }, 1000);
     }
 
+    // Cleanup: stop timer if conditions are no longer met
     return () => {
       if (timerInterval) {
         clearInterval(timerInterval);
@@ -86,15 +91,37 @@ export default function Countdown({
   useEffect(() => {
     if (resetAll) {
       handleRestartButton();
+      // Reset the resetAll flag after processing
+      if (setResetAll) {
+        setResetAll(false);
+      }
     }
-  }, [resetAll]);
+  }, [resetAll, setResetAll]);
 
-  // Start countdown when result changes
+  // Start countdown when result changes - always reset timer to beginning
   useEffect(() => {
     if (result) {
+      // Always reset timer to lastSelectedTime when a new question appears
+      if (lastSelectedTime > 0) {
+        setTimeRemaining(lastSelectedTime);
+      } else {
+        // If no time was selected, default to 2 minutes
+        const defaultTime = 2 * 60;
+        setTimeRemaining(defaultTime);
+        setLastSelectedTime(defaultTime);
+        setSelectedValue('2');
+      }
       setStartCountdown(true);
+      setIsPaused(false);
     }
-  }, [result, setStartCountdown]);
+  }, [
+    result,
+    setStartCountdown,
+    lastSelectedTime,
+    setTimeRemaining,
+    setLastSelectedTime,
+    setSelectedValue
+  ]);
 
   const minutes = Math.floor(timeRemaining / 60);
   const seconds = timeRemaining % 60;
@@ -112,9 +139,13 @@ export default function Countdown({
       setStartCountdown(true);
       setIsPaused(false);
     } else {
-      setSelectedValue('');
-      setTimeRemaining(0);
-      setStartCountdown(false);
+      // Default to 2 minutes if no time was selected
+      const defaultTime = 2 * 60;
+      setTimeRemaining(defaultTime);
+      setLastSelectedTime(defaultTime);
+      setSelectedValue('2');
+      setStartCountdown(true);
+      setIsPaused(false);
     }
   };
 
