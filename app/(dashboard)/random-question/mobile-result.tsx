@@ -26,7 +26,8 @@ export function MobileResultDialog({
   setLastSelectedTime,
   lastSelectedTime,
   setIsPaused,
-  isPaused
+  isPaused,
+  setResetAll
 }: {
   result: string;
   name: string;
@@ -43,6 +44,7 @@ export function MobileResultDialog({
   lastSelectedTime: number;
   setIsPaused: (value: boolean) => void;
   isPaused: boolean;
+  setResetAll?: (value: boolean) => void;
 }) {
   const isMobile = useIsMobile();
   return (
@@ -68,6 +70,7 @@ export function MobileResultDialog({
                   lastSelectedTime={lastSelectedTime}
                   setIsPaused={setIsPaused}
                   isPaused={isPaused}
+                  setResetAll={setResetAll}
                 />
               </div>
             </AlertDialogDescription>

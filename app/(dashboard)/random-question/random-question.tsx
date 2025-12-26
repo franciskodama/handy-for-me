@@ -58,8 +58,10 @@ export default function RandomQuestion({ name }: { name: string }) {
 
   const handleFeelingLucky = () => {
     const luckyChoice = getLuckyChoice();
+    // Set the topic so the dropdown shows the selected topic
+    setTopic(luckyChoice.topicId);
     setTimeout(() => {
-      setResult(luckyChoice);
+      setResult(luckyChoice.question);
       setStartCountdown(true);
     }, 1000);
   };
@@ -68,6 +70,18 @@ export default function RandomQuestion({ name }: { name: string }) {
     setResetAll(true);
     setSelectedValue('');
     setResult('');
+    setStartCountdown(false);
+    setIsPaused(false);
+    // Reset timer to last selected time (or default 2 minutes if none selected)
+    if (lastSelectedTime > 0) {
+      setTimeRemaining(lastSelectedTime);
+    } else {
+      // Default to 2 minutes (120 seconds) if no time was selected
+      const defaultTime = 2 * 60;
+      setTimeRemaining(defaultTime);
+      setLastSelectedTime(defaultTime);
+      setSelectedValue('2');
+    }
   };
 
   const minutesOptions = [0.1, 1, 2, 3, 4, 5];
@@ -139,6 +153,7 @@ export default function RandomQuestion({ name }: { name: string }) {
               </div>
 
               <Select
+                value={topic}
                 onValueChange={(value) => {
                   setResult('');
                   setTopic(value);
@@ -204,6 +219,7 @@ export default function RandomQuestion({ name }: { name: string }) {
               lastSelectedTime={lastSelectedTime}
               setIsPaused={setIsPaused}
               isPaused={isPaused}
+              setResetAll={setResetAll}
             />
           </div>
 
@@ -223,6 +239,7 @@ export default function RandomQuestion({ name }: { name: string }) {
             lastSelectedTime={lastSelectedTime}
             setIsPaused={setIsPaused}
             isPaused={isPaused}
+            setResetAll={setResetAll}
           />
         </div>
       </CardContent>
