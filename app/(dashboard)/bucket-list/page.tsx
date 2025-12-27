@@ -1,6 +1,7 @@
 import { auth } from '@/lib/auth';
 import { getBucketListItems } from '@/lib/actions';
 import BucketList from './bucket-list';
+import SignInPrompt from '@/components/SignInPrompt';
 
 export default async function BucketListPage() {
   const session = await auth();
@@ -8,11 +9,9 @@ export default async function BucketListPage() {
   const firstName = session?.user?.name?.split(' ')[0];
   const bucketList = (uid && (await getBucketListItems(uid))) || [];
 
-  return (
-    <>
-      {bucketList && uid && firstName && (
-        <BucketList uid={uid} bucketList={bucketList} />
-      )}
-    </>
-  );
+  if (!uid || !firstName) {
+    return <SignInPrompt />;
+  }
+
+  return <BucketList uid={uid} bucketList={bucketList} />;
 }
