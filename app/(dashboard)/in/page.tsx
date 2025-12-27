@@ -7,10 +7,15 @@ import {
   getShortcuts,
   getVisualBoardItems
 } from '@/lib/actions';
+import SignInPrompt from '@/components/SignInPrompt';
 
 export default async function InPage() {
   const session = await auth();
   const user = session?.user;
+
+  if (!session) {
+    return <SignInPrompt />;
+  }
 
   const location: any | null = await getUserLocation();
 
@@ -24,17 +29,13 @@ export default async function InPage() {
   const shortcutsItems = await getShortcuts(user?.email ?? '');
 
   return (
-    <>
-      {session ? (
-        <In
-          user={user}
-          location={location}
-          weather={weather}
-          visionBoardItems={visionBoardItems || []}
-          bucketListItems={bucketListItems || []}
-          shortcutsItems={shortcutsItems || []}
-        />
-      ) : null}
-    </>
+    <In
+      user={user}
+      location={location}
+      weather={weather}
+      visionBoardItems={visionBoardItems || []}
+      bucketListItems={bucketListItems || []}
+      shortcutsItems={shortcutsItems || []}
+    />
   );
 }

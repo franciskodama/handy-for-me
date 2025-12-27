@@ -1,5 +1,14 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+
 export default function PencilBanner() {
-  const randomIndex = Math.floor(Math.random() * quotes.length);
+  const [randomIndex, setRandomIndex] = useState(0);
+
+  useEffect(() => {
+    // Only generate random index on client side to avoid hydration mismatch
+    setRandomIndex(Math.floor(Math.random() * quotes.length));
+  }, []);
 
   return (
     <div>

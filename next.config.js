@@ -40,7 +40,10 @@ const nextConfig = {
         hostname: 'localhost:3000'
       }
     ]
-  }
+  },
+  // Disable source maps in development to avoid Turbopack source map warnings
+  // This is a known issue with Turbopack - the error is harmless but annoying
+  productionBrowserSourceMaps: false
 };
 
 module.exports = nextConfig;

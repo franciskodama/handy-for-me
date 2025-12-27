@@ -13,7 +13,6 @@
 // Next Auth: Credentials (Email and Password)
 // Next Auth: Sign in fields + Sign up page
 // Next Auth: https://www.youtube.com/watch?v=1MTyCvS05V4
-
 // Emails: https://sendgrid.com/en-us/free
 
 // Stoic Support: Check the Content

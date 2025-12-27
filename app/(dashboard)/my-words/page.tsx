@@ -5,10 +5,15 @@ import {
 } from '@/lib/actions';
 import { DecisionHelperItem, DecisionHelperList } from '@/lib/types';
 import MyWords from './my-words';
+import SignInPrompt from '@/components/SignInPrompt';
 
 export default async function SpinPage() {
   const session = await auth();
   const uid = session?.user?.email;
+
+  if (!uid) {
+    return <SignInPrompt />;
+  }
 
   //   let myWords: MyWords[] = [];
   //   if (uid) {
@@ -20,5 +25,5 @@ export default async function SpinPage() {
 
   const myWords = ['word', 'banana', 'caramelo', 'pizza', 'banana', 'caramelo'];
 
-  return <>{uid && <MyWords uid={uid} myWords={myWords} />}</>;
+  return <MyWords uid={uid} myWords={myWords} />;
 }
