@@ -3,7 +3,8 @@ import RandomQuestion from './random-question';
 
 export default async function RandomQuestionPage() {
   const session = await auth();
-  const name = session?.user?.name;
+  // Use user's name if authenticated, otherwise use "Guest"
+  const name = session?.user?.name || 'Guest';
 
-  return <>{name && <RandomQuestion name={name} />}</>;
+  return <RandomQuestion name={name} />;
 }
