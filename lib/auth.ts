@@ -2,7 +2,7 @@ import NextAuth from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
 import { signInSchema } from '@/lib/zod';
 import { ZodError } from 'zod';
-import { getUser } from './actions';
+import { getUser, addUser } from './actions';
 import { saltAndHashPassword } from './passwords';
 import { authConfig } from './auth.config';
 
@@ -39,7 +39,21 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         }
       }
     })
-  ]
+  ],
+  callbacks: {
+    async signIn({ user }) {
+      if (user.email) {
+        try {
+          await addUser(user.email, user.name || '', user.image || '');
+          return true;
+        } catch (error) {
+          console.error('Error adding user to database:', error);
+          return false;
+        }
+      }
+      return true;
+    }
+  }
 });
 
 // import NextAuth from 'next-auth';
