@@ -1,4 +1,7 @@
+'use client';
+
 import Image from 'next/image';
+import { useEffect, useState } from 'react';
 
 import { LocationProps } from '@/lib/types';
 import { tagClass } from './cards';
@@ -11,6 +14,30 @@ export function CardWeather({
   location: LocationProps | null;
   weather: any;
 }) {
+  const [sunriseTime, setSunriseTime] = useState<string>('');
+  const [sunsetTime, setSunsetTime] = useState<string>('');
+
+  useEffect(() => {
+    if (weather?.sys?.sunrise) {
+      setSunriseTime(
+        new Date(weather.sys.sunrise * 1000).toLocaleTimeString('en-US', {
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: true
+        })
+      );
+    }
+    if (weather?.sys?.sunset) {
+      setSunsetTime(
+        new Date(weather.sys.sunset * 1000).toLocaleTimeString('en-US', {
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: true
+        })
+      );
+    }
+  }, [weather]);
+
   return (
     <>
       <div className="relative flex flex-col sm:flex-row gap-4 bg-muted p-6 pt-10 sm:pt-6 sm:bg-transparent sm:border sm:border-slate-300 sm:border-dashed">
@@ -73,46 +100,16 @@ export function CardWeather({
           </div>
 
           <div className="flex justify-around w-full">
-            {/* <div className="w-1/3 sm:hidden">
-                <h4 className="text-xs">Visibility</h4>
-                <p className="font-semibold text-base capitalize">{`${weather.visibility} Km`}</p>
-              </div> */}
             <div className="w-1/3 sm:w-1/2">
               <h4 className="text-xs">Sunrise</h4>
               <div className="flex gap-1 font-semibold text-base capitalize">
-                {weather.sys ? (
-                  <p>
-                    {new Date(weather.sys.sunrise * 1000).toLocaleTimeString(
-                      'en-US',
-                      {
-                        hour: '2-digit',
-                        minute: '2-digit',
-                        hour12: true,
-                        timeZone:
-                          Intl.DateTimeFormat().resolvedOptions().timeZone
-                      }
-                    )}
-                  </p>
-                ) : null}
+                {weather.sys ? <p>{sunriseTime}</p> : null}
               </div>
             </div>
             <div className="w-1/3 sm:w-1/2">
               <h4 className="text-xs">Sunset</h4>
               <div className="flex gap-1 font-semibold text-base capitalize">
-                {weather.sys ? (
-                  <p>
-                    {new Date(weather.sys.sunset * 1000).toLocaleTimeString(
-                      'en-US',
-                      {
-                        hour: '2-digit',
-                        minute: '2-digit',
-                        hour12: true,
-                        timeZone:
-                          Intl.DateTimeFormat().resolvedOptions().timeZone
-                      }
-                    )}
-                  </p>
-                ) : null}
+                {weather.sys ? <p>{sunsetTime}</p> : null}
               </div>
             </div>
           </div>

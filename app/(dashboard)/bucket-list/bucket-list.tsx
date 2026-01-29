@@ -90,7 +90,7 @@ export default function BucketList({
     try {
       const result = await addBucketListItem(uid, item, category);
 
-      if (result) {
+      if (result.success) {
         const newBucketLists = await getBucketListItems(uid);
         newBucketLists && setBoard(organizeBoardByCategory(newBucketLists));
         toast({
@@ -104,13 +104,15 @@ export default function BucketList({
           category: ''
         });
       } else {
-        throw new Error('Failed to add item');
+        throw new Error(
+          result.error ? String(result.error) : 'Failed to add item'
+        );
       }
     } catch (error) {
       console.error(error);
       toast({
         title: 'Error Adding Adventure',
-        description: 'Something went wrong while adding your adventure.',
+        description: `Error: ${error instanceof Error ? error.message : String(error)}`,
         variant: 'destructive'
       });
     }
