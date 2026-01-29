@@ -61,6 +61,7 @@ const handleSubmit = async (previousState: unknown, formData: FormData) => {
       description: 'Is it an easy, moderate, or challenging goal?',
       variant: 'destructive'
     });
+    return;
   }
 
   const weeklyWin = await addWeeklyWin(uid, goal, type);

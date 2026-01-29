@@ -74,7 +74,9 @@ export default function DecisionHelper({
 }) {
   const [lists, setLists] = useState<DecisionHelperList[]>(initialLists);
   const [allItems, setAllItems] = useState<DecisionHelperItem[]>(initialItems);
-  const [listId, setListId] = useState<string>('');
+  const [listId, setListId] = useState<string>(
+    initialLists.length > 0 ? initialLists[0].id : ''
+  );
   const [listInput, setListInput] = useState<string>('');
   const [itemInput, setItemInput] = useState<string>('');
   const [pendingNewList, setPendingNewList] = useState<boolean>(false);
@@ -99,10 +101,18 @@ export default function DecisionHelper({
   const handleCreateItem = async () => {
     setPendingNewItem(true);
     const newItem = await addDecisionHelperItem(uid, listId, itemInput);
+    setPendingNewItem(false);
+
     if (newItem) {
       setAllItems([...allItems, newItem as DecisionHelperItem]);
-      setPendingNewItem(false);
       setItemInput('');
+    } else {
+      toast({
+        title: 'Error Adding Item! 🚨',
+        description:
+          'Something went wrong while adding the item. Please try again.',
+        variant: 'destructive'
+      });
     }
   };
 
@@ -291,14 +301,21 @@ export default function DecisionHelper({
               <div className="flex w-full gap-2">
                 <Input
                   className="w-full"
-                  placeholder="Enter a new Item for this list"
+                  placeholder={
+                    listId
+                      ? 'Enter a new Item for this list'
+                      : 'Select a list first'
+                  }
                   value={itemInput}
                   onChange={(e) => setItemInput(e.target.value)}
+                  disabled={!listId}
                 />
                 <Button
                   className={`ml-1 w-[10ch] ${pendingNewItem ? 'bg-orange-500' : ''}`}
                   onClick={handleCreateItem}
-                  disabled={pendingNewItem || itemInput.trim() === ''}
+                  disabled={
+                    pendingNewItem || itemInput.trim() === '' || !listId
+                  }
                 >
                   {pendingNewItem ? 'Adding...' : 'Add'}
                 </Button>
