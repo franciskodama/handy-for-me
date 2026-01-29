@@ -88,19 +88,24 @@ export default function BucketList({
     const { item, category } = data;
 
     try {
-      await addBucketListItem(uid, item, category);
-      const newBucketLists = await getBucketListItems(uid);
-      newBucketLists && setBoard(organizeBoardByCategory(newBucketLists));
-      toast({
-        title: 'Adventure Added!',
-        description: `"${data.item}" has been added to your bucket list.`,
-        variant: 'success'
-      });
+      const result = await addBucketListItem(uid, item, category);
 
-      reset({
-        item: '',
-        category: ''
-      });
+      if (result) {
+        const newBucketLists = await getBucketListItems(uid);
+        newBucketLists && setBoard(organizeBoardByCategory(newBucketLists));
+        toast({
+          title: 'Adventure Added!',
+          description: `"${data.item}" has been added to your bucket list.`,
+          variant: 'success'
+        });
+
+        reset({
+          item: '',
+          category: ''
+        });
+      } else {
+        throw new Error('Failed to add item');
+      }
     } catch (error) {
       console.error(error);
       toast({
