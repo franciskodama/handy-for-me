@@ -20,7 +20,7 @@ export async function addDecisionHelperList(uid: string, list: string) {
 
     return newList;
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return false;
   }
 }
@@ -51,7 +51,7 @@ export async function deleteDecisionHelperList(id: string) {
 
     return true;
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return false;
   }
 }
@@ -94,7 +94,7 @@ export async function getAllDecisionHelperItems(uid: string) {
 
     return data;
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return [];
   }
 }

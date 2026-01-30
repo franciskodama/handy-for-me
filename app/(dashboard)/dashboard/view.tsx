@@ -6,10 +6,10 @@ import {
   UserNameEmailImage,
   VisualBoardItem
 } from '@/lib/types';
-import DashboardHeader from './dashboard-header';
-import DashboardTopSection from './dashboard-top-section';
-import DashboardWidgets from './dashboard-widgets';
-import DashboardFeatureHighlights from './feature-highlights';
+import DashboardHeader from './components/sections/header';
+import DashboardTopSection from './components/sections/top-section';
+import DashboardWidgets from './components/sections/widgets';
+import DashboardFeatureHighlights from './components/sections/highlights';
 
 export default function DashboardView({
   user,

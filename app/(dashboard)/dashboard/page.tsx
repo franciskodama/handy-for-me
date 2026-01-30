@@ -1,5 +1,5 @@
 import { auth } from '@/lib/auth';
-import DashboardView from './dashboard-view';
+import DashboardView from './view';
 import { getWeather } from '@/lib/weather.server';
 import { getUserLocation } from '@/lib/location.server';
 import { getBucketListItems } from '@/lib/actions/bucket-list';

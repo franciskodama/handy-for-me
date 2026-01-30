@@ -49,7 +49,7 @@ export async function deleteBucketListItem(id: string) {
     });
     return true;
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return false;
   }
 }

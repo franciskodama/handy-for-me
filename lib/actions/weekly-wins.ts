@@ -45,7 +45,7 @@ export async function deleteWeeklyWin(id: string) {
     });
     return true;
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return false;
   }
 }

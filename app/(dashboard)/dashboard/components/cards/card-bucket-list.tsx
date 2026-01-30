@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { tagClass } from './cards';
 import { BucketListItem } from '@/lib/types';
 import { Button } from '@/components/ui/button';
-import { bucketListCategories } from '../bucket-list/bucket-list';
+import { bucketListCategories } from '@/app/(dashboard)/bucket-list/bucket-list';
 
 export default function CardBucketList({
   bucketListItems

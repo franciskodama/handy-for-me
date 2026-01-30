@@ -1,7 +1,7 @@
-import CardVisionBoard from './card-vision-board';
-import CardShortcuts from './card-shortcuts';
-import CardBucketList from './card-bucket-list';
-import CardEmpty from './card-empty';
+import CardVisionBoard from '../cards/card-vision-board';
+import CardShortcuts from '../cards/card-shortcuts';
+import CardBucketList from '../cards/card-bucket-list';
+import CardEmpty from '../cards/card-empty';
 import { BucketListItem, Shortcut, VisualBoardItem } from '@/lib/types';
 
 export default function DashboardWidgets({

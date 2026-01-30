@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 
-import { funFacts } from './fun-facts';
+import { funFacts } from '../../data/fun-facts';
 import { Button } from '@/components/ui/button';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
 import { tagClass } from './cards';

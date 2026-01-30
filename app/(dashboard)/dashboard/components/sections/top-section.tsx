@@ -1,8 +1,8 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { CardWeather } from './card-weather';
-import { CardFunFact } from './card-fun-fact';
-import CardUser from './card-user';
-import CardEmpty from './card-empty';
+import { CardWeather } from '../cards/card-weather';
+import { CardFunFact } from '../cards/card-fun-fact';
+import CardUser from '../cards/card-user';
+import CardEmpty from '../cards/card-empty';
 import { LocationProps, UserNameEmailImage } from '@/lib/types';
 
 export default function DashboardTopSection({

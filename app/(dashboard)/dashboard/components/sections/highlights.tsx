@@ -1,4 +1,4 @@
-import CardDivulgation from './card-divulgation';
+import CardDivulgation from '../cards/card-divulgation';
 
 export default function DashboardFeatureHighlights() {
   return (

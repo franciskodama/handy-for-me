@@ -39,7 +39,7 @@ export async function addShortcutCategory({
     });
     return true;
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return false;
   }
 }
@@ -53,7 +53,7 @@ export async function deleteShortcutCategory(id: string) {
     });
     return true;
   } catch (error) {
-    console.log(error);
+    console.error(error);
     throw new Error('🚨 Failed to delete Shortcut');
   }
 }
@@ -82,7 +82,7 @@ export async function updateShortcutCategory({
     });
     return true;
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return false;
   }
 }

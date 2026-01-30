@@ -76,6 +76,7 @@ export default function BucketList({
   const [openAction, setOpenAction] = useState(false);
   const [showShuffleInfo, setShowShuffleInfo] = useState(false);
   const [board, setBoard] = useState<BucketListItem[][]>([]);
+  const [filter, setFilter] = useState<'all' | 'done' | 'not-done'>('all');
 
   const {
     register,
@@ -118,8 +119,14 @@ export default function BucketList({
   };
 
   const organizeBoardByCategory = (bucketList: BucketListItem[]) => {
+    const filteredList = bucketList.filter((item) => {
+      if (filter === 'done') return item.done;
+      if (filter === 'not-done') return !item.done;
+      return true;
+    });
+
     const organizedBoard: BucketListItem[][] = Object.values(
-      bucketList.reduce(
+      filteredList.reduce(
         (acc: Record<string, BucketListItem[]>, curr: BucketListItem) => {
           if (acc[curr.category]) {
             acc[curr.category].push(curr);
@@ -149,10 +156,10 @@ export default function BucketList({
   const boardByCategory = organizeBoardByCategory(bucketList);
 
   useEffect(() => {
-    if (boardByCategory) {
-      setBoard(boardByCategory);
-    }
-  }, []);
+    // We need to re-organize the board whenever the filter changes
+    // or when the initial bucketList is loaded.
+    setBoard(organizeBoardByCategory(bucketList));
+  }, [filter, bucketList]);
 
   const handleDeleteItem = async (el: BucketListItem) => {
     try {
@@ -236,8 +243,42 @@ export default function BucketList({
                 {!openAction ? <Help setOpenAction={setOpenAction} /> : <div />}
               </div>
             </div>
+
+            <div className="flex gap-2 mt-4">
+              <button
+                onClick={() => setFilter('all')}
+                className={`text-xs px-3 py-1 rounded-full border transition-colors ${
+                  filter === 'all'
+                    ? 'bg-primary text-primary-foreground border-primary'
+                    : 'bg-background hover:bg-muted text-muted-foreground border-border'
+                }`}
+              >
+                All
+              </button>
+              <button
+                onClick={() => setFilter('not-done')}
+                className={`text-xs px-3 py-1 rounded-full border transition-colors ${
+                  filter === 'not-done'
+                    ? 'bg-primary text-primary-foreground border-primary'
+                    : 'bg-background hover:bg-muted text-muted-foreground border-border'
+                }`}
+              >
+                To Do
+              </button>
+              <button
+                onClick={() => setFilter('done')}
+                className={`text-xs px-3 py-1 rounded-full border transition-colors ${
+                  filter === 'done'
+                    ? 'bg-primary text-primary-foreground border-primary'
+                    : 'bg-background hover:bg-muted text-muted-foreground border-border'
+                }`}
+              >
+                Done
+              </button>
+            </div>
+
             <p
-              className={`${barlow.className} text-sm font-normal lowercase mt-2`}
+              className={`${barlow.className} text-sm font-normal lowercase mt-4`}
             >
               <span className="uppercase">A</span>
               dd, explore, and cross off your next adventure.

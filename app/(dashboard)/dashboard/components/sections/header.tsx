@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import Help from '@/components/common/Help';
-import DashboardExplanation from './dashboard-explanation';
+import DashboardExplanation from '../explanation';
 import { AnimatePresence, motion } from 'framer-motion';
 
 export default function DashboardHeader() {

@@ -175,6 +175,7 @@ export default function DecisionHelper({
         spread: 55,
         origin: { x: 1 }
       });
+      setTimeout(() => confetti.reset(), 3000); // Reset confetti after 3 seconds
     }, 2000);
   };
 
