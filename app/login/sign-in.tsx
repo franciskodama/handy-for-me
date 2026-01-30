@@ -19,7 +19,7 @@ export function SignIn() {
       password,
       redirect: true
     });
-    if (result) redirect('/in');
+    if (result) redirect('/dashboard');
 
     // if (result?.error) {
     //   console.error('Sign-in error:', result.error);

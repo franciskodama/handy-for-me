@@ -22,7 +22,7 @@ import Greeting from './header/greeting';
 import { Toaster } from '@/components/ui/toaster';
 import { NavItem } from '@/components/NavItem';
 import { SearchInput } from './header/search';
-import CardDivulgationHelp from './in/card-divulgation-help';
+import CardDivulgationHelp from './dashboard/card-divulgation-help';
 import Footer from '@/components/Footer';
 import { menuItems } from '@/lib/menu';
 import { Menu } from 'lucide-react';
