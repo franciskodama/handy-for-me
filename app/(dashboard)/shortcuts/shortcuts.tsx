@@ -189,7 +189,7 @@ export default function Shortcuts({
         <div className="flex flex-col sm:flex-row w-full gap-8 mb-12">
           {board.map((groupOfShortcuts: Shortcut[]) => (
             <div key={groupOfShortcuts[0].categoryId} className="sm:w-1/5">
-              <div className="flex items-center justify-between pr-4 group">
+              <div className="flex items-center justify-between group">
                 <h3
                   className={`${kumbh_sans.className} w-full text-left text-sm font-semibold text-primary px-4 py-3 my-2 uppercase leading-none`}
                   style={getColorCode(
