@@ -58,6 +58,35 @@ export async function deleteShortcutCategory(id: string) {
   }
 }
 
+export async function updateShortcutCategory({
+  id,
+  uid,
+  category,
+  colorUppperCase
+}: {
+  id: string;
+  uid: string;
+  category: string;
+  colorUppperCase: shortcut_color_enum;
+}) {
+  try {
+    await prisma.shortcutCategory.update({
+      where: {
+        id
+      },
+      data: {
+        uid,
+        category,
+        color: colorUppperCase
+      }
+    });
+    return true;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+}
+
 export const getShortcuts = async (uid: string) => {
   try {
     const shortcuts = await prisma.shortcut.findMany({

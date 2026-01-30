@@ -8,10 +8,12 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
   Sheet,
-  SheetClose,
   SheetContent,
+  SheetDescription,
+  SheetTitle,
   SheetTrigger
 } from '@/components/ui/sheet';
+import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 import {
   Select,
   SelectContent,
@@ -32,6 +34,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import { kumbh_sans } from '@/app/ui/fonts';
 import { ShortcutCategory } from '@/lib/types';
+import { EditCategory } from './edit-category';
 import { toast } from '@/hooks/use-toast';
 import {
   addShortcutCategory,
@@ -170,6 +173,12 @@ export function AddCategory({
       </SheetTrigger>
       <SheetContent side="right" className="sm:max-w-xs mt-8 gap-8">
         <div className="flex flex-col gap-2 my-8">
+          <VisuallyHidden>
+            <SheetTitle>Add Category</SheetTitle>
+            <SheetDescription>
+              Organize your content with categories.
+            </SheetDescription>
+          </VisuallyHidden>
           <h2 className={`${kumbh_sans.className} text-lg uppercase font-bold`}>
             Add Category
           </h2>
@@ -268,44 +277,52 @@ export function AddCategory({
                     {category.category}
                   </p>
                 </div>
-                <AlertDialog>
-                  <AlertDialogTrigger>
-                    <Trash2 size={18} strokeWidth={1.8} color="black" />
-                  </AlertDialogTrigger>
-                  <AlertDialogContent className="w-[calc(100%-35px)]">
-                    <AlertDialogHeader>
-                      <AlertDialogTitle className="flex items-center gap-2">
-                        <Bomb size={24} strokeWidth={1.8} />
-                        Are you absolutely sure?
-                      </AlertDialogTitle>
-                      <AlertDialogDescription className="py-4">
-                        This will permanently delete this Category
-                        <span className="font-bold mx-1">
-                          {category.category}
-                        </span>
-                        from our servers.
-                      </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                      <AlertDialogCancel
-                        onClick={() => {
-                          toast({
-                            title: 'Operation Cancelled! ❌',
-                            description: `Phew! 😮‍💨 Crisis averted. You successfully cancelled the operation.`,
-                            variant: 'destructive'
-                          });
-                        }}
-                      >
-                        Cancel
-                      </AlertDialogCancel>
-                      <AlertDialogAction
-                        onClick={() => handleDeleteCategory(category)}
-                      >
-                        Continue
-                      </AlertDialogAction>
-                    </AlertDialogFooter>
-                  </AlertDialogContent>
-                </AlertDialog>
+                <div className="flex items-center gap-2">
+                  <EditCategory
+                    uid={uid}
+                    category={category}
+                    currentCategories={currentCategories}
+                    setCurrentCategoriesAction={setCurrentCategoriesAction}
+                  />
+                  <AlertDialog>
+                    <AlertDialogTrigger>
+                      <Trash2 size={18} strokeWidth={1.8} color="black" />
+                    </AlertDialogTrigger>
+                    <AlertDialogContent className="w-[calc(100%-35px)]">
+                      <AlertDialogHeader>
+                        <AlertDialogTitle className="flex items-center gap-2">
+                          <Bomb size={24} strokeWidth={1.8} />
+                          Are you absolutely sure?
+                        </AlertDialogTitle>
+                        <AlertDialogDescription className="py-4">
+                          This will permanently delete this Category
+                          <span className="font-bold mx-1">
+                            {category.category}
+                          </span>
+                          from our servers.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel
+                          onClick={() => {
+                            toast({
+                              title: 'Operation Cancelled! ❌',
+                              description: `Phew! 😮‍💨 Crisis averted. You successfully cancelled the operation.`,
+                              variant: 'destructive'
+                            });
+                          }}
+                        >
+                          Cancel
+                        </AlertDialogCancel>
+                        <AlertDialogAction
+                          onClick={() => handleDeleteCategory(category)}
+                        >
+                          Continue
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
+                </div>
               </div>
             ))
           ) : (
