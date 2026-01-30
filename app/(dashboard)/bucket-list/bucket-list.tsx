@@ -74,6 +74,7 @@ export default function BucketList({
   bucketList: BucketListItem[];
 }) {
   const [openAction, setOpenAction] = useState(false);
+  const [showShuffleInfo, setShowShuffleInfo] = useState(false);
   const [board, setBoard] = useState<BucketListItem[][]>([]);
 
   const {
@@ -347,12 +348,27 @@ export default function BucketList({
           </div>
         )}
 
-        <div className="flex items-center justify-center gap-2 w-full mt-8">
-          <Shuffle size={18} strokeWidth={1.4} />
-          <p className="text-sm italic">
-            Categories dynamically reorder as you add adventures, always
-            grouping from the most populated categories first.
-          </p>
+        <div className="flex flex-col items-center justify-center gap-2 w-full mt-8">
+          <Button
+            variant="ghost"
+            onClick={() => setShowShuffleInfo((prev) => !prev)}
+            className="hover:bg-transparent"
+          >
+            <Shuffle size={18} strokeWidth={1.4} />
+          </Button>
+          <AnimatePresence>
+            {showShuffleInfo && (
+              <motion.p
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                className="text-sm italic text-center text-muted-foreground max-w-md"
+              >
+                Categories dynamically reorder as you add adventures, always
+                grouping from the most populated categories first.
+              </motion.p>
+            )}
+          </AnimatePresence>
         </div>
 
         <div className="flex flex-wrap w-full justify-center gap-8 mt-8 mb-12">
