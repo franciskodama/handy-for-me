@@ -20,7 +20,7 @@ import {
 import { kumbh_sans } from '@/app/ui/fonts';
 import { Shortcut, ShortcutCategory } from '@/lib/types';
 import { toast } from '@/hooks/use-toast';
-import { addShortcut, getShortcuts } from '@/lib/actions';
+import { addShortcut, getShortcuts } from '@/lib/actions/shortcuts';
 
 type FormErrors = {
   shortcut?: string;

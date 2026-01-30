@@ -50,7 +50,7 @@ import {
   deleteDecisionHelperItem,
   deleteDecisionHelperList,
   selectionDecisionHelperItem
-} from '@/lib/actions';
+} from '@/lib/actions/decision-helper';
 import { Checkbox } from '@/components/ui/checkbox';
 import { kumbh_sans } from '@/app/ui/fonts';
 import Help from '@/components/Help';

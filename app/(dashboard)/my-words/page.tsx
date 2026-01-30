@@ -2,7 +2,7 @@ import { auth } from '@/lib/auth';
 import {
   getAllDecisionHelperItems,
   getDecisionHelperLists
-} from '@/lib/actions';
+} from '@/lib/actions/decision-helper';
 import { DecisionHelperItem, DecisionHelperList } from '@/lib/types';
 import MyWords from './my-words';
 import SignInPrompt from '@/components/SignInPrompt';

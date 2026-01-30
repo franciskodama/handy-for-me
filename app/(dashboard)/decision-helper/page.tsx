@@ -2,7 +2,7 @@ import { auth } from '@/lib/auth';
 import {
   getAllDecisionHelperItems,
   getDecisionHelperLists
-} from '@/lib/actions';
+} from '@/lib/actions/decision-helper';
 import { DecisionHelperItem, DecisionHelperList } from '@/lib/types';
 import DecisionHelper from './decision-helper';
 import SignInPrompt from '@/components/SignInPrompt';
@@ -27,7 +27,5 @@ export default async function DecisionHelperPage() {
     items = fetchedItems;
   }
 
-  return (
-    <DecisionHelper uid={uid} initialLists={lists} initialItems={items} />
-  );
+  return <DecisionHelper uid={uid} initialLists={lists} initialItems={items} />;
 }

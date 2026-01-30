@@ -37,7 +37,7 @@ import {
   addShortcutCategory,
   deleteShortcutCategory,
   getShortcutsCategories
-} from '@/lib/actions';
+} from '@/lib/actions/shortcuts';
 import { colors } from '@/lib/utils';
 
 type Color = {

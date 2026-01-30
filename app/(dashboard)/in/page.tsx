@@ -2,11 +2,9 @@ import { auth } from '@/lib/auth';
 import In from './in';
 import { getWeather } from '@/lib/weather.server';
 import { getUserLocation } from '@/lib/location.server';
-import {
-  getBucketListItems,
-  getShortcuts,
-  getVisualBoardItems
-} from '@/lib/actions';
+import { getBucketListItems } from '@/lib/actions/bucket-list';
+import { getShortcuts } from '@/lib/actions/shortcuts';
+import { getVisualBoardItems } from '@/lib/actions/visual-board';
 import SignInPrompt from '@/components/SignInPrompt';
 
 export default async function InPage() {

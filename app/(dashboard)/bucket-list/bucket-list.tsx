@@ -39,7 +39,7 @@ import {
   deleteBucketListItem,
   getBucketListItems,
   setBucketListItemDone
-} from '@/lib/actions';
+} from '@/lib/actions/bucket-list';
 import { barlow, kumbh_sans } from '@/app/ui/fonts';
 import { toast } from '@/hooks/use-toast';
 import ExplanationBucketList from './explanation-bucket-list';

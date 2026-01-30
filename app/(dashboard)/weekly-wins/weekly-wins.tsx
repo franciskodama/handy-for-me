@@ -34,7 +34,7 @@ import {
   deleteWeeklyWin,
   getWeeklyWins,
   setWeeklyWinDone
-} from '@/lib/actions';
+} from '@/lib/actions/weekly-wins';
 import MessageEmpty from '@/components/MessageEmpty';
 import { Input } from '@/components/ui/input';
 import ExplanationWeeklyWins from './explanation-weekly-wins';

@@ -2,7 +2,7 @@ import NextAuth from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
 import { signInSchema } from '@/lib/zod';
 import { ZodError } from 'zod';
-import { getUser } from './actions';
+import { getUser } from './actions/user';
 import { saltAndHashPassword } from './passwords';
 import { authConfig } from './auth.config';
 

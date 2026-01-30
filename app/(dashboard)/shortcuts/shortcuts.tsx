@@ -32,7 +32,7 @@ import ExplanationShortcuts from './explanation-shortcuts';
 import { AddShortcut } from './add-shortcut';
 import { AddCategory } from './add-category';
 import { Button } from '@/components/ui/button';
-import { deleteShortcut } from '@/lib/actions';
+import { deleteShortcut } from '@/lib/actions/shortcuts';
 import { getColorCode } from '@/lib/utils';
 import MessageEmpty from '@/components/MessageEmpty';
 
