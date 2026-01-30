@@ -291,13 +291,10 @@ export async function addBucketListItem(
         done: false
       }
     });
-    return { success: true, item: newItem };
+    return newItem;
   } catch (error) {
     console.error('Error adding Bucket List item:', error);
-    return {
-      success: false,
-      error: JSON.stringify(error, Object.getOwnPropertyNames(error))
-    };
+    return false;
   }
 }
 
