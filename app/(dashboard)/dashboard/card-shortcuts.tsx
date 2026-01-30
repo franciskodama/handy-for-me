@@ -21,7 +21,7 @@ export default function CardShortcuts({
                   className="text-sm sm:text-base px-2 py-1 font-semibold"
                   style={getColorCode(el.category?.color ?? 'grey')}
                 >
-                  {el.shortcut}
+                  {el.shortcut.toUpperCase()}
                 </p>
               </Link>
             </div>

@@ -27,10 +27,10 @@ import CardShortcuts from './card-shortcuts';
 import CardEmpty from './card-empty';
 import CardDivulgation from './card-divulgation';
 import CardDivulgationHelp from './card-divulgation-help';
-import ExplanationIn from './explanation-in';
+import DashboardExplanation from './dashboard-explanation';
 import Help from '@/components/Help';
 
-export default function In({
+export default function DashboardView({
   user,
   location,
   weather,
@@ -68,7 +68,7 @@ export default function In({
               exit={{ opacity: 0, scale: 0.5, transition: { duration: 0.2 } }}
             >
               <div className="mb-12">
-                <ExplanationIn setOpenAction={setOpenAction} />
+                <DashboardExplanation setOpenAction={setOpenAction} />
               </div>
             </motion.div>
           ) : null}

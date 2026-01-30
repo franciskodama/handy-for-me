@@ -1,5 +1,5 @@
 import { auth } from '@/lib/auth';
-import In from './in';
+import DashboardView from './dashboard-view';
 import { getWeather } from '@/lib/weather.server';
 import { getUserLocation } from '@/lib/location.server';
 import { getBucketListItems } from '@/lib/actions/bucket-list';
@@ -7,7 +7,9 @@ import { getShortcuts } from '@/lib/actions/shortcuts';
 import { getVisualBoardItems } from '@/lib/actions/visual-board';
 import SignInPrompt from '@/components/SignInPrompt';
 
-export default async function InPage() {
+import { LocationProps } from '@/lib/types';
+
+export default async function DashboardPage() {
   const session = await auth();
   const user = session?.user;
 
@@ -15,19 +17,21 @@ export default async function InPage() {
     return <SignInPrompt />;
   }
 
-  const location: any | null = await getUserLocation();
+  const [visionBoardItems, bucketListItems, shortcutsItems, location] =
+    await Promise.all([
+      getVisualBoardItems(user?.email ?? ''),
+      getBucketListItems(user?.email ?? ''),
+      getShortcuts(user?.email ?? ''),
+      getUserLocation() as Promise<LocationProps | null>
+    ]);
 
   let weather;
   if (location) {
     weather = await getWeather(location.city);
   }
 
-  const visionBoardItems = await getVisualBoardItems(user?.email ?? '');
-  const bucketListItems = await getBucketListItems(user?.email ?? '');
-  const shortcutsItems = await getShortcuts(user?.email ?? '');
-
   return (
-    <In
+    <DashboardView
       user={user}
       location={location}
       weather={weather}

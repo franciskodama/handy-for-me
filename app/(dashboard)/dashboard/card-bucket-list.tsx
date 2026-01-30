@@ -24,7 +24,7 @@ export default function CardBucketList({
                 className="text-sm sm:text-base px-1 py-1 font-semibold"
                 style={getColorCodes(el.category)}
               >
-                {el.item}
+                {el.item.toUpperCase()}
               </p>
             </div>
           ))}
