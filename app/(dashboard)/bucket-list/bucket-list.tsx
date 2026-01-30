@@ -371,7 +371,7 @@ export default function BucketList({
           </AnimatePresence>
         </div>
 
-        <div className="flex flex-wrap w-full justify-center gap-8 mt-8 mb-12">
+        <div className="flex flex-wrap w-full  gap-8 mt-8 mb-12">
           {board.map((categoryArray: BucketListItem[]) => (
             <div key={categoryArray[0].category} className="w-full sm:w-[30ch]">
               <h3
