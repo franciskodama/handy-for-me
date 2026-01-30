@@ -25,7 +25,7 @@ import {
   AlertDialogTrigger
 } from '@/components/ui/alert-dialog';
 import { Shortcut, ShortcutCategory } from '@/lib/types';
-import Help from '@/components/Help';
+import Help from '@/components/common/Help';
 import { toast } from '@/hooks/use-toast';
 import { barlow, kumbh_sans } from '@/app/ui/fonts';
 import ExplanationShortcuts from './explanation-shortcuts';

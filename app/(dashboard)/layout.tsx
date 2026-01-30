@@ -14,16 +14,16 @@ import {
   TooltipProvider,
   TooltipTrigger
 } from '@/components/ui/tooltip';
-import { User } from './header/user';
+import { User } from '@/components/layout/header/user';
 import Providers from './providers';
-import PencilBanner from './header/pencil-banner';
-import { DashboardBreadcrumb } from './header/breadcrumb';
-import Greeting from './header/greeting';
+import PencilBanner from '@/components/layout/header/pencil-banner';
+import { DashboardBreadcrumb } from '@/components/layout/header/breadcrumb';
+import Greeting from '@/components/layout/header/greeting';
 import { Toaster } from '@/components/ui/toaster';
 import { NavItem } from '@/components/NavItem';
-import { SearchInput } from './header/search';
+import { SearchInput } from '@/components/layout/header/search';
 import CardDivulgationHelp from './dashboard/card-divulgation-help';
-import Footer from '@/components/Footer';
+import Footer from '@/components/layout/Footer';
 import { menuItems } from '@/lib/menu';
 import { Menu } from 'lucide-react';
 

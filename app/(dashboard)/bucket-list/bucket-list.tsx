@@ -43,7 +43,7 @@ import {
 import { barlow, kumbh_sans } from '@/app/ui/fonts';
 import { toast } from '@/hooks/use-toast';
 import ExplanationBucketList from './explanation-bucket-list';
-import Help from '@/components/Help';
+import Help from '@/components/common/Help';
 import MessageEmpty from '@/components/MessageEmpty';
 
 type Category = {

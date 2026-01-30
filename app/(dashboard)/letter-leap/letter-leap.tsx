@@ -22,7 +22,7 @@ import {
 
 import { Button } from '@/components/ui/button';
 import ExplanationLetterLeap from './explanation-letter-leap';
-import Help from '@/components/Help';
+import Help from '@/components/common/Help';
 
 export default function LetterLeap({ name }: { name: string }) {
   const [result, setResult] = useState<string>('');

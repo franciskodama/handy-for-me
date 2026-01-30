@@ -23,7 +23,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger
 } from '@/components/ui/alert-dialog';
-import Help from '@/components/Help';
+import Help from '@/components/common/Help';
 import { barlow } from '@/app/ui/fonts';
 import ExplanationStoicSupport from './explanation-stoic-support';
 import {
@@ -111,9 +111,9 @@ export default function StoicSupport({ name }: { name: string }) {
         <div className="flex flex-wrap justify-center gap-4 w-full sm:w-auto mb-12">
           {sortedStoicResponses.map((el: Category) => (
             <div key={el.category}>
-              <AccordionByButtons type="single" collapsible className="">
+              <AccordionByButtons type="single" collapsible>
                 <AccordionItem value="item-1" className="border-0">
-                  <AccordionTrigger className="text-left w-[20em]">
+                  <AccordionTrigger className="text-left w-[20em] h-[3.8em]">
                     {getIcon(el.category, 'accordion')}
                     {el.category}
                   </AccordionTrigger>

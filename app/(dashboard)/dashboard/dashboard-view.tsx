@@ -28,7 +28,7 @@ import CardEmpty from './card-empty';
 import CardDivulgation from './card-divulgation';
 import CardDivulgationHelp from './card-divulgation-help';
 import DashboardExplanation from './dashboard-explanation';
-import Help from '@/components/Help';
+import Help from '@/components/common/Help';
 
 export default function DashboardView({
   user,
