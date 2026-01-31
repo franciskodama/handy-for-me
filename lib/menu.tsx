@@ -8,7 +8,8 @@ import {
   MessageCircleQuestion,
   RefreshCw,
   Trophy,
-  HandHeart
+  HandHeart,
+  Flag
 } from 'lucide-react';
 
 export const menuItems = [
@@ -36,6 +37,11 @@ export const menuItems = [
     label: 'Weekly Wins',
     href: '/weekly-wins',
     icon: <Trophy className="h-5 w-5" />
+  },
+  {
+    label: 'Promises',
+    href: '/promises',
+    icon: <Flag className="h-5 w-5" />
   },
   {
     label: 'Decision Helper',
