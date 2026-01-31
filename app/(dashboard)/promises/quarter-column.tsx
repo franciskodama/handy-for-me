@@ -14,13 +14,15 @@ export function QuarterColumn({
   title,
   promises,
   updateProgress,
-  onDelete
+  onDelete,
+  isCurrentYear
 }: {
   id: string;
   title: string;
   promises: YearPromise[];
   updateProgress?: (id: string, progress: number) => void;
   onDelete?: (id: string) => void;
+  isCurrentYear?: boolean;
 }) {
   const { setNodeRef } = useDroppable({
     id
@@ -34,7 +36,7 @@ export function QuarterColumn({
     return 'Q4';
   };
 
-  const isActive = title === getActiveQuarter();
+  const isActive = isCurrentYear && title === getActiveQuarter();
 
   return (
     <div

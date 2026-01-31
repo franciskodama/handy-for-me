@@ -4,10 +4,17 @@ import prisma from '@/lib/prisma';
 import { YearPromise } from '@/lib/types';
 import { revalidatePath } from 'next/cache';
 
-export async function getYearPromises(uid: string): Promise<YearPromise[]> {
+export async function getYearPromises(
+  uid: string,
+  year?: number
+): Promise<YearPromise[]> {
   try {
+    const whereClause: any = { uid };
+    if (year) {
+      whereClause.year = year;
+    }
     const promises = await prisma.yearPromise.findMany({
-      where: { uid },
+      where: whereClause,
       orderBy: { createdAt: 'desc' }
     });
     return promises as YearPromise[];
@@ -20,7 +27,8 @@ export async function getYearPromises(uid: string): Promise<YearPromise[]> {
 export async function addYearPromise(
   uid: string,
   title: string,
-  quarter: string
+  quarter: string,
+  year: number
 ) {
   try {
     const newPromise = await prisma.yearPromise.create({
@@ -28,6 +36,7 @@ export async function addYearPromise(
         uid,
         title,
         quarter,
+        year,
         progress: 0,
         done: false
       }

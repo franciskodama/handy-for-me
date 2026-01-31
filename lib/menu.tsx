@@ -39,7 +39,7 @@ export const menuItems = [
     icon: <Trophy className="h-5 w-5" />
   },
   {
-    label: 'Promises',
+    label: 'Yearly Promises',
     href: '/promises',
     icon: <Flag className="h-5 w-5" />
   },

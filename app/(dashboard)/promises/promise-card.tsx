@@ -69,6 +69,7 @@ export function PromiseCard({
         <div
           {...attributes}
           {...listeners}
+          data-html2canvas-ignore
           className="cursor-grab active:cursor-grabbing p-1 -ml-2 text-muted-foreground hover:text-primary transition-colors"
         >
           <GripVertical size={18} />
@@ -114,7 +115,7 @@ export function PromiseCard({
 
         {!isOverlay && (
           <AlertDialog>
-            <AlertDialogTrigger asChild>
+            <AlertDialogTrigger asChild data-html2canvas-ignore>
               <Button
                 variant="ghost"
                 size="icon"

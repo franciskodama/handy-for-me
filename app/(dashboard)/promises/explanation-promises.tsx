@@ -9,8 +9,8 @@ export default function ExplanationPromises({
   const contentOne = (
     <>
       <p>
-        Promises for the Year is your strategic roadmap. It helps you break down
-        your big yearly ambitions into manageable phases by organizing them into
+        Yearly Promises is your strategic roadmap. It helps you break down your
+        big yearly ambitions into manageable phases by organizing them into
         quarters (Q1 to Q4).
       </p>
       <p>

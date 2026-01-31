@@ -99,6 +99,7 @@ export type YearPromise = {
   updatedAt: Date;
   uid: string;
   title: string;
+  year: number;
   quarter: string;
   progress: number;
   done: boolean;
