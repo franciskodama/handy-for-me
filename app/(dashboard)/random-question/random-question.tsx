@@ -24,7 +24,7 @@ import {
 } from './questions';
 import { Button } from '@/components/ui/button';
 import { MobileResultDialog } from './mobile-result';
-import Help from '@/components/Help';
+import Help from '@/components/common/Help';
 import ExplanationRandomQuestion from './explanation-random-question';
 import Countdown from './countdown';
 import Result from './result';

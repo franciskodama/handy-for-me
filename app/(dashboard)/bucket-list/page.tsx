@@ -1,5 +1,5 @@
 import { auth } from '@/lib/auth';
-import { getBucketListItems } from '@/lib/actions';
+import { getBucketListItems } from '@/lib/actions/bucket-list';
 import BucketList from './bucket-list';
 import SignInPrompt from '@/components/SignInPrompt';
 

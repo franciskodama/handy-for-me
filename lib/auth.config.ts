@@ -1,21 +1,16 @@
-// auth.config.ts (New File - Does NOT import the database logic)
-
 import type { NextAuthConfig } from 'next-auth';
 import GitHub from 'next-auth/providers/github';
 import Google from 'next-auth/providers/google';
 
 export const authConfig = {
-  // 1. Session Strategy: JWT is correct for Edge
-  session: { strategy: 'jwt' },
+  session: {
+    strategy: 'jwt',
+    maxAge: 30 * 24 * 60 * 60 // 30 days sign out
+  },
 
-  // 2. Add OAuth providers (they don't use the database in middleware)
-  providers: [
-    GitHub,
-    Google
-    // 🛑 Credentials provider is OMITTED here 🛑
-  ]
+  providers: [GitHub, Google]
 
-  // You might need to add pages config if you have custom login pages
+  // We might need to add pages config if we have custom login pages in the future
   // pages: {
   //   signIn: '/login',
   //   error: '/auth/error',

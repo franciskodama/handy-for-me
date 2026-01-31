@@ -1,4 +1,4 @@
-import { getWeeklyWins } from '@/lib/actions';
+import { getWeeklyWins } from '@/lib/actions/weekly-wins';
 import { auth } from '@/lib/auth';
 import WeeklyWins from './weekly-wins';
 import SignInPrompt from '@/components/SignInPrompt';

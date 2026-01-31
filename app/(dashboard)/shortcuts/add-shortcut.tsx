@@ -8,8 +8,11 @@ import {
   Sheet,
   SheetClose,
   SheetContent,
+  SheetDescription,
+  SheetTitle,
   SheetTrigger
 } from '@/components/ui/sheet';
+import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 import {
   Select,
   SelectContent,
@@ -20,7 +23,7 @@ import {
 import { kumbh_sans } from '@/app/ui/fonts';
 import { Shortcut, ShortcutCategory } from '@/lib/types';
 import { toast } from '@/hooks/use-toast';
-import { addShortcut, getShortcuts } from '@/lib/actions';
+import { addShortcut, getShortcuts } from '@/lib/actions/shortcuts';
 
 type FormErrors = {
   shortcut?: string;
@@ -128,6 +131,13 @@ export function AddShortcut({
       </SheetTrigger>
       <SheetContent side="right" className="sm:max-w-xs mt-8 gap-8">
         <div className="flex flex-col gap-2 my-8">
+          <VisuallyHidden>
+            <SheetTitle>Add Your Shortcut</SheetTitle>
+            <SheetDescription>
+              Store your go-to websites and categorize them with a personal
+              touch.
+            </SheetDescription>
+          </VisuallyHidden>
           <h2 className={`${kumbh_sans.className} text-lg uppercase font-bold`}>
             Add Your Shortcut
           </h2>

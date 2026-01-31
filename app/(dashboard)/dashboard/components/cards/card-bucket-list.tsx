@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { tagClass } from './cards';
 import { BucketListItem } from '@/lib/types';
 import { Button } from '@/components/ui/button';
-import { bucketListCategories } from '../bucket-list/bucket-list';
+import { bucketListCategories } from '@/app/(dashboard)/bucket-list/bucket-list';
 
 export default function CardBucketList({
   bucketListItems
@@ -24,7 +24,7 @@ export default function CardBucketList({
                 className="text-sm sm:text-base px-1 py-1 font-semibold"
                 style={getColorCodes(el.category)}
               >
-                {el.item}
+                {el.item.toUpperCase()}
               </p>
             </div>
           ))}

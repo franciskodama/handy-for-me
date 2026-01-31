@@ -60,20 +60,6 @@ model ShortcutCategory {
   shortcuts Shortcut[]
 }
 
-enum shortcut_color_enum {
-  BLUE
-  GREEN
-  RED
-  YELLOW
-  PURPLE
-  ORANGE
-  PINK
-  TEAL
-  GRAY
-  BROWN
-  BLACK
-}
-
 model Shortcut {
   id        String   @id @default(uuid()) @db.VarChar(255)
   createdAt DateTime @default(now()) @db.Timestamp(6)
@@ -92,4 +78,30 @@ model WeeklyWin {
   goal      String   
   type      String
   done      Boolean
+}
+
+model YearPromise {
+  id        String   @id @default(uuid()) @db.VarChar(255)
+  createdAt DateTime @default(now()) @db.Timestamp(6)
+  updatedAt DateTime @updatedAt
+  uid       String   
+  title     String   
+  year      Int      @default(2025)
+  quarter   String   
+  progress  Int      @default(0)
+  done      Boolean  @default(false)
+}
+
+enum shortcut_color_enum {
+  BLUE
+  GREEN
+  RED
+  YELLOW
+  PURPLE
+  ORANGE
+  PINK
+  TEAL
+  GRAY
+  BROWN
+  BLACK
 }

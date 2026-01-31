@@ -14,18 +14,18 @@ import {
   TooltipProvider,
   TooltipTrigger
 } from '@/components/ui/tooltip';
-import { User } from './header/user';
+import { User } from '@/components/layout/header/user';
 import Providers from './providers';
-import PencilBanner from './header/pencil-banner';
-import { DashboardBreadcrumb } from './header/breadcrumb';
-import Greeting from './header/greeting';
+import PencilBanner from '@/components/layout/header/pencil-banner';
+import { DashboardBreadcrumb } from '@/components/layout/header/breadcrumb';
+import Greeting from '@/components/layout/header/greeting';
 import { Toaster } from '@/components/ui/toaster';
 import { NavItem } from '@/components/NavItem';
-import { SearchInput } from './header/search';
-import CardDivulgationHelp from './in/card-divulgation-help';
-import Footer from '@/components/Footer';
+import { SearchInput } from '@/components/layout/header/search';
+import Footer from '@/components/layout/Footer';
 import { menuItems } from '@/lib/menu';
 import { Menu } from 'lucide-react';
+import CardDivulgationHelp from './dashboard/components/cards/card-divulgation-help';
 
 export default function DashboardLayout({
   children
@@ -131,13 +131,9 @@ export function DesktopNav() {
       <nav className="mt-auto flex flex-col items-center gap-4 px-2 sm:py-5">
         <Tooltip>
           <TooltipTrigger asChild>
-            <Link
-              href="#"
-              className="flex h-9 w-9 items-center justify-center text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
-            >
+            <div className="flex h-9 w-9 items-center justify-center text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8 cursor-pointer">
               <CardDivulgationHelp />
-              <span className="sr-only">Need a hand?</span>
-            </Link>
+            </div>
           </TooltipTrigger>
           <TooltipContent side="right">Need a hand?</TooltipContent>
         </Tooltip>

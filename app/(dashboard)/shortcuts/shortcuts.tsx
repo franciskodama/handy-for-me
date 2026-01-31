@@ -25,14 +25,15 @@ import {
   AlertDialogTrigger
 } from '@/components/ui/alert-dialog';
 import { Shortcut, ShortcutCategory } from '@/lib/types';
-import Help from '@/components/Help';
+import Help from '@/components/common/Help';
 import { toast } from '@/hooks/use-toast';
 import { barlow, kumbh_sans } from '@/app/ui/fonts';
 import ExplanationShortcuts from './explanation-shortcuts';
 import { AddShortcut } from './add-shortcut';
 import { AddCategory } from './add-category';
+
 import { Button } from '@/components/ui/button';
-import { deleteShortcut } from '@/lib/actions';
+import { deleteShortcut } from '@/lib/actions/shortcuts';
 import { getColorCode } from '@/lib/utils';
 import MessageEmpty from '@/components/MessageEmpty';
 
@@ -188,21 +189,20 @@ export default function Shortcuts({
         <div className="flex flex-col sm:flex-row w-full gap-8 mb-12">
           {board.map((groupOfShortcuts: Shortcut[]) => (
             <div key={groupOfShortcuts[0].categoryId} className="sm:w-1/5">
-              <h3
-                className={`${kumbh_sans.className} text-left text-sm font-semibold text-primary px-4 py-3 my-2 uppercase leading-none`}
-                style={getColorCode(
-                  groupOfShortcuts[0].category?.color ?? 'grey'
-                )}
-              >
-                {groupOfShortcuts[0].category?.category}
-              </h3>
+              <div className="flex items-center justify-between group">
+                <h3
+                  className={`${kumbh_sans.className} w-full text-left text-sm font-semibold text-primary px-4 py-3 my-2 uppercase leading-none`}
+                  style={getColorCode(
+                    groupOfShortcuts[0].category?.color ?? 'grey'
+                  )}
+                >
+                  {groupOfShortcuts[0].category?.category}
+                </h3>
+              </div>
 
               {groupOfShortcuts.map((shortcut: Shortcut) => (
-                <>
-                  <div
-                    key={shortcut.id}
-                    className="flex border border-primary mt-2"
-                  >
+                <div key={shortcut.id}>
+                  <div className="flex border border-primary mt-2">
                     <div className="w-full px-4 py-3">
                       <Link
                         href={shortcut.url}
@@ -305,7 +305,7 @@ export default function Shortcuts({
                       </motion.div>
                     ) : null}
                   </AnimatePresence>
-                </>
+                </div>
               ))}
             </div>
           ))}

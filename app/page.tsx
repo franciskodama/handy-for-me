@@ -1,4 +1,4 @@
-import { addUser } from '@/lib/actions';
+import { addUser } from '@/lib/actions/user';
 import { auth } from '@/lib/auth';
 import { redirect } from 'next/navigation';
 
@@ -13,5 +13,5 @@ export default async function HomePage() {
     await addUser(email, name, image);
   }
 
-  return <div>{user ? redirect('/in') : redirect('/login')}</div>;
+  return <div>{user ? redirect('/dashboard') : redirect('/login')}</div>;
 }

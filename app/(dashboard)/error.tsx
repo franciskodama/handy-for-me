@@ -1,8 +1,9 @@
 'use client';
 
-import { kumbh_sans } from 'app/ui/fonts';
-import Image from 'next/image';
 import { useEffect } from 'react';
+import Image from 'next/image';
+
+import { kumbh_sans } from 'app/ui/fonts';
 
 export default function Error({
   error
@@ -10,7 +11,7 @@ export default function Error({
   error: Error & { digest?: string };
 }) {
   useEffect(() => {
-    console.error(error);
+    console.error('Error boundary caught:', error.message);
   }, [error]);
 
   return (
@@ -21,7 +22,7 @@ export default function Error({
         </h1>
         {error && (
           <pre className="my-4 px-3 py-6 bg-black text-white max-w-2xl overflow-scroll flex text-wrap">
-            {`${error} `}{' '}
+            {`${error.message} `}{' '}
             <p>
               <br />
               ¯\_(ツ)_/¯

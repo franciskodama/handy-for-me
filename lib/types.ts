@@ -92,3 +92,15 @@ export type WeeklyWin = {
   type: string;
   done: boolean;
 };
+
+export type YearPromise = {
+  id: string;
+  createdAt: Date;
+  updatedAt: Date;
+  uid: string;
+  title: string;
+  year: number;
+  quarter: string;
+  progress: number;
+  done: boolean;
+};

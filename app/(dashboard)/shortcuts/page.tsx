@@ -1,5 +1,5 @@
 import { auth } from '@/lib/auth';
-import { getShortcuts, getShortcutsCategories } from '@/lib/actions';
+import { getShortcuts, getShortcutsCategories } from '@/lib/actions/shortcuts';
 import { Shortcut, ShortcutCategory } from '@/lib/types';
 import Shortcuts from './shortcuts';
 import SignInPrompt from '@/components/SignInPrompt';

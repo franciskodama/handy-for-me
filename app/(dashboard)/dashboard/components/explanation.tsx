@@ -1,7 +1,9 @@
+'use client';
+
 import { Compass, Heart, Plus } from 'lucide-react';
 import ExplanationBox from '@/components/ExplanationBox';
 
-export default function ExplanationIn({
+export default function DashboardExplanation({
   setOpenAction
 }: {
   setOpenAction: (value: boolean) => void;

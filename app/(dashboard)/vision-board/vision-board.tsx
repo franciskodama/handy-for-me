@@ -43,8 +43,8 @@ import {
   deleteVisualBoardItem,
   getVisualBoardItems,
   setVisualBoardItemDone
-} from '@/lib/actions';
-import Help from '@/components/Help';
+} from '@/lib/actions/visual-board';
+import Help from '@/components/common/Help';
 import { toast } from '@/hooks/use-toast';
 import { barlow, kumbh_sans } from '@/app/ui/fonts';
 import ExplanationVisionBoard from './explanation-vision-board';

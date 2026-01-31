@@ -39,11 +39,11 @@ import {
   deleteBucketListItem,
   getBucketListItems,
   setBucketListItemDone
-} from '@/lib/actions';
+} from '@/lib/actions/bucket-list';
 import { barlow, kumbh_sans } from '@/app/ui/fonts';
 import { toast } from '@/hooks/use-toast';
 import ExplanationBucketList from './explanation-bucket-list';
-import Help from '@/components/Help';
+import Help from '@/components/common/Help';
 import MessageEmpty from '@/components/MessageEmpty';
 
 type Category = {
@@ -74,7 +74,9 @@ export default function BucketList({
   bucketList: BucketListItem[];
 }) {
   const [openAction, setOpenAction] = useState(false);
+  const [showShuffleInfo, setShowShuffleInfo] = useState(false);
   const [board, setBoard] = useState<BucketListItem[][]>([]);
+  const [filter, setFilter] = useState<'all' | 'done' | 'not-done'>('all');
 
   const {
     register,
@@ -117,8 +119,14 @@ export default function BucketList({
   };
 
   const organizeBoardByCategory = (bucketList: BucketListItem[]) => {
+    const filteredList = bucketList.filter((item) => {
+      if (filter === 'done') return item.done;
+      if (filter === 'not-done') return !item.done;
+      return true;
+    });
+
     const organizedBoard: BucketListItem[][] = Object.values(
-      bucketList.reduce(
+      filteredList.reduce(
         (acc: Record<string, BucketListItem[]>, curr: BucketListItem) => {
           if (acc[curr.category]) {
             acc[curr.category].push(curr);
@@ -148,10 +156,10 @@ export default function BucketList({
   const boardByCategory = organizeBoardByCategory(bucketList);
 
   useEffect(() => {
-    if (boardByCategory) {
-      setBoard(boardByCategory);
-    }
-  }, []);
+    // We need to re-organize the board whenever the filter changes
+    // or when the initial bucketList is loaded.
+    setBoard(organizeBoardByCategory(bucketList));
+  }, [filter, bucketList]);
 
   const handleDeleteItem = async (el: BucketListItem) => {
     try {
@@ -235,8 +243,9 @@ export default function BucketList({
                 {!openAction ? <Help setOpenAction={setOpenAction} /> : <div />}
               </div>
             </div>
+
             <p
-              className={`${barlow.className} text-sm font-normal lowercase mt-2`}
+              className={`${barlow.className} text-sm font-normal lowercase mt-4`}
             >
               <span className="uppercase">A</span>
               dd, explore, and cross off your next adventure.
@@ -347,87 +356,119 @@ export default function BucketList({
           </div>
         )}
 
-        <div className="flex items-center justify-center gap-2 w-full mt-8">
-          <Shuffle size={18} strokeWidth={1.4} />
-          <p className="text-sm italic">
-            Categories dynamically reorder as you add adventures, always
-            grouping from the most populated categories first.
-          </p>
-        </div>
+        <div className="flex flex-col items-center justify-center">
+          <div className="flex gap-2 mt-12">
+            <button
+              onClick={() => setFilter('all')}
+              className={`text-xs px-3 py-1 font-bold border transition-colors ${
+                filter === 'all'
+                  ? 'bg-primary text-primary-foreground border-primary'
+                  : 'bg-background hover:bg-muted text-muted-foreground border-border'
+              }`}
+            >
+              All
+            </button>
+            <button
+              onClick={() => setFilter('not-done')}
+              className={`text-xs px-3 py-1 border transition-colors ${
+                filter === 'not-done'
+                  ? 'bg-primary text-primary-foreground border-primary'
+                  : 'bg-background hover:bg-muted text-muted-foreground border-border'
+              }`}
+            >
+              To Do
+            </button>
+            <button
+              onClick={() => setFilter('done')}
+              className={`text-xs px-3 py-1 border transition-colors ${
+                filter === 'done'
+                  ? 'bg-primary text-primary-foreground border-primary'
+                  : 'bg-background hover:bg-muted text-muted-foreground border-border'
+              }`}
+            >
+              Done
+            </button>
+          </div>
 
-        <div className="flex flex-wrap w-full justify-center gap-8 mt-8 mb-12">
-          {board.map((categoryArray: BucketListItem[]) => (
-            <div key={categoryArray[0].category} className="w-full sm:w-[30ch]">
-              <h3
-                className={`${kumbh_sans.className} text-left text-sm font-semibold text-primary px-4 py-3 my-2 uppercase leading-none`}
-                style={getColorCodes(categoryArray[0].category ?? 'grey')}
+          <div className="flex flex-wrap w-full gap-8 mt-8 mb-12">
+            {board.map((categoryArray: BucketListItem[]) => (
+              <div
+                key={categoryArray[0].category}
+                className="w-full sm:w-[30ch]"
               >
-                {categoryArray[0].category}
-              </h3>
-
-              {categoryArray.map((el: BucketListItem) => (
-                <div
-                  key={el.id}
-                  className="flex items-center border border-primary mt-2"
+                <h3
+                  className={`${kumbh_sans.className} text-left text-sm font-semibold text-primary px-4 py-3 my-2 uppercase leading-none`}
+                  style={getColorCodes(categoryArray[0].category ?? 'grey')}
                 >
-                  <div className="w-full px-4 py-3">
-                    <p
-                      className={`${el.done && 'line-through'} text-left uppercase text-sm leading-5`}
-                    >
-                      {el.item}
-                    </p>
-                  </div>
+                  {categoryArray[0].category}
+                </h3>
 
-                  <Button
-                    className="px-0 mx-0"
-                    onClick={() => handleCheck(el)}
-                    variant={'link'}
+                {categoryArray.map((el: BucketListItem) => (
+                  <div
+                    key={el.id}
+                    className={`flex items-center border border-primary mt-2 ${el.done ? 'bg-muted shadow-inner' : ''}`}
                   >
-                    {el.done ? (
-                      <SquareCheckBig size={18} strokeWidth={1.8} />
-                    ) : (
-                      <Square size={18} strokeWidth={1.8} />
-                    )}
-                  </Button>
+                    <div className="w-full px-4 py-3">
+                      <p
+                        className={`${el.done ? 'line-through text-muted-foreground' : ''} text-left uppercase text-sm leading-5`}
+                      >
+                        {el.item}
+                      </p>
+                    </div>
 
-                  <AlertDialog>
-                    <AlertDialogTrigger className="px-2 py-1 mr-2">
-                      <Trash2 size={18} strokeWidth={1.8} />
-                    </AlertDialogTrigger>
-                    <AlertDialogContent className="w-[calc(100%-35px)]">
-                      <AlertDialogHeader>
-                        <AlertDialogTitle className="flex items-center gap-2">
-                          <Bomb size={24} strokeWidth={1.8} />
-                          Are you absolutely sure?
-                        </AlertDialogTitle>
-                        <AlertDialogDescription className="py-4">
-                          This will permanently delete the adventure
-                          <span className="font-bold mx-1">{el.item}</span>
-                          from our servers.
-                        </AlertDialogDescription>
-                      </AlertDialogHeader>
-                      <AlertDialogFooter>
-                        <AlertDialogCancel
-                          onClick={() => {
-                            toast({
-                              title: 'Operation Cancelled! ❌',
-                              description: `Phew! 😮‍💨 Crisis averted. You successfully cancelled the operation.`,
-                              variant: 'destructive'
-                            });
-                          }}
-                        >
-                          Cancel
-                        </AlertDialogCancel>
-                        <AlertDialogAction onClick={() => handleDeleteItem(el)}>
-                          Continue
-                        </AlertDialogAction>
-                      </AlertDialogFooter>
-                    </AlertDialogContent>
-                  </AlertDialog>
-                </div>
-              ))}
-            </div>
-          ))}
+                    <Button
+                      className="px-0 mx-0"
+                      onClick={() => handleCheck(el)}
+                      variant={'link'}
+                    >
+                      {el.done ? (
+                        <SquareCheckBig size={18} strokeWidth={1.8} />
+                      ) : (
+                        <Square size={18} strokeWidth={1.8} />
+                      )}
+                    </Button>
+
+                    <AlertDialog>
+                      <AlertDialogTrigger className="px-2 py-1 mr-2">
+                        <Trash2 size={18} strokeWidth={1.8} />
+                      </AlertDialogTrigger>
+                      <AlertDialogContent className="w-[calc(100%-35px)]">
+                        <AlertDialogHeader>
+                          <AlertDialogTitle className="flex items-center gap-2">
+                            <Bomb size={24} strokeWidth={1.8} />
+                            Are you absolutely sure?
+                          </AlertDialogTitle>
+                          <AlertDialogDescription className="py-4">
+                            This will permanently delete the adventure
+                            <span className="font-bold mx-1">{el.item}</span>
+                            from our servers.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel
+                            onClick={() => {
+                              toast({
+                                title: 'Operation Cancelled! ❌',
+                                description: `Phew! 😮‍💨 Crisis averted. You successfully cancelled the operation.`,
+                                variant: 'destructive'
+                              });
+                            }}
+                          >
+                            Cancel
+                          </AlertDialogCancel>
+                          <AlertDialogAction
+                            onClick={() => handleDeleteItem(el)}
+                          >
+                            Continue
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>
         </div>
       </CardContent>
     </Card>

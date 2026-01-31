@@ -50,10 +50,10 @@ import {
   deleteDecisionHelperItem,
   deleteDecisionHelperList,
   selectionDecisionHelperItem
-} from '@/lib/actions';
+} from '@/lib/actions/decision-helper';
 import { Checkbox } from '@/components/ui/checkbox';
 import { kumbh_sans } from '@/app/ui/fonts';
-import Help from '@/components/Help';
+import Help from '@/components/common/Help';
 import ExplanationDecisionHelper from './explanation-decision-helper';
 
 export const foldit = Foldit({
@@ -175,6 +175,7 @@ export default function DecisionHelper({
         spread: 55,
         origin: { x: 1 }
       });
+      setTimeout(() => confetti.reset(), 3000); // Reset confetti after 3 seconds
     }, 2000);
   };
 

@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { createUser } from '@/lib/actions';
+import { createUser } from '@/lib/actions/user';
 import { redirect } from 'next/navigation';
 
 export default function SignUp() {

@@ -1,6 +1,6 @@
 import { auth } from '@/lib/auth';
 import VisionBoard from './vision-board';
-import { getVisualBoardItems } from '@/lib/actions';
+import { getVisualBoardItems } from '@/lib/actions/visual-board';
 import SignInPrompt from '@/components/SignInPrompt';
 
 export default async function VisionBoardPage() {

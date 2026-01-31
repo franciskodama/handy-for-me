@@ -16,7 +16,7 @@ export function DashboardBreadcrumb() {
   return (
     <Breadcrumb className="hidden md:flex">
       <BreadcrumbList>
-        {pathname !== '/in' ? (
+        {pathname !== '/dashboard' ? (
           <>
             <BreadcrumbItem>
               <BreadcrumbLink asChild>

@@ -8,11 +8,16 @@ import {
   MessageCircleQuestion,
   RefreshCw,
   Trophy,
-  HandHeart
+  HandHeart,
+  Flag
 } from 'lucide-react';
 
 export const menuItems = [
-  { label: 'Dashboard', href: '/in', icon: <Home className="h-5 w-5" /> },
+  {
+    label: 'Dashboard',
+    href: '/dashboard',
+    icon: <Home className="h-5 w-5" />
+  },
   {
     label: 'Vision Board',
     href: '/vision-board',
@@ -32,6 +37,11 @@ export const menuItems = [
     label: 'Weekly Wins',
     href: '/weekly-wins',
     icon: <Trophy className="h-5 w-5" />
+  },
+  {
+    label: 'Yearly Promises',
+    href: '/promises',
+    icon: <Flag className="h-5 w-5" />
   },
   {
     label: 'Decision Helper',

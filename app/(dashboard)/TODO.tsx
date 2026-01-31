@@ -85,7 +85,7 @@
 
 // TODO: WORKING ON
 // Spin: Do something if a list has only one item (and the item must be selected or message the user)
-// Component MessageTeam
+
 // use() instead of useEffect and useState: https://www.youtube.com/watch?v=oMvW3A_IRsY>>
 
 // TODO: FEATURES
