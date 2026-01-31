@@ -406,11 +406,11 @@ export default function BucketList({
                 {categoryArray.map((el: BucketListItem) => (
                   <div
                     key={el.id}
-                    className="flex items-center border border-primary mt-2"
+                    className={`flex items-center border border-primary mt-2 ${el.done ? 'bg-muted shadow-inner' : ''}`}
                   >
                     <div className="w-full px-4 py-3">
                       <p
-                        className={`${el.done && 'line-through'} text-left uppercase text-sm leading-5`}
+                        className={`${el.done ? 'line-through text-muted-foreground' : ''} text-left uppercase text-sm leading-5`}
                       >
                         {el.item}
                       </p>
