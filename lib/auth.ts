@@ -1,12 +1,11 @@
 import NextAuth from 'next-auth';
-import Credentials from 'next-auth/providers/credentials';
-import { signInSchema } from '@/lib/zod';
-import { ZodError } from 'zod';
-import { getUser } from './actions/user';
-import { saltAndHashPassword } from './passwords';
+import GitHub from 'next-auth/providers/github';
+import Google from 'next-auth/providers/google';
+import { addUser } from './actions/user';
 import { authConfig } from './auth.config';
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
+  ...authConfig,
   providers: [GitHub, Google],
   callbacks: {
     async signIn({ user }) {
