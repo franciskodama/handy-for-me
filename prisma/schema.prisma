@@ -93,3 +93,14 @@ model WeeklyWin {
   type      String
   done      Boolean
 }
+
+model YearPromise {
+  id        String   @id @default(uuid()) @db.VarChar(255)
+  createdAt DateTime @default(now()) @db.Timestamp(6)
+  updatedAt DateTime @updatedAt
+  uid       String   
+  title     String   
+  quarter   String   // "Q1", "Q2", "Q3", "Q4"
+  progress  Int      @default(0)
+  done      Boolean  @default(false)
+}

@@ -22,10 +22,10 @@ import Greeting from '@/components/layout/header/greeting';
 import { Toaster } from '@/components/ui/toaster';
 import { NavItem } from '@/components/NavItem';
 import { SearchInput } from '@/components/layout/header/search';
-import CardDivulgationHelp from './dashboard/card-divulgation-help';
 import Footer from '@/components/layout/Footer';
 import { menuItems } from '@/lib/menu';
 import { Menu } from 'lucide-react';
+import CardDivulgationHelp from './dashboard/components/cards/card-divulgation-help';
 
 export default function DashboardLayout({
   children
@@ -131,13 +131,9 @@ export function DesktopNav() {
       <nav className="mt-auto flex flex-col items-center gap-4 px-2 sm:py-5">
         <Tooltip>
           <TooltipTrigger asChild>
-            <Link
-              href="#"
-              className="flex h-9 w-9 items-center justify-center text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
-            >
+            <div className="flex h-9 w-9 items-center justify-center text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8 cursor-pointer">
               <CardDivulgationHelp />
-              <span className="sr-only">Need a hand?</span>
-            </Link>
+            </div>
           </TooltipTrigger>
           <TooltipContent side="right">Need a hand?</TooltipContent>
         </Tooltip>

@@ -1,3 +1,5 @@
+'use client';
+
 import CardVisionBoard from '../cards/card-vision-board';
 import CardShortcuts from '../cards/card-shortcuts';
 import CardBucketList from '../cards/card-bucket-list';

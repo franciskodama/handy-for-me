@@ -1,3 +1,5 @@
+'use client';
+
 import CardDivulgation from '../cards/card-divulgation';
 
 export default function DashboardFeatureHighlights() {

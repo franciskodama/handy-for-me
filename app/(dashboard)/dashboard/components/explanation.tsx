@@ -1,3 +1,5 @@
+'use client';
+
 import { Compass, Heart, Plus } from 'lucide-react';
 import ExplanationBox from '@/components/ExplanationBox';
 

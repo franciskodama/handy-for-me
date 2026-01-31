@@ -1,3 +1,5 @@
+'use client';
+
 import { CircleHelp, LifeBuoy, MoveUpRight } from 'lucide-react';
 
 import {

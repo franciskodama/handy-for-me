@@ -1,3 +1,5 @@
+'use client';
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { CardWeather } from '../cards/card-weather';
 import { CardFunFact } from '../cards/card-fun-fact';

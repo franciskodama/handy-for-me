@@ -1,4 +1,7 @@
+'use client';
+
 import { useState } from 'react';
+
 import { CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import Help from '@/components/common/Help';
 import DashboardExplanation from '../explanation';
