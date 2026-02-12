@@ -7,10 +7,13 @@ import {
   Shuffle,
   Square,
   SquareCheckBig,
-  Trash2
+  Trash2,
+  Printer
 } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useForm, SubmitHandler, Controller } from 'react-hook-form';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
@@ -77,6 +80,55 @@ export default function BucketList({
   const [showShuffleInfo, setShowShuffleInfo] = useState(false);
   const [board, setBoard] = useState<BucketListItem[][]>([]);
   const [filter, setFilter] = useState<'all' | 'done' | 'not-done'>('all');
+  const boardRef = useRef<HTMLDivElement>(null);
+
+  const handleDownloadPDF = async () => {
+    if (!boardRef.current) return;
+
+    try {
+      const canvas = await html2canvas(boardRef.current, {
+        scale: 2,
+        useCORS: true,
+        backgroundColor: '#ffffff',
+        onclone: (clonedDoc) => {
+          const header = clonedDoc.getElementById('pdf-header');
+          if (header) header.style.display = 'block';
+
+          const board = clonedDoc.getElementById('bucket-list-board');
+          if (board) {
+            board.style.padding = '40px';
+            board.style.background = 'white';
+          }
+        }
+      });
+
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF({
+        orientation: 'landscape',
+        unit: 'mm',
+        format: 'a4'
+      });
+
+      const imgWidth = 297;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+      pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+      pdf.save(`Bucket-List-${new Date().getFullYear()}.pdf`);
+
+      toast({
+        title: 'PDF Generated! 📄',
+        description: 'Your bucket list is ready to print.',
+        variant: 'success'
+      });
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+      toast({
+        title: 'Generation Failed 🚨',
+        description: 'Could not create PDF. Please try again.',
+        variant: 'destructive'
+      });
+    }
+  };
 
   const {
     register,
@@ -356,8 +408,8 @@ export default function BucketList({
           </div>
         )}
 
-        <div className="flex flex-col items-center justify-center">
-          <div className="flex gap-2 mt-12">
+        <div className="flex justify-end items-center gap-3 mb-8">
+          <div className="flex gap-2">
             <button
               onClick={() => setFilter('all')}
               className={`text-xs px-3 py-1 font-bold border transition-colors ${
@@ -390,7 +442,38 @@ export default function BucketList({
             </button>
           </div>
 
-          <div className="flex flex-wrap w-full gap-8 mt-8 mb-12">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleDownloadPDF}
+            className="h-9 px-3 text-xs font-semibold gap-2 border-primary/20 hover:bg-primary hover:text-white transition-all ml-2"
+          >
+            <Printer size={14} />
+            Download PDF
+          </Button>
+        </div>
+
+        <div
+          id="bucket-list-board"
+          ref={boardRef}
+          className="flex flex-col items-center"
+        >
+          <div
+            id="pdf-header"
+            style={{ display: 'none' }}
+            className="mb-12 text-center"
+          >
+            <h1
+              className={`${kumbh_sans.className} text-4xl font-bold uppercase tracking-tighter text-primary`}
+            >
+              My Bucket List — {new Date().getFullYear()}
+            </h1>
+            <p className={`${barlow.className} text-muted-foreground mt-2`}>
+              Every hero needs epic adventures!
+            </p>
+          </div>
+
+          <div className="flex flex-wrap justify-center w-full gap-8 mt-4 mb-12">
             {board.map((categoryArray: BucketListItem[]) => (
               <div
                 key={categoryArray[0].category}
@@ -420,6 +503,7 @@ export default function BucketList({
                       className="px-0 mx-0"
                       onClick={() => handleCheck(el)}
                       variant={'link'}
+                      data-html2canvas-ignore
                     >
                       {el.done ? (
                         <SquareCheckBig size={18} strokeWidth={1.8} />
@@ -429,7 +513,10 @@ export default function BucketList({
                     </Button>
 
                     <AlertDialog>
-                      <AlertDialogTrigger className="px-2 py-1 mr-2">
+                      <AlertDialogTrigger
+                        className="px-2 py-1 mr-2"
+                        data-html2canvas-ignore
+                      >
                         <Trash2 size={18} strokeWidth={1.8} />
                       </AlertDialogTrigger>
                       <AlertDialogContent className="w-[calc(100%-35px)]">
