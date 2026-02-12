@@ -13,10 +13,10 @@ export default function DashboardHeader() {
   return (
     <>
       <CardHeader className="sm:mb-12">
-        <CardTitle className="flex justify-between items-center gap-2">
-          <p>Dashboard</p>
+        <div className="flex justify-between items-center gap-2">
+          <CardTitle className="mb-0">Dashboard</CardTitle>
           {!openAction ? <Help setOpenAction={setOpenAction} /> : <div />}
-        </CardTitle>
+        </div>
         <CardDescription>
           Everything you need, right at your fingertips.
         </CardDescription>

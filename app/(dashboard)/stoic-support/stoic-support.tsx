@@ -25,6 +25,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import Help from '@/components/common/Help';
 import { barlow } from '@/app/ui/fonts';
+import { cn } from '@/lib/utils';
 import ExplanationStoicSupport from './explanation-stoic-support';
 import {
   BookOpen,
@@ -71,10 +72,10 @@ export default function StoicSupport({ name }: { name: string }) {
   return (
     <Card className="min-h-[75vh]">
       <CardHeader>
-        <CardTitle className="flex flex-col sm:flex-row sm:justify-between items-start mb-0">
+        <div className="flex flex-col sm:flex-row sm:justify-between items-start mb-0 w-full">
           <div className="flex flex-col w-full">
             <div className="flex items-center justify-between w-full">
-              <p>Stoic Support</p>
+              <CardTitle className="mb-0">Stoic Support</CardTitle>
               <div>
                 {!openAction ? <Help setOpenAction={setOpenAction} /> : <div />}
               </div>
@@ -86,7 +87,7 @@ export default function StoicSupport({ name }: { name: string }) {
               growth with timeless wisdom.
             </p>
           </div>
-        </CardTitle>
+        </div>
       </CardHeader>
       <CardContent className="relative p-6">
         <AnimatePresence>
@@ -121,12 +122,15 @@ export default function StoicSupport({ name }: { name: string }) {
                     {el.topics.map((topic: Topic) => (
                       <div key={topic.topic}>
                         <AlertDialog>
-                          <AlertDialogTrigger className="px-2 py-1 w-full">
-                            <p
-                              className={`${accordionContentAsButtonClass} justify-start`}
+                          <AlertDialogTrigger asChild>
+                            <button
+                              className={cn(
+                                accordionContentAsButtonClass,
+                                'px-2 py-1 w-full justify-start text-left'
+                              )}
                             >
                               {topic.topic}
-                            </p>
+                            </button>
                           </AlertDialogTrigger>
                           <AlertDialogContent className="w-[calc(100%-35px)] sm:p-8">
                             <AlertDialogHeader>
@@ -137,18 +141,23 @@ export default function StoicSupport({ name }: { name: string }) {
                                 {getIcon(el.category, 'dialog')}
                                 {topic.topic}
                               </AlertDialogTitle>
-                              <AlertDialogDescription className="py-4 text-primary">
-                                <div className="flex flex-col gap-2 my-8 p-4 bg-muted">
-                                  <span className="text-lg font-semibold italic">
-                                    {`"${topic.quote}"`}
-                                  </span>
-                                  <p className="font-semibold text-left ml-4 sm:text-right mr-8">{`— ${topic.author}`}</p>
-                                </div>
-                                <div className="p-4 text-left text-base">
-                                  <div>{`${name}, `}</div>
-                                  <span className="mb-4 mt-1">
-                                    {topic.explanation}
-                                  </span>
+                              <AlertDialogDescription
+                                className="py-4 text-primary"
+                                asChild
+                              >
+                                <div>
+                                  <div className="flex flex-col gap-2 my-8 p-4 bg-muted">
+                                    <span className="text-lg font-semibold italic">
+                                      {`"${topic.quote}"`}
+                                    </span>
+                                    <p className="font-semibold text-left ml-4 sm:text-right mr-8">{`— ${topic.author}`}</p>
+                                  </div>
+                                  <div className="p-4 text-left text-base">
+                                    <div>{`${name}, `}</div>
+                                    <span className="mb-4 mt-1">
+                                      {topic.explanation}
+                                    </span>
+                                  </div>
                                 </div>
                               </AlertDialogDescription>
                             </AlertDialogHeader>

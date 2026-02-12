@@ -47,13 +47,13 @@ export default function ExplanationVisionBoard({
         <span className="font-semibold mr-1">3) Tap “Add”</span>
         to instantly see your goal’s image in the gallery.
       </p>
-      <p className="font-semibold mr-1">
+      <div className="font-semibold mr-1">
         4) Hover over an image:
         <div className="flex flex-col gap-1 mt-2 ml-4 font-normal">
           <p>a) Check a goal when completed (can be unchecked).</p>
           <p>b) Delete a goal if no longer relevant.</p>
         </div>
-      </p>
+      </div>
     </>
   );
 
