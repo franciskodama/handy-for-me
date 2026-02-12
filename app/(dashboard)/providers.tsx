@@ -17,9 +17,5 @@ export function CSPostHogProvider({ children }: { children: React.ReactNode }) {
 }
 
 export default function Providers({ children }: { children: React.ReactNode }) {
-  return (
-    <CSPostHogProvider>
-      <TooltipProvider>{children}</TooltipProvider>
-    </CSPostHogProvider>
-  );
+  return <TooltipProvider>{children}</TooltipProvider>;
 }

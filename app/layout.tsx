@@ -18,15 +18,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <head></head>
-      <CSPostHogProvider>
-        <body
-          className={`${barlow.className} antialiased flex min-h-screen w-full flex-col`}
-        >
-          {children}
-        </body>
-      </CSPostHogProvider>
+    <html lang="en" suppressHydrationWarning>
+      <body
+        className={`${barlow.className} antialiased flex min-h-screen w-full flex-col`}
+      >
+        <CSPostHogProvider>{children}</CSPostHogProvider>
+      </body>
     </html>
   );
 }

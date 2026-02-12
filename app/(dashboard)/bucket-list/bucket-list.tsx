@@ -285,7 +285,7 @@ export default function BucketList({
   };
 
   return (
-    <Card>
+    <Card className="min-h-[75vh]">
       <CardHeader>
         <CardTitle className="flex flex-col sm:flex-row sm:justify-between items-start mb-0">
           <div className="flex flex-col">
