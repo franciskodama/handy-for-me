@@ -92,7 +92,7 @@ export default function RandomQuestion({ name }: { name: string }) {
     setLastSelectedTime(timeInSeconds);
   };
   return (
-    <Card>
+    <Card className="min-h-[75vh]">
       <CardHeader className="mb-12">
         <CardTitle className="flex justify-between items-center gap-2">
           <p>Random Questions</p>

@@ -27,7 +27,7 @@ export default function DashboardView({
   shortcutsItems: Shortcut[];
 }) {
   return (
-    <Card className="relative">
+    <Card className="relative min-h-[75vh]">
       <DashboardHeader />
       <CardContent>
         <div className="flex flex-col gap-4">

@@ -84,14 +84,15 @@ function MobileNav() {
             <span className="sr-only">HandyFor.me</span>
           </Link>
           {menuItems.map((item) => (
-            <Link key={item.label} href={item.href}>
-              <SheetClose asChild>
-                <button className="flex items-center gap-4 px-2.5 truncate text-left text-muted-foreground hover:text-foreground">
-                  {item.icon}
-                  {item.label}
-                </button>
-              </SheetClose>
-            </Link>
+            <SheetClose asChild key={item.label}>
+              <Link
+                href={item.href}
+                className="flex items-center gap-4 px-2.5 truncate text-left text-muted-foreground hover:text-foreground"
+              >
+                {item.icon}
+                {item.label}
+              </Link>
+            </SheetClose>
           ))}
           {/* <Link
             href="#"

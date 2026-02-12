@@ -180,7 +180,7 @@ export default function DecisionHelper({
   };
 
   return (
-    <Card>
+    <Card className="min-h-[75vh]">
       <CardHeader className="mb-4">
         <CardTitle className="flex justify-between items-center gap-2">
           <p>Decision Helper</p>

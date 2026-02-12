@@ -52,7 +52,7 @@ export default function LetterLeap({ name }: { name: string }) {
   };
 
   return (
-    <Card>
+    <Card className="min-h-[75vh]">
       <CardHeader className="mb-4 sm:mb-12">
         <CardTitle className="flex justify-between items-center gap-2">
           <p>Letter Leap</p>

@@ -49,7 +49,7 @@ export default function MyWords({
   };
 
   return (
-    <Card>
+    <Card className="min-h-[75vh]">
       <CardHeader className="mb-12">
         <CardTitle className="flex justify-between items-center gap-2">
           <p>My Words</p>
