@@ -1,4 +1,7 @@
 {
+  "name": "handy-for-me",
+  "version": "1.0.0",
+  "description": "Your personal hub for organizing daily tasks and personal growth.",
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",

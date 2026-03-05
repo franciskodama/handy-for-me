@@ -387,7 +387,7 @@ export default function Footer() {
         </div>
 
         <div className="flex flex-col gap-1">
-          <p>HandyFor.Me - 2024</p>
+          <p>HandyFor.Me - 2026</p>
           <p>© All rights reserved.</p>
         </div>
       </div>
