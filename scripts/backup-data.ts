@@ -20,12 +20,9 @@ async function main() {
     process.exit(1);
   }
 
+  // @ts-ignore
   const prisma = new PrismaClient({
-    datasources: {
-      db: {
-        url: process.env.DATABASE_URL
-      }
-    }
+    datasourceUrl: process.env.DATABASE_URL
   });
 
   try {
