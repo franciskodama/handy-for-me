@@ -1,8 +1,4 @@
-import * as dotenv from 'dotenv';
-dotenv.config();
-
 import { PrismaClient } from '@prisma/client';
-import { PrismaNeon } from '@prisma/adapter-neon';
 import * as fs from 'fs';
 import * as path from 'path';
 import { encrypt } from './utils/encryption';
@@ -21,9 +17,7 @@ async function main() {
     process.exit(1);
   }
 
-  const connectionString = process.env.DATABASE_URL;
-  const adapter = new PrismaNeon({ connectionString });
-  const prisma = new PrismaClient({ adapter });
+  const prisma = new PrismaClient();
 
   try {
     const backupData = {
@@ -51,19 +45,19 @@ async function main() {
     const backupsDir = path.join(process.cwd(), 'backups');
 
     if (!fs.existsSync(backupsDir)) {
-      fs.mkdirSync(backupsDir);
+      fs.mkdirSync(backupsDir, { recursive: true });
     }
 
     const backupJson = JSON.stringify(backupData, null, 2);
     const encryptedData = encrypt(backupJson);
 
-    // Save timestamped version locally
-    const filePath = path.join(backupsDir, fileName);
-    fs.writeFileSync(filePath, encryptedData);
-
     // Save 'latest' version locally for tracking
     const latestPath = path.join(backupsDir, 'automated_latest.json.enc');
     fs.writeFileSync(latestPath, encryptedData);
+
+    // Save timestamped version locally
+    const filePath = path.join(backupsDir, fileName);
+    fs.writeFileSync(filePath, encryptedData);
 
     console.log(`✅ Local encrypted backup saved to: ${filePath}`);
 
@@ -78,6 +72,7 @@ async function main() {
     console.log(`📊 Exported all system data.`);
   } catch (error) {
     console.error('❌ Backup failed:', error);
+    process.exit(1);
   } finally {
     await prisma.$disconnect();
   }
