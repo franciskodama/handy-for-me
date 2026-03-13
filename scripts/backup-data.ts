@@ -3,6 +3,9 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { encrypt } from './utils/encryption';
 import { uploadToGCS } from './utils/gcs';
+import * as dotenv from 'dotenv';
+
+dotenv.config();
 
 async function main() {
   console.log('🚀 Starting system-wide backup (encrypted + cloud) for HandyForMe...');
@@ -17,7 +20,9 @@ async function main() {
     process.exit(1);
   }
 
-  const prisma = new PrismaClient();
+  const prisma = new PrismaClient({
+    datasourceUrl: process.env.DATABASE_URL
+  });
 
   try {
     const backupData = {
