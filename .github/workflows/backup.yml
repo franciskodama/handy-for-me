@@ -38,11 +38,3 @@ jobs:
           GCS_PRIVATE_KEY: ${{ secrets.GCS_PRIVATE_KEY }}
           GCS_BUCKET_NAME: ${{ secrets.GCS_BUCKET_NAME }}
         run: yarn db:backup
-
-      - name: Commit and Push latest backup
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git add backups/automated_latest.json.enc
-          git commit -m "chore: nightly backup update [skip ci]" || echo "No changes to commit"
-          git push
