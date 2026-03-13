@@ -9,15 +9,9 @@
 // shadow-[0_0px_0px_0px_inset,#FFF_-3px_3px_0_-1px,#0F1739_-3px_3px]
 
 // TODO: Nadgen Q.A.
-// Next Auth: Sigout after some time without signing in: https://next-auth.js.org/configuration/providers/oauth
 // Next Auth: Credentials (Email and Password)
 // Next Auth: Sign in fields + Sign up page
-// Next Auth: https://www.youtube.com/watch?v=1MTyCvS05V4
-// Emails: https://sendgrid.com/en-us/free
-
-// Stoic Support: Check the Content
 // Responsivity for smallers screens of Laptops (Weather was tight on Nadgen's screen)
-// Weekly Wins on the Dashboard
 // Dashboard: Accordions?
 // Weekly Wins: include Nadgen idea to set how many days a week + progress bar
 // Build feature "My Words" (and "My Phrases") to practice and increase vocabulary
