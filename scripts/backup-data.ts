@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import { PrismaNeon } from '@prisma/adapter-neon';
 import * as fs from 'fs';
 import * as path from 'path';
 import { encrypt } from './utils/encryption';
@@ -20,10 +21,8 @@ async function main() {
     process.exit(1);
   }
 
-  // @ts-ignore
-  const prisma = new PrismaClient({
-    datasourceUrl: process.env.DATABASE_URL
-  });
+  const adapter = new PrismaNeon({ connectionString: process.env.DATABASE_URL as string });
+  const prisma = new PrismaClient({ adapter });
 
   try {
     const backupData = {
