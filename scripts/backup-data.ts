@@ -1,5 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import { PrismaNeon } from '@prisma/adapter-neon';
+import { neonConfig } from '@neondatabase/serverless';
+import ws from 'ws';
 import * as fs from 'fs';
 import * as path from 'path';
 import { encrypt } from './utils/encryption';
@@ -7,6 +9,9 @@ import { uploadToGCS } from './utils/gcs';
 import * as dotenv from 'dotenv';
 
 dotenv.config();
+
+// Fix for WebSocket connection in Node.js environments (required for Neon serverless)
+neonConfig.webSocketConstructor = ws;
 
 async function main() {
   console.log('🚀 Starting system-wide backup (encrypted + cloud) for HandyForMe...');
