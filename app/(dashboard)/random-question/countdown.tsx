@@ -239,12 +239,10 @@ const kudos = [
   "Time's up! Your words are a symphony! 🎶"
 ];
 
-// Component to handle random kudos message on client side only
 function KudosMessage({ name }: { name: string }) {
   const [message, setMessage] = useState<string>('');
 
   useEffect(() => {
-    // Only generate random message on client side
     const chosen = Math.random();
     let selectedMessage: string;
     switch (true) {

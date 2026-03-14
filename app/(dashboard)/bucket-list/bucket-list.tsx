@@ -4,7 +4,6 @@ import { AnimatePresence, motion } from 'framer-motion';
 import {
   Bomb,
   FlagOff,
-  Shuffle,
   Square,
   SquareCheckBig,
   Trash2,
@@ -208,7 +207,7 @@ export default function BucketList({
   const boardByCategory = organizeBoardByCategory(bucketList);
 
   useEffect(() => {
-    // We need to re-organize the board whenever the filter changes
+    // Re-organize the board whenever the filter changes
     // or when the initial bucketList is loaded.
     setBoard(organizeBoardByCategory(bucketList));
   }, [filter, bucketList]);

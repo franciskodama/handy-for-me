@@ -2,7 +2,6 @@ import Image from 'next/image';
 
 import { AspectRatio } from './ui/aspect-ratio';
 import { Button } from './ui/button';
-import { ArrowRight } from 'lucide-react';
 
 export type MessageInTable = {
   image: string;

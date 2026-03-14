@@ -29,7 +29,7 @@ export function QuarterColumn({
   });
 
   const getActiveQuarter = () => {
-    const month = new Date().getMonth(); // 0-11
+    const month = new Date().getMonth();
     if (month < 3) return 'Q1';
     if (month < 6) return 'Q2';
     if (month < 9) return 'Q3';

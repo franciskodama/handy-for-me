@@ -1,6 +1,4 @@
 import Link from 'next/link';
-
-import { tagClass } from './cards';
 import { Button } from '@/components/ui/button';
 
 export default function CardEmpty({
