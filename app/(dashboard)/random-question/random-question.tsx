@@ -128,10 +128,12 @@ export default function RandomQuestion({ name }: { name: string }) {
           <Tabs defaultValue="topic" className="w-1/5">
             <TabsList className="w-full">
               <TabsTrigger value="topic">Topic</TabsTrigger>
-              <TabsTrigger value="helper">Helper</TabsTrigger>
+              <TabsTrigger value="vocabulary">
+                Expand your Vocabulary
+              </TabsTrigger>
             </TabsList>
             <TabsContent value="topic" className="w-full">
-              <div className="flex flex-col w-full gap-4 mt-8 px-2">
+              <div className="flex flex-col w-full gap-4 mt-16 px-2">
                 <p className="sm:hidden text-lg font-semibold mb-4">
                   Let's get started!
                 </p>
@@ -197,9 +199,9 @@ export default function RandomQuestion({ name }: { name: string }) {
                 </div>
               </div>
             </TabsContent>
-            <TabsContent value="helper">
+            <TabsContent value="vocabulary">
               {/* ----------------------------------- */}
-              <div className="flex flex-col w-full gap-4 mt-8 px-2">
+              <div className="flex flex-col w-full mt-4 px-2">
                 {linkingWords.map(
                   (category: { category: string; words: string[] }) => (
                     <Accordion
@@ -208,15 +210,23 @@ export default function RandomQuestion({ name }: { name: string }) {
                       collapsible
                     >
                       <AccordionItem value={category.category}>
-                        <AccordionTrigger className="uppercase text-lg">
+                        <AccordionTrigger className="uppercase text-lg my-0">
                           {category.category}
                         </AccordionTrigger>
                         <AccordionContent>
-                          <div className="flex flex-col gap-2 uppercase text-3xl font-semibold p-2">
+                          <ul className="flex flex-col gap-2 capitalize text-3xl font-semibold p-2">
                             {category.words.map((word: string) => (
-                              <p key={word}>{word}</p>
+                              <li
+                                key={word}
+                                className="flex items-center gap-2"
+                              >
+                                <p className="flex items-center gap-2">
+                                  <span className="text-sm">-</span>
+                                  {word}
+                                </p>
+                              </li>
                             ))}
-                          </div>
+                          </ul>
                         </AccordionContent>
                       </AccordionItem>
                     </Accordion>
@@ -279,26 +289,21 @@ const linkingWords = [
   {
     category: 'Addition',
     words: [
-      'and',
-      'also',
-      'too',
       'as well as',
       'in addition',
       'additionally',
       'furthermore',
       'moreover',
       'besides',
-      'not only ... but also',
       'on top of that',
-      'plus',
       "what's more",
-      'along with'
+      'along with',
+      'not only ... but also'
     ]
   },
   {
     category: 'Contrast',
     words: [
-      'but',
       'however',
       'although',
       'though',
@@ -317,21 +322,11 @@ const linkingWords = [
   },
   {
     category: 'Cause',
-    words: [
-      'because',
-      'since',
-      'as',
-      'for',
-      'due to',
-      'owing to',
-      'because of',
-      'as a result of'
-    ]
+    words: ['since', 'as', 'for', 'due to', 'owing to', 'as a result of']
   },
   {
     category: 'Result',
     words: [
-      'so',
       'therefore',
       'thus',
       'as a result',
@@ -367,36 +362,31 @@ const linkingWords = [
   {
     category: 'Example',
     words: [
-      'for example',
-      'for instance',
       'such as',
       'like',
-      'e.g.',
-      'including',
-      'namely',
       'to illustrate',
-      'in particular'
+      'in particular',
+      'for example',
+      'for instance'
     ]
   },
   {
-    category: 'Opinion/Emphasis',
+    category: 'Opinion',
     words: [
-      'I think',
       'in my opinion',
       'personally',
-      'actually',
       'in fact',
       'to be honest',
       'frankly',
       'surprisingly',
       'believe it or not',
-      'as far as I know'
+      'as far as I know',
+      'as a matter of fact'
     ]
   },
   {
     category: 'Time',
     words: [
-      'now',
       'at the moment',
       'currently',
       'right now',
@@ -409,7 +399,7 @@ const linkingWords = [
     ]
   },
   {
-    category: 'Summary/Conclusion',
+    category: 'Conclusion',
     words: [
       'in conclusion',
       'to sum up',
@@ -425,12 +415,11 @@ const linkingWords = [
     words: [
       'if',
       'unless',
-      'provided that',
       'as long as',
       'so that',
       'in order to',
-      'to',
-      'so as to'
+      'so as to',
+      'provided that'
     ]
   }
 ];
