@@ -189,7 +189,7 @@ export default function Countdown({
             .padStart(2, '0')}s`}</p>
         </div>
 
-        <div className="flex flex-wrap gap-2 mt-4">
+        <div className="flex flex-wrap mt-4">
           <Button
             className="w-[10ch] mb-2"
             onClick={handlePauseResumeButton}
@@ -199,7 +199,7 @@ export default function Countdown({
           </Button>
 
           <Button
-            className="w-[10ch] mx-2 mb-2"
+            className="w-[10ch] sm:mx-2 mb-2"
             onClick={handleRestartButton}
             disabled={lastSelectedTime === 0}
           >
@@ -239,12 +239,10 @@ const kudos = [
   "Time's up! Your words are a symphony! 🎶"
 ];
 
-// Component to handle random kudos message on client side only
 function KudosMessage({ name }: { name: string }) {
   const [message, setMessage] = useState<string>('');
 
   useEffect(() => {
-    // Only generate random message on client side
     const chosen = Math.random();
     let selectedMessage: string;
     switch (true) {

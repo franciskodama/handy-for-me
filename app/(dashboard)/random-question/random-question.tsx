@@ -17,6 +17,13 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger
+} from '@/components/ui/accordion';
 import {
   topicsRandomQuestions,
   getQuestions,
@@ -41,6 +48,7 @@ export default function RandomQuestion({ name }: { name: string }) {
   const [timeRemaining, setTimeRemaining] = useState<number>(0);
   const [lastSelectedTime, setLastSelectedTime] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
+  const [showInspirations, setShowInspirations] = useState(false);
 
   useEffect(() => {
     const arrayOfQuestions = getQuestions(topic);
@@ -58,7 +66,6 @@ export default function RandomQuestion({ name }: { name: string }) {
 
   const handleFeelingLucky = () => {
     const luckyChoice = getLuckyChoice();
-    // Set the topic so the dropdown shows the selected topic
     setTopic(luckyChoice.topicId);
     setTimeout(() => {
       setResult(luckyChoice.question);
@@ -72,11 +79,9 @@ export default function RandomQuestion({ name }: { name: string }) {
     setResult('');
     setStartCountdown(false);
     setIsPaused(false);
-    // Reset timer to last selected time (or default 2 minutes if none selected)
     if (lastSelectedTime > 0) {
       setTimeRemaining(lastSelectedTime);
     } else {
-      // Default to 2 minutes (120 seconds) if no time was selected
       const defaultTime = 2 * 60;
       setTimeRemaining(defaultTime);
       setLastSelectedTime(defaultTime);
@@ -91,6 +96,7 @@ export default function RandomQuestion({ name }: { name: string }) {
     setTimeRemaining(timeInSeconds);
     setLastSelectedTime(timeInSeconds);
   };
+
   return (
     <Card className="min-h-[75vh]">
       <CardHeader className="mb-12">
@@ -119,85 +125,117 @@ export default function RandomQuestion({ name }: { name: string }) {
         </AnimatePresence>
 
         <div className="flex flex-col sm:flex-row justify-between gap-8 w-full mb-12">
-          <div className="flex flex-col sm:w-1/5 gap-4">
-            <p className="sm:hidden text-lg font-semibold mb-4">
-              Let's get started!
-            </p>
-            <div className="flex flex-col gap-2">
-              <div className="sm:hidden flex flex-col gap-2">
-                <p className="text-sm">Minutes to answer</p>
-                <Select value={selectedValue} onValueChange={handleValueChange}>
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Time" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {minutesOptions.map((min: number) => (
-                      <SelectItem
-                        key={min}
-                        value={min.toString()}
-                      >{`${min} min`}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="flex items-center gap-2 mt-4 sm:mt-0">
-                <p className="text-sm sm:text-lg sm:font-semibold">
-                  Pick a Topic
+          <Tabs defaultValue="topic" className="w-1/5">
+            <TabsList className="w-full">
+              <TabsTrigger value="topic">Topic</TabsTrigger>
+              <TabsTrigger value="vocabulary">
+                Expand your Vocabulary
+              </TabsTrigger>
+            </TabsList>
+            <TabsContent value="topic" className="w-full">
+              <div className="flex flex-col w-full gap-4 mt-16 px-2">
+                <p className="sm:hidden text-lg font-semibold mb-4">
+                  Let's get started!
                 </p>
-                <Search
-                  size={24}
-                  strokeWidth={1.6}
-                  className="hidden sm:block"
-                />
-              </div>
+                <div className="flex flex-col gap-2">
+                  <div className="flex items-center gap-2 mt-4 sm:mt-0">
+                    <p className="text-sm sm:text-lg sm:font-semibold">
+                      Pick a Topic
+                    </p>
+                    <Search
+                      size={24}
+                      strokeWidth={1.6}
+                      className="hidden sm:block"
+                    />
+                  </div>
 
-              <Select
-                value={topic}
-                onValueChange={(value) => {
-                  setResult('');
-                  setTopic(value);
-                }}
-              >
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Topic" />
-                </SelectTrigger>
-                <SelectContent>
-                  {topicsRandomQuestions.map(
-                    (topic: { id: string; name: string }) => (
-                      <div key={topic.id}>
-                        {topic && (
-                          <SelectItem value={topic.id} className="capitalize">
-                            {topic.name}
-                          </SelectItem>
-                        )}
-                      </div>
-                    )
-                  )}
-                </SelectContent>
-              </Select>
-            </div>
-            <Button
-              className="capitalize"
-              onClick={handleSpin}
-              disabled={topic.trim() === ''}
-            >
-              {!topic ? 'Waiting for topic...' : 'Spin!'}
-            </Button>
-            <div className="flex flex-col items-center gap-2 w-full">
-              <p className="text-xs mb-2">or</p>
-              <Button
-                className="capitalize w-full"
-                variant="outline"
-                onClick={handleFeelingLucky}
-              >
-                {`I'm feeling lucky!`}
-              </Button>
-              <p className="text-xs mb-8">
-                Let fate decide your next topic and question
-              </p>
-            </div>
-          </div>
+                  <Select
+                    value={topic}
+                    onValueChange={(value) => {
+                      setResult('');
+                      setTopic(value);
+                    }}
+                  >
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Topic" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {topicsRandomQuestions.map(
+                        (topic: { id: string; name: string }) => (
+                          <div key={topic.id}>
+                            {topic && (
+                              <SelectItem
+                                value={topic.id}
+                                className="capitalize"
+                              >
+                                {topic.name}
+                              </SelectItem>
+                            )}
+                          </div>
+                        )
+                      )}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <Button
+                  className="capitalize"
+                  onClick={handleSpin}
+                  disabled={topic.trim() === ''}
+                >
+                  {!topic ? 'Waiting for topic...' : 'Spin!'}
+                </Button>
+                <div className="flex flex-col items-center gap-2 w-full">
+                  <p className="text-xs mb-2">or</p>
+                  <Button
+                    className="capitalize w-full"
+                    variant="outline"
+                    onClick={handleFeelingLucky}
+                  >
+                    {`I'm feeling lucky!`}
+                  </Button>
+                  <p className="text-xs mb-8">
+                    Let fate decide your next topic and question
+                  </p>
+                </div>
+              </div>
+            </TabsContent>
+            <TabsContent value="vocabulary">
+              {/* ----------------------------------- */}
+              <div className="flex flex-col w-full mt-4 px-2">
+                {linkingWords.map(
+                  (category: { category: string; words: string[] }) => (
+                    <Accordion
+                      key={category.category}
+                      type="single"
+                      collapsible
+                    >
+                      <AccordionItem value={category.category}>
+                        <AccordionTrigger className="uppercase text-lg my-0">
+                          {category.category}
+                        </AccordionTrigger>
+                        <AccordionContent>
+                          <ul className="flex flex-col gap-2 capitalize text-3xl font-semibold p-2">
+                            {category.words.map((word: string) => (
+                              <li
+                                key={word}
+                                className="flex items-center gap-2"
+                              >
+                                <p className="flex items-center gap-2">
+                                  <span className="text-sm">-</span>
+                                  {word}
+                                </p>
+                              </li>
+                            ))}
+                          </ul>
+                        </AccordionContent>
+                      </AccordionItem>
+                    </Accordion>
+                  )
+                )}
+              </div>
+              {/* ----------------------------------- */}
+            </TabsContent>
+          </Tabs>
 
           <div className="hidden sm:block sm:w-3/5 h-full">
             <Result result={result} handleResetAll={handleResetAll} />
@@ -246,3 +284,142 @@ export default function RandomQuestion({ name }: { name: string }) {
     </Card>
   );
 }
+
+const linkingWords = [
+  {
+    category: 'Addition',
+    words: [
+      'as well as',
+      'in addition',
+      'additionally',
+      'furthermore',
+      'moreover',
+      'besides',
+      'on top of that',
+      "what's more",
+      'along with',
+      'not only ... but also'
+    ]
+  },
+  {
+    category: 'Contrast',
+    words: [
+      'however',
+      'although',
+      'though',
+      'even though',
+      'despite',
+      'in spite of',
+      'nevertheless',
+      'on the other hand',
+      'whereas',
+      'while',
+      'yet',
+      'conversely',
+      'nonetheless',
+      'still'
+    ]
+  },
+  {
+    category: 'Cause',
+    words: ['since', 'as', 'for', 'due to', 'owing to', 'as a result of']
+  },
+  {
+    category: 'Result',
+    words: [
+      'therefore',
+      'thus',
+      'as a result',
+      'consequently',
+      "that's why",
+      'for this reason',
+      'hence',
+      'that is why',
+      'it follows that'
+    ]
+  },
+  {
+    category: 'Sequence',
+    words: [
+      'first',
+      'firstly',
+      'to start with',
+      'first of all',
+      'then',
+      'next',
+      'after that',
+      'afterwards',
+      'secondly',
+      'thirdly',
+      'finally',
+      'lastly',
+      'meanwhile',
+      'in the meantime',
+      'before',
+      'prior to'
+    ]
+  },
+  {
+    category: 'Example',
+    words: [
+      'such as',
+      'like',
+      'to illustrate',
+      'in particular',
+      'for example',
+      'for instance'
+    ]
+  },
+  {
+    category: 'Opinion',
+    words: [
+      'in my opinion',
+      'personally',
+      'in fact',
+      'to be honest',
+      'frankly',
+      'surprisingly',
+      'believe it or not',
+      'as far as I know',
+      'as a matter of fact'
+    ]
+  },
+  {
+    category: 'Time',
+    words: [
+      'at the moment',
+      'currently',
+      'right now',
+      'suddenly',
+      'eventually',
+      'soon',
+      'later',
+      'at the same time',
+      'simultaneously'
+    ]
+  },
+  {
+    category: 'Conclusion',
+    words: [
+      'in conclusion',
+      'to sum up',
+      'overall',
+      'all in all',
+      'in short',
+      'briefly',
+      'in a nutshell'
+    ]
+  },
+  {
+    category: 'Condition/Purpose',
+    words: [
+      'if',
+      'unless',
+      'as long as',
+      'so that',
+      'in order to',
+      'so as to',
+      'provided that'
+    ]
+  }
+];

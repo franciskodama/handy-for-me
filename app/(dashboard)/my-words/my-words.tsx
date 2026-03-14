@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { CircleHelp, SquareX } from 'lucide-react';
-import { Foldit } from 'next/font/google';
 
 import {
   Card,
@@ -36,12 +35,6 @@ export default function MyWords({
   const handleSpin = () => {
     setSpinning(true);
     setShowInspirations(false);
-    // const randomIndex = Math.floor(Math.random() * alphabet.length);
-    // const randomLetter = alphabet[randomIndex];
-    // setTimeout(() => {
-    //   setResult(randomLetter);
-    //   setSpinning(false);
-    // }, 1000);
   };
 
   const handleShowInspirations = () => {
@@ -147,18 +140,6 @@ export default function MyWords({
             </Button>
             <div className="">
               Hello!
-              {/* {result &&
-                showInspirations &&
-                startWords[result.toUpperCase() as keyof typeof startWords].map(
-                  (word: string) => (
-                    <p
-                      key={word}
-                      className="border text-center w-full mt-1 py-2 text-base"
-                    >
-                      {word}
-                    </p>
-                  )
-                )} */}
               {result && showInspirations && (
                 <div>
                   <Button
