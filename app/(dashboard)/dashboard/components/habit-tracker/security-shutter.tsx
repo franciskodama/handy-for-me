@@ -44,8 +44,8 @@ export default function SecurityShutter({
 
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-2">
-                <div className="w-2 h-2 bg-red-600 animate-pulse shadow-[0_0_8px_rgba(220,38,38,0.8)]" />
-                <span className="text-[10px] text-zinc-600 uppercase font-black tracking-widest">
+                <div className="w-3 h-3 rounded-full bg-red-600 animate-pulse shadow-[0_0_8px_rgba(220,38,38,0.8)]" />
+                <span className="text-[10px] text-zinc-500 uppercase font-black tracking-widest">
                   Privacy Active
                 </span>
               </div>

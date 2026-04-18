@@ -50,31 +50,31 @@ export default function FactorySign({
 
   if (isEditing) {
     return (
-      <div className="relative bg-zinc-950 px-8 py-4 rounded-lg border-2 border-red-900/50 shadow-2xl h-full flex items-center gap-4 group animate-in fade-in zoom-in duration-300">
+      <div className="relative bg-zinc-950 px-8 py-4 border-2 border-red-900/50 shadow-2xl h-full flex items-center gap-4 group animate-in fade-in zoom-in duration-300">
         <div className="flex-1 flex flex-col sm:flex-row gap-2">
           <input
             type="text"
             value={editName}
             onChange={(e) => setEditName(e.target.value)}
-            className="flex-1 bg-zinc-900 border border-zinc-700 rounded px-3 py-1 text-xs text-zinc-200 focus:border-red-500 outline-none"
+            className="flex-1 bg-zinc-900 border border-zinc-700 px-3 py-1 text-xs text-zinc-200 focus:border-red-500 outline-none"
           />
           <input
             type="date"
             value={editDate}
             onChange={(e) => setEditDate(e.target.value)}
-            className="bg-zinc-900 border border-zinc-700 rounded px-3 py-1 text-xs text-zinc-400 focus:border-red-500 outline-none"
+            className="bg-zinc-900 border border-zinc-700 px-3 py-1 text-xs text-zinc-400 focus:border-red-500 outline-none"
           />
         </div>
         <div className="flex items-center gap-2">
           <button
             onClick={handleUpdate}
-            className="p-2 text-green-500 hover:bg-green-500/10 rounded-full transition-colors"
+            className="p-2 text-green-500 hover:bg-green-500/10 transition-colors"
           >
             <Check className="w-4 h-4" />
           </button>
           <button
             onClick={() => setIsEditing(false)}
-            className="p-2 text-zinc-500 hover:bg-zinc-500/10 rounded-full transition-colors"
+            className="p-2 text-zinc-500 hover:bg-zinc-500/10 transition-colors"
           >
             <X className="w-4 h-4" />
           </button>
@@ -87,7 +87,7 @@ export default function FactorySign({
   }
 
   return (
-    <div className="relative bg-zinc-950 px-8 py-4 rounded-lg border-2 border-zinc-800 shadow-2xl overflow-hidden h-full flex items-center justify-between group">
+    <div className="relative bg-zinc-950 px-8 py-4 border-2 border-zinc-800 shadow-2xl overflow-hidden h-full flex items-center justify-between group">
       {/* Hazard Stripes Left & Right */}
       <div className="absolute top-0 left-0 h-full w-2 bg-[repeating-linear-gradient(0deg,#fbbf24,#fbbf24_10px,#000_10px,#000_20px)] opacity-50" />
       <div className="absolute top-0 right-0 h-full w-2 bg-[repeating-linear-gradient(0deg,#fbbf24,#fbbf24_10px,#000_10px,#000_20px)] opacity-50" />
