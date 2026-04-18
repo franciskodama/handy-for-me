@@ -47,6 +47,20 @@ export async function resetHabit(id: string) {
   }
 }
 
+export async function updateHabit(id: string, name: string, lastResetAt: Date) {
+  try {
+    await prisma.habit.update({
+      where: { id },
+      data: { name, lastResetAt }
+    });
+    revalidatePath('/dashboard');
+    return { success: true };
+  } catch (error) {
+    console.error('Error updating habit:', error);
+    return { success: false, error: 'Failed to update habit' };
+  }
+}
+
 export async function deleteHabit(id: string) {
   try {
     await prisma.habit.delete({

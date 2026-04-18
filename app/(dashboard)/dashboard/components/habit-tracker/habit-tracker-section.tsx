@@ -7,17 +7,21 @@ import { Plus } from 'lucide-react';
 import { useState } from 'react';
 import { createHabit, deleteHabit } from '@/lib/actions/habits';
 import { toast } from 'sonner';
+import { tagClass } from '../cards/cards';
+import { Button } from '@/components/ui/button';
 
-export default function HabitTrackerSection({ 
-  habits, 
-  uid 
-}: { 
-  habits: Habit[], 
-  uid: string 
+export default function HabitTrackerSection({
+  habits,
+  uid
+}: {
+  habits: Habit[];
+  uid: string;
 }) {
   const [isAdding, setIsAdding] = useState(false);
   const [newHabitName, setNewHabitName] = useState('');
-  const [startDate, setStartDate] = useState(new Date().toISOString().split('T')[0]);
+  const [startDate, setStartDate] = useState(
+    new Date().toISOString().split('T')[0]
+  );
 
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -44,15 +48,16 @@ export default function HabitTrackerSection({
   };
 
   return (
-    <div className="w-full my-8">
-      <div className="flex items-center justify-between mb-6 px-2">
-        <h2 className="text-xl font-bold uppercase tracking-widest text-zinc-400">
+    <div className="w-full my-4">
+      <div className="flex items-center justify-between mb-2">
+        {/* <h2 className="text-xs font-bold uppercase tracking-widest text-zinc-400"> */}
+        <h2 className="p-1 px-2 text-primary text-xs font-semibold">
           Streak <span className="text-red-500">Monitors</span>
         </h2>
-        
+
         <button
           onClick={() => setIsAdding(!isAdding)}
-          className="flex items-center gap-2 text-xs font-black uppercase bg-zinc-800 hover:bg-zinc-700 text-zinc-300 px-3 py-1.5 rounded border border-zinc-700 transition-all"
+          className="p-1 px-2 text-xs text-primary font-semibold flex items-center gap-2"
         >
           <Plus className="w-3 h-3" />
           {isAdding ? 'Cancel' : 'New Monitor'}
@@ -64,10 +69,10 @@ export default function HabitTrackerSection({
           <div className="flex flex-col sm:flex-row gap-2">
             <input
               type="text"
-              placeholder="Habit Name (e.g. Sugar, Smoking)"
+              placeholder="e.g. Sugar, Social Media, ..."
               value={newHabitName}
               onChange={(e) => setNewHabitName(e.target.value)}
-              className="flex-1 bg-zinc-900 border border-zinc-700 rounded px-4 py-2 text-sm focus:outline-none focus:border-red-500"
+              className="flex-1 bg-zinc-900 border border-zinc-700 px-4 py-2 text-sm focus:outline-none focus:border-red-500"
               autoFocus
             />
             <div className="flex gap-2">
@@ -75,42 +80,42 @@ export default function HabitTrackerSection({
                 type="date"
                 value={startDate}
                 onChange={(e) => setStartDate(e.target.value)}
-                className="bg-zinc-900 border border-zinc-700 rounded px-4 py-2 text-sm focus:outline-none focus:border-red-500 text-zinc-400"
+                className="bg-zinc-900 border border-zinc-700 px-4 py-2 text-sm focus:outline-none focus:border-red-500 text-zinc-400"
               />
               <button
                 type="submit"
-                className="bg-red-600 hover:bg-red-500 text-white text-xs font-bold uppercase px-6 py-2 rounded transition-colors"
+                className="bg-red-600 hover:bg-red-500 text-white text-xs font-bold uppercase px-6 py-2 transition-colors"
               >
                 Deploy
               </button>
             </div>
           </div>
-          <p className="text-[10px] text-zinc-500 mt-2 uppercase tracking-tight">Set start date (default is today)</p>
+          <p className="text-[10px] text-zinc-500 mt-2 uppercase tracking-tight">
+            Set start date (default is today)
+          </p>
         </form>
       )}
 
       {habits.length === 0 && !isAdding ? (
-        <div className="flex flex-col items-center justify-center p-12 border-2 border-dashed border-zinc-800 rounded-xl bg-zinc-900/10">
-          <p className="text-zinc-600 uppercase text-xs font-bold tracking-widest">No Active Monitors</p>
-          <button 
-             onClick={() => setIsAdding(true)}
-             className="mt-4 text-red-500/50 hover:text-red-500 text-xs uppercase font-black transition-colors"
+        <div className="flex flex-col items-center justify-center p-12 border-2 border-dashed border-zinc-800 bg-zinc-900/10">
+          <p className="text-zinc-600 uppercase text-xs font-bold tracking-widest">
+            No Active Monitors
+          </p>
+          <button
+            onClick={() => setIsAdding(true)}
+            className="mt-4 text-red-500/50 hover:text-red-500 text-xs uppercase font-black transition-colors"
           >
             Initialize First Tracker
           </button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {habits.map((habit) => (
-            <div key={habit.id} className="relative">
-              <SecurityShutter label={habit.name}>
-                <FactorySign habit={habit} />
-                <button
-                  onClick={() => handleDelete(habit.id)}
-                  className="absolute bottom-2 left-6 text-[10px] text-zinc-800 hover:text-red-900 transition-colors uppercase font-bold"
-                >
-                  Decommission
-                </button>
+        <div className="flex flex-col gap-4">
+          {habits.map((habit, index) => (
+            <div key={habit.id} className="relative w-full">
+              <SecurityShutter
+                label={`STREAK MONITOR #${String(index + 1).padStart(2, '0')}`}
+              >
+                <FactorySign habit={habit} onDelete={handleDelete} />
               </SecurityShutter>
             </div>
           ))}
