@@ -104,3 +104,12 @@ export type YearPromise = {
   progress: number;
   done: boolean;
 };
+
+export type Habit = {
+  id: string;
+  createdAt: Date;
+  uid: string;
+  name: string;
+  lastResetAt: Date;
+  color: string;
+};

@@ -1,0 +1,121 @@
+'use client';
+
+import { Habit } from '@/lib/types';
+import SecurityShutter from './security-shutter';
+import FactorySign from './factory-sign';
+import { Plus } from 'lucide-react';
+import { useState } from 'react';
+import { createHabit, deleteHabit } from '@/lib/actions/habits';
+import { toast } from 'sonner';
+
+export default function HabitTrackerSection({ 
+  habits, 
+  uid 
+}: { 
+  habits: Habit[], 
+  uid: string 
+}) {
+  const [isAdding, setIsAdding] = useState(false);
+  const [newHabitName, setNewHabitName] = useState('');
+  const [startDate, setStartDate] = useState(new Date().toISOString().split('T')[0]);
+
+  const handleCreate = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newHabitName.trim()) return;
+
+    const res = await createHabit(uid, newHabitName, new Date(startDate));
+    if (res.success) {
+      toast.success('Habit tracker deployment successful!');
+      setNewHabitName('');
+      setStartDate(new Date().toISOString().split('T')[0]);
+      setIsAdding(false);
+    } else {
+      toast.error('Deployment failed.');
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    if (confirm('Decommission this tracker? All history will be lost.')) {
+      const res = await deleteHabit(id);
+      if (res.success) {
+        toast.success('Tracker decommissioned.');
+      }
+    }
+  };
+
+  return (
+    <div className="w-full my-8">
+      <div className="flex items-center justify-between mb-6 px-2">
+        <h2 className="text-xl font-bold uppercase tracking-widest text-zinc-400">
+          Streak <span className="text-red-500">Monitors</span>
+        </h2>
+        
+        <button
+          onClick={() => setIsAdding(!isAdding)}
+          className="flex items-center gap-2 text-xs font-black uppercase bg-zinc-800 hover:bg-zinc-700 text-zinc-300 px-3 py-1.5 rounded border border-zinc-700 transition-all"
+        >
+          <Plus className="w-3 h-3" />
+          {isAdding ? 'Cancel' : 'New Monitor'}
+        </button>
+      </div>
+
+      {isAdding && (
+        <form onSubmit={handleCreate} className="mb-8 px-2 max-w-lg">
+          <div className="flex flex-col sm:flex-row gap-2">
+            <input
+              type="text"
+              placeholder="Habit Name (e.g. Sugar, Smoking)"
+              value={newHabitName}
+              onChange={(e) => setNewHabitName(e.target.value)}
+              className="flex-1 bg-zinc-900 border border-zinc-700 rounded px-4 py-2 text-sm focus:outline-none focus:border-red-500"
+              autoFocus
+            />
+            <div className="flex gap-2">
+              <input
+                type="date"
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
+                className="bg-zinc-900 border border-zinc-700 rounded px-4 py-2 text-sm focus:outline-none focus:border-red-500 text-zinc-400"
+              />
+              <button
+                type="submit"
+                className="bg-red-600 hover:bg-red-500 text-white text-xs font-bold uppercase px-6 py-2 rounded transition-colors"
+              >
+                Deploy
+              </button>
+            </div>
+          </div>
+          <p className="text-[10px] text-zinc-500 mt-2 uppercase tracking-tight">Set start date (default is today)</p>
+        </form>
+      )}
+
+      {habits.length === 0 && !isAdding ? (
+        <div className="flex flex-col items-center justify-center p-12 border-2 border-dashed border-zinc-800 rounded-xl bg-zinc-900/10">
+          <p className="text-zinc-600 uppercase text-xs font-bold tracking-widest">No Active Monitors</p>
+          <button 
+             onClick={() => setIsAdding(true)}
+             className="mt-4 text-red-500/50 hover:text-red-500 text-xs uppercase font-black transition-colors"
+          >
+            Initialize First Tracker
+          </button>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {habits.map((habit) => (
+            <div key={habit.id} className="relative">
+              <SecurityShutter label={habit.name}>
+                <FactorySign habit={habit} />
+                <button
+                  onClick={() => handleDelete(habit.id)}
+                  className="absolute bottom-2 left-6 text-[10px] text-zinc-800 hover:text-red-900 transition-colors uppercase font-bold"
+                >
+                  Decommission
+                </button>
+              </SecurityShutter>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}

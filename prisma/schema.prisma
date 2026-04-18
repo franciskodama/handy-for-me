@@ -92,6 +92,15 @@ model YearPromise {
   done      Boolean  @default(false)
 }
 
+model Habit {
+  id          String   @id @default(uuid()) @db.VarChar(255)
+  createdAt   DateTime @default(now()) @db.Timestamp(6)
+  uid         String
+  name        String
+  lastResetAt DateTime @default(now()) @db.Timestamp(6)
+  color       String?  @default("#ef4444")
+}
+
 enum shortcut_color_enum {
   BLUE
   GREEN
