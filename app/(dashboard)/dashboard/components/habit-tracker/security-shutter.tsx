@@ -60,7 +60,7 @@ export default function SecurityShutter({
           {/* Close Button (Hidden Eye) */}
           <button
             onClick={() => setIsOpen(false)}
-            className="absolute top-2 right-2 p-2 text-white hover:text-zinc-500 transition-colors z-30"
+            className="absolute top-1/2 -translate-y-1/2 right-8 p-2 text-white hover:text-zinc-400 transition-colors z-30"
             title="Hide Tracker"
           >
             <EyeOff className="w-4 h-4" />

@@ -52,7 +52,7 @@ export default function HabitTrackerSection({
       <div className="flex items-center justify-between mb-2">
         {/* <h2 className="text-xs font-bold uppercase tracking-widest text-zinc-400"> */}
         <h2 className="p-1 px-2 text-primary text-xs font-semibold">
-          Streak <span className="text-red-500">Monitors</span>
+          Habit <span className="text-red-500">Tracker</span>
         </h2>
 
         <button

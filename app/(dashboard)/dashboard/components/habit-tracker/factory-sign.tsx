@@ -94,7 +94,7 @@ export default function FactorySign({
 
       {/* Left: Habit Name */}
       <div className="flex-1 flex items-center gap-4">
-        <h3 className="text-zinc-500 uppercase tracking-[0.3em] text-[10px] font-bold">
+        <h3 className="text-zinc-400 uppercase tracking-[0.3em] text-[10px] font-bold">
           Monitor Tag: <span className="text-zinc-300 ml-2">{habit.name}</span>
         </h3>
       </div>
@@ -106,17 +106,17 @@ export default function FactorySign({
             {String(days).padStart(3, '0')}
           </span>
         </div>
-        <p className="text-zinc-500 uppercase tracking-tighter text-[10px] font-black leading-tight max-w-[80px]">
+        <p className="text-zinc-400 uppercase tracking-tighter text-xs font-black leading-tight max-w-[80px]">
           Days Without An Accident
         </p>
       </div>
 
       {/* Right: Actions */}
-      <div className="flex-1 flex justify-end items-center gap-4">
+      <div className="flex-1 flex justify-end items-center gap-3 mr-8">
         <button
           onClick={handleReset}
           disabled={isResetting}
-          className="flex items-center gap-2 text-[9px] uppercase font-bold text-zinc-700 hover:text-red-500 transition-colors group/btn"
+          className="flex items-center gap-2 text-xs uppercase font-bold text-zinc-400 hover:text-red-500 transition-colors group/btn"
         >
           <RefreshCcw
             className={`w-3 h-3 ${isResetting ? 'animate-spin' : 'group-hover/btn:rotate-180 transition-transform duration-500'}`}
@@ -129,10 +129,10 @@ export default function FactorySign({
         <div className="flex items-center gap-1">
           <button
             onClick={() => setIsEditing(true)}
-            className="p-1.5 text-zinc-700 hover:text-zinc-300 transition-colors"
+            className="p-1.5 text-zinc-500 hover:text-zinc-300 transition-colors"
             title="Edit Monitor"
           >
-            <Settings className="w-3 h-3" />
+            <Settings className="w-4 h-4" />
           </button>
           <button
             onClick={() => onDelete(habit.id)}
