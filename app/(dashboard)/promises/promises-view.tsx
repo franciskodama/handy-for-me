@@ -425,7 +425,7 @@ export default function PromisesView({
               variant="outline"
               size="sm"
               onClick={handleDownloadPDF}
-              className="h-9 px-3 text-xs font-semibold gap-2 border-primary/20 hover:bg-primary hover:text-white transition-all ml-2"
+              className="h-9 px-3 text-xs font-semibold gap-2 hover:bg-primary hover:text-white transition-all ml-2"
             >
               <Printer size={14} />
               Download PDF

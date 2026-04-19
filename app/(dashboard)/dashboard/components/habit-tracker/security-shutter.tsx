@@ -32,7 +32,7 @@ export default function SecurityShutter({
           <div className="absolute bottom-0 left-0 w-full h-1.5 bg-[repeating-linear-gradient(45deg,#fbbf24,#fbbf24_10px,#000_10px,#000_20px)]" />
 
           {/* Center Lock Interface */}
-          <div className="absolute inset-0 flex items-center justify-between px-12">
+          <div className="absolute inset-0 flex items-center justify-between px-12 pb-1.5">
             <div className="flex items-center gap-4">
               <div className="p-2 group-hover:border-yellow-500/50 group-hover:scale-110 transition-all duration-300">
                 <Lock className="w-4 h-4 text-zinc-500 group-hover:text-yellow-500" />

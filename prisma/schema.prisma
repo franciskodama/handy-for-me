@@ -99,6 +99,7 @@ model Habit {
   name        String
   lastResetAt DateTime @default(now()) @db.Timestamp(6)
   color       String?  @default("#ef4444")
+  targetDate  DateTime? @db.Timestamp(6)
 }
 
 enum shortcut_color_enum {

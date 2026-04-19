@@ -22,16 +22,54 @@ export default function HabitTrackerSection({
   const [startDate, setStartDate] = useState(
     new Date().toISOString().split('T')[0]
   );
+  const [targetDate, setTargetDate] = useState('');
+  const [periodStr, setPeriodStr] = useState('');
+
+  const updatePeriod = (startStr: string, targetStr: string) => {
+    if (!startStr || !targetStr) {
+      setPeriodStr('');
+      return;
+    }
+    const start = new Date(startStr);
+    const target = new Date(targetStr);
+    if (target <= start) {
+      setPeriodStr('');
+      return;
+    }
+
+    let months =
+      (target.getFullYear() - start.getFullYear()) * 12 +
+      target.getMonth() -
+      start.getMonth();
+    let tempDate = new Date(start);
+    tempDate.setMonth(tempDate.getMonth() + months);
+
+    if (tempDate > target) {
+      months--;
+      tempDate = new Date(start);
+      tempDate.setMonth(tempDate.getMonth() + months);
+    }
+
+    const diffTime = Math.max(0, target.getTime() - tempDate.getTime());
+    const days = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+    setPeriodStr(`${months}m ${days}d`);
+  };
 
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newHabitName.trim()) return;
 
-    const res = await createHabit(uid, newHabitName, new Date(startDate));
+    const res = await createHabit(
+      uid,
+      newHabitName,
+      new Date(startDate),
+      targetDate ? new Date(targetDate) : undefined
+    );
     if (res.success) {
       toast.success('Habit tracker deployment successful!');
       setNewHabitName('');
       setStartDate(new Date().toISOString().split('T')[0]);
+      setTargetDate('');
       setIsAdding(false);
     } else {
       toast.error('Deployment failed.');
@@ -55,44 +93,88 @@ export default function HabitTrackerSection({
           Habit <span className="text-red-500">Tracker</span>
         </h2>
 
-        <button
-          onClick={() => setIsAdding(!isAdding)}
-          className="p-1 px-2 text-xs text-primary font-semibold flex items-center gap-2"
-        >
-          <Plus className="w-3 h-3" />
-          {isAdding ? 'Cancel' : 'New Monitor'}
-        </button>
+        {!isAdding && (
+          <button
+            onClick={() => setIsAdding(true)}
+            className="p-1 px-2 text-xs text-primary font-semibold flex items-center gap-2 hover:text-red-500 transition-colors"
+          >
+            <Plus className="w-3 h-3" />
+            New Monitor
+          </button>
+        )}
       </div>
 
       {isAdding && (
-        <form onSubmit={handleCreate} className="mb-8 px-2 max-w-lg">
-          <div className="flex flex-col sm:flex-row gap-2">
-            <input
-              type="text"
-              placeholder="e.g. Sugar, Social Media, ..."
-              value={newHabitName}
-              onChange={(e) => setNewHabitName(e.target.value)}
-              className="flex-1 bg-zinc-900 border border-zinc-700 px-4 py-2 text-sm focus:outline-none focus:border-red-500"
-              autoFocus
-            />
-            <div className="flex gap-2">
+        <form onSubmit={handleCreate} className="mb-8 max-w-5xl">
+          <div className="flex flex-col lg:flex-row items-end gap-3 p-0 rounded-lg">
+            <div className="flex-[2] w-full group">
+              <label className="text-[10px] text-zinc-500 uppercase tracking-widest font-black mb-1.5 block group-focus-within:text-red-500 transition-colors">
+                Habit Designation
+              </label>
+              <input
+                type="text"
+                placeholder="e.g. Daily Meditation, No Sugar..."
+                value={newHabitName}
+                onChange={(e) => setNewHabitName(e.target.value)}
+                className="w-full bg-zinc-950 border border-zinc-800 px-4 py-2 text-sm text-zinc-100 focus:outline-none focus:border-red-600/50 transition-all placeholder:text-zinc-500"
+                autoFocus
+              />
+            </div>
+
+            <div className="flex-1 w-full lg:w-auto">
+              <label className="text-[10px] text-zinc-400 capitalize tracking-widest font-black mb-1.5 block">
+                Deployment Date
+              </label>
               <input
                 type="date"
                 value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
-                className="bg-zinc-900 border border-zinc-700 px-4 py-2 text-sm focus:outline-none focus:border-red-500 text-zinc-400"
+                onChange={(e) => {
+                  setStartDate(e.target.value);
+                  updatePeriod(e.target.value, targetDate);
+                }}
+                onClick={(e) => e.currentTarget.showPicker?.()}
+                className="w-full bg-zinc-950 border border-zinc-800 px-4 py-2 text-sm focus:outline-none focus:border-red-600/50 text-zinc-200 cursor-pointer hover:bg-zinc-900 transition-all"
               />
-              <button
-                type="submit"
-                className="bg-red-600 hover:bg-red-500 text-white text-xs font-bold uppercase px-6 py-2 transition-colors"
+            </div>
+
+            <div className="flex-1 w-full lg:w-auto">
+              <label className="text-[10px] text-zinc-400 capitalize tracking-widest font-black mb-1.5 block">
+                Target Milestone
+              </label>
+              <input
+                type="date"
+                value={targetDate}
+                onChange={(e) => {
+                  setTargetDate(e.target.value);
+                  updatePeriod(startDate, e.target.value);
+                }}
+                onClick={(e) => e.currentTarget.showPicker?.()}
+                className="w-full bg-zinc-950 border border-zinc-800 px-4 py-2 text-sm focus:outline-none focus:border-red-600/50 text-zinc-200 cursor-pointer hover:bg-zinc-900 transition-all"
+              />
+            </div>
+
+            <div className="flex gap-2 w-full lg:w-[360px] lg:shrink-0 mt-2 lg:mt-0 items-center">
+              <Button type="submit" variant="outline">
+                Initialize Monitor
+              </Button>
+              <Button
+                type="button"
+                variant="ghost"
+                className="text-xs font-black uppercase px-8 h-[38px] transition-all"
+                onClick={() => setIsAdding(false)}
               >
-                Deploy
-              </button>
+                Cancel
+              </Button>
+              {periodStr && (
+                <div className="flex items-center gap-2 px-3 border-l border-zinc-800 h-[38px] animate-in fade-in slide-in-from-left-1 duration-300">
+                  <p className="text-[10px] text-zinc-400 uppercase font-black tracking-widest leading-none whitespace-nowrap">
+                    Goal <br />
+                    <span className="text-zinc-500 text-xs">{periodStr}</span>
+                  </p>
+                </div>
+              )}
             </div>
           </div>
-          <p className="text-[10px] text-zinc-500 mt-2 uppercase tracking-tight">
-            Set start date (default is today)
-          </p>
         </form>
       )}
 

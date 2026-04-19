@@ -19,22 +19,58 @@ export default function FactorySign({
   const [editDate, setEditDate] = useState(
     new Date(habit.lastResetAt).toISOString().split('T')[0]
   );
+  const [editTargetDate, setEditTargetDate] = useState(
+    habit.targetDate
+      ? new Date(habit.targetDate).toISOString().split('T')[0]
+      : ''
+  );
 
   const lastReset = new Date(habit.lastResetAt);
   const now = new Date();
-  
-  let finalMonths = (now.getFullYear() - lastReset.getFullYear()) * 12 + now.getMonth() - lastReset.getMonth();
+
+  let finalMonths =
+    (now.getFullYear() - lastReset.getFullYear()) * 12 +
+    now.getMonth() -
+    lastReset.getMonth();
   let tempDate = new Date(lastReset);
   tempDate.setMonth(tempDate.getMonth() + finalMonths);
-  
+
   if (tempDate > now) {
     finalMonths--;
     tempDate = new Date(lastReset);
     tempDate.setMonth(tempDate.getMonth() + finalMonths);
   }
-  
+
   const diffTime = Math.max(0, now.getTime() - tempDate.getTime());
   const finalDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+  // Goal calculation
+  const targetDate = habit.targetDate ? new Date(habit.targetDate) : null;
+  let remainingMonths = 0;
+  let remainingDays = 0;
+  let hasReachedGoal = false;
+
+  if (targetDate) {
+    if (now >= targetDate) {
+      hasReachedGoal = true;
+    } else {
+      remainingMonths =
+        (targetDate.getFullYear() - now.getFullYear()) * 12 +
+        targetDate.getMonth() -
+        now.getMonth();
+      let rTempDate = new Date(now);
+      rTempDate.setMonth(rTempDate.getMonth() + remainingMonths);
+
+      if (rTempDate > targetDate) {
+        remainingMonths--;
+        rTempDate = new Date(now);
+        rTempDate.setMonth(rTempDate.getMonth() + remainingMonths);
+      }
+
+      const rDiffTime = Math.max(0, targetDate.getTime() - rTempDate.getTime());
+      remainingDays = Math.ceil(rDiffTime / (1000 * 60 * 60 * 24));
+    }
+  }
 
   const handleReset = async () => {
     if (confirm(`Are you sure you want to reset "${habit.name}" to 0?`)) {
@@ -50,7 +86,12 @@ export default function FactorySign({
   };
 
   const handleUpdate = async () => {
-    const res = await updateHabit(habit.id, editName, new Date(editDate));
+    const res = await updateHabit(
+      habit.id,
+      editName,
+      new Date(editDate),
+      editTargetDate ? new Date(editTargetDate) : null
+    );
     if (res.success) {
       toast.success('Monitor configuration updated.');
       setIsEditing(false);
@@ -73,7 +114,18 @@ export default function FactorySign({
             type="date"
             value={editDate}
             onChange={(e) => setEditDate(e.target.value)}
-            className="bg-zinc-900 border border-zinc-700 px-3 py-1 text-xs text-zinc-400 focus:border-red-500 outline-none"
+            onClick={(e) => e.currentTarget.showPicker?.()}
+            className="bg-zinc-900 border border-zinc-700 px-3 py-1 text-[10px] text-zinc-400 focus:border-red-500 outline-none w-28 cursor-pointer"
+            title="Start Date"
+          />
+          <input
+            type="date"
+            value={editTargetDate}
+            onChange={(e) => setEditTargetDate(e.target.value)}
+            onClick={(e) => e.currentTarget.showPicker?.()}
+            className="bg-zinc-900 border border-zinc-700 px-3 py-1 text-[10px] text-zinc-400 focus:border-red-500 outline-none w-28 cursor-pointer"
+            placeholder="Goal Date"
+            title="Goal Date (Optional)"
           />
         </div>
         <div className="flex items-center gap-2">
@@ -117,49 +169,64 @@ export default function FactorySign({
             <span className="text-xl font-mono font-bold text-red-600 drop-shadow-[0_0_8px_rgba(220,38,38,0.5)]">
               {String(finalMonths).padStart(2, '0')}
             </span>
-            <span className="text-[10px] text-zinc-500 font-bold ml-1 uppercase tracking-tighter">m</span>
+            <span className="text-[10px] text-zinc-400 font-bold ml-1 uppercase tracking-tighter">
+              m
+            </span>
           </div>
           <div className="bg-zinc-900 rounded border border-zinc-800 px-2 py-0 flex items-baseline">
             <span className="text-xl font-mono font-bold text-red-600 drop-shadow-[0_0_8px_rgba(220,38,38,0.5)]">
               {String(finalDays).padStart(2, '0')}
             </span>
-            <span className="text-[10px] text-zinc-500 font-bold ml-1 uppercase tracking-tighter">d</span>
+            <span className="text-[10px] text-zinc-400 font-bold ml-1 uppercase tracking-tighter">
+              d
+            </span>
           </div>
         </div>
-        <p className="text-zinc-500 uppercase tracking-tighter text-[9px] font-black leading-none max-w-[60px]">
-          Accident Free Period
-        </p>
+        {targetDate ? (
+          <div className="flex flex-col">
+            <p className="text-zinc-500 uppercase tracking-tighter text-[8px] font-black leading-none mb-1">
+              {hasReachedGoal ? 'Goal Status' : 'Time to Goal'}
+            </p>
+            <p
+              className={`uppercase tracking-tighter text-[9px] font-black leading-none max-w-[80px] ${hasReachedGoal ? 'text-green-500' : 'text-zinc-400'}`}
+            >
+              {hasReachedGoal
+                ? 'MISSION COMPLETE'
+                : `${remainingMonths}M ${remainingDays}D REMAINING`}
+            </p>
+          </div>
+        ) : (
+          <p className="text-zinc-400 uppercase tracking-wider text-sm font-black leading-none">
+            Without an accident
+          </p>
+        )}
       </div>
 
       {/* Right: Actions */}
-      <div className="flex-1 flex justify-end items-center gap-3 mr-8">
+      <div className="flex-1 flex justify-end items-center gap-3 mr-12">
         <button
           onClick={handleReset}
           disabled={isResetting}
           className="flex items-center gap-2 text-xs uppercase font-bold text-zinc-400 hover:text-red-500 transition-colors group/btn"
         >
           <RefreshCcw
-            className={`w-3 h-3 ${isResetting ? 'animate-spin' : 'group-hover/btn:rotate-180 transition-transform duration-500'}`}
+            className={`w-4 h-4 ${isResetting ? 'animate-spin' : 'group-hover/btn:rotate-180 transition-transform duration-500'}`}
           />
-          Reset
         </button>
-
-        <div className="h-4 w-[1px] bg-zinc-800 mx-2" />
-
         <div className="flex items-center gap-1">
           <button
             onClick={() => setIsEditing(true)}
-            className="p-1.5 text-zinc-500 hover:text-zinc-300 transition-colors"
+            className="p-1.5 text-zinc-400 hover:text-zinc-300 transition-colors"
             title="Edit Monitor"
           >
             <Settings className="w-4 h-4" />
           </button>
           <button
             onClick={() => onDelete(habit.id)}
-            className="p-1.5 text-zinc-900 hover:text-red-900 transition-colors"
+            className="p-1.5 text-zinc-400 hover:text-red-900 transition-colors"
             title="Decommission"
           >
-            <Trash2 className="w-3 h-3" />
+            <Trash2 className="w-4 h-4" />
           </button>
         </div>
       </div>

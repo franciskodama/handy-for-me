@@ -16,13 +16,14 @@ export async function getHabits(uid: string) {
   }
 }
 
-export async function createHabit(uid: string, name: string, startDate?: Date) {
+export async function createHabit(uid: string, name: string, startDate?: Date, targetDate?: Date) {
   try {
     const habit = await prisma.habit.create({
       data: {
         uid,
         name,
-        lastResetAt: startDate || new Date()
+        lastResetAt: startDate || new Date(),
+        targetDate: targetDate || null
       }
     });
     revalidatePath('/dashboard');
@@ -47,11 +48,11 @@ export async function resetHabit(id: string) {
   }
 }
 
-export async function updateHabit(id: string, name: string, lastResetAt: Date) {
+export async function updateHabit(id: string, name: string, lastResetAt: Date, targetDate?: Date | null) {
   try {
     await prisma.habit.update({
       where: { id },
-      data: { name, lastResetAt }
+      data: { name, lastResetAt, targetDate: targetDate || null }
     });
     revalidatePath('/dashboard');
     return { success: true };
