@@ -4,6 +4,17 @@ import { Habit } from '@/lib/types';
 import { resetHabit, updateHabit } from '@/lib/actions/habits';
 import { toast } from 'sonner';
 import { RefreshCcw, Settings, Trash2, X, Check } from 'lucide-react';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger
+} from '@/components/ui/alert-dialog';
 import { useState } from 'react';
 
 export default function FactorySign({
@@ -72,17 +83,15 @@ export default function FactorySign({
     }
   }
 
-  const handleReset = async () => {
-    if (confirm(`Are you sure you want to reset "${habit.name}" to 0?`)) {
-      setIsResetting(true);
-      const res = await resetHabit(habit.id);
-      if (res.success) {
-        toast.success(`${habit.name} has been reset. Stay strong!`);
-      } else {
-        toast.error('Failed to reset habit.');
-      }
-      setIsResetting(false);
+  const onResetConfirm = async () => {
+    setIsResetting(true);
+    const res = await resetHabit(habit.id);
+    if (res.success) {
+      toast.success(`${habit.name} has been reset. Stay strong!`);
+    } else {
+      toast.error('Failed to reset habit.');
     }
+    setIsResetting(false);
   };
 
   const handleUpdate = async () => {
@@ -204,15 +213,44 @@ export default function FactorySign({
 
       {/* Right: Actions */}
       <div className="flex-1 flex justify-end items-center gap-3 mr-12">
-        <button
-          onClick={handleReset}
-          disabled={isResetting}
-          className="flex items-center gap-2 text-xs uppercase font-bold text-zinc-400 hover:text-red-500 transition-colors group/btn"
-        >
-          <RefreshCcw
-            className={`w-4 h-4 ${isResetting ? 'animate-spin' : 'group-hover/btn:rotate-180 transition-transform duration-500'}`}
-          />
-        </button>
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <button
+              disabled={isResetting}
+              className="flex items-center gap-2 text-xs uppercase font-bold text-zinc-400 hover:text-red-500 transition-colors group/btn"
+              title="Reset Monitor"
+            >
+              <RefreshCcw
+                className={`w-4 h-4 ${isResetting ? 'animate-spin' : 'group-hover/btn:rotate-180 transition-transform duration-500'}`}
+              />
+            </button>
+          </AlertDialogTrigger>
+          <AlertDialogContent className="bg-zinc-950 border-zinc-800 text-zinc-100">
+            <AlertDialogHeader>
+              <AlertDialogTitle className="uppercase tracking-widest font-black text-sm">
+                Confirm Reset
+              </AlertDialogTitle>
+              <AlertDialogDescription className="text-zinc-500 text-xs">
+                Are you sure you want to reset the{' '}
+                <span className="text-red-500 font-bold uppercase">
+                  "{habit.name}"
+                </span>{' '}
+                monitor? This will reset the counter to zero.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter className="mt-4">
+              <AlertDialogCancel className="bg-zinc-900 border-zinc-800 text-zinc-400 hover:bg-zinc-800 hover:text-zinc-100 uppercase text-[10px] font-bold">
+                Cancel
+              </AlertDialogCancel>
+              <AlertDialogAction
+                onClick={onResetConfirm}
+                className="bg-red-600 hover:bg-red-500 text-white uppercase text-[10px] font-black"
+              >
+                Execute Reset
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
         <div className="flex items-center gap-1">
           <button
             onClick={() => setIsEditing(true)}
@@ -221,13 +259,42 @@ export default function FactorySign({
           >
             <Settings className="w-4 h-4" />
           </button>
-          <button
-            onClick={() => onDelete(habit.id)}
-            className="p-1.5 text-zinc-400 hover:text-red-900 transition-colors"
-            title="Decommission"
-          >
-            <Trash2 className="w-4 h-4" />
-          </button>
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <button
+                className="p-1.5 text-zinc-400 hover:text-red-900 transition-colors"
+                title="Decommission"
+              >
+                <Trash2 className="w-4 h-4" />
+              </button>
+            </AlertDialogTrigger>
+            <AlertDialogContent className="bg-zinc-950 border-zinc-800 text-zinc-100">
+              <AlertDialogHeader>
+                <AlertDialogTitle className="uppercase tracking-widest font-black text-sm">
+                  Decommission Alert
+                </AlertDialogTitle>
+                <AlertDialogDescription className="text-zinc-500 text-xs">
+                  Are you absolutely sure you want to decommission the{' '}
+                  <span className="text-red-500 font-bold uppercase">
+                    "{habit.name}"
+                  </span>{' '}
+                  monitor? This action will permanently remove all tracking
+                  history.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter className="mt-4">
+                <AlertDialogCancel className="bg-zinc-900 border-zinc-800 text-zinc-400 hover:bg-zinc-800 hover:text-zinc-100 uppercase text-[10px] font-bold">
+                  Keep Active
+                </AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={() => onDelete(habit.id)}
+                  className="bg-red-600 hover:bg-red-500 text-white uppercase text-[10px] font-black"
+                >
+                  Decommission
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </div>
       </div>
 

@@ -77,11 +77,9 @@ export default function HabitTrackerSection({
   };
 
   const handleDelete = async (id: string) => {
-    if (confirm('Decommission this tracker? All history will be lost.')) {
-      const res = await deleteHabit(id);
-      if (res.success) {
-        toast.success('Tracker decommissioned.');
-      }
+    const res = await deleteHabit(id);
+    if (res.success) {
+      toast.success('Tracker decommissioned.');
     }
   };
 
@@ -89,14 +87,14 @@ export default function HabitTrackerSection({
     <div className="w-full my-4">
       <div className="flex items-center justify-between mb-2">
         {/* <h2 className="text-xs font-bold uppercase tracking-widest text-zinc-400"> */}
-        <h2 className="p-1 px-2 text-primary text-xs font-semibold">
+        <h2 className=" text-primary text-sm font-semibold">
           Habit <span className="text-red-500">Tracker</span>
         </h2>
 
         {!isAdding && (
           <button
             onClick={() => setIsAdding(true)}
-            className="p-1 px-2 text-xs text-primary font-semibold flex items-center gap-2 hover:text-red-500 transition-colors"
+            className="px-1 text-xs text-primary font-semibold flex items-center gap-2 hover:text-red-500 transition-colors"
           >
             <Plus className="w-3 h-3" />
             New Monitor
@@ -108,7 +106,8 @@ export default function HabitTrackerSection({
         <form onSubmit={handleCreate} className="mb-8 max-w-5xl">
           <div className="flex flex-col lg:flex-row items-end gap-3 p-0 rounded-lg">
             <div className="flex-[2] w-full group">
-              <label className="text-[10px] text-zinc-500 uppercase tracking-widest font-black mb-1.5 block group-focus-within:text-red-500 transition-colors">
+              <label className="text-xs text-slate-800 capitalize mb-1.5 block">
+                {/* <label className="text-[10px] text-zinc-500 uppercase tracking-widest font-black mb-1.5 block group-focus-within:text-red-500 transition-colors"> */}
                 Habit Designation
               </label>
               <input
@@ -122,7 +121,8 @@ export default function HabitTrackerSection({
             </div>
 
             <div className="flex-1 w-full lg:w-auto">
-              <label className="text-[10px] text-zinc-400 capitalize tracking-widest font-black mb-1.5 block">
+              {/* <label className="text-[10px] text-zinc-400 capitalize tracking-widest font-black mb-1.5 block"> */}
+              <label className="text-xs text-slate-800 capitalize mb-1.5 block">
                 Deployment Date
               </label>
               <input
@@ -138,7 +138,7 @@ export default function HabitTrackerSection({
             </div>
 
             <div className="flex-1 w-full lg:w-auto">
-              <label className="text-[10px] text-zinc-400 capitalize tracking-widest font-black mb-1.5 block">
+              <label className="text-xs text-slate-800 capitalize mb-1.5 block">
                 Target Milestone
               </label>
               <input
