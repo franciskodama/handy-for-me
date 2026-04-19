@@ -54,7 +54,7 @@ export default function HabitTrackerSection({
 
     const diffTime = Math.max(0, target.getTime() - tempDate.getTime());
     const days = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-    setPeriodStr(`${months}m ${days}d`);
+    setPeriodStr(months > 0 ? `${months}m ${days}d` : `${days}d`);
   };
 
   const [isPending, setIsPending] = useState(false);
@@ -179,9 +179,9 @@ export default function HabitTrackerSection({
                 type="submit"
                 variant="outline"
                 disabled={isPending}
-                className="flex-1 lg:flex-none border-zinc-700 text-zinc-300 hover:bg-zinc-800 hover:text-white uppercase font-black text-xs h-[38px] transition-all"
+                className="flex-1 lg:flex-none border-zinc-700 hover:bg-zinc-800 hover:text-white uppercase font-black text-xs h-[38px] transition-all"
               >
-                {isPending ? 'Deploying...' : 'Initialize'}
+                {isPending ? 'Deploying...' : 'Initialize Monitor'}
               </Button>
               <Button
                 type="button"

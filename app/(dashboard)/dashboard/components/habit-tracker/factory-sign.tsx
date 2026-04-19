@@ -174,35 +174,53 @@ export default function FactorySign({
       {/* Center: Digital Counter */}
       <div className="flex-[2] flex justify-center items-center gap-3">
         <div className="flex items-center gap-1.5">
-          <div className="bg-zinc-900 rounded border border-zinc-800 px-2 py-0 flex items-baseline">
-            <span className="text-xl font-mono font-bold text-red-600 drop-shadow-[0_0_8px_rgba(220,38,38,0.5)]">
-              {String(finalMonths).padStart(2, '0')}
-            </span>
-            <span className="text-[10px] text-zinc-400 font-bold ml-1 uppercase tracking-tighter">
-              m
-            </span>
-          </div>
-          <div className="bg-zinc-900 rounded border border-zinc-800 px-2 py-0 flex items-baseline">
+          {finalMonths > 0 && (
+            <div className="bg-zinc-900 rounded border border-zinc-800 px-2 py-0 flex items-baseline">
+              <span className="text-xl font-mono font-bold text-red-600 drop-shadow-[0_0_8px_rgba(220,38,38,0.5)]">
+                {String(finalMonths).padStart(2, '0')}
+              </span>
+              <span className="text-xs text-zinc-400 font-bold ml-1 uppercase tracking-tighter">
+                m
+              </span>
+            </div>
+          )}
+          <div className="bg-zinc-900 rounded border border-zinc-800 px-2 flex items-baseline">
             <span className="text-xl font-mono font-bold text-red-600 drop-shadow-[0_0_8px_rgba(220,38,38,0.5)]">
               {String(finalDays).padStart(2, '0')}
             </span>
-            <span className="text-[10px] text-zinc-400 font-bold ml-1 uppercase tracking-tighter">
+            <span className="text-xs text-zinc-400 font-bold ml-1 uppercase tracking-tighter">
               d
             </span>
           </div>
         </div>
         {targetDate ? (
-          <div className="flex">
-            <p className="text-zinc-400 uppercase tracking-wider text-sm font-black leading-none mb-1">
+          <div className="flex items-center">
+            <p className="text-zinc-400 uppercase tracking-wider text-sm font-black leading-none">
               {hasReachedGoal ? 'Goal Status' : 'Time to Goal'}
             </p>
-            <p
-              className={`ml-8 uppercase tracking-wider text-sm font-black leading-none ${hasReachedGoal ? 'text-green-500' : 'text-zinc-400'}`}
+            <div
+              className={`ml-12 flex items-baseline gap-1 uppercase tracking-wider text-sm font-black leading-none ${hasReachedGoal ? 'text-green-500' : 'text-zinc-400'}`}
             >
-              {hasReachedGoal
-                ? 'MISSION COMPLETE'
-                : `${remainingMonths}M ${remainingDays}D REMAINING`}
-            </p>
+              {hasReachedGoal ? (
+                'MISSION COMPLETE'
+              ) : (
+                <>
+                  {remainingMonths > 0 && (
+                    <>
+                      <span className=" text-red-600 text-lg font-mono font-bold drop-shadow-[0_0_8px_rgba(220,38,38,0.5)]">
+                        {remainingMonths}
+                      </span>
+                      <span className="text-zinc-400 text-xs mr-1">M</span>
+                    </>
+                  )}
+                  <span className="text-red-600 text-lg font-mono font-bold drop-shadow-[0_0_8px_rgba(220,38,38,0.5)]">
+                    {remainingDays}
+                  </span>
+                  <span className="text-zinc-400 text-xs mr-1">D</span>
+                  <span className="text-zinc-400">REMAINING</span>
+                </>
+              )}
+            </div>
           </div>
         ) : (
           <p className="text-zinc-400 w-[20ch] uppercase tracking-wider text-xs font-black leading-none">
