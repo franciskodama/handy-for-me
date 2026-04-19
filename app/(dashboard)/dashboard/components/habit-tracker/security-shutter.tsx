@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Lock, EyeOff } from 'lucide-react';
 
 export default function SecurityShutter({
@@ -12,6 +12,15 @@ export default function SecurityShutter({
   label?: string;
 }) {
   const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    if (isOpen) {
+      const timer = setTimeout(() => {
+        setIsOpen(false);
+      }, 120000); // Auto-hide after 2 minutes
+      return () => clearTimeout(timer);
+    }
+  }, [isOpen]);
 
   return (
     <div className="relative w-full h-[40px] [perspective:1000px]">

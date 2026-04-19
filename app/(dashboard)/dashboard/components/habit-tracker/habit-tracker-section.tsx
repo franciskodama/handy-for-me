@@ -7,6 +7,7 @@ import { Plus } from 'lucide-react';
 import { useState } from 'react';
 import { createHabit, deleteHabit } from '@/lib/actions/habits';
 import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
 import { tagClass } from '../cards/cards';
 import { Button } from '@/components/ui/button';
 
@@ -23,6 +24,7 @@ export default function HabitTrackerSection({
     new Date().toISOString().split('T')[0]
   );
   const [targetDate, setTargetDate] = useState('');
+  const router = useRouter();
   const [periodStr, setPeriodStr] = useState('');
 
   const updatePeriod = (startStr: string, targetStr: string) => {
@@ -55,24 +57,37 @@ export default function HabitTrackerSection({
     setPeriodStr(`${months}m ${days}d`);
   };
 
+  const [isPending, setIsPending] = useState(false);
+
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newHabitName.trim()) return;
+    if (!newHabitName.trim()) {
+      toast.error('Please specify a habit designation.');
+      return;
+    }
 
-    const res = await createHabit(
-      uid,
-      newHabitName,
-      new Date(startDate),
-      targetDate ? new Date(targetDate) : undefined
-    );
-    if (res.success) {
-      toast.success('Habit tracker deployment successful!');
-      setNewHabitName('');
-      setStartDate(new Date().toISOString().split('T')[0]);
-      setTargetDate('');
-      setIsAdding(false);
-    } else {
-      toast.error('Deployment failed.');
+    setIsPending(true);
+    try {
+      const res = await createHabit(
+        uid,
+        newHabitName,
+        new Date(startDate),
+        targetDate ? new Date(targetDate) : undefined
+      );
+      if (res.success) {
+        toast.success(`Monitor "${newHabitName}" deployed successfully!`);
+        setNewHabitName('');
+        setStartDate(new Date().toISOString().split('T')[0]);
+        setTargetDate('');
+        setIsAdding(false);
+        router.refresh();
+      } else {
+        toast.error('Deployment failed: System error.');
+      }
+    } catch (err) {
+      toast.error('Critical failure in deployment sequence.');
+    } finally {
+      setIsPending(false);
     }
   };
 
@@ -85,11 +100,18 @@ export default function HabitTrackerSection({
 
   return (
     <div className="w-full my-4">
-      <div className="flex items-center justify-between mb-2">
-        {/* <h2 className="text-xs font-bold uppercase tracking-widest text-zinc-400"> */}
-        <h2 className=" text-primary text-sm font-semibold">
+      <div className="flex items-center justify-between mb-4 relative">
+        <h2 className="text-primary text-sm font-semibold">
           Habit <span className="text-red-500">Tracker</span>
         </h2>
+
+        {habits.length === 0 && !isAdding && (
+          <div className="absolute left-1/2 -translate-x-1/2">
+            <p className="text-zinc-600 uppercase text-[10px] font-bold tracking-widest opacity-50">
+              No active monitors
+            </p>
+          </div>
+        )}
 
         {!isAdding && (
           <button
@@ -106,23 +128,22 @@ export default function HabitTrackerSection({
         <form onSubmit={handleCreate} className="mb-8 max-w-5xl">
           <div className="flex flex-col lg:flex-row items-end gap-3 p-0 rounded-lg">
             <div className="flex-[2] w-full group">
-              <label className="text-xs text-slate-800 capitalize mb-1.5 block">
-                {/* <label className="text-[10px] text-zinc-500 uppercase tracking-widest font-black mb-1.5 block group-focus-within:text-red-500 transition-colors"> */}
+              <label className="text-xs text-zinc-400 capitalize mb-1.5 block">
                 Habit Designation
               </label>
               <input
                 type="text"
+                required
                 placeholder="e.g. Daily Meditation, No Sugar..."
                 value={newHabitName}
                 onChange={(e) => setNewHabitName(e.target.value)}
-                className="w-full bg-zinc-950 border border-zinc-800 px-4 py-2 text-sm text-zinc-100 focus:outline-none focus:border-red-600/50 transition-all placeholder:text-zinc-500"
+                className="w-full bg-zinc-950 border border-zinc-800 px-4 py-2 text-sm text-zinc-100 focus:outline-none focus:border-red-600/50 transition-all placeholder:text-zinc-600"
                 autoFocus
               />
             </div>
 
             <div className="flex-1 w-full lg:w-auto">
-              {/* <label className="text-[10px] text-zinc-400 capitalize tracking-widest font-black mb-1.5 block"> */}
-              <label className="text-xs text-slate-800 capitalize mb-1.5 block">
+              <label className="text-xs text-zinc-400 capitalize mb-1.5 block">
                 Deployment Date
               </label>
               <input
@@ -138,7 +159,7 @@ export default function HabitTrackerSection({
             </div>
 
             <div className="flex-1 w-full lg:w-auto">
-              <label className="text-xs text-slate-800 capitalize mb-1.5 block">
+              <label className="text-xs text-zinc-400 capitalize mb-1.5 block">
                 Target Milestone
               </label>
               <input
@@ -154,13 +175,19 @@ export default function HabitTrackerSection({
             </div>
 
             <div className="flex gap-2 w-full lg:w-[360px] lg:shrink-0 mt-2 lg:mt-0 items-center">
-              <Button type="submit" variant="outline">
-                Initialize Monitor
+              <Button
+                type="submit"
+                variant="outline"
+                disabled={isPending}
+                className="flex-1 lg:flex-none border-zinc-700 text-zinc-300 hover:bg-zinc-800 hover:text-white uppercase font-black text-xs h-[38px] transition-all"
+              >
+                {isPending ? 'Deploying...' : 'Initialize'}
               </Button>
               <Button
                 type="button"
                 variant="ghost"
-                className="text-xs font-black uppercase px-8 h-[38px] transition-all"
+                disabled={isPending}
+                className="text-xs font-black uppercase px-8 h-[38px] transition-all text-zinc-500 hover:text-red-500"
                 onClick={() => setIsAdding(false)}
               >
                 Cancel
@@ -178,31 +205,17 @@ export default function HabitTrackerSection({
         </form>
       )}
 
-      {habits.length === 0 && !isAdding ? (
-        <div className="flex flex-col items-center justify-center p-12 border-2 border-dashed border-zinc-800 bg-zinc-900/10">
-          <p className="text-zinc-600 uppercase text-xs font-bold tracking-widest">
-            No Active Monitors
-          </p>
-          <button
-            onClick={() => setIsAdding(true)}
-            className="mt-4 text-red-500/50 hover:text-red-500 text-xs uppercase font-black transition-colors"
-          >
-            Initialize First Tracker
-          </button>
-        </div>
-      ) : (
-        <div className="flex flex-col gap-2">
-          {habits.map((habit, index) => (
-            <div key={habit.id} className="relative w-full">
-              <SecurityShutter
-                label={`STREAK MONITOR #${String(index + 1).padStart(2, '0')}`}
-              >
-                <FactorySign habit={habit} onDelete={handleDelete} />
-              </SecurityShutter>
-            </div>
-          ))}
-        </div>
-      )}
+      <div className="flex flex-col gap-2">
+        {habits.map((habit, index) => (
+          <div key={habit.id} className="relative w-full">
+            <SecurityShutter
+              label={`STREAK MONITOR #${String(index + 1).padStart(2, '0')}`}
+            >
+              <FactorySign habit={habit} onDelete={handleDelete} />
+            </SecurityShutter>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

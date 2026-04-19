@@ -192,12 +192,12 @@ export default function FactorySign({
           </div>
         </div>
         {targetDate ? (
-          <div className="flex flex-col">
-            <p className="text-zinc-500 uppercase tracking-tighter text-[8px] font-black leading-none mb-1">
+          <div className="flex">
+            <p className="text-zinc-400 uppercase tracking-wider text-sm font-black leading-none mb-1">
               {hasReachedGoal ? 'Goal Status' : 'Time to Goal'}
             </p>
             <p
-              className={`uppercase tracking-tighter text-[9px] font-black leading-none max-w-[80px] ${hasReachedGoal ? 'text-green-500' : 'text-zinc-400'}`}
+              className={`ml-8 uppercase tracking-wider text-sm font-black leading-none ${hasReachedGoal ? 'text-green-500' : 'text-zinc-400'}`}
             >
               {hasReachedGoal
                 ? 'MISSION COMPLETE'
@@ -205,7 +205,7 @@ export default function FactorySign({
             </p>
           </div>
         ) : (
-          <p className="text-zinc-400 uppercase tracking-wider text-sm font-black leading-none">
+          <p className="text-zinc-400 w-[20ch] uppercase tracking-wider text-xs font-black leading-none">
             Without an accident
           </p>
         )}
