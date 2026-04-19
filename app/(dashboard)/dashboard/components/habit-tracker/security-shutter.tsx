@@ -14,7 +14,7 @@ export default function SecurityShutter({
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="relative w-full h-[60px] [perspective:1000px]">
+    <div className="relative w-full h-[40px] [perspective:1000px]">
       <motion.div
         animate={{ rotateX: isOpen ? 180 : 0 }}
         transition={{ duration: 0.8, ease: [0.4, 0, 0.2, 1] }}
@@ -29,7 +29,7 @@ export default function SecurityShutter({
           <div className="absolute inset-0 bg-[repeating-linear-gradient(0deg,#18181b,#18181b_10px,#27272a_10px,#27272a_12px)] opacity-50" />
 
           {/* Hazard Border Bottom */}
-          <div className="absolute bottom-0 left-0 w-full h-2 bg-[repeating-linear-gradient(45deg,#fbbf24,#fbbf24_10px,#000_10px,#000_20px)]" />
+          <div className="absolute bottom-0 left-0 w-full h-1.5 bg-[repeating-linear-gradient(45deg,#fbbf24,#fbbf24_10px,#000_10px,#000_20px)]" />
 
           {/* Center Lock Interface */}
           <div className="absolute inset-0 flex items-center justify-between px-12">

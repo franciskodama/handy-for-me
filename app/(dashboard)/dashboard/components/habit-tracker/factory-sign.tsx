@@ -22,8 +22,19 @@ export default function FactorySign({
 
   const lastReset = new Date(habit.lastResetAt);
   const now = new Date();
-  const diffTime = Math.max(0, now.getTime() - lastReset.getTime());
-  const days = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+  
+  let finalMonths = (now.getFullYear() - lastReset.getFullYear()) * 12 + now.getMonth() - lastReset.getMonth();
+  let tempDate = new Date(lastReset);
+  tempDate.setMonth(tempDate.getMonth() + finalMonths);
+  
+  if (tempDate > now) {
+    finalMonths--;
+    tempDate = new Date(lastReset);
+    tempDate.setMonth(tempDate.getMonth() + finalMonths);
+  }
+  
+  const diffTime = Math.max(0, now.getTime() - tempDate.getTime());
+  const finalDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
 
   const handleReset = async () => {
     if (confirm(`Are you sure you want to reset "${habit.name}" to 0?`)) {
@@ -50,7 +61,7 @@ export default function FactorySign({
 
   if (isEditing) {
     return (
-      <div className="relative bg-zinc-950 px-8 py-4 border-2 border-red-900/50 shadow-2xl h-full flex items-center gap-4 group animate-in fade-in zoom-in duration-300">
+      <div className="relative bg-zinc-950 px-8 py-1 border-2 border-red-900/50 shadow-2xl h-full flex items-center gap-4 group animate-in fade-in zoom-in duration-300">
         <div className="flex-1 flex flex-col sm:flex-row gap-2">
           <input
             type="text"
@@ -87,7 +98,7 @@ export default function FactorySign({
   }
 
   return (
-    <div className="relative bg-zinc-950 px-8 py-4 border-2 border-zinc-800 shadow-2xl overflow-hidden h-full flex items-center justify-between group">
+    <div className="relative bg-zinc-950 px-8 py-0.5 border-2 border-zinc-800 shadow-2xl overflow-hidden h-full flex items-center justify-between group">
       {/* Hazard Stripes Left & Right */}
       <div className="absolute top-0 left-0 h-full w-2 bg-[repeating-linear-gradient(0deg,#fbbf24,#fbbf24_10px,#000_10px,#000_20px)] opacity-50" />
       <div className="absolute top-0 right-0 h-full w-2 bg-[repeating-linear-gradient(0deg,#fbbf24,#fbbf24_10px,#000_10px,#000_20px)] opacity-50" />
@@ -100,14 +111,23 @@ export default function FactorySign({
       </div>
 
       {/* Center: Digital Counter */}
-      <div className="flex-[2] flex justify-center items-center gap-4">
-        <div className="relative bg-zinc-900 rounded border border-zinc-800 px-6 py-1 inline-block">
-          <span className="text-4xl font-mono font-bold text-red-600 drop-shadow-[0_0_10px_rgba(220,38,38,0.5)]">
-            {String(days).padStart(3, '0')}
-          </span>
+      <div className="flex-[2] flex justify-center items-center gap-3">
+        <div className="flex items-center gap-1.5">
+          <div className="bg-zinc-900 rounded border border-zinc-800 px-2 py-0 flex items-baseline">
+            <span className="text-xl font-mono font-bold text-red-600 drop-shadow-[0_0_8px_rgba(220,38,38,0.5)]">
+              {String(finalMonths).padStart(2, '0')}
+            </span>
+            <span className="text-[10px] text-zinc-500 font-bold ml-1 uppercase tracking-tighter">m</span>
+          </div>
+          <div className="bg-zinc-900 rounded border border-zinc-800 px-2 py-0 flex items-baseline">
+            <span className="text-xl font-mono font-bold text-red-600 drop-shadow-[0_0_8px_rgba(220,38,38,0.5)]">
+              {String(finalDays).padStart(2, '0')}
+            </span>
+            <span className="text-[10px] text-zinc-500 font-bold ml-1 uppercase tracking-tighter">d</span>
+          </div>
         </div>
-        <p className="text-zinc-400 uppercase tracking-tighter text-xs font-black leading-tight max-w-[80px]">
-          Days Without An Accident
+        <p className="text-zinc-500 uppercase tracking-tighter text-[9px] font-black leading-none max-w-[60px]">
+          Accident Free Period
         </p>
       </div>
 

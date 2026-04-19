@@ -109,7 +109,7 @@ export default function HabitTrackerSection({
           </button>
         </div>
       ) : (
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-2">
           {habits.map((habit, index) => (
             <div key={habit.id} className="relative w-full">
               <SecurityShutter
