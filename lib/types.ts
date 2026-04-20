@@ -111,5 +111,6 @@ export type Habit = {
   uid: string;
   name: string;
   lastResetAt: Date;
-  color: string;
+  color: string | null;
+  targetDate: Date | null;
 };
