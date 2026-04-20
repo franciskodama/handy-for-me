@@ -3,7 +3,7 @@
 import { Habit } from '@/lib/types';
 import { resetHabit, updateHabit } from '@/lib/actions/habits';
 import { toast } from 'sonner';
-import { RefreshCcw, Settings, Trash2, X, Check } from 'lucide-react';
+import { RefreshCcw, Settings, Trash2, X, Check, Pen } from 'lucide-react';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -112,13 +112,25 @@ export default function FactorySign({
   if (isEditing) {
     return (
       <div className="relative bg-zinc-950 px-8 py-1 border-2 border-red-900/50 shadow-2xl h-full flex items-center gap-4 group animate-in fade-in zoom-in duration-300">
-        <div className="flex-1 flex flex-col sm:flex-row gap-2">
+        <div className="flex-1 flex flex-col items-center sm:flex-row gap-2">
+          <label
+            htmlFor="editName"
+            className="text-zinc-200 uppercase tracking-wider text-[10px] ml-8"
+          >
+            Monitor Tag:
+          </label>
           <input
             type="text"
             value={editName}
             onChange={(e) => setEditName(e.target.value)}
             className="flex-1 bg-zinc-900 border border-zinc-700 px-3 py-1 text-xs text-zinc-200 focus:border-red-500 outline-none"
           />
+          <label
+            htmlFor="editDate"
+            className="text-zinc-200 uppercase tracking-wider text-[10px] ml-8"
+          >
+            Start Date:
+          </label>
           <input
             type="date"
             value={editDate}
@@ -127,17 +139,23 @@ export default function FactorySign({
             className="bg-zinc-900 border border-zinc-700 px-3 py-1 text-[10px] text-zinc-400 focus:border-red-500 outline-none w-28 cursor-pointer"
             title="Start Date"
           />
+          <label
+            htmlFor="editTargetDate"
+            className="text-zinc-200 uppercase tracking-wider text-[10px] ml-8"
+          >
+            Goal Date:
+          </label>
           <input
             type="date"
             value={editTargetDate}
             onChange={(e) => setEditTargetDate(e.target.value)}
             onClick={(e) => e.currentTarget.showPicker?.()}
-            className="bg-zinc-900 border border-zinc-700 px-3 py-1 text-[10px] text-zinc-400 focus:border-red-500 outline-none w-28 cursor-pointer"
+            className="mr-12 bg-zinc-900 border border-zinc-700 px-3 py-1 text-[10px] text-zinc-400 focus:border-red-500 outline-none w-28 cursor-pointer"
             placeholder="Goal Date"
             title="Goal Date (Optional)"
           />
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 mr-10">
           <button
             onClick={handleUpdate}
             className="p-2 text-green-500 hover:bg-green-500/10 transition-colors"
@@ -275,7 +293,7 @@ export default function FactorySign({
             className="p-1.5 text-zinc-400 hover:text-zinc-300 transition-colors"
             title="Edit Monitor"
           >
-            <Settings className="w-4 h-4" />
+            <Pen className="w-4 h-4" />
           </button>
           <AlertDialog>
             <AlertDialogTrigger asChild>
