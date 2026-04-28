@@ -67,7 +67,8 @@ export const menuItems = [
   {
     label: 'Interview Practice',
     href: '/interview-practice',
-    icon: <Briefcase className="h-5 w-5" />
+    icon: <Briefcase className="h-5 w-5" />,
+    restricted: true
   }
   // {
   //   label: 'My Words',
