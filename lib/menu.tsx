@@ -9,7 +9,8 @@ import {
   RefreshCw,
   Trophy,
   HandHeart,
-  Flag
+  Flag,
+  Briefcase
 } from 'lucide-react';
 
 export const menuItems = [
@@ -62,6 +63,11 @@ export const menuItems = [
     label: 'Letter Leap',
     href: '/letter-leap',
     icon: <BookA className="h-5 w-5" />
+  },
+  {
+    label: 'Interview Practice',
+    href: '/interview-practice',
+    icon: <Briefcase className="h-5 w-5" />
   }
   // {
   //   label: 'My Words',

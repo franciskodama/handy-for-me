@@ -1,0 +1,476 @@
+export const pmInterviewQuestions = [
+  {
+    id: 1,
+    category: 'Product Strategy & Vision',
+    question: "How do you define a product's North Star metric?",
+    answer:
+      "It is the single key metric that best captures the core value your product delivers to customers. It must align user value with long-term business growth, such as 'Normalized Assets Tracked' for a fintech tool."
+  },
+  {
+    id: 2,
+    category: 'Product Strategy & Vision',
+    question:
+      'Walk me through a time you had to pivot a product strategy based on data.',
+    answer:
+      'At my agency, we shifted from broad marketing services to specialized product development after data showed a 40% higher LTV and better retention in technical builds versus creative campaigns.'
+  },
+  {
+    id: 3,
+    category: 'Product Strategy & Vision',
+    question:
+      'How do you balance short-term revenue goals with long-term product vision?',
+    answer:
+      "By using a '70/20/10' roadmap: 70% on core vision, 20% on tactical revenue requests, and 10% on innovative bets to ensure the 'now' doesn't kill the 'future'."
+  },
+  {
+    id: 4,
+    category: 'Product Strategy & Vision',
+    question:
+      'Tell me about a product you love but think is positioned poorly. How would you fix it?',
+    answer:
+      "I’d look at specialized IDEs that market to 'beginners' but have 'pro' features. I’d reposition them around 'Productivity Velocity' for senior leads to capture the high-value market."
+  },
+  {
+    id: 5,
+    category: 'Product Strategy & Vision',
+    question: 'How do you decide which features to kill?',
+    answer:
+      "I use a quadrant analysis comparing 'Usage Frequency' vs. 'Core Value Alignment.' If a feature is high-maintenance but low-usage and doesn't support the North Star, it's deprecated."
+  },
+  {
+    id: 6,
+    category: 'Product Strategy & Vision',
+    question:
+      "How do you handle a founder who wants a feature that doesn't align with the roadmap?",
+    answer:
+      "I validate their intent, then present the 'Opportunity Cost.' I show what must be delayed or removed to accommodate the request, shifting the conversation to trade-offs rather than a simple 'no'."
+  },
+  {
+    id: 7,
+    category: 'Product Strategy & Vision',
+    question:
+      'What is your process for conducting a competitive market analysis?',
+    answer:
+      "I look beyond features to 'Job-to-be-Done' (JTBD) gaps. I analyze competitors' pricing, technical constraints, and user reviews to find where they are over-complicating or under-serving."
+  },
+  {
+    id: 8,
+    category: 'Product Strategy & Vision',
+    question: "How do you determine 'Product-Market Fit' for a new feature?",
+    answer:
+      "By measuring the 'Disappointment Factor': if 40% or more of surveyed users say they would be 'very disappointed' if the feature were removed, you have fit."
+  },
+  {
+    id: 9,
+    category: 'Product Strategy & Vision',
+    question:
+      'Describe a time you failed to meet a product goal. What did you learn?',
+    answer:
+      "I once over-engineered a feature that users found too complex. I learned that 'MVP' should mean 'Minimum Viable Proof,' focusing on the core utility before adding architectural bells and whistles."
+  },
+  {
+    id: 10,
+    category: 'Product Strategy & Vision',
+    question:
+      "How do you incorporate 'Product-Led Growth' (PLG) into a technical roadmap?",
+    answer:
+      "By identifying 'Aha! moments' in the user journey and engineering the product to remove friction at those points, such as automated onboarding or viral loops within the UI."
+  },
+  {
+    id: 11,
+    category: 'Technical Depth',
+    question:
+      'How do you explain a complex technical debt issue to a non-technical stakeholder?',
+    answer:
+      "I use the 'Financial Interest' metaphor: technical debt is a high-interest loan. If we don't pay the 'principal' now, the 'interest' will eventually consume our entire capacity to build new features."
+  },
+  {
+    id: 12,
+    category: 'Technical Depth',
+    question: 'Walk me through the architecture of your most complex project.',
+    answer:
+      'Trezo.app uses Next.js for serverless speed, Prisma with Neon/PostgreSQL for type-safe data, and Zod for input validation, ensuring a high-integrity multi-currency normalization engine.'
+  },
+  {
+    id: 13,
+    category: 'Technical Depth',
+    question:
+      "How do you decide between 'Building' a custom solution vs. 'Buying' a third-party API?",
+    answer:
+      "If the feature is a core competitive advantage, we build. If it’s a standard utility (like auth or payments) that doesn't differentiate us, we buy to maintain velocity."
+  },
+  {
+    id: 14,
+    category: 'Technical Depth',
+    question:
+      'What is your approach to system scalability for an MVP moving to Enterprise?',
+    answer:
+      "I focus on 'Hardening the Core.' This involves optimizing database queries, implementing caching layers, and ensuring the architecture is modular enough to handle increased load without a total rewrite."
+  },
+  {
+    id: 15,
+    category: 'Technical Depth',
+    question:
+      "How do you manage the trade-off between 'Speed to Market' and 'Code Quality'?",
+    answer:
+      "I advocate for 'Clean Enough' code for MVPs—well-documented and modular so it can be refactored easily once the market validates the feature."
+  },
+  {
+    id: 16,
+    category: 'Technical Depth',
+    question:
+      'Describe your experience with AI/LLM integration. How do you handle non-deterministic outputs?',
+    answer:
+      "I use strict prompt engineering and parsing logic (like Zod) to validate LLM outputs. I implement 'Human-in-the-loop' for sensitive data to ensure accuracy."
+  },
+  {
+    id: 17,
+    category: 'Technical Depth',
+    question: 'How do you lead a technical post-mortem after a system failure?',
+    answer:
+      "By creating a 'Blame-Free' environment. We focus on the '5 Whys' to find the root cause in the process or architecture, not the person, and document a clear remediation plan."
+  },
+  {
+    id: 18,
+    category: 'Technical Depth',
+    question:
+      'What is your preferred tech stack for high-velocity builds, and why?',
+    answer:
+      'Next.js, TypeScript, Tailwind, and Supabase/Neon. This stack minimizes boilerplate, provides end-to-end type safety, and allows for instant deployment and scaling.'
+  },
+  {
+    id: 19,
+    category: 'Technical Depth',
+    question:
+      "How do you ensure data privacy and security are 'baked into' the product design?",
+    answer:
+      "By adopting a 'Privacy by Design' mindset: implementing least-privilege access, encrypting sensitive data at rest and in transit, and conducting regular security audits during the sprint."
+  },
+  {
+    id: 20,
+    category: 'Technical Depth',
+    question:
+      "How do you handle 'Scope Creep' from an engineering perspective?",
+    answer:
+      "By maintaining a strict definition of 'Done' and using a 'V2' backlog. If a request doesn't meet the current sprint's goals, it's documented for future consideration to protect velocity."
+  },
+  {
+    id: 21,
+    category: 'Leadership & Culture',
+    question:
+      'How do you manage conflict between a Lead Designer and a Lead Engineer?',
+    answer:
+      "I refocus them on the 'User Goal.' Usually, conflict arises from differing constraints. I facilitate a compromise that respects both design intent and technical feasibility."
+  },
+  {
+    id: 22,
+    category: 'Leadership & Culture',
+    question:
+      'Describe your leadership style when managing a remote, cross-border team.',
+    answer:
+      "I prioritize 'Asynchronous Transparency.' I use clear documentation and recorded updates so everyone has the same context regardless of their time zone."
+  },
+  {
+    id: 23,
+    category: 'Leadership & Culture',
+    question:
+      'How do you mentor junior developers or PMs to think more strategically?',
+    answer:
+      "I involve them in 'The Why' behind decisions. Instead of giving tasks, I give problems to solve and ask them to explain how their solution impacts the North Star."
+  },
+  {
+    id: 24,
+    category: 'Leadership & Culture',
+    question:
+      "Tell me about a time you had to deliver difficult feedback to a 'rockstar' employee.",
+    answer:
+      "I focused on 'Impact over Intent.' I showed how their individual behavior was disrupting team cohesion, which ultimately hindered the very project they cared about."
+  },
+  {
+    id: 25,
+    category: 'Leadership & Culture',
+    question:
+      "How do you foster a culture of 'Extreme Ownership' within your team?",
+    answer:
+      'By modeling it. I take responsibility for failures and share the credit for successes. I empower team members to make decisions within their domain without micromanaging.'
+  },
+  {
+    id: 26,
+    category: 'Leadership & Culture',
+    question: 'What is the most difficult personnel decision you’ve ever made?',
+    answer:
+      "Letting go of a talented person who didn't align with the company culture. It taught me that 'Culture Fit' is just as important as 'Technical Skill' for long-term success."
+  },
+  {
+    id: 27,
+    category: 'Leadership & Culture',
+    question: 'How do you handle burnout within your engineering team?',
+    answer:
+      "I proactively monitor 'Sprint Velocity' for unsustainable spikes. I encourage time off and ensure that we are prioritizing 'Meaningful Work' over 'Busy Work'."
+  },
+  {
+    id: 28,
+    category: 'Leadership & Culture',
+    question:
+      "Describe a time you had to manage 'up' to influence a board of directors.",
+    answer:
+      'At my agency, I used data-backed risk assessments to convince the board to invest in internal IP (products) rather than just service-based growth.'
+  },
+  {
+    id: 29,
+    category: 'Leadership & Culture',
+    question:
+      'How do you ensure diversity of thought when brainstorming new product ideas?',
+    answer:
+      "I use 'Silent Brainstorming' first to prevent 'Groupthink.' This ensures that the quietest voices have their ideas on the table before the discussion starts."
+  },
+  {
+    id: 30,
+    category: 'Leadership & Culture',
+    question:
+      'What is your 30/60/90 day plan when joining a new organization as a Lead?',
+    answer:
+      "30: Listen and learn the culture/tech stack. 60: Identify 'Low-Hanging Fruit' for quick wins. 90: Execute a strategic project that aligns with the long-term vision."
+  },
+  {
+    id: 31,
+    category: 'Execution & Analytics',
+    question:
+      'What are the top three metrics you track for a B2B SaaS platform?',
+    answer:
+      '1. Churn Rate (Retention), 2. Customer Acquisition Cost (Efficiency), and 3. Active Usage of Core Features (Value).'
+  },
+  {
+    id: 32,
+    category: 'Execution & Analytics',
+    question: 'How do you use A/B testing to validate a hypothesis?',
+    answer:
+      "I define a clear 'Success Metric' beforehand, ensure the sample size is statistically significant, and only test one variable at a time to isolate the cause of change."
+  },
+  {
+    id: 33,
+    category: 'Execution & Analytics',
+    question:
+      'Describe your process for a Product Requirements Document (PRD).',
+    answer:
+      "I start with 'The Problem' and 'The User.' I include clear User Stories, functional requirements, success metrics, and technical constraints to ensure alignment."
+  },
+  {
+    id: 34,
+    category: 'Execution & Analytics',
+    question: 'How do you manage a roadmap across multiple time zones?',
+    answer:
+      "I use 'Follow-the-Sun' workflows where tasks are handed off between regions, supported by a shared project management tool and 'Single Source of Truth' documentation."
+  },
+  {
+    id: 35,
+    category: 'Execution & Analytics',
+    question:
+      "Tell me about a time you used data to 'disprove' a popular opinion in the company.",
+    answer:
+      "I used heatmaps and session recordings to show that a highly requested 'Feature X' was actually causing 20% of users to drop off during onboarding."
+  },
+  {
+    id: 36,
+    category: 'Execution & Analytics',
+    question: 'How do you prioritize a backlog with 100+ competing requests?',
+    answer:
+      'I use the RICE framework (Reach, Impact, Confidence, Effort) to objectively score and rank every item based on its potential value versus cost.'
+  },
+  {
+    id: 37,
+    category: 'Execution & Analytics',
+    question: 'What is your experience with Agile, Scrum, or Kanban?',
+    answer:
+      "I’ve used all three. I prefer 'Scrumban' for high-velocity teams: the structure of Scrum for planning, but the flexibility of Kanban for flow and bottle-neck management."
+  },
+  {
+    id: 38,
+    category: 'Execution & Analytics',
+    question: "How do you track 'Product Velocity'?",
+    answer:
+      "By measuring 'Cycle Time'—the time from an idea entering the backlog to it being live in production—and ensuring it is decreasing or stabilizing."
+  },
+  {
+    id: 39,
+    category: 'Execution & Analytics',
+    question:
+      "How do you ensure your team is building for the 'User' and not just the 'Requirements'?",
+    answer:
+      "By bringing engineers into 'User Testing' sessions. Seeing a user struggle with a feature they built is the fastest way to build empathy and focus."
+  },
+  {
+    id: 40,
+    category: 'Execution & Analytics',
+    question: 'What tools do you use for project management and why?',
+    answer:
+      "Linear for its speed and developer-focus, or Jira for enterprise-level visibility. I pair these with Notion for 'Long-Form' documentation."
+  },
+  {
+    id: 41,
+    category: 'Behavioral & Situational',
+    question:
+      'Tell me about a time you had to make a decision with incomplete data.',
+    answer:
+      "When launching a new service at my agency, I used 'Analogous Data' from similar markets and made a reversible bet to test the waters quickly."
+  },
+  {
+    id: 42,
+    category: 'Behavioral & Situational',
+    question:
+      'Describe a situation where you had to influence someone without direct authority.',
+    answer:
+      "I used 'Data and Empathy.' I showed a peer how my proposal would solve their specific pain point, making them an ally rather than a competitor."
+  },
+  {
+    id: 43,
+    category: 'Behavioral & Situational',
+    question:
+      'What is the most innovative thing you’ve built with a limited budget?',
+    answer:
+      'Monkey Business—using LLMs to automate household financial parsing. It proved that AI can replace complex, expensive custom software with smart prompting.'
+  },
+  {
+    id: 44,
+    category: 'Behavioral & Situational',
+    question:
+      'Tell me about a time you disagreed with a direct report. How did you resolve it?',
+    answer:
+      "I asked them to 'Sell Me' on their idea. By listening deeply, I realized they had context I lacked. We compromised on a solution that incorporated both views."
+  },
+  {
+    id: 45,
+    category: 'Behavioral & Situational',
+    question: 'What is the biggest professional risk you’ve ever taken?',
+    answer:
+      'Closing my successful agency after 14 years to pivot into full-stack engineering. It was a bet on my ability to lead the next generation of AI-driven products.'
+  },
+  {
+    id: 46,
+    category: 'Behavioral & Situational',
+    question:
+      'How do you stay updated on emerging technologies like AI and Microsoft Fabric?',
+    answer:
+      "I build. I spend 5-10 hours a week in my 'Live Lab' testing new APIs, reading whitepapers, and following key engineers on GitHub/LinkedIn."
+  },
+  {
+    id: 47,
+    category: 'Behavioral & Situational',
+    question:
+      "Why are you transitioning from 'Executive' back into a 'Product Lead' role?",
+    answer:
+      "Because the most impactful leadership today happens at the intersection of 'Strategy' and 'Code.' I want to be where the products are actually built."
+  },
+  {
+    id: 48,
+    category: 'Behavioral & Situational',
+    question: "What is your 'superpower' as a Technical Product Lead?",
+    answer:
+      "I am a 'Bi-Lingual' leader. I speak 'Business' to the board and 'Code' to the engineers, eliminating the translation friction that kills most projects."
+  },
+  {
+    id: 49,
+    category: 'Behavioral & Situational',
+    question:
+      "Tell me about a time you advocated for a 'technical' fix with no business value.",
+    answer:
+      "I fought to refactor a legacy database that wasn't 'broken' but was slowing down our deploy cycle. I framed it as an 'Investment in Velocity'."
+  },
+  {
+    id: 50,
+    category: 'Behavioral & Situational',
+    question: 'Why our company, and why now?',
+    answer:
+      "Because you are at the 'Inflection Point' I specialize in. You have a validated MVP, and I have the hybrid leadership and technical skills to scale it into an Enterprise leader."
+  }
+];
+
+export const getCategories = () => {
+  return Array.from(new Set(pmInterviewQuestions.map((q) => q.category))).map(
+    (cat) => ({
+      id: cat,
+      name: cat
+    })
+  );
+};
+
+export const getQuestionsByCategory = (category: string) => {
+  return pmInterviewQuestions.filter((q) => q.category === category);
+};
+
+export const getLuckyChoice = () => {
+  const randomIndex = Math.floor(Math.random() * pmInterviewQuestions.length);
+  return pmInterviewQuestions[randomIndex];
+};
+
+export const pmFrameworks = [
+  {
+    category: 'Product Design',
+    items: [
+      {
+        name: 'CIRCLES Method',
+        description:
+          'Comprehend, Identify, Report, Cut, List, Evaluate, Summarize.'
+      },
+      {
+        name: '5 Whys',
+        description: 'Dig deep into root causes by asking "Why?" five times.'
+      },
+      {
+        name: 'User Journey Mapping',
+        description: 'Visualize the process a user goes through to reach a goal.'
+      }
+    ]
+  },
+  {
+    category: 'Prioritization',
+    items: [
+      {
+        name: 'RICE',
+        description: 'Reach, Impact, Confidence, Effort.'
+      },
+      {
+        name: 'MoSCoW',
+        description: 'Must have, Should have, Could have, Won’t have.'
+      },
+      {
+        name: 'Kano Model',
+        description: 'Basic, Performance, and Excitement features.'
+      }
+    ]
+  },
+  {
+    category: 'Strategy',
+    items: [
+      {
+        name: 'SWOT',
+        description: 'Strengths, Weaknesses, Opportunities, Threats.'
+      },
+      {
+        name: 'Porter’s Five Forces',
+        description: 'Competitive Rivalry, Supplier Power, Buyer Power, Threat of Substitution, Threat of New Entry.'
+      },
+      {
+        name: 'Blue Ocean Strategy',
+        description: 'Creating uncontested market space and making competition irrelevant.'
+      }
+    ]
+  },
+  {
+    category: 'Analytics',
+    items: [
+      {
+        name: 'HEART Framework',
+        description: 'Happiness, Engagement, Adoption, Retention, Task Success.'
+      },
+      {
+        name: 'AARRR (Pirate Metrics)',
+        description: 'Acquisition, Activation, Retention, Referral, Revenue.'
+      },
+      {
+        name: 'North Star Metric',
+        description: 'The single metric that best captures the core value your product delivers.'
+      }
+    ]
+  }
+];
