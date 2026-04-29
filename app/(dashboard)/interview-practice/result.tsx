@@ -22,73 +22,75 @@ export default function Result({
   return (
     <div className="relative stripe-border flex flex-col w-full items-center min-h-[400px]">
       {result ? (
-        <div className="flex flex-col items-center w-full px-8 py-12">
-          <div className="flex gap-4 mb-6">
+        <div className="flex flex-col items-center w-full px-8 py-4">
+          <div className="flex gap-4 mb-12">
             <Button
               className="text-xl h-8 w-8 p-0"
-              variant="outline"
+              variant="ghost"
               onClick={() => setFontSize(fontSize + 4)}
             >
               +
             </Button>
             <Button
               className="text-xl h-8 w-8 p-0"
-              variant="outline"
+              variant="ghost"
               onClick={() => setFontSize(fontSize - 4)}
             >
               -
             </Button>
           </div>
 
-          <p className="text-sm font-bold uppercase text-muted-foreground mb-2">
-            {result.category}
-          </p>
+          <div className="flex flex-col items-center py-12">
+            <p className="text-sm font-bold uppercase text-muted-foreground">
+              {result.category}
+            </p>
 
-          <p
-            className="font-semibold text-primary text-center mb-8 leading-tight transition-all duration-300"
-            style={{ fontSize: `${fontSize}px` }}
-          >
-            {result.question}
-          </p>
-
-          <div className="flex flex-col items-center gap-4 w-full">
-            {timeRemaining === 0 && !showAnswer && (
-              <Button
-                variant="default"
-                className="bg-primary text-white flex items-center gap-2"
-                onClick={() => setShowAnswer(true)}
-              >
-                <Eye size={18} />
-                Reveal Answer
-              </Button>
-            )}
-
-            <AnimatePresence>
-              {showAnswer && (
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="w-full bg-muted/50 p-6 rounded-xl border border-primary/20 mt-4"
-                >
-                  <div className="flex items-center gap-2 mb-3">
-                    <Lightbulb className="text-yellow-500" size={20} />
-                    <p className="font-bold text-sm uppercase tracking-wider">Suggested Answer</p>
-                  </div>
-                  <p className="text-lg text-foreground/90 leading-relaxed italic">
-                    &quot;{result.answer}&quot;
-                  </p>
-                </motion.div>
-              )}
-            </AnimatePresence>
-
-            <Button
-              variant="ghost"
-              className="mt-8 text-muted-foreground hover:text-primary"
-              onClick={handleResetAll}
+            <p
+              className="font-semibold text-primary text-center my-8 leading-tight transition-all duration-300"
+              style={{ fontSize: `${fontSize}px` }}
             >
-              Next Question
-            </Button>
+              {result.question}
+            </p>
+
+            <div className="flex flex-col items-center gap-4 w-full mt-8">
+              {!showAnswer && (
+                <Button
+                  variant="outline"
+                  className="flex items-center gap-2"
+                  onClick={() => setShowAnswer(true)}
+                >
+                  Reveal Answer
+                </Button>
+              )}
+
+              <AnimatePresence>
+                {showAnswer && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="w-full bg-muted/50 p-6 border border-primary/20 mt-4"
+                  >
+                    <div className="flex items-center gap-2 mb-3">
+                      <Lightbulb className="text-yellow-500" size={20} />
+                      <p className="font-bold text-sm uppercase tracking-wider">
+                        Suggested Answer
+                      </p>
+                    </div>
+                    <p className="text-lg text-foreground/90 leading-relaxed italic">
+                      &quot;{result.answer}&quot;
+                    </p>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
           </div>
+          <Button
+            variant="ghost"
+            className="mt-12 text-muted-foreground hover:text-primary"
+            onClick={handleResetAll}
+          >
+            Next Question
+          </Button>
         </div>
       ) : (
         <div className="flex flex-col h-full justify-center items-center px-12 py-24 leading-tight text-center w-full gap-6">

@@ -219,15 +219,15 @@ export default function Countdown({
 }
 
 const kudos = [
-  "Confidence is key! You nailed it! 🚀",
-  "Great articulation of your thoughts! 🗣️",
-  "Structured and clear. Well done! 📐",
+  'Confidence is key! You nailed it! 🚀',
+  'Great articulation of your thoughts! 🗣️',
+  'Structured and clear. Well done! 📐',
   "You're thinking like a Lead PM! 🧠",
-  "Excellent delivery! Keep it up! ✨",
-  "Practice makes perfect! 🎯",
+  'Excellent delivery! Keep it up! ✨',
+  'Practice makes perfect! 🎯',
   "You've got this! Strong answer! 💪",
-  "Strategic and insightful. Impressive! 📈",
-  "Way to handle that curveball! ⚾",
+  'Strategic and insightful. Impressive! 📈',
+  'Way to handle that curveball! ⚾',
   "Time's up! You did great! 🏁"
 ];
 
@@ -242,7 +242,7 @@ function KudosMessage({ name }: { name: string }) {
   if (!message) return null;
 
   return (
-    <p className="text-sm text-white font-semibold text-center p-4 mt-4 animate-pulse bg-green-600 rounded-lg">
+    <p className="text-lg text-white font-semibold text-center p-4 mt-4 animate-pulse bg-green-600">
       {message}
     </p>
   );
