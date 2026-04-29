@@ -103,8 +103,7 @@ export default function InterviewPractice({ name }: { name: string }) {
     <Card className="min-h-[75vh]">
       <CardHeader className="mb-12">
         <CardTitle className="flex justify-between items-center gap-2">
-          <div className="flex items-center gap-2">
-            <Briefcase className="text-primary" />
+          <div className="flex items-center gap-4">
             <p>Interview Practice</p>
           </div>
           {!openAction ? <Help setOpenAction={setOpenAction} /> : <div />}
@@ -202,7 +201,7 @@ export default function InterviewPractice({ name }: { name: string }) {
                     className="w-full"
                   >
                     <AccordionItem value={framework.category}>
-                      <AccordionTrigger className="text-sm font-bold uppercase tracking-wider">
+                      <AccordionTrigger className="text-lg font-black uppercase tracking-wider">
                         {framework.category}
                       </AccordionTrigger>
                       <AccordionContent>
@@ -212,10 +211,10 @@ export default function InterviewPractice({ name }: { name: string }) {
                               key={item.name}
                               className="flex flex-col gap-1 border-b border-muted pb-2 last:border-0"
                             >
-                              <p className="font-bold text-primary">
+                              <p className="font-semibold text-base text-primary">
                                 {item.name}
                               </p>
-                              <p className="text-xs text-muted-foreground">
+                              <p className="text-sm text-muted-foreground">
                                 {item.description}
                               </p>
                             </div>
