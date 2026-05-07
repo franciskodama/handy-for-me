@@ -54,11 +54,11 @@ export default function Result({
       ) : (
         <>
           <div className="flex flex-col h-full justify-center items-center px-12 py-24 leading-tight text-center w-full gap-4">
-            <div className="flex items-center gap-2">
-              <p className="font-semibold text-6xl sm:text-2xl">
+            <div className="flex items-center gap-3">
+              <p className="font-bold text-3xl sm:text-4xl text-primary">
                 Ready for a challenge?
               </p>
-              <Flame size={32} strokeWidth={1.6} />
+              <Flame size={40} className="text-orange-500 animate-bounce" />
             </div>
             <p className="text-sm sm:text-xl">
               Set the timer, choose a topic, spin, and answer.

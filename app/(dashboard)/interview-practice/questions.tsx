@@ -481,11 +481,11 @@ export const pmFrameworks = [
         description: 'The single metric that best captures the core value your product delivers.',
         longDescription: `The North Star Metric is the key measure of success for the product team in a company. It defines the relationship between the customer problems that the product team is trying to solve and the revenue that the business aims to generate by doing so.
 
-### Core Components of a North Star Metric
+Core Components of a North Star Metric
 
-- **Customer Success Moment:** It must reflect when a customer actually experiences the core value of the product, not just a feature the founder likes.
-- **Measurable Progress:** The metric requires a time element (daily, weekly, or monthly) to track growth effectively.
-- **Path to Revenue:** There must be a direct connection between the metric and the company's profitability.`,
+- Customer Success Moment: It must reflect when a customer actually experiences the core value of the product, not just a feature the founder likes.
+- Measurable Progress: The metric requires a time element (daily, weekly, or monthly) to track growth effectively.
+- Path to Revenue: There must be a direct connection between the metric and the company's profitability.`,
         image: '/north_star_metric_framework_1778181998860.png'
       }
     ]
@@ -496,21 +496,21 @@ export const pmFrameworks = [
       {
         name: 'OKR',
         description: 'Objectives and Key Results: A collaborative goal-setting tool used by teams to set challenging, ambitious goals with measurable results.',
-        longDescription: `OKRs are a goal-setting framework used to define measurable goals and track their outcomes. They focus on **growth**, **change**, and **innovation**.
+        longDescription: `OKRs are a goal-setting framework used to define measurable goals and track their outcomes. They focus on growth, change, and innovation.
 
-- **Objective:** A qualitative, inspirational statement of what is to be achieved (e.g., "Create a world-class user onboarding experience").
-- **Key Results:** 3 to 5 quantitative, time-bound metrics used to measure the achievement of the objective (e.g., "Reduce sign-up drop-off by 20%").
-- **Nature:** Aggressive, temporary, and aspirational.`,
+- Objective: A qualitative, inspirational statement of what is to be achieved (e.g., "Create a world-class user onboarding experience").
+- Key Results: 3 to 5 quantitative, time-bound metrics used to measure the achievement of the objective (e.g., "Reduce sign-up drop-off by 20%").
+- Nature: Aggressive, temporary, and aspirational.`,
         image: '/okr_framework_explanation_1778181528675.png'
       },
       {
         name: 'KPI',
         description: 'Key Performance Indicators: Quantifiable measures of performance over time for a specific objective, providing targets for teams to shoot for.',
-        longDescription: `KPIs are quantifiable measures used to evaluate the success of an organization or employee in meeting objectives for performance. They focus on the **health** and **stability** of ongoing processes.
+        longDescription: `KPIs are quantifiable measures used to evaluate the success of an organization or employee in meeting objectives for performance. They focus on the health and stability of ongoing processes.
 
-- **Function:** They measure "business as usual" performance.
-- **Nature:** Usually steady, ongoing, and descriptive (e.g., "Monthly Recurring Revenue" or "Average Response Time").
-- **Analogy:** A car's dashboard (speedometer, fuel gauge) which tells you if the vehicle is operating correctly.`,
+- Function: They measure "business as usual" performance.
+- Nature: Usually steady, ongoing, and descriptive (e.g., "Monthly Recurring Revenue" or "Average Response Time").
+- Analogy: A car's dashboard (speedometer, fuel gauge) which tells you if the vehicle is operating correctly.`,
         image: '/kpi_dashboard_analogy_1778181486830.png'
       }
     ]
