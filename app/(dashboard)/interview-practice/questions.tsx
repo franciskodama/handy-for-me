@@ -472,5 +472,18 @@ export const pmFrameworks = [
         description: 'The single metric that best captures the core value your product delivers.'
       }
     ]
+  },
+  {
+    category: 'Goal Setting',
+    items: [
+      {
+        name: 'OKR',
+        description: 'Objectives and Key Results: A collaborative goal-setting tool used by teams to set challenging, ambitious goals with measurable results.'
+      },
+      {
+        name: 'KPI',
+        description: 'Key Performance Indicators: Quantifiable measures of performance over time for a specific objective, providing targets for teams to shoot for.'
+      }
+    ]
   }
 ];

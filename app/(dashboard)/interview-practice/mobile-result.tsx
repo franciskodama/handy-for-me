@@ -21,6 +21,7 @@ export function MobileResultDialog({
   setSelectedValue,
   selectedValue,
   handleResetAll,
+  handleNextQuestion,
   setResult,
   setTimeRemaining,
   timeRemaining,
@@ -49,10 +50,6 @@ export function MobileResultDialog({
   setResetAll?: (value: boolean) => void;
 }) {
   const isMobile = useIsMobile();
-
-  function handleNextQuestion(): void {
-    throw new Error('Function not implemented.');
-  }
 
   return (
     <AlertDialog open={!!result && isMobile}>
