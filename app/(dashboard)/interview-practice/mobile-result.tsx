@@ -49,17 +49,21 @@ export function MobileResultDialog({
   setResetAll?: (value: boolean) => void;
 }) {
   const isMobile = useIsMobile();
-  
+
+  function handleNextQuestion(): void {
+    throw new Error('Function not implemented.');
+  }
+
   return (
     <AlertDialog open={!!result && isMobile}>
       <AlertDialogContent className="w-[calc(100%-35px)] max-h-[90vh] overflow-y-auto">
         <AlertDialogHeader>
           <AlertDialogDescription>
-            <Result 
-              result={result} 
-              handleResetAll={handleResetAll} 
+            <Result
+              result={result}
+              handleResetAll={handleResetAll}
               handleNextQuestion={handleNextQuestion}
-              timeRemaining={timeRemaining} 
+              timeRemaining={timeRemaining}
             />
             <div className="flex flex-col mt-8">
               <Countdown
