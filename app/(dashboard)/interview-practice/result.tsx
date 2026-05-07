@@ -6,10 +6,12 @@ import { motion, AnimatePresence } from 'framer-motion';
 export default function Result({
   result,
   handleResetAll,
+  handleNextQuestion,
   timeRemaining
 }: {
   result: any;
   handleResetAll: () => void;
+  handleNextQuestion: () => void;
   timeRemaining: number;
 }) {
   const [fontSize, setFontSize] = useState(30);
@@ -87,7 +89,7 @@ export default function Result({
           <Button
             variant="ghost"
             className="mt-12 text-muted-foreground hover:text-primary"
-            onClick={handleResetAll}
+            onClick={handleNextQuestion}
           >
             Next Question
           </Button>

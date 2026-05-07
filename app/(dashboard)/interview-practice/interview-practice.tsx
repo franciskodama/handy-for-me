@@ -50,6 +50,7 @@ export default function InterviewPractice({ name }: { name: string }) {
   const [timeRemaining, setTimeRemaining] = useState<number>(0);
   const [lastSelectedTime, setLastSelectedTime] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
+  const [isLuckyMode, setIsLuckyMode] = useState(false);
 
   const categories = getCategories();
 
@@ -62,6 +63,7 @@ export default function InterviewPractice({ name }: { name: string }) {
 
   const handleSpin = () => {
     if (questions.length === 0) return;
+    setIsLuckyMode(false);
     const randomIndex = Math.floor(Math.random() * questions.length);
     const randomItem = questions[randomIndex];
 
@@ -74,6 +76,7 @@ export default function InterviewPractice({ name }: { name: string }) {
   };
 
   const handleFeelingLucky = () => {
+    setIsLuckyMode(true);
     const luckyChoice = getLuckyChoice();
     setCategory(luckyChoice.category);
     setResult(null);
@@ -81,6 +84,14 @@ export default function InterviewPractice({ name }: { name: string }) {
       setResult(luckyChoice);
       setStartCountdown(true);
     }, 1000);
+  };
+
+  const handleNextQuestion = () => {
+    if (isLuckyMode) {
+      handleFeelingLucky();
+    } else {
+      handleSpin();
+    }
   };
 
   const handleResetAll = () => {
@@ -232,6 +243,7 @@ export default function InterviewPractice({ name }: { name: string }) {
             <Result
               result={result}
               handleResetAll={handleResetAll}
+              handleNextQuestion={handleNextQuestion}
               timeRemaining={timeRemaining}
             />
           </div>
@@ -273,6 +285,7 @@ export default function InterviewPractice({ name }: { name: string }) {
             setIsPaused={setIsPaused}
             isPaused={isPaused}
             setResetAll={setResetAll}
+            handleNextQuestion={handleNextQuestion}
           />
         </div>
       </CardContent>

@@ -38,6 +38,7 @@ export function MobileResultDialog({
   setSelectedValue: (value: string) => void;
   selectedValue: string;
   handleResetAll: () => void;
+  handleNextQuestion: () => void;
   setResult: (value: any) => void;
   setTimeRemaining: Dispatch<SetStateAction<number>>;
   timeRemaining: number;
@@ -57,6 +58,7 @@ export function MobileResultDialog({
             <Result 
               result={result} 
               handleResetAll={handleResetAll} 
+              handleNextQuestion={handleNextQuestion}
               timeRemaining={timeRemaining} 
             />
             <div className="flex flex-col mt-8">
