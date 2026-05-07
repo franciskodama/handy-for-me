@@ -32,6 +32,16 @@ import {
   pmInterviewQuestions
 } from './questions';
 import { Button } from '@/components/ui/button';
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogAction,
+} from '@/components/ui/alert-dialog';
+import Image from 'next/image';
 import { MobileResultDialog } from '@/app/(dashboard)/interview-practice/mobile-result';
 import Help from '@/components/common/Help';
 import Result from './result';
@@ -51,6 +61,7 @@ export default function InterviewPractice({ name }: { name: string }) {
   const [lastSelectedTime, setLastSelectedTime] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const [isLuckyMode, setIsLuckyMode] = useState(false);
+  const [selectedFramework, setSelectedFramework] = useState<any>(null);
 
   const categories = getCategories();
 
@@ -220,11 +231,21 @@ export default function InterviewPractice({ name }: { name: string }) {
                           {framework.items.map((item) => (
                             <div
                               key={item.name}
-                              className="flex flex-col gap-1 border-b border-muted pb-2 last:border-0"
+                              className="flex flex-col gap-1 border-b border-muted pb-4 last:border-0"
                             >
-                              <p className="font-semibold text-base text-primary">
-                                {item.name}
-                              </p>
+                              <div className="flex justify-between items-start gap-2">
+                                <p className="font-semibold text-base text-primary">
+                                  {item.name}
+                                </p>
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  className="h-7 text-xs text-muted-foreground hover:text-primary"
+                                  onClick={() => setSelectedFramework(item)}
+                                >
+                                  More
+                                </Button>
+                              </div>
                               <p className="text-sm text-muted-foreground">
                                 {item.description}
                               </p>
@@ -289,6 +310,39 @@ export default function InterviewPractice({ name }: { name: string }) {
           />
         </div>
       </CardContent>
+
+      <AlertDialog
+        open={!!selectedFramework}
+        onOpenChange={() => setSelectedFramework(null)}
+      >
+        <AlertDialogContent className="w-[95vw] md:max-w-2xl max-h-[90vh] overflow-y-auto">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-2xl font-bold text-primary">
+              {selectedFramework?.name}
+            </AlertDialogTitle>
+            <AlertDialogDescription className="text-base text-foreground mt-4 whitespace-pre-wrap">
+              {selectedFramework?.longDescription || selectedFramework?.description}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+
+          {selectedFramework?.image && (
+            <div className="relative w-full aspect-square mt-6 rounded-lg overflow-hidden border border-muted">
+              <Image
+                src={selectedFramework.image}
+                alt={selectedFramework.name}
+                fill
+                className="object-contain p-4"
+              />
+            </div>
+          )}
+
+          <AlertDialogFooter className="mt-8">
+            <AlertDialogAction onClick={() => setSelectedFramework(null)}>
+              Got it!
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </Card>
   );
 }
