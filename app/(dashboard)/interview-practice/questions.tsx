@@ -409,8 +409,9 @@ export const pmFrameworks = [
     items: [
       {
         name: 'CIRCLES Method',
-        description:
-          'Comprehend, Identify, Report, Cut, List, Evaluate, Summarize.'
+        description: 'Comprehend, Identify, Report, Cut, List, Evaluate, Summarize.',
+        longDescription: 'The CIRCLES Method™ is a framework that helps product managers provide a complete, thoughtful response to any product design question. It guides you through understanding the context, identifying the user, uncovering their needs, prioritizing problems, brainstorming solutions, evaluating trade-offs, and summarizing your recommendation.',
+        image: '/circles_method_framework_1778180739414.png'
       },
       {
         name: '5 Whys',
@@ -427,7 +428,9 @@ export const pmFrameworks = [
     items: [
       {
         name: 'RICE',
-        description: 'Reach, Impact, Confidence, Effort.'
+        description: 'Reach, Impact, Confidence, Effort.',
+        longDescription: 'RICE is a prioritization framework designed to help product managers determine which features, products, and tasks to prioritize. By scoring each factor, you can calculate a single score that helps in making objective decisions about the roadmap.',
+        image: '/rice_prioritization_framework_1778180764816.png'
       },
       {
         name: 'MoSCoW',
@@ -444,7 +447,9 @@ export const pmFrameworks = [
     items: [
       {
         name: 'SWOT',
-        description: 'Strengths, Weaknesses, Opportunities, Threats.'
+        description: 'Strengths, Weaknesses, Opportunities, Threats.',
+        longDescription: 'SWOT Analysis is a strategic planning technique used to help a person or organization identify strengths, weaknesses, opportunities, and threats related to business competition or project planning. It is designed for use in the preliminary stages of decision-making processes.',
+        image: '/swot_analysis_framework_1778180792266.png'
       },
       {
         name: 'Porter’s Five Forces',
@@ -461,11 +466,15 @@ export const pmFrameworks = [
     items: [
       {
         name: 'HEART Framework',
-        description: 'Happiness, Engagement, Adoption, Retention, Task Success.'
+        description: 'Happiness, Engagement, Adoption, Retention, Task Success.',
+        longDescription: 'The HEART framework is a set of user-centered metrics developed by Google. It is designed to help product teams measure the user experience of their products and services across five key categories: Happiness, Engagement, Adoption, Retention, and Task Success.',
+        image: '/heart_framework_pm_1778180916305.png'
       },
       {
         name: 'AARRR (Pirate Metrics)',
-        description: 'Acquisition, Activation, Retention, Referral, Revenue.'
+        description: 'Acquisition, Activation, Retention, Referral, Revenue.',
+        longDescription: 'AARRR is a framework for customer lifecycle and growth, popularized by Dave McClure. It stands for Acquisition (how users find you), Activation (their first good experience), Retention (do they come back?), Referral (do they tell others?), and Revenue (do they pay?).',
+        image: '/aarrr_pirate_metrics_framework_1778180950478.png'
       },
       {
         name: 'North Star Metric',
@@ -478,11 +487,23 @@ export const pmFrameworks = [
     items: [
       {
         name: 'OKR',
-        description: 'Objectives and Key Results: A collaborative goal-setting tool used by teams to set challenging, ambitious goals with measurable results.'
+        description: 'Objectives and Key Results: A collaborative goal-setting tool used by teams to set challenging, ambitious goals with measurable results.',
+        longDescription: `OKRs are a goal-setting framework used to define measurable goals and track their outcomes. They focus on **growth**, **change**, and **innovation**.
+
+- **Objective:** A qualitative, inspirational statement of what is to be achieved (e.g., "Create a world-class user onboarding experience").
+- **Key Results:** 3 to 5 quantitative, time-bound metrics used to measure the achievement of the objective (e.g., "Reduce sign-up drop-off by 20%").
+- **Nature:** Aggressive, temporary, and aspirational.`,
+        image: '/okr_framework_explanation_1778181528675.png'
       },
       {
         name: 'KPI',
-        description: 'Key Performance Indicators: Quantifiable measures of performance over time for a specific objective, providing targets for teams to shoot for.'
+        description: 'Key Performance Indicators: Quantifiable measures of performance over time for a specific objective, providing targets for teams to shoot for.',
+        longDescription: `KPIs are quantifiable measures used to evaluate the success of an organization or employee in meeting objectives for performance. They focus on the **health** and **stability** of ongoing processes.
+
+- **Function:** They measure "business as usual" performance.
+- **Nature:** Usually steady, ongoing, and descriptive (e.g., "Monthly Recurring Revenue" or "Average Response Time").
+- **Analogy:** A car's dashboard (speedometer, fuel gauge) which tells you if the vehicle is operating correctly.`,
+        image: '/kpi_dashboard_analogy_1778181486830.png'
       }
     ]
   }
