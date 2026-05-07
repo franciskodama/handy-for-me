@@ -478,7 +478,15 @@ export const pmFrameworks = [
       },
       {
         name: 'North Star Metric',
-        description: 'The single metric that best captures the core value your product delivers.'
+        description: 'The single metric that best captures the core value your product delivers.',
+        longDescription: `The North Star Metric is the key measure of success for the product team in a company. It defines the relationship between the customer problems that the product team is trying to solve and the revenue that the business aims to generate by doing so.
+
+### Core Components of a North Star Metric
+
+- **Customer Success Moment:** It must reflect when a customer actually experiences the core value of the product, not just a feature the founder likes.
+- **Measurable Progress:** The metric requires a time element (daily, weekly, or monthly) to track growth effectively.
+- **Path to Revenue:** There must be a direct connection between the metric and the company's profitability.`,
+        image: '/north_star_metric_framework_1778181998860.png'
       }
     ]
   },
