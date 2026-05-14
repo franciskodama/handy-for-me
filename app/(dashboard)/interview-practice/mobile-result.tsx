@@ -1,10 +1,12 @@
+'use client';
 // Mobile result dialog for interview practice
 import {
   AlertDialog,
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogFooter,
-  AlertDialogHeader
+  AlertDialogHeader,
+  AlertDialogTitle
 } from '@/components/ui/alert-dialog';
 import { X } from 'lucide-react';
 import useIsMobile from '@/hooks/use-is-mobile';
@@ -55,31 +57,36 @@ export function MobileResultDialog({
     <AlertDialog open={!!result && isMobile}>
       <AlertDialogContent className="w-[calc(100%-35px)] max-h-[90vh] overflow-y-auto">
         <AlertDialogHeader>
-          <AlertDialogDescription>
-            <Result
-              result={result}
-              handleResetAll={handleResetAll}
-              handleNextQuestion={handleNextQuestion}
-              timeRemaining={timeRemaining}
-            />
-            <div className="flex flex-col mt-8">
-              <Countdown
-                name={name}
-                resetAll={resetAll}
-                result={result?.question}
-                setStartCountdown={setStartCountdown}
-                startCountdown={startCountdown}
-                setSelectedValue={setSelectedValue}
-                selectedValue={selectedValue}
+          <AlertDialogTitle className="sr-only">
+            Interview Result
+          </AlertDialogTitle>
+          <AlertDialogDescription asChild>
+            <div>
+              <Result
+                result={result}
                 handleResetAll={handleResetAll}
-                setTimeRemaining={setTimeRemaining}
+                handleNextQuestion={handleNextQuestion}
                 timeRemaining={timeRemaining}
-                setLastSelectedTime={setLastSelectedTime}
-                lastSelectedTime={lastSelectedTime}
-                setIsPaused={setIsPaused}
-                isPaused={isPaused}
-                setResetAll={setResetAll}
               />
+              <div className="flex flex-col mt-8">
+                <Countdown
+                  name={name}
+                  resetAll={resetAll}
+                  result={result?.question}
+                  setStartCountdown={setStartCountdown}
+                  startCountdown={startCountdown}
+                  setSelectedValue={setSelectedValue}
+                  selectedValue={selectedValue}
+                  handleResetAll={handleResetAll}
+                  setTimeRemaining={setTimeRemaining}
+                  timeRemaining={timeRemaining}
+                  setLastSelectedTime={setLastSelectedTime}
+                  lastSelectedTime={lastSelectedTime}
+                  setIsPaused={setIsPaused}
+                  isPaused={isPaused}
+                  setResetAll={setResetAll}
+                />
+              </div>
             </div>
           </AlertDialogDescription>
         </AlertDialogHeader>

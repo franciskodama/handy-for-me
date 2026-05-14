@@ -1,3 +1,4 @@
+'use client';
 import React, { useEffect, useState, Dispatch, SetStateAction } from 'react';
 import { Timer } from 'lucide-react';
 import confetti from 'canvas-confetti';

@@ -1,3 +1,4 @@
+'use client';
 import React, { useEffect, useState, Dispatch, SetStateAction } from 'react';
 import { Timer } from 'lucide-react';
 import confetti from 'canvas-confetti';
@@ -189,7 +190,7 @@ export default function Countdown({
             .padStart(2, '0')}s`}</p>
         </div>
 
-        <div className="flex flex-wrap mt-4">
+        <div className="flex flex-wrap gap-4 mt-4">
           <Button
             className="w-[10ch] mb-2"
             onClick={handlePauseResumeButton}
