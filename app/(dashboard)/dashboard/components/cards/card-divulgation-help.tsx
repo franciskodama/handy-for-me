@@ -28,12 +28,14 @@ export default function CardDivulgationHelp() {
                 <p>Need a hand?</p>
               </div>
             </AlertDialogTitle>
-            <AlertDialogDescription className="flex flex-col gap-2 text-primary text-left">
-              <p>
-                Look for the Help Icon to explore how the feature works and its
-                benefits (top-right of each feature page).
-              </p>
-              <p className="mt-2"></p>
+            <AlertDialogDescription asChild>
+              <div className="flex flex-col gap-2 text-primary text-left">
+                <p>
+                  Look for the Help Icon to explore how the feature works and its
+                  benefits (top-right of each feature page).
+                </p>
+                <p className="mt-2"></p>
+              </div>
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

@@ -55,26 +55,28 @@ export function MobileResultDialog({
         <AlertDialogContent className="w-[calc(100%-35px)]">
           <AlertDialogHeader>
             <AlertDialogTitle className="sr-only">Result</AlertDialogTitle>
-            <AlertDialogDescription>
-              <Result result={result} handleResetAll={handleResetAll} />
-              <div className="flex flex-col mt-8">
-                <Countdown
-                  name={name}
-                  resetAll={resetAll}
-                  result={result}
-                  setStartCountdown={setStartCountdown}
-                  startCountdown={startCountdown}
-                  setSelectedValue={setSelectedValue}
-                  selectedValue={selectedValue}
-                  handleResetAll={handleResetAll}
-                  setTimeRemaining={setTimeRemaining}
-                  timeRemaining={timeRemaining}
-                  setLastSelectedTime={setLastSelectedTime}
-                  lastSelectedTime={lastSelectedTime}
-                  setIsPaused={setIsPaused}
-                  isPaused={isPaused}
-                  setResetAll={setResetAll}
-                />
+            <AlertDialogDescription asChild>
+              <div>
+                <Result result={result} handleResetAll={handleResetAll} />
+                <div className="flex flex-col mt-8">
+                  <Countdown
+                    name={name}
+                    resetAll={resetAll}
+                    result={result}
+                    setStartCountdown={setStartCountdown}
+                    startCountdown={startCountdown}
+                    setSelectedValue={setSelectedValue}
+                    selectedValue={selectedValue}
+                    handleResetAll={handleResetAll}
+                    setTimeRemaining={setTimeRemaining}
+                    timeRemaining={timeRemaining}
+                    setLastSelectedTime={setLastSelectedTime}
+                    lastSelectedTime={lastSelectedTime}
+                    setIsPaused={setIsPaused}
+                    isPaused={isPaused}
+                    setResetAll={setResetAll}
+                  />
+                </div>
               </div>
             </AlertDialogDescription>
           </AlertDialogHeader>
