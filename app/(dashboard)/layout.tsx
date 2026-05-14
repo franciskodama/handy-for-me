@@ -83,7 +83,7 @@ function MobileNav({ items }: { items: any[] }) {
         <nav className="grid gap-6 text-lg font-medium">
           <Link
             href="/"
-            className="group flex h-10 w-10 shrink-0 items-center justify-center gap-2 text-lg font-semibold text-primary-foreground md:text-base"
+            className="group flex h-10 w-10 shrink-0 items-center justify-center gap-2 text-lg font-semibold md:text-base"
           >
             <Image
               src="/logos/HandyForMe_Cog200x200.png"
@@ -97,10 +97,10 @@ function MobileNav({ items }: { items: any[] }) {
             <SheetClose asChild key={item.label}>
               <Link
                 href={item.href}
-                className="flex items-center gap-4 px-2.5 truncate text-left text-muted-foreground hover:text-foreground"
+                className="flex items-center gap-4 px-2.5 text-left text-muted-foreground hover:text-foreground"
               >
                 {item.icon}
-                {item.label}
+                <span>{item.label}</span>
               </Link>
             </SheetClose>
           ))}

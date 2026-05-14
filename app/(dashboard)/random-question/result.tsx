@@ -1,6 +1,7 @@
 import { Flame, HelpingHand, Lightbulb } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
+import useIsMobile from '@/hooks/use-is-mobile';
 
 export default function Result({
   result,
@@ -9,7 +10,8 @@ export default function Result({
   result: string;
   handleResetAll: () => void;
 }) {
-  const [fontSize, setFontSize] = useState(50);
+  const isMobile = useIsMobile();
+  const [fontSize, setFontSize] = useState(isMobile ? 30 : 50);
 
   return (
     <div className="relative stripe-border flex flex-col w-full items-center">

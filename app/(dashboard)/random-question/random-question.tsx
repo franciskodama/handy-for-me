@@ -125,20 +125,22 @@ export default function RandomQuestion({ name }: { name: string }) {
         </AnimatePresence>
 
         <div className="flex flex-col sm:flex-row justify-between gap-8 w-full mb-12">
-          <Tabs defaultValue="topic" className="w-1/5">
-            <TabsList className="w-full">
-              <TabsTrigger value="topic">Topic</TabsTrigger>
-              <TabsTrigger value="vocabulary">
+          <Tabs defaultValue="topic" className="w-full sm:w-1/5">
+            <TabsList className="w-full h-auto flex-wrap sm:flex-nowrap">
+              <TabsTrigger value="topic" className="flex-1">
+                Topic
+              </TabsTrigger>
+              <TabsTrigger value="vocabulary" className="flex-1">
                 Expand your Vocabulary
               </TabsTrigger>
             </TabsList>
             <TabsContent value="topic" className="w-full">
-              <div className="flex flex-col w-full gap-4 mt-16 px-2">
-                <p className="sm:hidden text-lg font-semibold mb-4">
-                  Let's get started!
+              <div className="flex flex-col w-full gap-4 mt-8 sm:mt-16 px-2">
+                <p className="sm:hidden text-lg font-semibold mb-2">
+                  Let&apos;s get started!
                 </p>
                 <div className="flex flex-col gap-2">
-                  <div className="flex items-center gap-2 mt-4 sm:mt-0">
+                  <div className="flex items-center gap-2 mt-2 sm:mt-0">
                     <p className="text-sm sm:text-lg sm:font-semibold">
                       Pick a Topic
                     </p>
@@ -193,14 +195,13 @@ export default function RandomQuestion({ name }: { name: string }) {
                   >
                     {`I'm feeling lucky!`}
                   </Button>
-                  <p className="text-xs mb-8">
+                  <p className="text-xs mb-4 text-center">
                     Let fate decide your next topic and question
                   </p>
                 </div>
               </div>
             </TabsContent>
             <TabsContent value="vocabulary">
-              {/* ----------------------------------- */}
               <div className="flex flex-col w-full mt-4 px-2">
                 {linkingWords.map(
                   (category: { category: string; words: string[] }) => (
@@ -214,7 +215,7 @@ export default function RandomQuestion({ name }: { name: string }) {
                           {category.category}
                         </AccordionTrigger>
                         <AccordionContent>
-                          <ul className="flex flex-col gap-2 capitalize text-3xl font-semibold p-2">
+                          <ul className="flex flex-col gap-2 capitalize text-xl sm:text-3xl font-semibold p-2">
                             {category.words.map((word: string) => (
                               <li
                                 key={word}
@@ -233,7 +234,6 @@ export default function RandomQuestion({ name }: { name: string }) {
                   )
                 )}
               </div>
-              {/* ----------------------------------- */}
             </TabsContent>
           </Tabs>
 
