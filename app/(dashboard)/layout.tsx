@@ -6,6 +6,8 @@ import {
   Sheet,
   SheetClose,
   SheetContent,
+  SheetHeader,
+  SheetTitle,
   SheetTrigger
 } from '@/components/ui/sheet';
 import {
@@ -80,6 +82,9 @@ function MobileNav({ items }: { items: any[] }) {
         </Button>
       </SheetTrigger>
       <SheetContent side="left" className="sm:max-w-xs">
+        <SheetHeader>
+          <SheetTitle className="sr-only">Menu</SheetTitle>
+        </SheetHeader>
         <nav className="grid gap-6 text-lg font-medium">
           <Link
             href="/"

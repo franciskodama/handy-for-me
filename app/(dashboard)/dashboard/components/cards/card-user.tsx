@@ -16,6 +16,7 @@ export default function CardUser({
             height={100}
             alt="Avatar"
             className="overflow-hidden rounded-full z-0"
+            priority
           />
           <p className="text-2xl font-bold">
             Hi,
@@ -33,6 +34,7 @@ export default function CardUser({
           height={150}
           alt="Avatar"
           className="overflow-hidden rounded-full"
+          priority
         />
       )}
     </div>

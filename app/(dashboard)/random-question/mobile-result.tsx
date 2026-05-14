@@ -3,7 +3,8 @@ import {
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogFooter,
-  AlertDialogHeader
+  AlertDialogHeader,
+  AlertDialogTitle
 } from '@/components/ui/alert-dialog';
 import { X } from 'lucide-react';
 import useIsMobile from '@/hooks/use-is-mobile';
@@ -52,6 +53,7 @@ export function MobileResultDialog({
       <AlertDialog open={result.length > 0 && isMobile}>
         <AlertDialogContent className="w-[calc(100%-35px)]">
           <AlertDialogHeader>
+            <AlertDialogTitle className="sr-only">Result</AlertDialogTitle>
             <AlertDialogDescription>
               <Result result={result} handleResetAll={handleResetAll} />
               <div className="flex flex-col mt-8">
