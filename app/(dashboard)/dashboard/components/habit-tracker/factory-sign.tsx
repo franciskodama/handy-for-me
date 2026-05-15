@@ -177,20 +177,20 @@ export default function FactorySign({
   }
 
   return (
-    <div className="relative bg-zinc-950 px-8 py-0.5 border-2 border-zinc-800 shadow-2xl overflow-hidden h-full flex items-center justify-between group">
+    <div className="relative bg-zinc-950 px-4 md:px-8 py-4 md:py-0.5 border-2 border-zinc-800 shadow-2xl overflow-hidden h-full flex flex-col md:flex-row items-center justify-between group gap-4 md:gap-0">
       {/* Hazard Stripes Left & Right */}
       <div className="absolute top-0 left-0 h-full w-2 bg-[repeating-linear-gradient(0deg,#fbbf24,#fbbf24_10px,#000_10px,#000_20px)] opacity-50" />
       <div className="absolute top-0 right-0 h-full w-2 bg-[repeating-linear-gradient(0deg,#fbbf24,#fbbf24_10px,#000_10px,#000_20px)] opacity-50" />
 
       {/* Left: Habit Name */}
-      <div className="flex-1 flex items-center gap-4">
+      <div className="flex-none md:flex-1 flex items-center gap-4">
         <h3 className="text-zinc-400 uppercase tracking-[0.3em] text-[10px] font-bold">
           Monitor Tag: <span className="text-zinc-300 ml-2">{habit.name}</span>
         </h3>
       </div>
 
       {/* Center: Digital Counter */}
-      <div className="flex-[2] flex justify-center items-center gap-3">
+      <div className="flex-1 md:flex-[2] flex flex-col md:flex-row justify-center items-center gap-3 w-full">
         <div className="flex items-center gap-1.5">
           {finalMonths > 0 && (
             <div className="bg-zinc-900 rounded border border-zinc-800 px-2 py-0 flex items-baseline">
@@ -212,12 +212,12 @@ export default function FactorySign({
           </div>
         </div>
         {targetDate ? (
-          <div className="flex items-center">
-            <p className="text-zinc-400 uppercase tracking-wider text-sm font-black leading-none">
+          <div className="flex flex-col md:flex-row items-center gap-1 md:gap-0">
+            <p className="text-zinc-400 uppercase tracking-wider text-[10px] md:text-sm font-black leading-none">
               {hasReachedGoal ? 'Goal Status' : 'Time to Goal'}
             </p>
             <div
-              className={`ml-12 flex items-baseline gap-1 uppercase tracking-wider text-sm font-black leading-none ${hasReachedGoal ? 'text-green-500' : 'text-zinc-400'}`}
+              className={`md:ml-12 flex items-baseline gap-1 uppercase tracking-wider text-[10px] md:text-sm font-black leading-none ${hasReachedGoal ? 'text-green-500' : 'text-zinc-400'}`}
             >
               {hasReachedGoal ? (
                 'MISSION COMPLETE'
@@ -225,30 +225,30 @@ export default function FactorySign({
                 <>
                   {remainingMonths > 0 && (
                     <>
-                      <span className=" text-red-600 text-lg font-mono font-bold drop-shadow-[0_0_8px_rgba(220,38,38,0.5)]">
+                      <span className=" text-red-600 text-base md:text-lg font-mono font-bold drop-shadow-[0_0_8px_rgba(220,38,38,0.5)]">
                         {remainingMonths}
                       </span>
-                      <span className="text-zinc-400 text-xs mr-1">M</span>
+                      <span className="text-zinc-400 text-[10px] md:text-xs mr-1">M</span>
                     </>
                   )}
-                  <span className="text-red-600 text-lg font-mono font-bold drop-shadow-[0_0_8px_rgba(220,38,38,0.5)]">
+                  <span className="text-red-600 text-base md:text-lg font-mono font-bold drop-shadow-[0_0_8px_rgba(220,38,38,0.5)]">
                     {remainingDays}
                   </span>
-                  <span className="text-zinc-400 text-xs mr-1">D</span>
-                  <span className="text-zinc-400">REMAINING</span>
+                  <span className="text-zinc-400 text-[10px] md:text-xs mr-1">D</span>
+                  <span className="text-zinc-400 text-[10px] md:text-xs">REMAINING</span>
                 </>
               )}
             </div>
           </div>
         ) : (
-          <p className="text-zinc-400 w-[20ch] uppercase tracking-wider text-xs font-black leading-none">
+          <p className="text-zinc-400 w-auto md:w-[20ch] uppercase tracking-wider text-[10px] md:text-xs font-black leading-none text-center">
             Without an accident
           </p>
         )}
       </div>
 
       {/* Right: Actions */}
-      <div className="flex-1 flex justify-end items-center gap-3 mr-12">
+      <div className="flex-none md:flex-1 flex justify-end items-center gap-3 md:mr-12">
         <AlertDialog>
           <AlertDialogTrigger asChild>
             <button
