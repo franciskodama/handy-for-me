@@ -12,7 +12,7 @@ export default function Result({
   handleResetAll: () => void;
 }) {
   const isMobile = useIsMobile();
-  const [fontSize, setFontSize] = useState(isMobile ? 30 : 50);
+  const [fontSize, setFontSize] = useState(isMobile ? 30 : 25);
 
   return (
     <div className="relative stripe-border flex flex-col w-full items-center">
@@ -40,7 +40,7 @@ export default function Result({
               </Button>
             </div>
             <p
-              className="flex flex-col justify-center px-12 pb-12 pt-6 font-semibold text-primary sm:leading-normal text-center"
+              className="flex flex-col justify-center px-12 pb-12 pt-6 font-semibold text-primary leading-8 sm:leading-normal text-center"
               style={{ fontSize: `${fontSize}px` }}
             >
               {result}
