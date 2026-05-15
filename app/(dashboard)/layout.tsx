@@ -21,13 +21,11 @@ import PencilBanner from '@/components/layout/header/pencil-banner';
 import { DashboardBreadcrumb } from '@/components/layout/header/breadcrumb';
 import Greeting from '@/components/layout/header/greeting';
 import { Toaster } from '@/components/ui/toaster';
-import { NavItem } from '@/components/NavItem';
 import { SearchInput } from '@/components/layout/header/search';
 import Footer from '@/components/layout/Footer';
 import { auth } from '@/lib/auth';
 import { menuItems } from '@/lib/menu';
-import { Menu } from 'lucide-react';
-import CardDivulgationHelp from './dashboard/components/cards/card-divulgation-help';
+import { MobileNav, DesktopNav } from '@/components/layout/side-nav';
 
 export default async function DashboardLayout({
   children
@@ -69,102 +67,5 @@ export default async function DashboardLayout({
         </div>
       </main>
     </Providers>
-  );
-}
-
-function MobileNav({ items }: { items: any[] }) {
-  return (
-    <Sheet>
-      <SheetTrigger asChild>
-        <Button size="icon" variant="outline" className="sm:hidden">
-          <Menu className="h-5 w-5" />
-          <span className="sr-only">Toggle Menu</span>
-        </Button>
-      </SheetTrigger>
-      <SheetContent side="left" className="sm:max-w-xs">
-        <SheetHeader>
-          <SheetTitle className="sr-only">Menu</SheetTitle>
-        </SheetHeader>
-        <nav className="grid gap-6 text-lg font-medium">
-          <Link
-            href="/"
-            className="group flex h-10 w-10 shrink-0 items-center justify-center gap-2 text-lg font-semibold md:text-base"
-          >
-            <Image
-              src="/logos/HandyForMe_Cog200x200.png"
-              alt="HandyFor.Me Logo"
-              width={200}
-              height={200}
-            />
-            <span className="sr-only">HandyFor.me</span>
-          </Link>
-          {items.map((item) => (
-            <SheetClose asChild key={item.label}>
-              <Link
-                href={item.href}
-                className="flex items-center gap-4 px-2.5 text-left text-muted-foreground hover:text-foreground"
-              >
-                {item.icon}
-                <span>{item.label}</span>
-              </Link>
-            </SheetClose>
-          ))}
-          {/* <Link
-            href="#"
-            className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-          >
-            <Settings className="h-5 w-5" />
-            Settings
-          </Link> */}
-        </nav>
-      </SheetContent>
-    </Sheet>
-  );
-}
-
-export function DesktopNav({ items }: { items: any[] }) {
-  return (
-    <aside className="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-background sm:flex">
-      <nav className="flex flex-col items-center gap-4 px-2 sm:py-5">
-        <Link
-          href="/"
-          className="group flex h-9 w-9 shrink-0 items-center justify-center gap-2 text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base"
-        >
-          <Image
-            src="/logos/HandyForMe_Cog200x200.png"
-            alt="HandyFor.Me Logo"
-            width={200}
-            height={200}
-          />
-        </Link>
-        {items.map((item) => (
-          <NavItem key={item.href} href={item.href} label={item.label}>
-            {item.icon}
-          </NavItem>
-        ))}
-      </nav>
-      <nav className="mt-auto flex flex-col items-center gap-4 px-2 sm:py-5">
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <div className="flex h-9 w-9 items-center justify-center text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8 cursor-pointer">
-              <CardDivulgationHelp />
-            </div>
-          </TooltipTrigger>
-          <TooltipContent side="right">Need a hand?</TooltipContent>
-        </Tooltip>
-        {/* <Tooltip>
-          <TooltipTrigger asChild>
-            <Link
-              href="#"
-              className="flex h-9 w-9 items-center justify-center text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
-            >
-              <Settings className="h-5 w-5" />
-              <span className="sr-only">Settings</span>
-            </Link>
-          </TooltipTrigger>
-          <TooltipContent side="right">Settings</TooltipContent>
-        </Tooltip> */}
-      </nav>
-    </aside>
   );
 }

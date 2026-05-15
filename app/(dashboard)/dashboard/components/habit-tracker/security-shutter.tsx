@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import { Lock, EyeOff } from 'lucide-react';
 
-export default function SecurityShutter({
+export default function wSecurityShutter({
   children,
   label = 'SECURED DATA'
 }: {
@@ -46,7 +46,7 @@ export default function SecurityShutter({
               <div className="p-2 group-hover:border-yellow-500/50 group-hover:scale-110 transition-all duration-300">
                 <Lock className="w-4 h-4 text-zinc-500 group-hover:text-yellow-500" />
               </div>
-              <p className="text-zinc-500 font-mono text-[10px] tracking-[0.3em] font-bold uppercase group-hover:text-zinc-300">
+              <p className="hidden md:block text-zinc-500 font-mono text-[10px] tracking-[0.3em] font-bold uppercase group-hover:text-zinc-300">
                 SYSTEM ID: {label}
               </p>
             </div>
