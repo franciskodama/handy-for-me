@@ -221,12 +221,12 @@ export default function SettingsView({
   };
 
   return (
-    <div className="flex flex-col gap-6 max-w-6xl mx-auto py-4 mb-8">
+    <div className="flex flex-col gap-6 max-w-6xl mx-auto py-4 my-8">
       {/* Page Title */}
       <div className="flex items-center gap-3 mb-8">
         <Settings className="h-8 w-8 text-primary" />
         <h1 className="text-3xl font-bold tracking-tight uppercase">
-          Sharing Settings
+          Settings
         </h1>
       </div>
 

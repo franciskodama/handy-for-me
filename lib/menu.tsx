@@ -19,6 +19,16 @@ export const menuItems = [
     icon: <Home className="h-5 w-5" />
   },
   {
+    label: 'Decision Helper',
+    href: '/decision-helper',
+    icon: <Scale className="h-5 w-5" />
+  },
+  {
+    label: 'Bucket List',
+    href: '/bucket-list',
+    icon: <ListOrdered className="h-5 w-5" />
+  },
+  {
     label: 'Vision Board',
     href: '/vision-board',
     icon: <Grid3x3 className="h-5 w-5" />
@@ -28,11 +38,7 @@ export const menuItems = [
     href: '/shortcuts',
     icon: <ExternalLink className="h-5 w-5" />
   },
-  {
-    label: 'Bucket List',
-    href: '/bucket-list',
-    icon: <ListOrdered className="h-5 w-5" />
-  },
+
   {
     label: 'Weekly Wins',
     href: '/weekly-wins',
@@ -42,11 +48,6 @@ export const menuItems = [
     label: 'Yearly Promises',
     href: '/promises',
     icon: <Flag className="h-5 w-5" />
-  },
-  {
-    label: 'Decision Helper',
-    href: '/decision-helper',
-    icon: <Scale className="h-5 w-5" />
   },
   {
     label: 'Stoic Support',
