@@ -79,9 +79,13 @@ export default function SettingsView({
   const [showJoinDialog, setShowJoinDialog] = useState(false);
   const [pendingJoinCode, setPendingJoinCode] = useState('');
 
-  const handleCreate = async () => {
+  // Create Flow Dialog State
+  const [showCreateDialog, setShowCreateDialog] = useState(false);
+
+  const handleCreate = async (mergeData: boolean) => {
+    setShowCreateDialog(false);
     setLoading(true);
-    const res = await createHousehold(uid);
+    const res = await createHousehold(uid, mergeData);
     setLoading(false);
 
     if (res.success && res.household) {
@@ -350,7 +354,7 @@ export default function SettingsView({
                     code to join an existing one.
                   </p>
                   <Button
-                    onClick={handleCreate}
+                    onClick={() => setShowCreateDialog(true)}
                     disabled={loading}
                     className="w-full flex items-center gap-2"
                   >
@@ -495,6 +499,43 @@ export default function SettingsView({
               Keep Separate
             </Button>
             <AlertDialogAction onClick={() => handleJoin(true)}>
+              Yes, Merge Data
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Create Flow Alert Dialog for Merging Data */}
+      <AlertDialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-xl font-bold flex items-center gap-2">
+              Merge Existing Data?
+            </AlertDialogTitle>
+            <AlertDialogDescription className="space-y-3">
+              <p>
+                You are about to create a new household.
+              </p>
+              <p>
+                Would you like to{' '}
+                <strong>merge your existing private items</strong> (Decision
+                Helper lists and Bucket List items) into this new household so future
+                members can see and collaborate on them?
+              </p>
+              <p className="text-xs text-amber-600 bg-amber-50 dark:bg-amber-950/20 p-2.5 rounded border border-amber-200 dark:border-amber-900">
+                <strong>Keep Separate:</strong> Your existing items will remain
+                private. You will start with a fresh shared household space.
+              </p>
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="flex flex-col sm:flex-row gap-2 sm:gap-0">
+            <AlertDialogCancel onClick={() => setShowCreateDialog(false)}>
+              Cancel
+            </AlertDialogCancel>
+            <Button variant="outline" onClick={() => handleCreate(false)}>
+              Keep Separate
+            </Button>
+            <AlertDialogAction onClick={() => handleCreate(true)}>
               Yes, Merge Data
             </AlertDialogAction>
           </AlertDialogFooter>

@@ -70,11 +70,5 @@ export const menuItems = [
     icon: <Briefcase className="h-5 w-5" />,
     restricted: true
   }
-  // {
-  //   label: 'My Words',
-  //   href: '/my-words',
-  //   icon: <WholeWord className="h-5 w-5" />
-  // }
   // { label: 'Artificial Intelligence', href: '/ai', icon: Bot },
-  // { label: 'Products', href: '/products', icon: Ghost },
 ];

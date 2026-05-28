@@ -13,7 +13,7 @@ function generateCode(): string {
   return result;
 }
 
-export async function createHousehold(userUid: string) {
+export async function createHousehold(userUid: string, mergeExistingData: boolean) {
   try {
     const user = await prisma.user.findUnique({
       where: { uid: userUid }
@@ -55,6 +55,31 @@ export async function createHousehold(userUid: string) {
         shareBucketList: true
       }
     });
+
+    // Handle data merge if requested
+    if (mergeExistingData) {
+      // Merge Decision Helper lists
+      await prisma.decisionHelperList.updateMany({
+        where: {
+          uid: userUid,
+          householdId: null
+        },
+        data: {
+          householdId: household.id
+        }
+      });
+
+      // Merge Bucket List items
+      await prisma.bucketListItem.updateMany({
+        where: {
+          uid: userUid,
+          householdId: null
+        },
+        data: {
+          householdId: household.id
+        }
+      });
+    }
 
     return { success: true, household };
   } catch (error) {
