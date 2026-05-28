@@ -36,7 +36,8 @@ import {
   Check,
   Settings2,
   Plus,
-  ShieldAlert
+  ShieldAlert,
+  Settings
 } from 'lucide-react';
 import Image from 'next/image';
 
@@ -220,12 +221,12 @@ export default function SettingsView({
   };
 
   return (
-    <div className="flex flex-col gap-6 max-w-4xl mx-auto py-4">
+    <div className="flex flex-col gap-6 max-w-6xl mx-auto py-4 mb-8">
       {/* Page Title */}
-      <div className="flex items-center gap-3 mb-2">
-        <Settings2 className="h-8 w-8 text-primary" />
-        <h1 className="text-3xl font-bold tracking-tight">
-          Profile & Sharing Settings
+      <div className="flex items-center gap-3 mb-8">
+        <Settings className="h-8 w-8 text-primary" />
+        <h1 className="text-3xl font-bold tracking-tight uppercase">
+          Sharing Settings
         </h1>
       </div>
 
@@ -233,8 +234,7 @@ export default function SettingsView({
         {/* Household Admin Card */}
         <Card className="shadow-md">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Users className="h-8 w-8 text-primary" />
+            <CardTitle className="flex items-center gap-2 capitalize">
               Household Management
             </CardTitle>
             <CardDescription>
@@ -391,8 +391,7 @@ export default function SettingsView({
         {/* Feature Sharing Permissions Card */}
         <Card className="shadow-md">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Settings2 className="h-5 w-5 text-primary" />
+            <CardTitle className="flex items-center gap-2 capitalize text-3xl">
               Feature Sharing Permissions
             </CardTitle>
             <CardDescription>

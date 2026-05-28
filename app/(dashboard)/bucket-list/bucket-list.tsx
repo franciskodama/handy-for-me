@@ -302,11 +302,11 @@ export default function BucketList({
             <div className="flex items-center gap-3 flex-wrap">
               <p>Bucket List</p>
               {householdDetails?.inHousehold && householdDetails?.userSettings?.shareBucketList ? (
-                <Badge className="bg-violet-600 hover:bg-violet-700 text-white gap-1 flex items-center">
+                <Badge className="bg-violet-600 hover:bg-violet-700 text-white gap-1 flex items-center rounded-none">
                   👥 Household
                 </Badge>
               ) : (
-                <Badge variant="secondary" className="gap-1 flex items-center">
+                <Badge variant="secondary" className="gap-1 flex items-center rounded-none">
                   🔒 Personal
                 </Badge>
               )}

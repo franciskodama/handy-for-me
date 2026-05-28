@@ -3,14 +3,13 @@ import {
   Grid3x3,
   Home,
   ExternalLink,
-  ListMinus,
-  Menu,
   MessageCircleQuestion,
-  RefreshCw,
   Trophy,
   HandHeart,
   Flag,
-  Briefcase
+  Briefcase,
+  Scale,
+  ListOrdered
 } from 'lucide-react';
 
 export const menuItems = [
@@ -32,7 +31,7 @@ export const menuItems = [
   {
     label: 'Bucket List',
     href: '/bucket-list',
-    icon: <ListMinus className="h-5 w-5" />
+    icon: <ListOrdered className="h-5 w-5" />
   },
   {
     label: 'Weekly Wins',
@@ -47,7 +46,7 @@ export const menuItems = [
   {
     label: 'Decision Helper',
     href: '/decision-helper',
-    icon: <RefreshCw className="h-5 w-5" />
+    icon: <Scale className="h-5 w-5" />
   },
   {
     label: 'Stoic Support',
