@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Foldit } from 'next/font/google';
 import {
@@ -43,13 +43,16 @@ import {
 } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { DecisionHelperItem, DecisionHelperList } from '@/lib/types';
 import {
   addDecisionHelperItem,
   addDecisionHelperList,
   deleteDecisionHelperItem,
   deleteDecisionHelperList,
-  selectionDecisionHelperItem
+  selectionDecisionHelperItem,
+  getDecisionHelperLists,
+  getAllDecisionHelperItems
 } from '@/lib/actions/decision-helper';
 import { Checkbox } from '@/components/ui/checkbox';
 import { kumbh_sans } from '@/app/ui/fonts';
@@ -66,11 +69,13 @@ export const foldit = Foldit({
 export default function DecisionHelper({
   uid,
   initialLists,
-  initialItems
+  initialItems,
+  householdDetails
 }: {
   uid: string;
   initialLists: DecisionHelperList[];
   initialItems: DecisionHelperItem[];
+  householdDetails: any;
 }) {
   const [lists, setLists] = useState<DecisionHelperList[]>(initialLists);
   const [allItems, setAllItems] = useState<DecisionHelperItem[]>(initialItems);
@@ -78,6 +83,31 @@ export default function DecisionHelper({
     initialLists.length > 0 ? initialLists[0].id : ''
   );
   const [listInput, setListInput] = useState<string>('');
+
+  // Polling loop for collaborative updates when sharing is active
+  useEffect(() => {
+    const isShared = householdDetails?.inHousehold && householdDetails?.userSettings?.shareDecisionHelper;
+    if (!isShared) return;
+
+    const interval = setInterval(async () => {
+      const fetchedLists = await getDecisionHelperLists(uid);
+      if (Array.isArray(fetchedLists)) {
+        setLists(fetchedLists);
+        // If the current list was deleted by someone else, switch listId
+        if (listId && !fetchedLists.some((l) => l.id === listId)) {
+          setListId(fetchedLists.length > 0 ? fetchedLists[0].id : '');
+        } else if (!listId && fetchedLists.length > 0) {
+          setListId(fetchedLists[0].id);
+        }
+      }
+      const fetchedItems = await getAllDecisionHelperItems(uid);
+      if (Array.isArray(fetchedItems)) {
+        setAllItems(fetchedItems);
+      }
+    }, 4000);
+
+    return () => clearInterval(interval);
+  }, [uid, householdDetails, listId]);
   const [itemInput, setItemInput] = useState<string>('');
   const [pendingNewList, setPendingNewList] = useState<boolean>(false);
   const [pendingNewItem, setPendingNewItem] = useState<boolean>(false);
@@ -182,9 +212,45 @@ export default function DecisionHelper({
   return (
     <Card className="min-h-[75vh]">
       <CardHeader className="mb-4">
-        <CardTitle className="flex justify-between items-center gap-2">
-          <p>Decision Helper</p>
-          {!openAction ? <Help setOpenAction={setOpenAction} /> : <div />}
+        <CardTitle className="flex justify-between items-center gap-2 flex-wrap">
+          <div className="flex items-center gap-3 flex-wrap">
+            <p>Decision Helper</p>
+            {householdDetails?.inHousehold && householdDetails?.userSettings?.shareDecisionHelper ? (
+              <Badge className="bg-violet-600 hover:bg-violet-700 text-white gap-1 flex items-center">
+                👥 Household
+              </Badge>
+            ) : (
+              <Badge variant="secondary" className="gap-1 flex items-center">
+                🔒 Personal
+              </Badge>
+            )}
+            {householdDetails?.inHousehold && householdDetails?.userSettings?.shareDecisionHelper && householdDetails.household?.members && (
+              <div className="flex -space-x-1.5 overflow-hidden ml-1">
+                {householdDetails.household.members.map((member: any) => (
+                  <div
+                    key={member.id}
+                    className="inline-block h-6 w-6 rounded-full ring-2 ring-background overflow-hidden"
+                    title={member.name || member.uid}
+                  >
+                    {member.avatar ? (
+                      <img
+                        src={member.avatar}
+                        alt={member.name || 'avatar'}
+                        className="h-full w-full object-cover"
+                      />
+                    ) : (
+                      <div className="h-full w-full bg-primary/25 flex items-center justify-center font-bold text-[10px]">
+                        {(member.name || member.uid).charAt(0).toUpperCase()}
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+          <div className="flex items-center gap-4">
+            {!openAction ? <Help setOpenAction={setOpenAction} /> : <div />}
+          </div>
         </CardTitle>
         <CardDescription>
           A fun, random decision-maker that spins the wheel to pick your next
@@ -331,7 +397,14 @@ export default function DecisionHelper({
                     key={el.id}
                     className="flex gap-2 items-center justify-between text-sm w-full border px-2"
                   >
-                    <p>{el.item}</p>
+                    <div className="flex items-center gap-2">
+                      <p>{el.item}</p>
+                      {householdDetails?.inHousehold && householdDetails?.userSettings?.shareDecisionHelper && (
+                        <span className="text-[10px] text-muted-foreground bg-muted px-1.5 py-0.5 rounded" title={`Added by ${el.uid}`}>
+                          by {el.uid.split('@')[0]}
+                        </span>
+                      )}
+                    </div>
                     <div className="flex items-center gap-4 pr-2">
                       <Checkbox
                         checked={el.selected}

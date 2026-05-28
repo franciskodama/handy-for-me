@@ -36,6 +36,7 @@ import {
 import { BucketListItem } from '@/lib/types';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import {
   addBucketListItem,
   deleteBucketListItem,
@@ -70,16 +71,38 @@ type Inputs = {
 
 export default function BucketList({
   uid,
-  bucketList
+  bucketList,
+  householdDetails
 }: {
   uid: string;
   bucketList: BucketListItem[];
+  householdDetails: any;
 }) {
   const [openAction, setOpenAction] = useState(false);
   const [showShuffleInfo, setShowShuffleInfo] = useState(false);
   const [board, setBoard] = useState<BucketListItem[][]>([]);
   const [filter, setFilter] = useState<'all' | 'done' | 'not-done'>('all');
   const boardRef = useRef<HTMLDivElement>(null);
+  const [localBucketList, setLocalBucketList] = useState<BucketListItem[]>(bucketList);
+
+  useEffect(() => {
+    setLocalBucketList(bucketList);
+  }, [bucketList]);
+
+  // Polling loop for collaborative updates when sharing is active
+  useEffect(() => {
+    const isShared = householdDetails?.inHousehold && householdDetails?.userSettings?.shareBucketList;
+    if (!isShared) return;
+
+    const interval = setInterval(async () => {
+      const items = await getBucketListItems(uid);
+      if (Array.isArray(items)) {
+        setLocalBucketList(items);
+      }
+    }, 4000);
+
+    return () => clearInterval(interval);
+  }, [uid, householdDetails]);
 
   const handleDownloadPDF = async () => {
     if (!boardRef.current) return;
@@ -145,7 +168,9 @@ export default function BucketList({
 
       if (result) {
         const newBucketLists = await getBucketListItems(uid);
-        newBucketLists && setBoard(organizeBoardByCategory(newBucketLists));
+        if (newBucketLists) {
+          setLocalBucketList(newBucketLists);
+        }
         toast({
           title: 'Adventure Added!',
           description: `"${data.item}" has been added to your bucket list.`,
@@ -204,27 +229,19 @@ export default function BucketList({
     return organizedBoard;
   };
 
-  const boardByCategory = organizeBoardByCategory(bucketList);
+  const boardByCategory = organizeBoardByCategory(localBucketList);
 
   useEffect(() => {
     // Re-organize the board whenever the filter changes
-    // or when the initial bucketList is loaded.
-    setBoard(organizeBoardByCategory(bucketList));
-  }, [filter, bucketList]);
+    // or when the localBucketList is updated.
+    setBoard(organizeBoardByCategory(localBucketList));
+  }, [filter, localBucketList]);
 
   const handleDeleteItem = async (el: BucketListItem) => {
     try {
       const success = await deleteBucketListItem(el.id);
       if (success) {
-        setBoard((prevBoard) =>
-          prevBoard
-            .map((categoryArray) =>
-              categoryArray[0].category === el.category
-                ? categoryArray.filter((item) => item.id !== el.id)
-                : categoryArray
-            )
-            .filter((categoryArray) => categoryArray.length > 0)
-        );
+        setLocalBucketList((prev) => prev.filter((item) => item.id !== el.id));
       }
       toast({
         title: 'Item gone!',
@@ -245,15 +262,9 @@ export default function BucketList({
     try {
       const success = await setBucketListItemDone(el.id, !el.done);
       if (success) {
-        setBoard((prevBoard) =>
-          prevBoard.map((categoryArray) =>
-            categoryArray[0].category === el.category
-              ? categoryArray.map((boardItem) =>
-                  boardItem.id === el.id
-                    ? { ...boardItem, done: !boardItem.done }
-                    : boardItem
-                )
-              : categoryArray
+        setLocalBucketList((prev) =>
+          prev.map((item) =>
+            item.id === el.id ? { ...item, done: !item.done } : item
           )
         );
       }
@@ -286,10 +297,42 @@ export default function BucketList({
   return (
     <Card className="min-h-[75vh]">
       <CardHeader>
-        <CardTitle className="flex flex-col sm:flex-row sm:justify-between items-start mb-0">
+        <CardTitle className="flex flex-col sm:flex-row sm:justify-between items-start mb-0 w-full gap-4 flex-wrap">
           <div className="flex flex-col">
-            <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3 flex-wrap">
               <p>Bucket List</p>
+              {householdDetails?.inHousehold && householdDetails?.userSettings?.shareBucketList ? (
+                <Badge className="bg-violet-600 hover:bg-violet-700 text-white gap-1 flex items-center">
+                  👥 Household
+                </Badge>
+              ) : (
+                <Badge variant="secondary" className="gap-1 flex items-center">
+                  🔒 Personal
+                </Badge>
+              )}
+              {householdDetails?.inHousehold && householdDetails?.userSettings?.shareBucketList && householdDetails.household?.members && (
+                <div className="flex -space-x-1.5 overflow-hidden ml-1">
+                  {householdDetails.household.members.map((member: any) => (
+                    <div
+                      key={member.id}
+                      className="inline-block h-6 w-6 rounded-full ring-2 ring-background overflow-hidden"
+                      title={member.name || member.uid}
+                    >
+                      {member.avatar ? (
+                        <img
+                          src={member.avatar}
+                          alt={member.name || 'avatar'}
+                          className="h-full w-full object-cover"
+                        />
+                      ) : (
+                        <div className="h-full w-full bg-primary/25 flex items-center justify-center font-bold text-[10px]">
+                          {(member.name || member.uid).charAt(0).toUpperCase()}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
               <div className="block sm:hidden">
                 {!openAction ? <Help setOpenAction={setOpenAction} /> : <div />}
               </div>
@@ -491,11 +534,18 @@ export default function BucketList({
                     className={`flex items-center border border-primary mt-2 ${el.done ? 'bg-muted shadow-inner' : ''}`}
                   >
                     <div className="w-full px-4 py-3">
-                      <p
-                        className={`${el.done ? 'line-through text-muted-foreground' : ''} text-left uppercase text-sm leading-5`}
-                      >
-                        {el.item}
-                      </p>
+                      <div className="flex flex-col items-start">
+                        <p
+                          className={`${el.done ? 'line-through text-muted-foreground' : ''} text-left uppercase text-sm leading-5`}
+                        >
+                          {el.item}
+                        </p>
+                        {householdDetails?.inHousehold && householdDetails?.userSettings?.shareBucketList && (
+                          <span className="text-[9px] text-muted-foreground mt-0.5" title={`Added by ${el.uid}`}>
+                            Added by {el.uid.split('@')[0]}
+                          </span>
+                        )}
+                      </div>
                     </div>
 
                     <Button
