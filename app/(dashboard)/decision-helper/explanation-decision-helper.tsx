@@ -27,17 +27,21 @@ export default function ExplanationDecisionHelper({
         Create lists. Then, simply add your favorite items to each list, and
         when it’s time to make a decision, spin the wheel for a surprise choice!
       </p>
-      <p className="flex items-center gap-4">
+      <div className="flex items-center gap-4 text-sm">
         <Checkbox checked={true} />
-        Easily manage items by unselecting them to skip the next draw without
-        deleting them.
-      </p>
-      <p className="flex items-center gap-4">
-        <div>
+        <span>
+          Easily manage items by unselecting them to skip the next draw without
+          deleting them.
+        </span>
+      </div>
+      <div className="flex items-center gap-4 text-sm">
+        <span>
           <Trash2 size={18} strokeWidth={1.6} />
-        </div>
-        You can also permanently delete items whenever you no longer need them.
-      </p>
+        </span>
+        <span>
+          You can also permanently delete items whenever you no longer need them.
+        </span>
+      </div>
     </>
   );
 
