@@ -1,27 +1,9 @@
-import Link from 'next/link';
-import Image from 'next/image';
-
-import { Button } from '@/components/ui/button';
-import {
-  Sheet,
-  SheetClose,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger
-} from '@/components/ui/sheet';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger
-} from '@/components/ui/tooltip';
 import { User } from '@/components/layout/header/user';
 import Providers from './providers';
 import PencilBanner from '@/components/layout/header/pencil-banner';
 import { DashboardBreadcrumb } from '@/components/layout/header/breadcrumb';
 import Greeting from '@/components/layout/header/greeting';
 import { Toaster } from '@/components/ui/toaster';
-import { SearchInput } from '@/components/layout/header/search';
 import Footer from '@/components/layout/Footer';
 import { auth } from '@/lib/auth';
 import { menuItems } from '@/lib/menu';
@@ -60,9 +42,7 @@ export default async function DashboardLayout({
             </header>
           </div>
           <main className="flex flex-1 flex-col gap-4 p-4 sm:px-6 sm:py-0 md:gap-4 bg-muted/40">
-            <div className="flex-grow flex flex-col">
-              {children}
-            </div>
+            <div className="flex-grow flex flex-col">{children}</div>
             <Toaster />
             <Footer />
           </main>
