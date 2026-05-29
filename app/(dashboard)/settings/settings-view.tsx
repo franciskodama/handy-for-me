@@ -21,7 +21,8 @@ import {
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
-  AlertDialogTitle
+  AlertDialogTitle,
+  AlertDialogTrigger
 } from '@/components/ui/alert-dialog';
 import {
   createHousehold,
@@ -314,14 +315,16 @@ export default function SettingsView({
                 {/* Leave Household */}
                 <div className="pt-2">
                   <AlertDialog>
-                    <Button
-                      variant="destructive"
-                      className="w-full flex items-center gap-2"
-                      disabled={loading}
-                    >
-                      <LogOut className="h-4 w-4" />
-                      Leave Household
-                    </Button>
+                    <AlertDialogTrigger asChild>
+                      <Button
+                        variant="destructive"
+                        className="w-full flex items-center gap-2"
+                        disabled={loading}
+                      >
+                        <LogOut className="h-4 w-4" />
+                        Leave Household
+                      </Button>
+                    </AlertDialogTrigger>
                     <AlertDialogContent>
                       <AlertDialogHeader>
                         <AlertDialogTitle className="flex items-center gap-2">
@@ -329,10 +332,9 @@ export default function SettingsView({
                           Are you sure you want to leave?
                         </AlertDialogTitle>
                         <AlertDialogDescription>
-                          You will lose access to all shared Decision Helper
-                          lists and Bucket List items. Your personal data
-                          remains untouched, but you will no longer collaborate
-                          with this household.
+                          Any items you created in the shared space will remain
+                          with the household, and you will return to your private
+                          personal space.
                         </AlertDialogDescription>
                       </AlertDialogHeader>
                       <AlertDialogFooter>

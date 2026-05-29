@@ -460,16 +460,16 @@ export default function DecisionHelper({
                   <AlertDialogContent className="w-[calc(100%-35px)]">
                     <AlertDialogHeader>
                       <AlertDialogTitle className="flex items-center gap-2 justify-center animate-pulse">
-                        <p>
+                        <span>
                           {
                             titleAlert[
                               Math.floor(Math.random() * titleAlert.length)
                             ]
                           }
-                        </p>
+                        </span>
                         <PartyPopper size={24} strokeWidth={1.8} />
                       </AlertDialogTitle>
-                      <AlertDialogDescription>
+                      <AlertDialogDescription asChild>
                         <p
                           className={`${kumbh_sans.className} ${result.length > 8 ? 'text-lg sm:text-4xl' : 'text-3xl sm:text-7xl'} text-primary uppercase font-bold leading-none text-center w-full my-8`}
                         >
