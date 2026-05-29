@@ -3,6 +3,7 @@ import {
   getAllDecisionHelperItems,
   getDecisionHelperLists
 } from '@/lib/actions/decision-helper';
+import { getHouseholdDetails } from '@/lib/actions/household';
 import { DecisionHelperItem, DecisionHelperList } from '@/lib/types';
 import DecisionHelper from './decision-helper';
 import SignInPrompt from '@/components/SignInPrompt';
@@ -27,5 +28,14 @@ export default async function DecisionHelperPage() {
     items = fetchedItems;
   }
 
-  return <DecisionHelper uid={uid} initialLists={lists} initialItems={items} />;
+  const householdDetails = await getHouseholdDetails(uid);
+
+  return (
+    <DecisionHelper
+      uid={uid}
+      initialLists={lists}
+      initialItems={items}
+      householdDetails={householdDetails}
+    />
+  );
 }

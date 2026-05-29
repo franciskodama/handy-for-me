@@ -3,14 +3,13 @@ import {
   Grid3x3,
   Home,
   ExternalLink,
-  ListMinus,
-  Menu,
   MessageCircleQuestion,
-  RefreshCw,
   Trophy,
   HandHeart,
   Flag,
-  Briefcase
+  Briefcase,
+  Scale,
+  ListOrdered
 } from 'lucide-react';
 
 export const menuItems = [
@@ -18,6 +17,16 @@ export const menuItems = [
     label: 'Dashboard',
     href: '/dashboard',
     icon: <Home className="h-5 w-5" />
+  },
+  {
+    label: 'Decision Helper',
+    href: '/decision-helper',
+    icon: <Scale className="h-5 w-5" />
+  },
+  {
+    label: 'Bucket List',
+    href: '/bucket-list',
+    icon: <ListOrdered className="h-5 w-5" />
   },
   {
     label: 'Vision Board',
@@ -29,11 +38,7 @@ export const menuItems = [
     href: '/shortcuts',
     icon: <ExternalLink className="h-5 w-5" />
   },
-  {
-    label: 'Bucket List',
-    href: '/bucket-list',
-    icon: <ListMinus className="h-5 w-5" />
-  },
+
   {
     label: 'Weekly Wins',
     href: '/weekly-wins',
@@ -43,11 +48,6 @@ export const menuItems = [
     label: 'Yearly Promises',
     href: '/promises',
     icon: <Flag className="h-5 w-5" />
-  },
-  {
-    label: 'Decision Helper',
-    href: '/decision-helper',
-    icon: <RefreshCw className="h-5 w-5" />
   },
   {
     label: 'Stoic Support',
@@ -70,11 +70,5 @@ export const menuItems = [
     icon: <Briefcase className="h-5 w-5" />,
     restricted: true
   }
-  // {
-  //   label: 'My Words',
-  //   href: '/my-words',
-  //   icon: <WholeWord className="h-5 w-5" />
-  // }
   // { label: 'Artificial Intelligence', href: '/ai', icon: Bot },
-  // { label: 'Products', href: '/products', icon: Ghost },
 ];
