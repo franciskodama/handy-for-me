@@ -151,7 +151,6 @@ const continentMapping: Record<string, string> = {
   'cote d\'ivoire': 'Africa',
   'cameroon': 'Africa',
   'rwanda': 'Africa',
-  'uganda': 'Africa',
   'somalia': 'Africa',
   'namibia': 'Africa',
   'botswana': 'Africa',
