@@ -124,6 +124,19 @@ export default function AtlasView({ uid, initialPlaces }: AtlasViewProps) {
       return;
     }
 
+    if (visitDate) {
+      const parsedDate = new Date(visitDate);
+      const year = parsedDate.getFullYear();
+      if (isNaN(parsedDate.getTime()) || year < 1000 || year > 9999) {
+        toast({
+          variant: 'destructive',
+          title: 'Validation Error',
+          description: 'Please enter a valid visit date with a 4-digit year.'
+        });
+        return;
+      }
+    }
+
     startTransition(async () => {
       const res = await addVisitedPlace({
         uid,

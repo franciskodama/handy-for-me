@@ -95,6 +95,22 @@ export default function FactorySign({
   };
 
   const handleUpdate = async () => {
+    if (editDate) {
+      const d = new Date(editDate);
+      if (isNaN(d.getTime()) || d.getFullYear() < 1000 || d.getFullYear() > 9999) {
+        toast.error('Please enter a valid start date with a 4-digit year.');
+        return;
+      }
+    }
+
+    if (editTargetDate) {
+      const d = new Date(editTargetDate);
+      if (isNaN(d.getTime()) || d.getFullYear() < 1000 || d.getFullYear() > 9999) {
+        toast.error('Please enter a valid goal date with a 4-digit year.');
+        return;
+      }
+    }
+
     const res = await updateHabit(
       habit.id,
       editName,

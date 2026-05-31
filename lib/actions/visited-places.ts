@@ -71,6 +71,19 @@ export async function addVisitedPlace({
       return { success: false, error: 'Invalid coordinates returned from search.' };
     }
 
+    let parsedVisitDate: Date | null = null;
+    if (visitDate) {
+      const d = new Date(visitDate);
+      if (isNaN(d.getTime())) {
+        return { success: false, error: 'Invalid visit date format.' };
+      }
+      const year = d.getFullYear();
+      if (year < 1000 || year > 9999) {
+        return { success: false, error: 'Visit date year must be a 4-digit year.' };
+      }
+      parsedVisitDate = d;
+    }
+
     // Save to database
     const newPlace = await prisma.visitedPlace.create({
       data: {
@@ -83,7 +96,7 @@ export async function addVisitedPlace({
         lat,
         lng,
         notes: notes?.trim() || null,
-        visitDate: visitDate ? new Date(visitDate) : null
+        visitDate: parsedVisitDate
       }
     });
 
