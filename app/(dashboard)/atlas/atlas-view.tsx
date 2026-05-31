@@ -13,7 +13,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { addVisitedPlace, deleteVisitedPlace } from '@/lib/actions/visited-places';
+import { addVisitedPlace, deleteVisitedPlace, searchCities } from '@/lib/actions/visited-places';
 import { getContinentByCountry } from '@/lib/continents';
 import { MapPin, Globe, Award, Sparkles, Trash2, Calendar, BookOpen, Compass, Search } from 'lucide-react';
 
@@ -55,6 +55,29 @@ export default function AtlasView({ uid, initialPlaces }: AtlasViewProps) {
   const [visitDate, setVisitDate] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [isPending, startTransition] = useTransition();
+  const [suggestions, setSuggestions] = useState<Array<{ name: string; country: string; state: string }>>([]);
+  const [isFocused, setIsFocused] = useState(false);
+  const [searchTimeout, setSearchTimeout] = useState<NodeJS.Timeout | null>(null);
+
+  const handleCityChange = (val: string) => {
+    setCity(val);
+    if (searchTimeout) clearTimeout(searchTimeout);
+
+    if (val.trim().length < 2) {
+      setSuggestions([]);
+      return;
+    }
+
+    const timeout = setTimeout(async () => {
+      try {
+        const res = await searchCities(val);
+        setSuggestions(res);
+      } catch (err) {
+        console.error('Error fetching city suggestions:', err);
+      }
+    }, 150);
+    setSearchTimeout(timeout);
+  };
 
   // Statistics calculation
   const totalCities = places.length;
@@ -301,17 +324,48 @@ export default function AtlasView({ uid, initialPlaces }: AtlasViewProps) {
             </CardHeader>
             <CardContent>
               <form onSubmit={handleAddPlace} className="flex flex-col gap-4">
-                <div className="flex flex-col gap-1.5">
+                <div className="flex flex-col gap-1.5 relative">
                   <label htmlFor="city" className="text-xs font-semibold">City *</label>
-                  <Input
-                    id="city"
-                    placeholder="e.g., Paris, Tokyo, Sydney"
-                    value={city}
-                    onChange={(e) => setCity(e.target.value)}
-                    required
-                    disabled={isPending}
-                    className="focus-visible:ring-primary"
-                  />
+                  <div className="relative">
+                    <Input
+                      id="city"
+                      placeholder="e.g., Paris, Tokyo, Sydney"
+                      value={city}
+                      onChange={(e) => handleCityChange(e.target.value)}
+                      onFocus={() => setIsFocused(true)}
+                      onBlur={() => setTimeout(() => setIsFocused(false), 200)}
+                      required
+                      disabled={isPending}
+                      className="focus-visible:ring-primary"
+                      autoComplete="off"
+                    />
+                    {isFocused && suggestions.length > 0 && (
+                      <div className="absolute z-50 w-full mt-1 bg-popover text-popover-foreground border rounded-md shadow-lg max-h-60 overflow-y-auto animate-in fade-in-50 slide-in-from-top-1 duration-200">
+                        {suggestions.map((suggestion, idx) => (
+                          <button
+                            key={idx}
+                            type="button"
+                            onMouseDown={() => {
+                              setCity(suggestion.name);
+                              if (suggestion.state && suggestion.state !== 'N/A') {
+                                setStateName(suggestion.state);
+                              } else {
+                                setStateName('');
+                              }
+                              setCountry(suggestion.country);
+                              setSuggestions([]);
+                            }}
+                            className="w-full text-left px-3 py-2 hover:bg-accent hover:text-accent-foreground transition-colors flex flex-col border-b last:border-b-0 border-muted"
+                          >
+                            <span className="font-semibold text-xs text-foreground">{suggestion.name}</span>
+                            <span className="text-[10px] text-muted-foreground font-normal">
+                              {suggestion.state && suggestion.state !== 'N/A' ? `${suggestion.state}, ` : ''}{suggestion.country}
+                            </span>
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 </div>
 
                 <div className="flex flex-col gap-1.5">

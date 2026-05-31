@@ -1,5 +1,7 @@
 'use server';
 
+import { promises as fs } from 'fs';
+import path from 'path';
 import { v4 } from 'uuid';
 import prisma from '@/lib/prisma';
 import { auth } from '@/lib/auth';
@@ -152,3 +154,73 @@ export async function deleteVisitedPlace(id: string) {
     return { success: false, error: 'Failed to delete visited place.' };
   }
 }
+
+let citiesCache: Array<{ n: string; c: string; s: string }> | null = null;
+
+export async function searchCities(
+  query: string
+): Promise<Array<{ name: string; country: string; state: string }>> {
+  try {
+    if (!query || query.trim().length < 2) {
+      return [];
+    }
+
+    const searchLower = query.trim().toLowerCase();
+
+    // Lazy load the cities JSON file and cache it in memory
+    if (!citiesCache) {
+      const filePath = path.join(process.cwd(), 'lib/data/cities.json');
+      const fileContent = await fs.readFile(filePath, 'utf-8');
+      citiesCache = JSON.parse(fileContent);
+    }
+
+    if (!citiesCache) return [];
+
+    const matches: Array<{ name: string; country: string; state: string }> = [];
+
+    // First pass: Match by prefix (starts with) to show best matches first
+    for (const city of citiesCache) {
+      if (city.n.toLowerCase().startsWith(searchLower)) {
+        matches.push({
+          name: city.n,
+          country: city.c,
+          state: city.s
+        });
+      }
+      if (matches.length >= 10) {
+        break;
+      }
+    }
+
+    // Second pass: If we have less than 10 matches, do substring match (excluding duplicates)
+    if (matches.length < 10) {
+      for (const city of citiesCache) {
+        const nameLower = city.n.toLowerCase();
+        if (!nameLower.startsWith(searchLower) && nameLower.includes(searchLower)) {
+          const alreadyAdded = matches.some(
+            (m) =>
+              m.name.toLowerCase() === city.n.toLowerCase() &&
+              m.country.toLowerCase() === city.c.toLowerCase() &&
+              m.state.toLowerCase() === city.s.toLowerCase()
+          );
+          if (!alreadyAdded) {
+            matches.push({
+              name: city.n,
+              country: city.c,
+              state: city.s
+            });
+          }
+        }
+        if (matches.length >= 10) {
+          break;
+        }
+      }
+    }
+
+    return matches;
+  } catch (error) {
+    console.error('Error searching cities:', error);
+    return [];
+  }
+}
+
