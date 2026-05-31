@@ -79,6 +79,19 @@ export default function AtlasView({ uid, initialPlaces }: AtlasViewProps) {
     setSearchTimeout(timeout);
   };
 
+  const handleVisitDateChange = (val: string) => {
+    const clean = val.replace(/[^0-9]/g, '');
+    let formatted = '';
+    if (clean.length <= 4) {
+      formatted = clean;
+    } else if (clean.length <= 6) {
+      formatted = `${clean.slice(0, 4)}-${clean.slice(4)}`;
+    } else {
+      formatted = `${clean.slice(0, 4)}-${clean.slice(4, 6)}-${clean.slice(6, 8)}`;
+    }
+    setVisitDate(formatted);
+  };
+
   // Statistics calculation
   const totalCities = places.length;
   
@@ -397,11 +410,13 @@ export default function AtlasView({ uid, initialPlaces }: AtlasViewProps) {
                   <label htmlFor="visitDate" className="text-xs font-semibold">Date of Visit (Optional)</label>
                   <Input
                     id="visitDate"
-                    type="date"
+                    type="text"
+                    placeholder="YYYY-MM-DD"
                     value={visitDate}
-                    onChange={(e) => setVisitDate(e.target.value)}
+                    onChange={(e) => handleVisitDateChange(e.target.value)}
                     disabled={isPending}
-                    className="focus-visible:ring-primary text-sm"
+                    className="focus-visible:ring-primary text-sm font-mono"
+                    maxLength={10}
                   />
                 </div>
 
