@@ -227,7 +227,7 @@ export default function HabitTrackerSection({
             <SecurityShutter
               label={`STREAK MONITOR #${String(index + 1).padStart(2, '0')}`}
             >
-              <FactorySign habit={habit} onDelete={handleDelete} />
+              <FactorySign habit={habit} onDeleteAction={handleDelete} />
             </SecurityShutter>
           </div>
         ))}

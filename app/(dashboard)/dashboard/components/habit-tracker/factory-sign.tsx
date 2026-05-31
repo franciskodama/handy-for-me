@@ -19,10 +19,10 @@ import { useState } from 'react';
 
 export default function FactorySign({
   habit,
-  onDelete
+  onDeleteAction
 }: {
   habit: Habit;
-  onDelete: (id: string) => void;
+  onDeleteAction: (id: string) => void;
 }) {
   const [isResetting, setIsResetting] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -339,7 +339,7 @@ export default function FactorySign({
                   Keep Active
                 </AlertDialogCancel>
                 <AlertDialogAction
-                  onClick={() => onDelete(habit.id)}
+                  onClick={() => onDeleteAction(habit.id)}
                   className="bg-red-600 hover:bg-red-500 text-white uppercase text-[10px] font-black"
                 >
                   Decommission
