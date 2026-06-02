@@ -16,6 +16,7 @@ import { Badge } from '@/components/ui/badge';
 import { addVisitedPlace, deleteVisitedPlace, searchCities } from '@/lib/actions/visited-places';
 import { getContinentByCountry } from '@/lib/continents';
 import { MapPin, Globe, Award, Sparkles, Trash2, Calendar, BookOpen, Compass, Search } from 'lucide-react';
+import { barlow, kumbh_sans } from '@/app/ui/fonts';
 
 // Load Leaflet map component dynamically to avoid SSR errors
 const MapComponent = dynamic(() => import('@/components/atlas/map-component'), {
@@ -243,14 +244,13 @@ export default function AtlasView({ uid, initialPlaces }: AtlasViewProps) {
     <div className="flex flex-col gap-6 max-w-7xl mx-auto w-full pb-10">
       
       {/* Header and Quick Stats */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-3xl font-extrabold tracking-tight flex items-center gap-2">
-            <Compass className="h-8 w-8 text-primary" />
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-6 relative gap-4 w-full">
+        <div className="flex flex-col">
+          <h1 className={`${kumbh_sans.className} text-primary uppercase font-bold text-3xl leading-none`}>
             Atlas
           </h1>
-          <p className="text-muted-foreground mt-1">
-            Map the footsteps of your lifetime. Pin cities you've visited, save memories, and track your global footprint.
+          <p className={`${barlow.className} text-sm font-normal lowercase mt-2`}>
+            <span className="uppercase">M</span>ap the footsteps of your lifetime. pin cities you've visited, save memories, and track your global footprint.
           </p>
         </div>
       </div>
