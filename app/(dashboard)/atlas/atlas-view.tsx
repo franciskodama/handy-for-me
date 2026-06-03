@@ -496,7 +496,7 @@ export default function AtlasView({ uid, initialPlaces }: AtlasViewProps) {
           <div className="relative">
             <MapComponent 
               places={places} 
-              onDeletePlace={handleDeletePlace} 
+              onDeletePlaceAction={handleDeletePlace} 
             />
           </div>
 

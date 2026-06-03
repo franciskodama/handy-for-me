@@ -18,10 +18,10 @@ interface Place {
 
 interface MapComponentProps {
   places: Place[];
-  onDeletePlace: (id: string) => void;
+  onDeletePlaceAction: (id: string) => void;
 }
 
-export default function MapComponent({ places, onDeletePlace }: MapComponentProps) {
+export default function MapComponent({ places, onDeletePlaceAction }: MapComponentProps) {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<L.Map | null>(null);
   const markersGroupRef = useRef<L.FeatureGroup | null>(null);
@@ -152,7 +152,7 @@ export default function MapComponent({ places, onDeletePlace }: MapComponentProp
       deleteBtn.onclick = () => {
         if (confirm(`Are you sure you want to remove "${place.city}"?`)) {
           map.closePopup();
-          onDeletePlace(place.id);
+          onDeletePlaceAction(place.id);
         }
       };
       popupContent.appendChild(deleteBtn);
@@ -173,7 +173,7 @@ export default function MapComponent({ places, onDeletePlace }: MapComponentProp
     } catch (e) {
       console.error('Error fitting bounds:', e);
     }
-  }, [places, onDeletePlace]);
+  }, [places, onDeletePlaceAction]);
 
   return (
     <div className="relative w-full h-[500px] rounded-lg border bg-card overflow-hidden shadow-inner z-10">
