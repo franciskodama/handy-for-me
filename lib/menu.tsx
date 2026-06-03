@@ -9,7 +9,8 @@ import {
   Flag,
   Briefcase,
   Scale,
-  ListOrdered
+  ListOrdered,
+  Map
 } from 'lucide-react';
 
 export const menuItems = [
@@ -32,6 +33,11 @@ export const menuItems = [
     label: 'Vision Board',
     href: '/vision-board',
     icon: <Grid3x3 className="h-5 w-5" />
+  },
+  {
+    label: 'Atlas',
+    href: '/atlas',
+    icon: <Map className="h-5 w-5" />
   },
   {
     label: 'Shortcuts',

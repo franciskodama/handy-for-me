@@ -66,6 +66,22 @@ export default function HabitTrackerSection({
       return;
     }
 
+    if (startDate) {
+      const d = new Date(startDate);
+      if (isNaN(d.getTime()) || d.getFullYear() < 1000 || d.getFullYear() > 9999) {
+        toast.error('Please enter a valid deployment date with a 4-digit year.');
+        return;
+      }
+    }
+
+    if (targetDate) {
+      const d = new Date(targetDate);
+      if (isNaN(d.getTime()) || d.getFullYear() < 1000 || d.getFullYear() > 9999) {
+        toast.error('Please enter a valid target milestone date with a 4-digit year.');
+        return;
+      }
+    }
+
     setIsPending(true);
     try {
       const res = await createHabit(
@@ -211,7 +227,7 @@ export default function HabitTrackerSection({
             <SecurityShutter
               label={`STREAK MONITOR #${String(index + 1).padStart(2, '0')}`}
             >
-              <FactorySign habit={habit} onDelete={handleDelete} />
+              <FactorySign habit={habit} onDeleteAction={handleDelete} />
             </SecurityShutter>
           </div>
         ))}

@@ -18,6 +18,18 @@ export async function getHabits(uid: string) {
 
 export async function createHabit(uid: string, name: string, startDate?: Date, targetDate?: Date) {
   try {
+    if (startDate) {
+      const d = new Date(startDate);
+      if (isNaN(d.getTime()) || d.getFullYear() < 1000 || d.getFullYear() > 9999) {
+        return { success: false, error: 'Invalid deployment date format or year.' };
+      }
+    }
+    if (targetDate) {
+      const d = new Date(targetDate);
+      if (isNaN(d.getTime()) || d.getFullYear() < 1000 || d.getFullYear() > 9999) {
+        return { success: false, error: 'Invalid milestone date format or year.' };
+      }
+    }
     const habit = await prisma.habit.create({
       data: {
         uid,
@@ -50,6 +62,18 @@ export async function resetHabit(id: string) {
 
 export async function updateHabit(id: string, name: string, lastResetAt: Date, targetDate?: Date | null) {
   try {
+    if (lastResetAt) {
+      const d = new Date(lastResetAt);
+      if (isNaN(d.getTime()) || d.getFullYear() < 1000 || d.getFullYear() > 9999) {
+        return { success: false, error: 'Invalid start date format or year.' };
+      }
+    }
+    if (targetDate) {
+      const d = new Date(targetDate);
+      if (isNaN(d.getTime()) || d.getFullYear() < 1000 || d.getFullYear() > 9999) {
+        return { success: false, error: 'Invalid target date format or year.' };
+      }
+    }
     await prisma.habit.update({
       where: { id },
       data: { name, lastResetAt, targetDate: targetDate || null }

@@ -19,10 +19,10 @@ import { useState } from 'react';
 
 export default function FactorySign({
   habit,
-  onDelete
+  onDeleteAction
 }: {
   habit: Habit;
-  onDelete: (id: string) => void;
+  onDeleteAction: (id: string) => void;
 }) {
   const [isResetting, setIsResetting] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -95,6 +95,22 @@ export default function FactorySign({
   };
 
   const handleUpdate = async () => {
+    if (editDate) {
+      const d = new Date(editDate);
+      if (isNaN(d.getTime()) || d.getFullYear() < 1000 || d.getFullYear() > 9999) {
+        toast.error('Please enter a valid start date with a 4-digit year.');
+        return;
+      }
+    }
+
+    if (editTargetDate) {
+      const d = new Date(editTargetDate);
+      if (isNaN(d.getTime()) || d.getFullYear() < 1000 || d.getFullYear() > 9999) {
+        toast.error('Please enter a valid goal date with a 4-digit year.');
+        return;
+      }
+    }
+
     const res = await updateHabit(
       habit.id,
       editName,
@@ -323,7 +339,7 @@ export default function FactorySign({
                   Keep Active
                 </AlertDialogCancel>
                 <AlertDialogAction
-                  onClick={() => onDelete(habit.id)}
+                  onClick={() => onDeleteAction(habit.id)}
                   className="bg-red-600 hover:bg-red-500 text-white uppercase text-[10px] font-black"
                 >
                   Decommission
