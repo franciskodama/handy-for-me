@@ -25,7 +25,7 @@ export default function SecurityShutter({
   return (
     <div
       className={`relative w-full transition-all duration-500 ease-in-out [perspective:1000px] ${
-        isOpen ? 'h-[140px] md:h-[40px]' : 'h-[40px]'
+        isOpen ? 'h-[160px] md:h-[40px]' : 'h-[40px]'
       }`}
     >
       <motion.div

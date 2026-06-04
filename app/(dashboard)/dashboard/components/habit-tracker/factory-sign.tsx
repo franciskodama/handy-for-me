@@ -127,60 +127,73 @@ export default function FactorySign({
 
   if (isEditing) {
     return (
-      <div className="relative bg-zinc-950 px-8 py-1 border-2 border-red-900/50 shadow-2xl h-full flex items-center gap-4 group animate-in fade-in zoom-in duration-300">
-        <div className="flex-1 flex flex-col items-center sm:flex-row gap-2">
-          <label
-            htmlFor="editName"
-            className="text-zinc-200 uppercase tracking-wider text-[10px] ml-8"
-          >
-            Monitor Tag:
-          </label>
-          <input
-            type="text"
-            value={editName}
-            onChange={(e) => setEditName(e.target.value)}
-            className="flex-1 bg-zinc-900 border border-zinc-700 px-3 py-1 text-xs text-zinc-200 focus:border-red-500 outline-none"
-          />
-          <label
-            htmlFor="editDate"
-            className="text-zinc-200 uppercase tracking-wider text-[10px] ml-8"
-          >
-            Start Date:
-          </label>
-          <input
-            type="date"
-            value={editDate}
-            onChange={(e) => setEditDate(e.target.value)}
-            onClick={(e) => e.currentTarget.showPicker?.()}
-            className="bg-zinc-900 border border-zinc-700 px-3 py-1 text-[10px] text-zinc-400 focus:border-red-500 outline-none w-28 cursor-pointer"
-            title="Start Date"
-          />
-          <label
-            htmlFor="editTargetDate"
-            className="text-zinc-200 uppercase tracking-wider text-[10px] ml-8"
-          >
-            Goal Date:
-          </label>
-          <input
-            type="date"
-            value={editTargetDate}
-            onChange={(e) => setEditTargetDate(e.target.value)}
-            onClick={(e) => e.currentTarget.showPicker?.()}
-            className="mr-12 bg-zinc-900 border border-zinc-700 px-3 py-1 text-[10px] text-zinc-400 focus:border-red-500 outline-none w-28 cursor-pointer"
-            placeholder="Goal Date"
-            title="Goal Date (Optional)"
-          />
+      <div className="relative bg-zinc-950 px-4 md:px-8 py-2 md:py-1 border-2 border-red-900/50 shadow-2xl h-full flex flex-col md:flex-row items-center gap-3 md:gap-4 group animate-in fade-in zoom-in duration-300">
+        <div className="flex-1 w-full pr-10 md:pr-0 flex flex-col gap-2 md:flex-row md:items-center">
+          <div className="flex flex-col md:flex-row md:items-center gap-1 md:gap-2 flex-1">
+            <label
+              htmlFor="editName"
+              className="text-zinc-200 uppercase tracking-wider text-[10px] md:ml-8 shrink-0"
+            >
+              Monitor Tag:
+            </label>
+            <input
+              type="text"
+              id="editName"
+              value={editName}
+              onChange={(e) => setEditName(e.target.value)}
+              className="w-full md:flex-1 bg-zinc-900 border border-zinc-700 px-3 py-1 text-xs text-zinc-200 focus:border-red-500 outline-none"
+            />
+          </div>
+          <div className="flex flex-row gap-2 md:flex-row md:items-center w-full md:w-auto">
+            <div className="flex-1 md:flex-initial flex flex-col md:flex-row md:items-center gap-1 md:gap-2">
+              <label
+                htmlFor="editDate"
+                className="text-zinc-200 uppercase tracking-wider text-[10px] md:ml-8 shrink-0"
+              >
+                Start:
+              </label>
+              <input
+                type="date"
+                id="editDate"
+                value={editDate}
+                onChange={(e) => setEditDate(e.target.value)}
+                onClick={(e) => e.currentTarget.showPicker?.()}
+                className="w-full md:w-28 bg-zinc-900 border border-zinc-700 px-2 md:px-3 py-1 text-[10px] text-zinc-400 focus:border-red-500 outline-none cursor-pointer"
+                title="Start Date"
+              />
+            </div>
+            <div className="flex-1 md:flex-initial flex flex-col md:flex-row md:items-center gap-1 md:gap-2">
+              <label
+                htmlFor="editTargetDate"
+                className="text-zinc-200 uppercase tracking-wider text-[10px] md:ml-8 shrink-0"
+              >
+                Goal:
+              </label>
+              <input
+                type="date"
+                id="editTargetDate"
+                value={editTargetDate}
+                onChange={(e) => setEditTargetDate(e.target.value)}
+                onClick={(e) => e.currentTarget.showPicker?.()}
+                className="w-full md:w-28 md:mr-12 bg-zinc-900 border border-zinc-700 px-2 md:px-3 py-1 text-[10px] text-zinc-400 focus:border-red-500 outline-none cursor-pointer"
+                placeholder="Goal Date"
+                title="Goal Date (Optional)"
+              />
+            </div>
+          </div>
         </div>
-        <div className="flex items-center gap-2 mr-10">
+        <div className="flex items-center gap-2 mr-10 md:mr-0 shrink-0">
           <button
             onClick={handleUpdate}
             className="p-2 text-green-500 hover:bg-green-500/10 transition-colors"
+            title="Save changes"
           >
             <Check className="w-4 h-4" />
           </button>
           <button
             onClick={() => setIsEditing(false)}
             className="p-2 text-zinc-500 hover:bg-zinc-500/10 transition-colors"
+            title="Cancel editing"
           >
             <X className="w-4 h-4" />
           </button>
@@ -193,7 +206,7 @@ export default function FactorySign({
   }
 
   return (
-    <div className="relative bg-zinc-950 px-4 md:px-8 py-4 md:py-0.5 border-2 border-zinc-800 shadow-2xl overflow-hidden h-full flex flex-col md:flex-row items-center justify-between group gap-4 md:gap-0">
+    <div className="relative bg-zinc-950 px-4 md:px-8 py-4 md:py-0.5 border-2 border-zinc-800 shadow-2xl overflow-hidden h-full flex flex-col md:flex-row items-center justify-center md:justify-between group gap-2 md:gap-0">
       {/* Hazard Stripes Left & Right */}
       <div className="absolute top-0 left-0 h-full w-2 bg-[repeating-linear-gradient(0deg,#fbbf24,#fbbf24_10px,#000_10px,#000_20px)] opacity-50" />
       <div className="absolute top-0 right-0 h-full w-2 bg-[repeating-linear-gradient(0deg,#fbbf24,#fbbf24_10px,#000_10px,#000_20px)] opacity-50" />
@@ -264,12 +277,12 @@ export default function FactorySign({
       </div>
 
       {/* Right: Actions */}
-      <div className="flex-none md:flex-1 flex justify-end items-center gap-3 md:mr-12">
+      <div className="absolute right-4 top-[48px] flex flex-col items-center gap-2 z-30 md:static md:flex-row md:gap-3 md:mr-12 md:top-auto md:right-auto">
         <AlertDialog>
           <AlertDialogTrigger asChild>
             <button
               disabled={isResetting}
-              className="flex items-center gap-2 text-xs uppercase font-bold text-zinc-400 hover:text-red-500 transition-colors group/btn"
+              className="p-1.5 flex items-center gap-2 text-xs uppercase font-bold text-zinc-400 hover:text-red-500 transition-colors group/btn"
               title="Reset Monitor"
             >
               <RefreshCcw
@@ -303,7 +316,7 @@ export default function FactorySign({
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
-        <div className="flex items-center gap-1">
+        <div className="flex flex-col md:flex-row items-center gap-2 md:gap-1">
           <button
             onClick={() => setIsEditing(true)}
             className="p-1.5 text-zinc-400 hover:text-zinc-300 transition-colors"
