@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { useState, useTransition, useRef } from 'react';
 import dynamic from 'next/dynamic';
 import { toast } from '@/hooks/use-toast';
 import {
@@ -59,6 +59,17 @@ export default function AtlasView({ uid, initialPlaces }: AtlasViewProps) {
   const [suggestions, setSuggestions] = useState<Array<{ name: string; country: string; state: string }>>([]);
   const [isFocused, setIsFocused] = useState(false);
   const [searchTimeout, setSearchTimeout] = useState<NodeJS.Timeout | null>(null);
+  const datePickerRef = useRef<HTMLInputElement>(null);
+
+  const getValidDateValue = (val: string) => {
+    if (/^\d{4}-\d{2}-\d{2}$/.test(val)) {
+      const d = new Date(val);
+      if (!isNaN(d.getTime())) {
+        return val;
+      }
+    }
+    return '';
+  };
 
   const handleCityChange = (val: string) => {
     setCity(val);
@@ -408,16 +419,42 @@ export default function AtlasView({ uid, initialPlaces }: AtlasViewProps) {
 
                 <div className="flex flex-col gap-1.5">
                   <label htmlFor="visitDate" className="text-xs font-semibold">Date of Visit (Optional)</label>
-                  <Input
-                    id="visitDate"
-                    type="text"
-                    placeholder="YYYY-MM-DD"
-                    value={visitDate}
-                    onChange={(e) => handleVisitDateChange(e.target.value)}
-                    disabled={isPending}
-                    className="focus-visible:ring-primary text-sm font-mono"
-                    maxLength={10}
-                  />
+                  <div className="relative">
+                    <Input
+                      id="visitDate"
+                      type="text"
+                      placeholder="YYYY-MM-DD"
+                      value={visitDate}
+                      onChange={(e) => handleVisitDateChange(e.target.value)}
+                      disabled={isPending}
+                      className="focus-visible:ring-primary text-sm font-mono pr-10"
+                      maxLength={10}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => {
+                        try {
+                          datePickerRef.current?.showPicker();
+                        } catch (e) {
+                          console.error('showPicker not supported or failed:', e);
+                        }
+                      }}
+                      disabled={isPending}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground focus:outline-none disabled:opacity-50"
+                      title="Choose date from calendar"
+                    >
+                      <Calendar className="h-4 w-4" />
+                    </button>
+                    <input
+                      type="date"
+                      ref={datePickerRef}
+                      value={getValidDateValue(visitDate)}
+                      onChange={(e) => setVisitDate(e.target.value)}
+                      disabled={isPending}
+                      className="absolute inset-0 opacity-0 pointer-events-none w-0 h-0"
+                      tabIndex={-1}
+                    />
+                  </div>
                 </div>
 
                 <div className="flex flex-col gap-1.5">
