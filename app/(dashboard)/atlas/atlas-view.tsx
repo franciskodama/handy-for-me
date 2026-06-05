@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { useState, useTransition, useRef } from 'react';
 import dynamic from 'next/dynamic';
 import { toast } from '@/hooks/use-toast';
 import {
@@ -13,9 +13,9 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { addVisitedPlace, deleteVisitedPlace, searchCities } from '@/lib/actions/visited-places';
+import { addVisitedPlace, deleteVisitedPlace, searchCities, updateVisitedPlace } from '@/lib/actions/visited-places';
 import { getContinentByCountry } from '@/lib/continents';
-import { MapPin, Globe, Award, Sparkles, Trash2, Calendar, BookOpen, Compass, Search } from 'lucide-react';
+import { MapPin, Globe, Award, Sparkles, Trash2, Calendar, BookOpen, Compass, Search, Pencil } from 'lucide-react';
 import { barlow, kumbh_sans } from '@/app/ui/fonts';
 
 // Load Leaflet map component dynamically to avoid SSR errors
@@ -59,6 +59,45 @@ export default function AtlasView({ uid, initialPlaces }: AtlasViewProps) {
   const [suggestions, setSuggestions] = useState<Array<{ name: string; country: string; state: string }>>([]);
   const [isFocused, setIsFocused] = useState(false);
   const [searchTimeout, setSearchTimeout] = useState<NodeJS.Timeout | null>(null);
+  const datePickerRef = useRef<HTMLInputElement>(null);
+  const [editingId, setEditingId] = useState<string | null>(null);
+
+  const getValidDateValue = (val: string) => {
+    if (/^\d{4}-\d{2}-\d{2}$/.test(val)) {
+      const d = new Date(val);
+      if (!isNaN(d.getTime())) {
+        return val;
+      }
+    }
+    return '';
+  };
+
+  const startEditPlace = (place: Place) => {
+    setEditingId(place.id);
+    setCity(place.city);
+    setStateName(place.state || '');
+    setCountry(place.country);
+    setNotes(place.notes || '');
+    if (place.visitDate) {
+      const d = new Date(place.visitDate);
+      const year = d.getFullYear();
+      const month = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      setVisitDate(`${year}-${month}-${day}`);
+    } else {
+      setVisitDate('');
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const cancelEdit = () => {
+    setEditingId(null);
+    setCity('');
+    setStateName('');
+    setCountry('');
+    setNotes('');
+    setVisitDate('');
+  };
 
   const handleCityChange = (val: string) => {
     setCity(val);
@@ -150,7 +189,7 @@ export default function AtlasView({ uid, initialPlaces }: AtlasViewProps) {
   ];
 
   // Form Submission
-  const handleAddPlace = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!city.trim() || !country.trim()) {
       toast({
@@ -175,39 +214,71 @@ export default function AtlasView({ uid, initialPlaces }: AtlasViewProps) {
     }
 
     startTransition(async () => {
-      const res = await addVisitedPlace({
-        uid,
-        city: city.trim(),
-        state: stateName.trim() || undefined,
-        country: country.trim(),
-        notes: notes.trim() || undefined,
-        visitDate: visitDate || null
-      });
+      if (editingId) {
+        // Edit Mode
+        const res = await updateVisitedPlace({
+          id: editingId,
+          uid,
+          city: city.trim(),
+          state: stateName.trim() || undefined,
+          country: country.trim(),
+          notes: notes.trim() || undefined,
+          visitDate: visitDate || null
+        });
 
-      if (res.success && res.data) {
-        // cast because of Date serialization
-        const newPlace: Place = {
-          ...res.data,
-          visitDate: res.data.visitDate ? new Date(res.data.visitDate) : null
-        };
-        setPlaces((prev) => [newPlace, ...prev]);
-        toast({
-          title: 'Success!',
-          description: `Pinned ${newPlace.city} to your Atlas.`
-        });
-        
-        // Reset form
-        setCity('');
-        setStateName('');
-        setCountry('');
-        setNotes('');
-        setVisitDate('');
+        if (res.success && res.data) {
+          const updated: Place = {
+            ...res.data,
+            visitDate: res.data.visitDate ? new Date(res.data.visitDate) : null
+          };
+          setPlaces((prev) => prev.map((p) => p.id === editingId ? updated : p));
+          toast({
+            title: 'Success!',
+            description: `Updated ${updated.city} in your Atlas.`
+          });
+          cancelEdit();
+        } else {
+          toast({
+            variant: 'destructive',
+            title: 'Failed to update place',
+            description: res.error || 'Check spelling and try again.'
+          });
+        }
       } else {
-        toast({
-          variant: 'destructive',
-          title: 'Failed to add place',
-          description: res.error || 'Check spelling and try again.'
+        // Add Mode
+        const res = await addVisitedPlace({
+          uid,
+          city: city.trim(),
+          state: stateName.trim() || undefined,
+          country: country.trim(),
+          notes: notes.trim() || undefined,
+          visitDate: visitDate || null
         });
+
+        if (res.success && res.data) {
+          const newPlace: Place = {
+            ...res.data,
+            visitDate: res.data.visitDate ? new Date(res.data.visitDate) : null
+          };
+          setPlaces((prev) => [newPlace, ...prev]);
+          toast({
+            title: 'Success!',
+            description: `Pinned ${newPlace.city} to your Atlas.`
+          });
+          
+          // Reset form
+          setCity('');
+          setStateName('');
+          setCountry('');
+          setNotes('');
+          setVisitDate('');
+        } else {
+          toast({
+            variant: 'destructive',
+            title: 'Failed to add place',
+            description: res.error || 'Check spelling and try again.'
+          });
+        }
       }
     });
   };
@@ -217,6 +288,9 @@ export default function AtlasView({ uid, initialPlaces }: AtlasViewProps) {
     const res = await deleteVisitedPlace(id);
     if (res.success) {
       setPlaces((prev) => prev.filter((p) => p.id !== id));
+      if (editingId === id) {
+        cancelEdit();
+      }
       toast({
         title: 'Removed',
         description: 'Pin successfully removed from your Atlas.'
@@ -330,13 +404,26 @@ export default function AtlasView({ uid, initialPlaces }: AtlasViewProps) {
         <div className="lg:col-span-4 flex flex-col gap-6">
           
           {/* Add visited place Form */}
-          <Card className="shadow-sm">
+          <Card className="shadow-sm border-primary/20">
             <CardHeader>
-              <CardTitle className="text-lg">Add New Memory</CardTitle>
-              <CardDescription>Enter a city name and country to pin it on your map.</CardDescription>
+              <CardTitle className="text-lg flex items-center gap-1.5">
+                {editingId ? (
+                  <>
+                    <Pencil className="h-5 w-5 text-primary" />
+                    Edit Memory
+                  </>
+                ) : (
+                  'Add New Memory'
+                )}
+              </CardTitle>
+              <CardDescription>
+                {editingId 
+                  ? 'Update the details of your visited place.' 
+                  : 'Enter a city name and country to pin it on your map.'}
+              </CardDescription>
             </CardHeader>
             <CardContent>
-              <form onSubmit={handleAddPlace} className="flex flex-col gap-4">
+              <form onSubmit={handleSubmit} className="flex flex-col gap-4">
                 <div className="flex flex-col gap-1.5 relative">
                   <label htmlFor="city" className="text-xs font-semibold">City *</label>
                   <div className="relative">
@@ -408,16 +495,42 @@ export default function AtlasView({ uid, initialPlaces }: AtlasViewProps) {
 
                 <div className="flex flex-col gap-1.5">
                   <label htmlFor="visitDate" className="text-xs font-semibold">Date of Visit (Optional)</label>
-                  <Input
-                    id="visitDate"
-                    type="text"
-                    placeholder="YYYY-MM-DD"
-                    value={visitDate}
-                    onChange={(e) => handleVisitDateChange(e.target.value)}
-                    disabled={isPending}
-                    className="focus-visible:ring-primary text-sm font-mono"
-                    maxLength={10}
-                  />
+                  <div className="relative">
+                    <Input
+                      id="visitDate"
+                      type="text"
+                      placeholder="YYYY-MM-DD"
+                      value={visitDate}
+                      onChange={(e) => handleVisitDateChange(e.target.value)}
+                      disabled={isPending}
+                      className="focus-visible:ring-primary text-sm font-mono pr-10"
+                      maxLength={10}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => {
+                        try {
+                          datePickerRef.current?.showPicker();
+                        } catch (e) {
+                          console.error('showPicker not supported or failed:', e);
+                        }
+                      }}
+                      disabled={isPending}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground focus:outline-none disabled:opacity-50"
+                      title="Choose date from calendar"
+                    >
+                      <Calendar className="h-4 w-4" />
+                    </button>
+                    <input
+                      type="date"
+                      ref={datePickerRef}
+                      value={getValidDateValue(visitDate)}
+                      onChange={(e) => setVisitDate(e.target.value)}
+                      disabled={isPending}
+                      className="absolute inset-0 opacity-0 pointer-events-none w-0 h-0"
+                      tabIndex={-1}
+                    />
+                  </div>
                 </div>
 
                 <div className="flex flex-col gap-1.5">
@@ -432,9 +545,24 @@ export default function AtlasView({ uid, initialPlaces }: AtlasViewProps) {
                   />
                 </div>
 
-                <Button type="submit" disabled={isPending} className="w-full mt-2 font-medium">
-                  {isPending ? 'Searching & Pinning...' : 'Add to Atlas'}
-                </Button>
+                <div className="flex gap-2 mt-2">
+                  {editingId && (
+                    <Button 
+                      type="button" 
+                      variant="outline" 
+                      onClick={cancelEdit} 
+                      disabled={isPending}
+                      className="w-1/3"
+                    >
+                      Cancel
+                    </Button>
+                  )}
+                  <Button type="submit" disabled={isPending} className={editingId ? 'w-2/3' : 'w-full'}>
+                    {isPending 
+                      ? (editingId ? 'Updating...' : 'Searching & Pinning...') 
+                      : (editingId ? 'Save Changes' : 'Add to Atlas')}
+                  </Button>
+                </div>
               </form>
             </CardContent>
           </Card>
@@ -571,12 +699,22 @@ export default function AtlasView({ uid, initialPlaces }: AtlasViewProps) {
                             <td className="p-3 max-w-[200px] truncate text-xs text-muted-foreground italic" title={place.notes || undefined}>
                               {place.notes || '—'}
                             </td>
-                            <td className="p-3 text-right">
+                            <td className="p-3 text-right flex items-center justify-end gap-1">
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={() => startEditPlace(place)}
+                                className="h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-accent opacity-80 group-hover:opacity-100 transition-opacity"
+                                title="Edit visited place"
+                              >
+                                <Pencil className="h-4 w-4" />
+                              </Button>
                               <Button
                                 variant="ghost"
                                 size="icon"
                                 onClick={() => handleDeletePlace(place.id)}
                                 className="h-8 w-8 text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 opacity-80 group-hover:opacity-100 transition-opacity"
+                                title="Delete visited place"
                               >
                                 <Trash2 className="h-4 w-4" />
                               </Button>
