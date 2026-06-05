@@ -155,6 +155,124 @@ export async function deleteVisitedPlace(id: string) {
   }
 }
 
+export async function updateVisitedPlace({
+  id,
+  uid,
+  city,
+  state,
+  country,
+  notes,
+  visitDate
+}: {
+  id: string;
+  uid: string;
+  city: string;
+  state?: string;
+  country: string;
+  notes?: string;
+  visitDate?: string | null;
+}) {
+  try {
+    const user = await getAuthenticatedUser();
+    if (!user || user.uid !== uid) {
+      console.warn('Unauthorized attempt to update visited place');
+      return { success: false, error: 'Unauthorized' };
+    }
+
+    const existingPlace = await prisma.visitedPlace.findUnique({
+      where: { id }
+    });
+
+    if (!existingPlace) {
+      return { success: false, error: 'Visited place not found.' };
+    }
+
+    if (existingPlace.uid !== uid) {
+      return { success: false, error: 'Unauthorized.' };
+    }
+
+    if (!city.trim() || !country.trim()) {
+      return { success: false, error: 'City and Country are required.' };
+    }
+
+    let lat = existingPlace.lat;
+    let lng = existingPlace.lng;
+
+    // Check if location fields changed
+    const locationChanged = 
+      existingPlace.city !== city.trim() ||
+      (existingPlace.state || '') !== (state?.trim() || '') ||
+      existingPlace.country !== country.trim();
+
+    if (locationChanged) {
+      const queryParts = [city.trim()];
+      if (state?.trim()) {
+        queryParts.push(state.trim());
+      }
+      queryParts.push(country.trim());
+      const query = queryParts.join(', ');
+
+      const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=1`;
+      const res = await fetch(url, {
+        headers: {
+          'User-Agent': 'HandyForMe-Atlas/1.0 (contact: support@handyforme.local)'
+        }
+      });
+
+      if (!res.ok) {
+        return { success: false, error: 'Geocoding service unavailable. Please try again later.' };
+      }
+
+      const data = await res.json();
+      if (!data || data.length === 0) {
+        return { success: false, error: `Could not find coordinates for "${query}". Please check spelling.` };
+      }
+
+      const newLat = parseFloat(data[0].lat);
+      const newLng = parseFloat(data[0].lon);
+
+      if (isNaN(newLat) || isNaN(newLng)) {
+        return { success: false, error: 'Invalid coordinates returned from search.' };
+      }
+
+      lat = newLat;
+      lng = newLng;
+    }
+
+    let parsedVisitDate: Date | null = null;
+    if (visitDate) {
+      const d = new Date(visitDate);
+      if (isNaN(d.getTime())) {
+        return { success: false, error: 'Invalid visit date format.' };
+      }
+      const year = d.getFullYear();
+      if (year < 1000 || year > 9999) {
+        return { success: false, error: 'Visit date year must be a 4-digit year.' };
+      }
+      parsedVisitDate = d;
+    }
+
+    const updatedPlace = await prisma.visitedPlace.update({
+      where: { id },
+      data: {
+        city: city.trim(),
+        state: state?.trim() || null,
+        country: country.trim(),
+        lat,
+        lng,
+        notes: notes?.trim() || null,
+        visitDate: parsedVisitDate
+      }
+    });
+
+    return { success: true, data: updatedPlace };
+  } catch (error) {
+    console.error('Error updating visited place:', error);
+    return { success: false, error: 'An unexpected error occurred while updating the place.' };
+  }
+}
+
+
 let citiesCache: Array<{ n: string; c: string; s: string }> | null = null;
 
 export async function searchCities(
