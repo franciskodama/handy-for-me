@@ -34,11 +34,11 @@ export default function LoginScreen() {
   const handleLogin = async () => {
     setLoading(false);
     try {
-      // 1. Prepare Next.js callback URL
-      const authUrl = `${baseUrl}/api/auth/mobile-callback`;
-      
-      // 2. Prepare Expo deep link redirect URL
+      // 1. Prepare Expo deep link redirect URL
       const redirectUrl = Linking.createURL('redirect');
+
+      // 2. Prepare Next.js callback URL with the redirect URL appended
+      const authUrl = `${baseUrl}/api/auth/mobile-callback?redirect=${encodeURIComponent(redirectUrl)}`;
       console.log(`Starting AuthSession. Auth URL: ${authUrl}, Redirect: ${redirectUrl}`);
 
       setLoading(true);

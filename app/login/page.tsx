@@ -15,7 +15,17 @@ import { SignIn } from './sign-in';
 import Link from 'next/link';
 import { LogoGitHub, LogoGoogle } from '@/lib/svgs';
 
-export default async function Login() {
+export default async function Login({ searchParams }: { searchParams: Promise<{ redirect?: string }> }) {
+  const resolvedSearchParams = await searchParams;
+  const redirect = resolvedSearchParams.redirect || '';
+
+  const getRedirectTo = () => {
+    if (redirect) {
+      return `/api/auth/mobile-callback?redirect=${encodeURIComponent(redirect)}`;
+    }
+    return '/';
+  };
+
   return (
     <div
       className="min-h-screen flex flex-col sm:flex-row justify-center items-start md:items-center p-8 bg-[#ffffff] opacity-80"
@@ -61,7 +71,7 @@ export default async function Login() {
               action={async () => {
                 'use server';
                 await signIn('google', {
-                  redirectTo: '/'
+                  redirectTo: getRedirectTo()
                 });
               }}
               className="w-full"
@@ -79,7 +89,7 @@ export default async function Login() {
               action={async () => {
                 'use server';
                 await signIn('github', {
-                  redirectTo: '/'
+                  redirectTo: getRedirectTo()
                 });
               }}
               className="w-full"
