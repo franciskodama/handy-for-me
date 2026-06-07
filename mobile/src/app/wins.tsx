@@ -26,7 +26,7 @@ export default function WeeklyWinsScreen() {
   const { ip } = useLocalSearchParams<{ ip: string }>();
   
   // State variables
-  const [email, setEmail] = useState('franciskodama@gmail.com'); // default or simulated email
+  const [email, setEmail] = useState('franciskodama@gmail.com');
   const [wins, setWins] = useState<WeeklyWin[]>([]);
   const [loading, setLoading] = useState(false);
   const [newGoal, setNewGoal] = useState('');
@@ -164,14 +164,16 @@ export default function WeeklyWinsScreen() {
 
     return (
       <View className="mb-6">
-        <Text className={`text-white font-extrabold text-sm uppercase px-3 py-1.5 rounded-md self-start ${colorClass} mb-2`}>
-          {title} ({sectionWins.length})
-        </Text>
+        <View className={`border-2 border-[#0F1739] rounded-lg self-start px-3 py-1.5 ${colorClass} shadow-[2px_2px_0px_0px_rgba(15,23,57,1)] mb-3`}>
+          <Text className="text-[#0F1739] font-black text-xs uppercase">
+            {title} ({sectionWins.length})
+          </Text>
+        </View>
         {sectionWins.map(win => (
           <View 
             key={win.id} 
-            className={`flex-row justify-between items-center bg-slate-900 border border-slate-800 rounded-xl p-4 mb-2 shadow-sm ${
-              win.done ? 'opacity-65 border-dashed border-slate-700' : ''
+            className={`flex-row justify-between items-center bg-white border-2 border-[#0F1739] rounded-xl p-4 mb-2.5 shadow-[3px_3px_0px_0px_rgba(15,23,57,1)] ${
+              win.done ? 'opacity-70 bg-slate-50' : ''
             }`}
           >
             <TouchableOpacity 
@@ -179,19 +181,19 @@ export default function WeeklyWinsScreen() {
               onPress={() => handleToggleDone(win)}
             >
               <View className={`w-6 h-6 rounded-md items-center justify-center border-2 mr-3 ${
-                win.done ? 'bg-emerald-500 border-emerald-500' : 'bg-transparent border-slate-600'
+                win.done ? 'bg-[#DDF906] border-[#0F1739]' : 'bg-white border-[#0F1739]'
               }`}>
-                {win.done && <Text className="text-white text-xs font-bold">✓</Text>}
+                {win.done && <Text className="text-[#0F1739] text-xs font-black">✓</Text>}
               </View>
-              <Text className={`text-slate-100 text-sm font-semibold flex-1 ${
-                win.done ? 'line-through text-slate-500' : ''
+              <Text className={`text-[#0F1739] text-sm font-bold flex-1 ${
+                win.done ? 'line-through text-slate-400' : ''
               }`}>
                 {win.goal}
               </Text>
             </TouchableOpacity>
 
             <TouchableOpacity 
-              className="w-8 h-8 rounded-full items-center justify-center bg-slate-950 border border-slate-800 active:bg-rose-950"
+              className="w-8 h-8 rounded-lg items-center justify-center bg-slate-50 border-2 border-[#0F1739] shadow-[1px_1px_0px_0px_rgba(15,23,57,1)] active:bg-rose-100"
               onPress={() => handleDeleteWin(win.id)}
             >
               <Text className="text-xs">🗑️</Text>
@@ -203,30 +205,30 @@ export default function WeeklyWinsScreen() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-slate-950 p-5" style={{ paddingBottom: BottomTabInset }}>
+    <SafeAreaView className="flex-1 bg-white p-5" style={{ paddingBottom: BottomTabInset }}>
       
       {/* Header Block */}
       <View className="flex-row justify-between items-center mb-6">
         <TouchableOpacity 
-          className="bg-slate-900 px-4 py-2 border border-slate-800 rounded-lg active:bg-slate-800"
+          className="bg-slate-50 px-4 py-2 border-2 border-[#0F1739] rounded-lg shadow-[2px_2px_0px_0px_rgba(15,23,57,1)] active:bg-slate-100"
           onPress={() => router.back()}
         >
-          <Text className="text-slate-300 text-xs font-semibold">◀ Back</Text>
+          <Text className="text-[#0F1739] text-xs font-black">◀ Back</Text>
         </TouchableOpacity>
-        <Text className="text-white text-xl font-bold">Weekly Wins</Text>
+        <Text className="text-[#0F1739] text-2xl font-black uppercase tracking-tight">Weekly Wins</Text>
         <TouchableOpacity 
-          className="bg-slate-900 w-8 h-8 items-center justify-center border border-slate-800 rounded-lg active:bg-slate-800"
+          className="bg-slate-50 w-8 h-8 items-center justify-center border-2 border-[#0F1739] rounded-lg shadow-[2px_2px_0px_0px_rgba(15,23,57,1)] active:bg-slate-100"
           onPress={fetchWins}
         >
-          <Text className="text-slate-300 text-sm">🔄</Text>
+          <Text className="text-[#0F1739] text-sm font-bold">🔄</Text>
         </TouchableOpacity>
       </View>
 
       {/* Simulated Auth Bar */}
-      <View className="bg-slate-900 border border-slate-800 rounded-xl p-3 mb-4 flex-row items-center">
-        <Text className="text-slate-400 text-xs font-bold mr-2 uppercase">User:</Text>
+      <View className="bg-slate-50 border-2 border-[#0F1739] rounded-xl p-3 mb-4 flex-row items-center shadow-[3px_3px_0px_0px_rgba(15,23,57,1)]">
+        <Text className="text-[#0F1739] text-xs font-black mr-2 uppercase">User Email:</Text>
         <TextInput
-          className="flex-1 text-white text-xs font-mono py-1 px-2 bg-slate-950 rounded border border-slate-800"
+          className="flex-1 text-[#0F1739] text-xs font-mono py-1 px-2 bg-white rounded border-2 border-[#0F1739]"
           value={email}
           onChangeText={setEmail}
           autoCapitalize="none"
@@ -237,53 +239,53 @@ export default function WeeklyWinsScreen() {
 
       {/* Progress Card */}
       {totalCount > 0 && (
-        <View className="bg-slate-900 border border-slate-800 rounded-2xl p-4 mb-4 shadow-lg">
+        <View className="bg-white border-2 border-[#0F1739] rounded-2xl p-4 mb-4 shadow-[4px_4px_0px_0px_rgba(15,23,57,1)]">
           <View className="flex-row justify-between items-center mb-2">
-            <Text className="text-slate-300 text-xs font-bold uppercase">Weekly Progress</Text>
-            <Text className="text-white text-sm font-extrabold">{completedCount} of {totalCount} Wins</Text>
+            <Text className="text-[#0F1739] text-xs font-extrabold uppercase">Weekly Progress</Text>
+            <Text className="text-[#0F1739] text-sm font-black">{completedCount} of {totalCount} Wins</Text>
           </View>
-          <View className="w-full bg-slate-950 rounded-full h-3 overflow-hidden border border-slate-800">
+          <View className="w-full bg-slate-100 rounded-full h-3.5 overflow-hidden border-2 border-[#0F1739]">
             <View 
-              className="bg-emerald-500 h-full rounded-full" 
+              className="bg-[#DDF906] h-full rounded-full border-r border-[#0F1739]" 
               style={{ width: `${progressPercent}%` }} 
             />
           </View>
-          <Text className="text-slate-500 text-xxs mt-1.5 text-right font-mono">{progressPercent}% Completed</Text>
+          <Text className="text-slate-500 text-xxs mt-1.5 text-right font-mono font-bold">{progressPercent}% Completed</Text>
         </View>
       )}
 
       {/* Add Win Form */}
-      <View className="bg-slate-900 border border-slate-800 rounded-2xl p-4 mb-4 shadow-lg">
-        <Text className="text-white font-bold text-sm mb-2">Add New Win</Text>
+      <View className="bg-white border-2 border-[#0F1739] rounded-2xl p-4 mb-4 shadow-[4px_4px_0px_0px_rgba(15,23,57,1)]">
+        <Text className="text-[#0F1739] font-black text-sm mb-2 uppercase">Add New Goal</Text>
         <TextInput
-          className="bg-slate-950 text-white rounded-lg px-3 py-2 border border-slate-800 text-xs mb-3"
+          className="bg-slate-50 text-[#0F1739] font-bold rounded-lg px-3 py-2 border-2 border-[#0F1739] text-xs mb-3"
           placeholder="What will you conquer this week?"
-          placeholderTextColor="#64748b"
+          placeholderTextColor="#94a3b8"
           value={newGoal}
           onChangeText={setNewGoal}
         />
         
         <View className="flex-row justify-between items-center">
           {/* Difficulty Levels selector */}
-          <View className="flex-row bg-slate-950 rounded-lg p-1 border border-slate-800 gap-1">
+          <View className="flex-row bg-slate-50 rounded-lg p-1 border-2 border-[#0F1739] gap-1">
             {(['Easy', 'Moderate', 'Challenging'] as const).map(type => (
               <TouchableOpacity
                 key={type}
-                className={`px-3 py-1 rounded-md ${
+                className={`px-3 py-1 rounded-md border ${
                   newType === type 
-                    ? type === 'Easy' ? 'bg-emerald-500/20 border border-emerald-500/40' :
-                      type === 'Moderate' ? 'bg-amber-500/20 border border-amber-500/40' :
-                      'bg-rose-500/20 border border-rose-500/40'
-                    : 'border border-transparent'
+                    ? type === 'Easy' ? 'bg-green-500/20 border-green-500' :
+                      type === 'Moderate' ? 'bg-amber-500/20 border-amber-500' :
+                      'bg-rose-500/20 border-rose-500'
+                    : 'border-transparent'
                 }`}
                 onPress={() => setNewType(type)}
               >
-                <Text className={`text-xxs font-bold ${
+                <Text className={`text-xxs font-extrabold ${
                   newType === type
-                    ? type === 'Easy' ? 'text-emerald-400' :
-                      type === 'Moderate' ? 'text-amber-400' :
-                      'text-rose-400'
-                    : 'text-slate-500'
+                    ? type === 'Easy' ? 'text-green-700' :
+                      type === 'Moderate' ? 'text-amber-700' :
+                      'text-red-700'
+                    : 'text-slate-400'
                 }`}>
                   {type}
                 </Text>
@@ -292,10 +294,10 @@ export default function WeeklyWinsScreen() {
           </View>
 
           <TouchableOpacity
-            className="bg-red-500 px-4 py-2 rounded-lg active:opacity-85"
+            className="bg-[#0F1739] px-5 py-2 rounded-lg active:opacity-85 border-2 border-[#0F1739]"
             onPress={handleAddWin}
           >
-            <Text className="text-white font-bold text-xs">＋ Add</Text>
+            <Text className="text-white font-bold text-xs uppercase">＋ Add</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -304,21 +306,21 @@ export default function WeeklyWinsScreen() {
       <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
         {loading ? (
           <View className="py-8 items-center justify-center">
-            <ActivityIndicator color="#ef4444" size="large" />
-            <Text className="text-slate-500 text-xs mt-2 font-mono">Syncing database...</Text>
+            <ActivityIndicator color="#0F1739" size="large" />
+            <Text className="text-slate-500 text-xs mt-2 font-mono font-semibold">Syncing database...</Text>
           </View>
         ) : wins.length === 0 ? (
-          <View className="py-12 items-center justify-center bg-slate-900/40 border border-slate-900 border-dashed rounded-2xl">
-            <Text className="text-slate-400 text-center font-bold text-sm mb-1">Weekly Wins Not Found 👻</Text>
-            <Text className="text-slate-500 text-center text-xs px-8">
-              Looks like your week is wide open! Add a goal or two above to get started.
+          <View className="py-12 items-center justify-center bg-slate-50 border-2 border-dashed border-slate-350 rounded-2xl">
+            <Text className="text-slate-600 text-center font-black text-sm mb-1">Weekly Wins Not Found 👻</Text>
+            <Text className="text-slate-400 text-center text-xs font-semibold px-8 leading-relaxed">
+              Looks like your week is wide open! Add a goal above and let's get those wins.
             </Text>
           </View>
         ) : (
           <View>
-            {renderWinSection('Challenging Goals 🔥', challengingWins, 'bg-rose-500/20 border border-rose-500/40 text-rose-400')}
-            {renderWinSection('Moderate Goals ⚡', moderateWins, 'bg-amber-500/20 border border-amber-500/40 text-amber-400')}
-            {renderWinSection('Easy Goals 🟢', easyWins, 'bg-emerald-500/20 border border-emerald-500/40 text-emerald-400')}
+            {renderWinSection('Challenging 🔥', challengingWins, 'bg-rose-100')}
+            {renderWinSection('Moderate ⚡', moderateWins, 'bg-amber-100')}
+            {renderWinSection('Easy 🟢', easyWins, 'bg-green-100')}
           </View>
         )}
       </ScrollView>

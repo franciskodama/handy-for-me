@@ -60,87 +60,88 @@ export default function HomeScreen() {
   }, []);
 
   return (
-    <SafeAreaView className="flex-1 bg-slate-950 p-6 justify-between" style={{ paddingBottom: BottomTabInset }}>
+    <SafeAreaView className="flex-1 bg-white p-6 justify-between" style={{ paddingBottom: BottomTabInset }}>
+      
       {/* Header / Hero */}
       <View className="items-center justify-center flex-1 my-4">
-        <View className="mb-6 bg-slate-900 w-16 h-16 rounded-2xl items-center justify-center border border-slate-800 shadow-md">
+        <View className="mb-6 bg-slate-100 w-16 h-16 rounded-2xl items-center justify-center border-2 border-[#0F1739] shadow-[2px_2px_0px_0px_rgba(15,23,57,1)]">
           <Text className="text-3xl">⚙️</Text>
         </View>
-        <Text className="text-white text-3xl font-extrabold text-center tracking-tight">
+        <Text className="text-[#0F1739] text-4xl font-black text-center tracking-tight uppercase">
           Handyfor.me
         </Text>
-        <Text className="text-slate-400 text-sm text-center mt-2 px-6">
+        <Text className="text-slate-500 text-sm font-semibold text-center mt-2 px-6">
           Your tasks and personal growth hub, now native.
         </Text>
       </View>
 
       {/* Connection Tester Card */}
-      <View className="bg-slate-900 border border-slate-800 rounded-2xl p-5 mb-4 shadow-xl">
-        <Text className="text-white font-bold text-lg mb-2">Backend Connection Tester</Text>
-        <Text className="text-slate-400 text-xs mb-4">
-          Enter your Next.js dev server IP address. Use <Text className="font-mono text-slate-300">10.0.2.2</Text> for Android Emulator or your computer's local Wi-Fi IP for physical devices.
+      <View className="bg-white border-2 border-[#0F1739] rounded-2xl p-5 mb-4 shadow-[4px_4px_0px_0px_rgba(15,23,57,1)]">
+        <Text className="text-[#0F1739] font-extrabold text-xl mb-2 uppercase">Connection Tester</Text>
+        <Text className="text-slate-500 text-xs font-semibold mb-4 leading-relaxed">
+          Enter your Next.js dev server IP address. Use <Text className="font-mono text-slate-800">10.0.2.2</Text> for Android Emulator or your computer's local Wi-Fi IP for physical devices.
         </Text>
 
         <View className="flex-row gap-2 mb-3">
           <TextInput
-            className="flex-1 bg-slate-950 text-white rounded-lg px-3 py-2 border border-slate-700 text-sm"
+            className="flex-1 bg-slate-50 text-[#0F1739] font-semibold rounded-lg px-3 py-2 border-2 border-[#0F1739] text-sm"
             placeholder="e.g. 192.168.1.50"
-            placeholderTextColor="#64748b"
+            placeholderTextColor="#94a3b8"
             value={ipAddress}
             onChangeText={setIpAddress}
             autoCapitalize="none"
             autoCorrect={false}
           />
           <TouchableOpacity
-            className="bg-red-500 justify-center items-center px-4 rounded-lg active:opacity-85"
+            className="bg-[#0F1739] justify-center items-center px-5 rounded-lg active:opacity-85 border-2 border-[#0F1739]"
             onPress={() => testConnection(ipAddress)}
             disabled={status === 'loading'}
           >
-            <Text className="text-white font-semibold text-sm">
+            <Text className="text-white font-bold text-sm uppercase">
               {status === 'loading' ? 'Testing...' : 'Test'}
             </Text>
           </TouchableOpacity>
         </View>
 
         {/* Status indicator */}
-        <View className="mt-2 p-3 rounded-lg bg-slate-950 border border-slate-800">
+        <View className="mt-2 p-3 rounded-lg bg-slate-50 border-2 border-slate-100">
           <View className="flex-row items-center mb-1">
             <View 
-              className={`w-2 h-2 rounded-full mr-2 ${
+              className={`w-2.5 h-2.5 rounded-full mr-2 ${
                 status === 'success' ? 'bg-emerald-500' :
                 status === 'error' ? 'bg-rose-500' :
-                status === 'loading' ? 'bg-amber-500' : 'bg-slate-600'
+                status === 'loading' ? 'bg-amber-500' : 'bg-slate-400'
               }`} 
             />
-            <Text className="text-slate-300 text-xs font-semibold uppercase tracking-wider">
+            <Text className="text-slate-600 text-xs font-bold uppercase tracking-wider">
               Status: {status}
             </Text>
           </View>
           {apiResponse ? (
-            <Text className={`text-xs font-mono mt-1 ${status === 'success' ? 'text-emerald-400' : 'text-rose-400'}`}>
+            <Text className={`text-xs font-mono mt-1 ${status === 'success' ? 'text-emerald-600 font-bold' : 'text-rose-600'}`}>
               {apiResponse}
             </Text>
           ) : (
-            <Text className="text-slate-500 text-xs mt-1">No tests run yet.</Text>
+            <Text className="text-slate-400 text-xs mt-1">No tests run yet.</Text>
           )}
         </View>
 
         {status === 'success' && (
           <TouchableOpacity
-            className="mt-4 bg-emerald-600 justify-center items-center py-3 rounded-xl border border-emerald-500 shadow-md active:opacity-90"
+            className="mt-4 bg-[#DDF906] justify-center items-center py-3.5 rounded-xl border-2 border-[#0F1739] shadow-[3px_3px_0px_0px_rgba(15,23,57,1)] active:opacity-90"
             onPress={() => router.push({ pathname: '/wins', params: { ip: ipAddress } })}
           >
-            <Text className="text-white font-extrabold text-sm uppercase tracking-wide">
-              Go to Weekly Wins Dashboard ➔
+            <Text className="text-[#0F1739] font-black text-sm uppercase tracking-wider">
+              Go to Dashboard ➔
             </Text>
           </TouchableOpacity>
         )}
       </View>
 
       {/* Dev Menu Hint */}
-      <View className="items-center py-2 bg-slate-900/40 rounded-xl border border-slate-900/80">
-        <Text className="text-slate-500 text-xs text-center">
-          Dev Menu: {getDevMenuHint()}
+      <View className="items-center py-2.5 bg-slate-50 rounded-xl border-2 border-slate-100">
+        <Text className="text-slate-400 text-xs font-semibold text-center lowercase">
+          {getDevMenuHint()}
         </Text>
       </View>
     </SafeAreaView>
