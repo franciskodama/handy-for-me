@@ -28,10 +28,14 @@ export default function HomeScreen() {
 
   const getBaseUrl = (ip: string) => {
     if (!ip) return `http://${defaultIp}:3000`;
-    if (ip.startsWith('http://') || ip.startsWith('https://')) {
-      return ip;
+    let cleaned = ip.trim();
+    if (cleaned.endsWith('/')) {
+      cleaned = cleaned.slice(0, -1);
     }
-    return `http://${ip}:3000`;
+    if (cleaned.startsWith('http://') || cleaned.startsWith('https://')) {
+      return cleaned;
+    }
+    return `http://${cleaned}:3000`;
   };
 
   const testConnection = async (targetIp: string) => {
@@ -46,6 +50,7 @@ export default function HomeScreen() {
         method: 'GET',
         headers: {
           'Accept': 'application/json',
+          'ngrok-skip-browser-warning': 'true',
         },
       });
       

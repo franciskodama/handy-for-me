@@ -98,10 +98,14 @@ export default function WeeklyWinsScreen() {
 
   const getBaseUrl = (targetIp: string) => {
     if (!targetIp) return 'http://localhost:3000';
-    if (targetIp.startsWith('http://') || targetIp.startsWith('https://')) {
-      return targetIp;
+    let cleaned = targetIp.trim();
+    if (cleaned.endsWith('/')) {
+      cleaned = cleaned.slice(0, -1);
     }
-    return `http://${targetIp}:3000`;
+    if (cleaned.startsWith('http://') || cleaned.startsWith('https://')) {
+      return cleaned;
+    }
+    return `http://${cleaned}:3000`;
   };
 
   const baseUrl = getBaseUrl(ip || '');
@@ -118,6 +122,7 @@ export default function WeeklyWinsScreen() {
         headers: {
           'Authorization': `Bearer ${currentToken}`,
           'Accept': 'application/json',
+          'ngrok-skip-browser-warning': 'true',
         },
       });
       
@@ -150,6 +155,7 @@ export default function WeeklyWinsScreen() {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`,
+          'ngrok-skip-browser-warning': 'true',
         },
         body: JSON.stringify({
           id: win.id,
@@ -195,6 +201,7 @@ export default function WeeklyWinsScreen() {
                 method: 'DELETE',
                 headers: {
                   'Authorization': `Bearer ${token}`,
+                  'ngrok-skip-browser-warning': 'true',
                 },
               });
 
@@ -231,6 +238,7 @@ export default function WeeklyWinsScreen() {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`,
+          'ngrok-skip-browser-warning': 'true',
         },
         body: JSON.stringify({
           goal: newGoal.trim(),
