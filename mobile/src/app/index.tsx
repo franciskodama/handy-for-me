@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import * as Device from 'expo-device';
 import { Platform, TextInput, TouchableOpacity, View, Text } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useRouter } from 'expo-router';
 
 import { BottomTabInset } from '@/constants/theme';
 
@@ -17,6 +18,7 @@ function getDevMenuHint() {
 }
 
 export default function HomeScreen() {
+  const router = useRouter();
   const defaultIp = Platform.OS === 'android' ? '10.0.2.2' : 'localhost';
   const [ipAddress, setIpAddress] = useState(defaultIp);
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
@@ -44,15 +46,17 @@ export default function HomeScreen() {
       setStatus('success');
       setApiResponse(JSON.stringify(data, null, 2));
     } catch (err: any) {
-      console.error(err);
+      console.log('Connection test failed:', err.message);
       setStatus('error');
       setApiResponse(err.message || 'Failed to connect. Make sure your Next.js server is running.');
     }
   };
 
   useEffect(() => {
-    // Proactively test connection on load
-    testConnection(ipAddress);
+    // Only auto-test on startup if it's not the default emulator loopback
+    if (ipAddress !== '10.0.2.2' && ipAddress !== 'localhost') {
+      testConnection(ipAddress);
+    }
   }, []);
 
   return (
@@ -120,6 +124,17 @@ export default function HomeScreen() {
             <Text className="text-slate-500 text-xs mt-1">No tests run yet.</Text>
           )}
         </View>
+
+        {status === 'success' && (
+          <TouchableOpacity
+            className="mt-4 bg-emerald-600 justify-center items-center py-3 rounded-xl border border-emerald-500 shadow-md active:opacity-90"
+            onPress={() => router.push({ pathname: '/wins', params: { ip: ipAddress } })}
+          >
+            <Text className="text-white font-extrabold text-sm uppercase tracking-wide">
+              Go to Weekly Wins Dashboard ➔
+            </Text>
+          </TouchableOpacity>
+        )}
       </View>
 
       {/* Dev Menu Hint */}

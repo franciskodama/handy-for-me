@@ -53,7 +53,7 @@ export default function Countdown({
   }, []);
 
   useEffect(() => {
-    let timerInterval: NodeJS.Timeout;
+    let timerInterval: any;
 
     // Only countdown if: countdown is started, result exists, time is greater than 0, and not paused
     if (startCountdown && result && timeRemaining > 0 && !isPaused) {

@@ -116,7 +116,7 @@ export default function AtlasView({ uid, initialPlaces }: AtlasViewProps) {
         console.error('Error fetching city suggestions:', err);
       }
     }, 150);
-    setSearchTimeout(timeout);
+    setSearchTimeout(timeout as any);
   };
 
   const handleVisitDateChange = (val: string) => {

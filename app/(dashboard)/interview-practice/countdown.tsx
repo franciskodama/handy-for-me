@@ -53,7 +53,7 @@ export default function Countdown({
   }, []);
 
   useEffect(() => {
-    let timerInterval: NodeJS.Timeout;
+    let timerInterval: any;
 
     if (startCountdown && result && timeRemaining > 0 && !isPaused) {
       timerInterval = setInterval(() => {
