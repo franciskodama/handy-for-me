@@ -10,6 +10,7 @@ import {
   CardTitle
 } from '@/components/ui/card';
 import { signIn } from '@/lib/auth';
+import { headers } from 'next/headers';
 import Image from 'next/image';
 import { SignIn } from './sign-in';
 import Link from 'next/link';
@@ -19,11 +20,17 @@ export default async function Login({ searchParams }: { searchParams: Promise<{ 
   const resolvedSearchParams = await searchParams;
   const redirect = resolvedSearchParams.redirect || '';
 
+  // Read request headers to build absolute URLs, respecting ngrok forwarded headers
+  const headersList = await headers();
+  const host = headersList.get('x-forwarded-host') || headersList.get('host') || 'localhost:3000';
+  const proto = headersList.get('x-forwarded-proto') || 'http';
+  const domainUrl = `${proto}://${host}`;
+
   const getRedirectTo = () => {
     if (redirect) {
-      return `/api/auth/mobile-callback?redirect=${encodeURIComponent(redirect)}`;
+      return `${domainUrl}/api/auth/mobile-callback?redirect=${encodeURIComponent(redirect)}`;
     }
-    return '/';
+    return `${domainUrl}/`;
   };
 
   return (

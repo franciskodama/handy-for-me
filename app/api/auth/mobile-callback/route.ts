@@ -11,9 +11,13 @@ export async function GET(request: NextRequest) {
     const session = await auth();
     const user = session?.user;
 
+    const host = request.headers.get('x-forwarded-host') || request.headers.get('host') || 'localhost:3000';
+    const proto = request.headers.get('x-forwarded-proto') || 'http';
+    const domainUrl = `${proto}://${host}`;
+
     // 2. If not logged in, redirect to the web login page, passing along the redirect param
     if (!user || !user.email) {
-      const loginUrl = new URL('/login', request.url);
+      const loginUrl = new URL('/login', domainUrl);
       if (redirectParam) {
         loginUrl.searchParams.set('redirect', redirectParam);
       }
