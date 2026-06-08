@@ -26,12 +26,9 @@ export default async function Login({ searchParams }: { searchParams: Promise<{ 
   const proto = headersList.get('x-forwarded-proto') || 'http';
   const domainUrl = `${proto}://${host}`;
 
-  const getRedirectTo = () => {
-    if (redirect) {
-      return `${domainUrl}/api/auth/mobile-callback?redirect=${encodeURIComponent(redirect)}`;
-    }
-    return `${domainUrl}/`;
-  };
+  const redirectToUrl = redirect
+    ? `${domainUrl}/api/auth/mobile-callback?redirect=${encodeURIComponent(redirect)}`
+    : `${domainUrl}/`;
 
   return (
     <div
@@ -78,7 +75,7 @@ export default async function Login({ searchParams }: { searchParams: Promise<{ 
               action={async () => {
                 'use server';
                 await signIn('google', {
-                  redirectTo: getRedirectTo()
+                  redirectTo: redirectToUrl
                 });
               }}
               className="w-full"
@@ -96,7 +93,7 @@ export default async function Login({ searchParams }: { searchParams: Promise<{ 
               action={async () => {
                 'use server';
                 await signIn('github', {
-                  redirectTo: getRedirectTo()
+                  redirectTo: redirectToUrl
                 });
               }}
               className="w-full"
