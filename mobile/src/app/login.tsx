@@ -5,7 +5,8 @@ import {
   Text, 
   TouchableOpacity, 
   ActivityIndicator, 
-  Alert 
+  Alert,
+  Image 
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as WebBrowser from 'expo-web-browser';
@@ -80,54 +81,74 @@ export default function LoginScreen() {
   return (
     <SafeAreaView className="flex-1 bg-white p-6 justify-between rounded-none" style={{ paddingBottom: BottomTabInset }}>
       
-      {/* Header / Logo */}
-      <View className="items-center justify-center flex-1 my-4">
-        <View className="mb-6 bg-slate-50 w-16 h-16 items-center justify-center border border-[#0F1739] rounded-none shadow-[2px_2px_0px_0px_rgba(15,23,57,1)]">
-          <Text className="text-3xl">🔑</Text>
+      {/* Header / Logo (Mimics Web left panel) */}
+      <View className="p-5 border-2 bg-white border-[#0F1739] shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] rounded-none my-4">
+        <Image 
+          source={require('../../assets/images/HandyForMe_Cog200x200.png')} 
+          className="mb-4 w-16 h-16"
+          resizeMode="contain"
+        />
+        <View className="flex-col uppercase w-full">
+          <Text className="text-3xl font-black text-[#0F1739] leading-tight">
+            Goodbye 👋{"\n"}overwhelm!
+          </Text>
+          <Text className="text-slate-500 text-xs font-semibold leading-relaxed mt-2 uppercase tracking-wide">
+            Your personal hub for organizing daily tasks is just one click away!
+          </Text>
         </View>
-        <Text className="text-[#0F1739] text-4xl font-black text-center tracking-tight uppercase">
-          Handyfor.me
-        </Text>
-        <Text className="text-slate-500 text-sm font-semibold text-center mt-2 px-6">
-          Synchronize your tasks, goals, and habits.
-        </Text>
       </View>
 
-      {/* Login Card */}
-      <View className="bg-white border border-[#0F1739] rounded-none p-6 mb-4 shadow-[4px_4px_0px_0px_rgba(15,23,57,1)]">
-        <Text className="text-[#0F1739] font-extrabold text-xl mb-2 uppercase">Account Sign In</Text>
-        <Text className="text-slate-500 text-xs font-semibold mb-6 leading-relaxed">
-          Tapping sign-in will open a secure window to log in using Google or GitHub. Once completed, your phone will securely cache your session.
+      {/* Login Card (Mimics Web Card) */}
+      <View className="bg-white border-2 border-[#0F1739] rounded-none p-5 mb-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+        <Text className="text-black font-black text-3xl mb-1 uppercase tracking-tight">Login</Text>
+        <Text className="text-slate-500 text-xs font-semibold mb-6">
+          Life’s better when it’s handy – Let’s sign in!
         </Text>
 
+        {/* Google sign-in */}
         <TouchableOpacity
-          className="bg-[#DDF906] justify-center items-center py-4 rounded-none border border-[#0F1739] shadow-[3px_3px_0px_0px_rgba(15,23,57,1)] active:opacity-90"
+          className="bg-[#0F1739] flex-row justify-center items-center py-3.5 rounded-none border-2 border-[#0F1739] shadow-[3px_3px_0px_0px_#0F1739] active:opacity-90 mb-4"
           onPress={handleLogin}
           disabled={loading}
         >
           {loading ? (
-            <ActivityIndicator color="#0F1739" size="small" />
+            <ActivityIndicator color="#ffffff" size="small" />
           ) : (
-            <Text className="text-[#0F1739] font-black text-sm uppercase tracking-wider">
-              Sign In with Google / GitHub ➔
+            <Text className="text-white font-black text-xs uppercase tracking-widest">
+              Sign In with Google
+            </Text>
+          )}
+        </TouchableOpacity>
+
+        {/* GitHub sign-in */}
+        <TouchableOpacity
+          className="bg-[#0F1739] flex-row justify-center items-center py-3.5 rounded-none border-2 border-[#0F1739] shadow-[3px_3px_0px_0px_#0F1739] active:opacity-90 mb-4"
+          onPress={handleLogin}
+          disabled={loading}
+        >
+          {loading ? (
+            <ActivityIndicator color="#ffffff" size="small" />
+          ) : (
+            <Text className="text-white font-black text-xs uppercase tracking-widest">
+              Sign In with GitHub
             </Text>
           )}
         </TouchableOpacity>
 
         <TouchableOpacity
-          className="mt-4 justify-center items-center py-2.5 rounded-none border border-dashed border-[#0F1739]"
+          className="mt-2 justify-center items-center py-2.5 rounded-none border-2 border-dashed border-[#0F1739]"
           onPress={() => router.back()}
           disabled={loading}
         >
-          <Text className="text-[#0F1739] font-bold text-xs uppercase">
+          <Text className="text-[#0F1739] font-black text-xxs uppercase tracking-wider">
             Cancel
           </Text>
         </TouchableOpacity>
       </View>
 
       {/* Server IP Indicator */}
-      <View className="items-center py-2.5 bg-slate-50 rounded-none border border-[#0F1739]">
-        <Text className="text-slate-500 text-xxs font-mono text-center uppercase">
+      <View className="items-center py-2 bg-slate-50 rounded-none border-2 border-[#0F1739]">
+        <Text className="text-slate-500 text-xxs font-mono text-center uppercase tracking-widest">
           Target API Host: {baseUrl}
         </Text>
       </View>

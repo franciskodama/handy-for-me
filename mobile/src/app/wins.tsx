@@ -7,7 +7,8 @@ import {
   TouchableOpacity, 
   ScrollView, 
   ActivityIndicator, 
-  Alert 
+  Alert,
+  Image
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as SecureStore from 'expo-secure-store';
@@ -84,6 +85,50 @@ function decodeJWT(token: string): UserData | null {
   }
 }
 
+const quotes = [
+  { quote: "Your capacity to say 'No' determines your capacity to say 'Yes' to greater things.", author: "E. Stanley Jones" },
+  { quote: "Do fewer things. Do them better. Know why you're doing them.", author: "Cal Newport" },
+  { quote: "Stop managing your time. Start managing your focus.", author: "Unknown" },
+  { quote: "If you don't like where you are, change it. You're not a tree.", author: "Jim Rohn" },
+  { quote: "Forgive yourself for your faults and your mistakes and move on.", author: "Les Brown" },
+  { quote: "What you do matters, but why you do it matters much more.", author: "Unknown" },
+  { quote: "When the whole world is silent, even one voice becomes powerful.", author: "Malala Yousafzai" },
+  { quote: "Do the thing you think you cannot do.", author: "Eleanor Roosevelt" },
+  { quote: "Be not afraid of growing slowly; be afraid only of standing still.", author: "Chinese Proverb" },
+  { quote: "Success isn't about how your life looks to others. It's about how it feels to you.", author: "Michelle Obama" },
+  { quote: "Learn the rules like a pro, so you can break them like an artist.", author: "Pablo Picasso" },
+  { quote: "People do not seem to realize that their opinion of the world is also a confession of character.", author: "Ralph A. Emerson" },
+  { quote: "May your life be full in the simplicity of your actions.", author: "Unknown" },
+  { quote: "You are what you do repeatedly.", author: "Unknown" },
+  { quote: "The only person who needs to believe in you is you.", author: "Unknown" },
+  { quote: "A stumble may prevent a fall.", author: "Gretchen Rubin" },
+  { quote: "Empathy is the bridge that connects us to other people, despite the differences that separate us.", author: "Melinda Gates" },
+  { quote: "Give whatever you are doing and whoever you are with the gift of your attention.", author: "Jim Rohn" },
+  { quote: "Be the type of person you want to meet.", author: "Unknown" },
+  { quote: "Give me six hours to chop down a tree and i will spend the first four sharpening the axe.", author: "Unknown" },
+  { quote: "To attain knowledge add things every day. to attain wisdom subtract things every day.", author: "Lao-Tzu" },
+  { quote: "Not having the best situation, but seeing the best in your situation is the key to happiness.", author: "Marie Forleo" },
+  { quote: "People may hear your words, but they feel your attitude.", author: "John C. Maxwell" },
+  { quote: "Experience is simply the name we give our mistakes.", author: "Oscar Wilde" },
+  { quote: "Whoever is happy will make others happy too.", author: "Anne Frank" },
+  { quote: "What you seek is seeking you.", author: "Romi" },
+  { quote: "I have had lots of troubles in my life, most of which never happened.", author: "Mark Twain" },
+  { quote: "Nothing is so fatiguing as the eternal hanging on of an uncompleted task.", author: "William James" },
+  { quote: "Tension is who you think you should be. Relaxation is who you are.", author: "Unknown" },
+  { quote: "The past is done. The future has plenty of room for change.", author: "Unknown" },
+  { quote: "A positive attitude causes a chain reaction of positive thoughts, events, and outcomes.", author: "Wade Boggs" },
+  { quote: "Bravery is the solution to regret.", author: "Robin Sharma" },
+  { quote: "Do or do not, there is no try.", author: "Yoda" },
+  { quote: "Don't let a bad day make you feel like you have a bad life.", author: "Unknown" },
+  { quote: "Life is a series of building, testing, changing and iterating.", author: "Lauren Mosenthal" },
+  { quote: "Victory is always possible for the person who refuses to stop fighting.", author: "Napoleon Hill" },
+  { quote: "All great achievements require time.", author: "Maya Angelou" },
+  { quote: "Do a little more of what you want to do every day, until your idea becomes what's real.", author: "Unknown" },
+  { quote: "Never give up, for that is just the place and time that the tide will turn.", author: "Harriet Stowe" },
+  { quote: "It's kind of fun to do the impossible.", author: "Walt Disney" },
+  { quote: "A goal without a plan is only a wish.", author: "Antoine de Saint-Exupéry" }
+];
+
 export default function WeeklyWinsScreen() {
   const router = useRouter();
   const { ip } = useLocalSearchParams<{ ip: string }>();
@@ -95,6 +140,13 @@ export default function WeeklyWinsScreen() {
   const [loading, setLoading] = useState(false);
   const [newGoal, setNewGoal] = useState('');
   const [newType, setNewType] = useState<'Easy' | 'Moderate' | 'Challenging'>('Easy');
+  const [currentQuote, setCurrentQuote] = useState({ quote: '', author: '' });
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+
+  useEffect(() => {
+    const randomIdx = Math.floor(Math.random() * quotes.length);
+    setCurrentQuote(quotes[randomIdx]);
+  }, []);
 
   const getBaseUrl = (targetIp: string) => {
     if (!targetIp) return 'http://localhost:3000';
@@ -310,181 +362,212 @@ export default function WeeklyWinsScreen() {
   const moderateWins = wins.filter(w => w.type === 'Moderate');
   const challengingWins = wins.filter(w => w.type === 'Challenging');
 
-  const renderWinSection = (title: string, sectionWins: WeeklyWin[], colorClass: string) => {
+  const getHeaderColor = (type: 'Easy' | 'Moderate' | 'Challenging') => {
+    switch (type) {
+      case 'Easy': return 'bg-[#22c55e]'; // bg-green-500
+      case 'Moderate': return 'bg-[#eab308]'; // bg-yellow-500
+      case 'Challenging': return 'bg-[#ef4444]'; // bg-red-500
+    }
+  };
+
+  const getDoneColor = (type: 'Easy' | 'Moderate' | 'Challenging') => {
+    switch (type) {
+      case 'Easy': return 'bg-[#bbf7d0]'; // bg-green-200
+      case 'Moderate': return 'bg-[#fef9c3]'; // bg-yellow-100
+      case 'Challenging': return 'bg-[#fecaca]'; // bg-red-200
+    }
+  };
+
+  const getFirstName = () => {
+    if (!userData?.name) return 'User';
+    return userData.name.split(' ')[0];
+  };
+
+  const renderWinSection = (type: 'Easy' | 'Moderate' | 'Challenging', sectionWins: WeeklyWin[], headerBg: string) => {
     if (sectionWins.length === 0) return null;
 
     return (
       <View className="mb-6">
-        <View className={`border border-[#0F1739] rounded-none self-start px-3 py-1.5 ${colorClass} shadow-[2px_2px_0px_0px_rgba(15,23,57,1)] mb-3`}>
-          <Text className="text-[#0F1739] font-black text-xs uppercase">
-            {title} ({sectionWins.length})
+        <View className={`rounded-none px-4 py-3 ${headerBg} mb-2`}>
+          <Text className="text-white font-black text-xs uppercase tracking-wider">
+            {type}
           </Text>
         </View>
-        {sectionWins.map(win => (
-          <View 
-            key={win.id} 
-            className={`flex-row justify-between items-center bg-white border border-[#0F1739] rounded-none p-4 mb-2.5 shadow-[3px_3px_0px_0px_rgba(15,23,57,1)] ${
-              win.done ? 'opacity-70 bg-slate-50' : ''
-            }`}
-          >
-            <TouchableOpacity 
-              className="flex-1 flex-row items-center mr-4"
-              onPress={() => handleToggleDone(win)}
+        {sectionWins.map(win => {
+          const itemBg = win.done ? getDoneColor(win.type) : 'bg-white';
+          return (
+            <View 
+              key={win.id} 
+              className={`flex-row justify-between items-center ${itemBg} border border-[#0F1739] p-3.5 mt-2 rounded-none`}
             >
-              <View className={`w-6 h-6 rounded-none items-center justify-center border mr-3 ${
-                win.done ? 'bg-[#DDF906] border-[#0F1739]' : 'bg-white border-[#0F1739]'
-              }`}>
-                {win.done && <Text className="text-[#0F1739] text-xs font-black">✓</Text>}
-              </View>
-              <Text className={`text-[#0F1739] text-sm font-bold flex-1 ${
-                win.done ? 'line-through text-slate-400' : ''
+              <Text className={`text-[#0F1739] text-xs font-black uppercase tracking-tight flex-1 ${
+                win.done ? 'line-through text-slate-400 font-bold' : ''
               }`}>
                 {win.goal}
               </Text>
-            </TouchableOpacity>
 
-            <TouchableOpacity 
-              className="w-8 h-8 rounded-none items-center justify-center bg-slate-50 border border-[#0F1739] shadow-[1px_1px_0px_0px_rgba(15,23,57,1)] active:bg-rose-100"
-              onPress={() => handleDeleteWin(win.id)}
-            >
-              <Text className="text-xs">🗑️</Text>
-            </TouchableOpacity>
-          </View>
-        ))}
+              <View className="flex-row items-center gap-1">
+                <TouchableOpacity 
+                  className="p-2 active:bg-slate-100"
+                  onPress={() => handleToggleDone(win)}
+                >
+                  <Text className="text-black text-sm font-black">✓</Text>
+                </TouchableOpacity>
+                <TouchableOpacity 
+                  className="p-2 active:bg-rose-100"
+                  onPress={() => handleDeleteWin(win.id)}
+                >
+                  <Text className="text-black text-sm">🗑️</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          );
+        })}
       </View>
     );
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-white p-5 rounded-none" style={{ paddingBottom: BottomTabInset }}>
+    <View className="flex-1 bg-[#f8fafc]">
       
-      {/* Header Block */}
-      <View className="flex-row justify-between items-center mb-6">
+      {/* Quote Banner (Exact Web Quote bar layout) */}
+      {currentQuote.quote ? (
+        <SafeAreaView edges={['top']} className="bg-[#0F1739]">
+          <View className="px-6 py-2.5 justify-center items-center">
+            <Text className="text-white text-[9.5px] font-black text-center uppercase tracking-widest leading-tight">
+              "{currentQuote.quote.toUpperCase()}"  —  {currentQuote.author.toUpperCase()}
+            </Text>
+          </View>
+        </SafeAreaView>
+      ) : null}
+
+      {/* Header Container (Exact Web Header Layout) */}
+      <View className="flex-row justify-between items-center bg-white border-b-2 border-[#0F1739] px-5 py-3.5">
+        {/* Drawer menu back button */}
         <TouchableOpacity 
-          className="bg-slate-50 px-4 py-2 border border-[#0F1739] rounded-none shadow-[2px_2px_0px_0px_rgba(15,23,57,1)] active:bg-slate-100"
+          className="w-10 h-10 bg-white border-2 border-[#0F1739] rounded-none items-center justify-center shadow-[2px_2px_0px_0px_#0F1739] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[1px_1px_0px_0px_#0F1739]"
           onPress={() => router.back()}
         >
-          <Text className="text-[#0F1739] text-xs font-black">◀ Back</Text>
+          <View className="w-5 h-0.5 bg-[#0F1739] my-0.5" />
+          <View className="w-5 h-0.5 bg-[#0F1739] my-0.5" />
+          <View className="w-5 h-0.5 bg-[#0F1739] my-0.5" />
         </TouchableOpacity>
-        <Text className="text-[#0F1739] text-2xl font-black uppercase tracking-tight">Weekly Wins</Text>
-        <TouchableOpacity 
-          className="bg-slate-50 w-8 h-8 items-center justify-center border border-[#0F1739] rounded-none shadow-[2px_2px_0px_0px_rgba(15,23,57,1)] active:bg-slate-100"
-          onPress={() => fetchWins()}
-        >
-          <Text className="text-[#0F1739] text-sm font-bold">🔄</Text>
-        </TouchableOpacity>
-      </View>
 
-      {/* User Info Bar */}
-      <View className="bg-slate-50 border border-[#0F1739] rounded-none p-3.5 mb-4 flex-row justify-between items-center shadow-[3px_3px_0px_0px_rgba(15,23,57,1)]">
-        <View className="flex-row items-center flex-1 mr-3">
-          <View className="w-8 h-8 rounded-none bg-slate-200 border border-[#0F1739] justify-center items-center mr-2">
-            <Text className="text-xs">👤</Text>
-          </View>
-          <View className="flex-1">
-            <Text className="text-[#0F1739] text-xs font-black uppercase leading-tight">
-              {userData?.name || 'Logged In User'}
-            </Text>
-            <Text className="text-slate-500 text-xxs font-mono truncate">
-              {userData?.email || ''}
-            </Text>
-          </View>
-        </View>
-        <TouchableOpacity 
-          className="bg-white px-3 py-1.5 border border-[#0F1739] rounded-none shadow-[2px_2px_0px_0px_rgba(15,23,57,1)] active:bg-rose-50"
-          onPress={handleLogout}
-        >
-          <Text className="text-rose-600 text-xxs font-black uppercase">Sign Out</Text>
-        </TouchableOpacity>
-      </View>
-
-      {/* Progress Card */}
-      {totalCount > 0 && (
-        <View className="bg-white border border-[#0F1739] rounded-none p-4 mb-4 shadow-[4px_4px_0px_0px_rgba(15,23,57,1)]">
-          <View className="flex-row justify-between items-center mb-2">
-            <Text className="text-[#0F1739] text-xs font-extrabold uppercase">Weekly Progress</Text>
-            <Text className="text-[#0F1739] text-sm font-black">{completedCount} of {totalCount} Wins</Text>
-          </View>
-          <View className="w-full bg-slate-100 rounded-none h-3.5 overflow-hidden border border-[#0F1739]">
-            <View 
-              className="bg-[#DDF906] h-full rounded-none border-r border-[#0F1739]" 
-              style={{ width: `${progressPercent}%` }} 
-            />
-          </View>
-          <Text className="text-slate-500 text-xxs mt-1.5 text-right font-mono font-bold">{progressPercent}% Completed</Text>
-        </View>
-      )}
-
-      {/* Add Win Form */}
-      <View className="bg-white border border-[#0F1739] rounded-none p-4 mb-4 shadow-[4px_4px_0px_0px_rgba(15,23,57,1)]">
-        <Text className="text-[#0F1739] font-black text-sm mb-2 uppercase">Add New Goal</Text>
-        <TextInput
-          className="bg-slate-50 text-[#0F1739] font-bold rounded-none px-3 py-2 border border-[#0F1739] text-xs mb-3"
-          placeholder="What will you conquer this week?"
-          placeholderTextColor="#94a3b8"
-          value={newGoal}
-          onChangeText={setNewGoal}
-        />
-        
-        <View className="flex-row justify-between items-center">
-          {/* Difficulty Levels selector */}
-          <View className="flex-row bg-slate-50 rounded-none p-1 border border-[#0F1739] gap-1">
-            {(['Easy', 'Moderate', 'Challenging'] as const).map(type => (
-              <TouchableOpacity
-                key={type}
-                className={`px-3 py-1 rounded-none border ${
-                  newType === type 
-                    ? type === 'Easy' ? 'bg-green-500/20 border-green-500' :
-                      type === 'Moderate' ? 'bg-amber-500/20 border-amber-500' :
-                      'bg-rose-500/20 border-rose-500'
-                    : 'border-transparent'
-                }`}
-                onPress={() => setNewType(type)}
-              >
-                <Text className={`text-xxs font-extrabold ${
-                  newType === type
-                    ? type === 'Easy' ? 'text-green-700' :
-                      type === 'Moderate' ? 'text-amber-700' :
-                      'text-red-700'
-                    : 'text-slate-400'
-                }`}>
-                  {type}
-                </Text>
-              </TouchableOpacity>
-            ))}
-          </View>
-
-          <TouchableOpacity
-            className="bg-[#0F1739] px-5 py-2 rounded-none active:opacity-85 border border-[#0F1739]"
-            onPress={handleAddWin}
+        {/* Greetings and Profile Avatar */}
+        <View className="flex-row items-center">
+          <Text className="text-[#0F1739] text-base font-black mr-3">
+            Howdy {getFirstName()}! 🤠
+          </Text>
+          <TouchableOpacity 
+            className="w-9 h-9 border-2 border-[#0F1739] rounded-none bg-slate-200 justify-center items-center shadow-[2px_2px_0px_0px_#0F1739] active:bg-rose-50"
+            onPress={handleLogout}
           >
-            <Text className="text-white font-bold text-xs uppercase">＋ Add</Text>
+            {userData?.image ? (
+              <Image source={{ uri: userData.image }} className="w-full h-full" />
+            ) : (
+              <Text className="text-sm">👤</Text>
+            )}
           </TouchableOpacity>
         </View>
       </View>
 
-      {/* Wins Lists */}
-      <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
-        {loading ? (
-          <View className="py-8 items-center justify-center">
-            <ActivityIndicator color="#0F1739" size="large" />
-            <Text className="text-slate-500 text-xs mt-2 font-mono font-semibold">Syncing database...</Text>
+      {/* Scrollable Main Layout */}
+      <ScrollView className="flex-1 px-4 py-3" style={{ marginBottom: BottomTabInset }} showsVerticalScrollIndicator={false}>
+        
+        {/* Main Neobrutalist Dashboard Card */}
+        <View className="bg-white border-2 border-[#0F1739] rounded-none p-5 mb-8 shadow-[4px_4px_0px_0px_#0f1739]">
+          
+          {/* Weekly Wins Header Row */}
+          <View className="flex-row justify-between items-center mb-2">
+            <Text className="text-[#0F1739] text-3xl font-black uppercase tracking-tighter">Weekly Wins</Text>
+            <View className="w-7 h-7 rounded-full border-2 border-[#0F1739] justify-center items-center">
+              <Text className="text-[#0F1739] font-black text-xs">?</Text>
+            </View>
           </View>
-        ) : wins.length === 0 ? (
-          <View className="py-12 items-center justify-center bg-slate-50 border border-dashed border-[#0F1739] rounded-none">
-            <Text className="text-[#0F1739] text-center font-black text-sm mb-1">Weekly Wins Not Found 👻</Text>
-            <Text className="text-slate-400 text-center text-xs font-semibold px-8 leading-relaxed">
-              Looks like your week is wide open! Add a goal above and let's get those wins.
-            </Text>
+          
+          <Text className="text-slate-500 text-xs font-semibold mb-6 leading-relaxed">
+            Stay focused, track progress, and celebrate your wins each week!
+          </Text>
+
+          {/* ADD Goal Form */}
+          <View className="mb-6">
+            {/* Goal Input */}
+            <View className="mb-4">
+              <TextInput
+                className="bg-white text-[#0F1739] font-bold rounded-none px-3.5 py-2.5 border-2 border-[#0F1739] text-sm h-12"
+                placeholder="Goal"
+                placeholderTextColor="#94a3b8"
+                value={newGoal}
+                onChangeText={setNewGoal}
+              />
+              <Text className="text-slate-400 text-xxs mt-1 uppercase font-semibold">Name your goal</Text>
+            </View>
+
+            {/* Type Dropdown Picker */}
+            <View className="mb-4 relative z-50">
+              <TouchableOpacity
+                className="bg-white border-2 border-[#0F1739] px-3.5 py-2.5 flex-row justify-between items-center rounded-none h-12"
+                onPress={() => setDropdownOpen(!dropdownOpen)}
+              >
+                <Text className="text-[#0F1739] font-bold text-sm">
+                  {newType}
+                </Text>
+                <Text className="text-[#0F1739] font-bold text-xs">▼</Text>
+              </TouchableOpacity>
+              <Text className="text-slate-400 text-xxs mt-1 uppercase font-semibold">Choose your goal level</Text>
+
+              {dropdownOpen && (
+                <View className="absolute top-[50px] left-0 right-0 bg-white border-2 border-[#0F1739] rounded-none z-50 shadow-[3px_3px_0px_0px_#0F1739]">
+                  {(['Easy', 'Moderate', 'Challenging'] as const).map(option => (
+                    <TouchableOpacity
+                      key={option}
+                      className="p-3 border-b border-slate-100 last:border-b-0 active:bg-slate-50"
+                      onPress={() => {
+                        setNewType(option);
+                        setDropdownOpen(false);
+                      }}
+                    >
+                      <Text className="text-[#0F1739] font-bold text-sm">{option}</Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+              )}
+            </View>
+
+            {/* ADD Button */}
+            <TouchableOpacity
+               className="bg-[#0F1739] px-6 py-3.5 rounded-none border-2 border-[#0F1739] shadow-[3px_3px_0px_0px_#0F1739] self-start active:translate-x-[2px] active:translate-y-[2px] active:shadow-[0px_0px_0px_0px]"
+              onPress={handleAddWin}
+            >
+              <Text className="text-white font-black text-xs uppercase tracking-widest">ADD</Text>
+            </TouchableOpacity>
           </View>
-        ) : (
-          <View>
-            {renderWinSection('Challenging 🔥', challengingWins, 'bg-rose-100')}
-            {renderWinSection('Moderate ⚡', moderateWins, 'bg-amber-100')}
-            {renderWinSection('Easy 🟢', easyWins, 'bg-green-100')}
-          </View>
-        )}
+
+          {/* Divider */}
+          <View className="h-0.5 bg-slate-100 mb-6" />
+
+          {/* Wins lists */}
+          {loading ? (
+            <View className="py-8 items-center justify-center">
+              <ActivityIndicator color="#0F1739" size="large" />
+              <Text className="text-slate-500 text-xs mt-2 font-mono font-semibold">Syncing database...</Text>
+            </View>
+          ) : wins.length === 0 ? (
+            <View className="py-12 items-center justify-center bg-slate-50 border-2 border-dashed border-[#0F1739] rounded-none">
+              <Text className="text-[#0F1739] text-center font-black text-sm mb-1 uppercase">Weekly Wins Not Found 👻</Text>
+              <Text className="text-slate-400 text-center text-xs font-semibold px-8 leading-relaxed">
+                Looks like your week is wide open! Add a goal above and let's get those wins.
+              </Text>
+            </View>
+          ) : (
+            <View>
+              {renderWinSection('Challenging', challengingWins, getHeaderColor('Challenging'))}
+              {renderWinSection('Moderate', moderateWins, getHeaderColor('Moderate'))}
+              {renderWinSection('Easy', easyWins, getHeaderColor('Easy'))}
+            </View>
+          )}
+        </View>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }
