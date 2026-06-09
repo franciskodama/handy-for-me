@@ -142,6 +142,7 @@ export default function WeeklyWinsScreen() {
   const [newType, setNewType] = useState<'Easy' | 'Moderate' | 'Challenging'>('Easy');
   const [currentQuote, setCurrentQuote] = useState({ quote: '', author: '' });
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     const randomIdx = Math.floor(Math.random() * quotes.length);
@@ -443,10 +444,10 @@ export default function WeeklyWinsScreen() {
 
       {/* Header Container (Exact Web Header Layout) */}
       <View className="flex-row justify-between items-center bg-white border-b-2 border-[#0F1739] px-5 py-3.5">
-        {/* Drawer menu back button */}
+        {/* Drawer menu button */}
         <TouchableOpacity 
           className="w-10 h-10 bg-white border-2 border-[#0F1739] rounded-none items-center justify-center shadow-[2px_2px_0px_0px_#0F1739] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[1px_1px_0px_0px_#0F1739]"
-          onPress={() => router.back()}
+          onPress={() => setMenuOpen(true)}
         >
           <View className="w-5 h-0.5 bg-[#0F1739] my-0.5" />
           <View className="w-5 h-0.5 bg-[#0F1739] my-0.5" />
@@ -568,6 +569,75 @@ export default function WeeklyWinsScreen() {
           )}
         </View>
       </ScrollView>
+
+      {/* Drawer Navigation Overlay */}
+      {menuOpen && (
+        <View className="absolute inset-0 bg-black/60 z-50 flex-row">
+          <View className="w-[260px] h-full bg-[#f8fafc] border-r-2 border-[#0F1739] p-5 justify-between">
+            <View>
+              {/* Drawer Header */}
+              <View className="flex-row justify-between items-center mb-8 pb-4 border-b border-slate-100">
+                <View className="flex-row items-center">
+                  <Image 
+                    source={require('../../assets/images/HandyForMe_Cog200x200.png')} 
+                    className="w-8 h-8 mr-2"
+                    resizeMode="contain"
+                  />
+                  <Text className="text-[#0F1739] font-black text-sm uppercase">Handyfor.me</Text>
+                </View>
+                <TouchableOpacity 
+                  className="w-8 h-8 border border-slate-300 items-center justify-center rounded-none"
+                  onPress={() => setMenuOpen(false)}
+                >
+                  <Text className="text-[#0F1739] font-black text-xs">✕</Text>
+                </TouchableOpacity>
+              </View>
+
+              {/* Navigation Links */}
+              <View className="gap-3">
+                <TouchableOpacity
+                  className="py-3 px-4 bg-white border-2 border-[#0F1739] rounded-none active:bg-slate-100 flex-row items-center shadow-[2px_2px_0px_0px_#0F1739]"
+                  onPress={() => {
+                    setMenuOpen(false);
+                    router.push({ pathname: '/wins', params: { ip } });
+                  }}
+                >
+                  <Text className="text-[#0F1739] font-black text-xs uppercase tracking-wider">🏆 Weekly Wins</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  className="py-3 px-4 bg-white border-2 border-[#0F1739] rounded-none active:bg-slate-100 flex-row items-center shadow-[2px_2px_0px_0px_#0F1739]"
+                  onPress={() => {
+                    setMenuOpen(false);
+                    router.push({ pathname: '/decision-helper', params: { ip } });
+                  }}
+                >
+                  <Text className="text-[#0F1739] font-black text-xs uppercase tracking-wider">🤔 Decision Helper</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+
+            {/* Bottom logout block */}
+            <TouchableOpacity
+              className="py-3 px-4 bg-rose-50 border-2 border-rose-500 rounded-none active:bg-rose-100 flex-row justify-center items-center"
+              onPress={() => {
+                setMenuOpen(false);
+                handleLogout();
+              }}
+            >
+              <Text className="text-rose-600 font-black text-xs uppercase tracking-wider">Sign Out</Text>
+            </TouchableOpacity>
+          </View>
+          
+          {/* Clickable dim background area to dismiss */}
+          <TouchableOpacity 
+            className="flex-1 h-full" 
+            activeOpacity={1} 
+            onPress={() => setMenuOpen(false)} 
+          />
+        </View>
+      )}
+
     </View>
   );
 }
