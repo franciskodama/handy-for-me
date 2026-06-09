@@ -32,8 +32,8 @@ export default function RootLayout() {
 
     const currentSegment = segments[0];
     
-    // Guard the wins, decision-helper, bucket-list, vision-board, shortcuts and random-question routes: if no token exists, send them back to the start/login
-    if (!hasToken && (currentSegment === 'wins' || currentSegment === 'decision-helper' || currentSegment === 'bucket-list' || currentSegment === 'vision-board' || currentSegment === 'shortcuts' || currentSegment === 'random-question')) {
+    // Guard the wins, decision-helper, bucket-list, vision-board, shortcuts, random-question and stoic-support routes: if no token exists, send them back to the start/login
+    if (!hasToken && (currentSegment === 'wins' || currentSegment === 'decision-helper' || currentSegment === 'bucket-list' || currentSegment === 'vision-board' || currentSegment === 'shortcuts' || currentSegment === 'random-question' || currentSegment === 'stoic-support')) {
       // Use setTimeout to avoid calling navigation before layout finishes mounting
       const timer = setTimeout(() => {
         router.replace('/');
@@ -61,6 +61,7 @@ export default function RootLayout() {
         <Stack.Screen name="vision-board" />
         <Stack.Screen name="shortcuts" />
         <Stack.Screen name="random-question" />
+        <Stack.Screen name="stoic-support" />
       </Stack>
     </ThemeProvider>
   );
