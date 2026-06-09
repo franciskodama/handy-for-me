@@ -60,7 +60,7 @@ export default function LoginScreen() {
           await SecureStore.setItemAsync('dev_ip', ip || 'localhost');
 
           Alert.alert('Success', 'Successfully signed in! 🎉', [
-            { text: 'OK', onPress: () => router.replace({ pathname: '/wins', params: { ip } }) }
+            { text: 'OK', onPress: () => router.replace({ pathname: '/dashboard', params: { ip } }) }
           ]);
         } else {
           throw new Error('Authentication token was not returned by the server.');

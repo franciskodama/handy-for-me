@@ -165,7 +165,7 @@ export default function HomeScreen() {
             className="mt-4 bg-[#DDF906] justify-center items-center py-4 rounded-none border-2 border-[#0F1739] shadow-[3px_3px_0px_0px_#0F1739] active:opacity-90"
             onPress={() => {
               if (hasToken) {
-                router.push({ pathname: '/wins', params: { ip: ipAddress } });
+                router.push({ pathname: '/dashboard', params: { ip: ipAddress } });
               } else {
                 router.push({ pathname: '/login', params: { ip: ipAddress } });
               }

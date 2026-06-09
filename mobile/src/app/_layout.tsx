@@ -12,35 +12,43 @@ export default function RootLayout() {
   
   const [isReady, setIsReady] = useState(false);
   const [hasToken, setHasToken] = useState(false);
+  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
 
   useEffect(() => {
     async function checkAuth() {
+      setIsCheckingAuth(true);
+      console.log('[RootLayout] checkAuth start, segments:', segments);
       try {
         const token = await SecureStore.getItemAsync('user_token');
+        console.log('[RootLayout] checkAuth found token:', !!token);
         setHasToken(!!token);
       } catch (e) {
-        console.error('Error reading auth token:', e);
+        console.error('[RootLayout] Error reading auth token:', e);
       } finally {
+        setIsCheckingAuth(false);
         setIsReady(true);
+        console.log('[RootLayout] checkAuth end');
       }
     }
     checkAuth();
   }, [segments]); // Check auth on segment transitions to dynamic changes
 
   useEffect(() => {
-    if (!isReady) return;
+    console.log('[RootLayout] guard run, isReady:', isReady, 'isCheckingAuth:', isCheckingAuth, 'hasToken:', hasToken, 'segments:', segments);
+    if (!isReady || isCheckingAuth) return;
 
     const currentSegment = segments[0];
     
-    // Guard the wins, decision-helper, bucket-list, vision-board, shortcuts, random-question and stoic-support routes: if no token exists, send them back to the start/login
-    if (!hasToken && (currentSegment === 'wins' || currentSegment === 'decision-helper' || currentSegment === 'bucket-list' || currentSegment === 'vision-board' || currentSegment === 'shortcuts' || currentSegment === 'random-question' || currentSegment === 'stoic-support')) {
+    // Guard the wins, decision-helper, bucket-list, vision-board, shortcuts, random-question, stoic-support and dashboard routes: if no token exists, send them back to the start/login
+    if (!hasToken && (currentSegment === 'wins' || currentSegment === 'decision-helper' || currentSegment === 'bucket-list' || currentSegment === 'vision-board' || currentSegment === 'shortcuts' || currentSegment === 'random-question' || currentSegment === 'stoic-support' || currentSegment === 'dashboard')) {
+      console.log('[RootLayout] redirect guard triggered! Replacing with /');
       // Use setTimeout to avoid calling navigation before layout finishes mounting
       const timer = setTimeout(() => {
         router.replace('/');
       }, 0);
       return () => clearTimeout(timer);
     }
-  }, [isReady, hasToken, segments]);
+  }, [isReady, isCheckingAuth, hasToken, segments]);
 
   if (!isReady) {
     return (
@@ -62,6 +70,7 @@ export default function RootLayout() {
         <Stack.Screen name="shortcuts" />
         <Stack.Screen name="random-question" />
         <Stack.Screen name="stoic-support" />
+        <Stack.Screen name="dashboard" />
       </Stack>
     </ThemeProvider>
   );
