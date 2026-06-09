@@ -14,13 +14,14 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import * as SecureStore from 'expo-secure-store';
 import { BottomTabInset } from '@/constants/theme';
 
-interface WeeklyWin {
+interface BucketListItem {
   id: string;
-  goal: string;
-  type: 'Easy' | 'Moderate' | 'Challenging';
+  item: string;
+  category: string;
   done: boolean;
   uid: string;
   createdAt: string;
+  householdId: string | null;
 }
 
 interface UserData {
@@ -29,7 +30,28 @@ interface UserData {
   image?: string;
 }
 
-// Pure JS base64 decoder that works flawlessly in Hermes / React Native environment
+interface HouseholdMember {
+  id: string;
+  uid: string;
+  name: string | null;
+  avatar: string | null;
+}
+
+interface HouseholdDetails {
+  inHousehold: boolean;
+  household?: {
+    id: string;
+    code: string;
+    name: string;
+    members: HouseholdMember[];
+  };
+  userSettings: {
+    shareDecisionHelper: boolean;
+    shareBucketList: boolean;
+  };
+}
+
+// Pure JS base64 decoder that works in React Native / Hermes
 function decodeBase64(str: string): string {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
   const lookup = new Uint8Array(256);
@@ -129,25 +151,45 @@ const quotes = [
   { quote: "A goal without a plan is only a wish.", author: "Antoine de Saint-Exupéry" }
 ];
 
-export default function WeeklyWinsScreen() {
+export const bucketListCategories = [
+  { name: 'Adventure', bgColor: '#00D9FF', textColor: '#004A60' },
+  { name: 'Bar', bgColor: '#FF8C42', textColor: '#5D2A02' },
+  { name: 'Cultural', bgColor: '#FFD700', textColor: '#664400' },
+  { name: 'Destinations', bgColor: '#00CC99', textColor: '#004F3D' },
+  { name: 'Educational', bgColor: '#3399FF', textColor: '#FFFFFF' },
+  { name: 'Entertainment', bgColor: '#C266FF', textColor: '#330066' },
+  { name: 'Event', bgColor: '#FF5555', textColor: '#660000' },
+  { name: 'Festival', bgColor: '#6DFF66', textColor: '#335B33' },
+  { name: 'Historical', bgColor: '#9A9A9A', textColor: '#FFFFFF' },
+  { name: 'Landmark', bgColor: '#FFAA33', textColor: '#4D2A00' },
+  { name: 'Nature', bgColor: '#33D133', textColor: '#004D00' },
+  { name: 'Nightlife', bgColor: '#AA33FF', textColor: '#FFFFFF' },
+  { name: 'Outdoor Activity', bgColor: '#00BFFF', textColor: '#003366' },
+  { name: 'Restaurant', bgColor: '#9900CC', textColor: '#3D003D' },
+  { name: 'Romantic', bgColor: '#FF5E9F', textColor: '#5C1A3A' },
+  { name: 'Shopping', bgColor: '#FF3B8F', textColor: '#500030' },
+  { name: 'Sport', bgColor: '#FF7733', textColor: '#4D2600' },
+  { name: 'Wellness', bgColor: '#33FF99', textColor: '#006642' }
+];
+
+export default function BucketListScreen() {
   const router = useRouter();
   const { ip } = useLocalSearchParams<{ ip: string }>();
-  
+
   // State variables
   const [token, setToken] = useState<string | null>(null);
   const [userData, setUserData] = useState<UserData | null>(null);
-  const [wins, setWins] = useState<WeeklyWin[]>([]);
+  const [items, setItems] = useState<BucketListItem[]>([]);
+  const [householdDetails, setHouseholdDetails] = useState<HouseholdDetails | null>(null);
+
   const [loading, setLoading] = useState(false);
-  const [newGoal, setNewGoal] = useState('');
-  const [newType, setNewType] = useState<'Easy' | 'Moderate' | 'Challenging'>('Easy');
-  const [currentQuote, setCurrentQuote] = useState({ quote: '', author: '' });
+  const [newAdventure, setNewAdventure] = useState('');
+  const [newCategory, setNewCategory] = useState('');
+  const [filter, setFilter] = useState<'all' | 'done' | 'not-done'>('all');
+
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-
-  useEffect(() => {
-    const randomIdx = Math.floor(Math.random() * quotes.length);
-    setCurrentQuote(quotes[randomIdx]);
-  }, []);
+  const [currentQuote, setCurrentQuote] = useState({ quote: '', author: '' });
 
   const getBaseUrl = (targetIp: string) => {
     if (!targetIp) return 'http://localhost:3000';
@@ -163,14 +205,13 @@ export default function WeeklyWinsScreen() {
 
   const baseUrl = getBaseUrl(ip || '');
 
-  // Fetch weekly wins for the current user using Authorization Bearer token
-  const fetchWins = async (activeToken?: string | null) => {
+  // Fetch bucket list details
+  const fetchBucketList = async (activeToken?: string | null) => {
     const currentToken = activeToken !== undefined ? activeToken : token;
     if (!currentToken) return;
-    
-    setLoading(true);
+
     try {
-      const response = await fetch(`${baseUrl}/api/mobile/weekly-wins`, {
+      const response = await fetch(`${baseUrl}/api/mobile/bucket-list`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${currentToken}`,
@@ -178,154 +219,32 @@ export default function WeeklyWinsScreen() {
           'ngrok-skip-browser-warning': 'true',
         },
       });
-      
+
       if (response.status === 401) {
-        Alert.alert('Session Expired', 'Your session has expired. Please sign in again.');
+        Alert.alert('Session Expired', 'Please sign in again.');
         handleLogout();
         return;
       }
-      
+
       if (!response.ok) {
         throw new Error(`Failed to fetch: ${response.statusText}`);
       }
+
       const data = await response.json();
-      setWins(data);
-    } catch (error: any) {
-      console.error(error);
-      Alert.alert('Error', 'Could not load Weekly Wins. Make sure the backend server is running.');
-    } finally {
-      setLoading(false);
+      setItems(data.items || []);
+      setHouseholdDetails(data.householdDetails || null);
+    } catch (error) {
+      console.error('Error fetching bucket list:', error);
     }
   };
 
-  // Toggle done status
-  const handleToggleDone = async (win: WeeklyWin) => {
-    if (!token) return;
-    
-    try {
-      const response = await fetch(`${baseUrl}/api/mobile/weekly-wins`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-          'ngrok-skip-browser-warning': 'true',
-        },
-        body: JSON.stringify({
-          id: win.id,
-          done: !win.done,
-        }),
-      });
-
-      if (response.status === 401) {
-        Alert.alert('Session Expired', 'Please sign in again.');
-        handleLogout();
-        return;
-      }
-
-      if (!response.ok) throw new Error('Failed to update task');
-      
-      // Update local state
-      setWins(prevWins => 
-        prevWins.map(item => 
-          item.id === win.id ? { ...item, done: !item.done } : item
-        )
-      );
-    } catch (error: any) {
-      console.error(error);
-      Alert.alert('Error', 'Failed to toggle status.');
-    }
-  };
-
-  // Delete weekly win goal
-  const handleDeleteWin = async (id: string) => {
-    if (!token) return;
-    
-    Alert.alert(
-      'Delete Goal',
-      'Are you sure you want to permanently delete this goal?',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        { 
-          text: 'Delete', 
-          style: 'destructive',
-          onPress: async () => {
-            try {
-              const response = await fetch(`${baseUrl}/api/mobile/weekly-wins?id=${id}`, {
-                method: 'DELETE',
-                headers: {
-                  'Authorization': `Bearer ${token}`,
-                  'ngrok-skip-browser-warning': 'true',
-                },
-              });
-
-              if (response.status === 401) {
-                Alert.alert('Session Expired', 'Please sign in again.');
-                handleLogout();
-                return;
-              }
-
-              if (!response.ok) throw new Error('Failed to delete task');
-
-              setWins(prevWins => prevWins.filter(item => item.id !== id));
-            } catch (error) {
-              console.error(error);
-              Alert.alert('Error', 'Failed to delete goal.');
-            }
-          }
-        }
-      ]
-    );
-  };
-
-  // Add new weekly win goal
-  const handleAddWin = async () => {
-    if (!token) return;
-    if (!newGoal.trim()) {
-      Alert.alert('Warning', 'Please enter a goal description.');
-      return;
-    }
-
-    try {
-      const response = await fetch(`${baseUrl}/api/mobile/weekly-wins`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-          'ngrok-skip-browser-warning': 'true',
-        },
-        body: JSON.stringify({
-          goal: newGoal.trim(),
-          type: newType,
-        }),
-      });
-
-      if (response.status === 401) {
-        Alert.alert('Session Expired', 'Please sign in again.');
-        handleLogout();
-        return;
-      }
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to create goal');
-      }
-
-      const addedWin = await response.json();
-      setWins(prev => [addedWin, ...prev]);
-      setNewGoal('');
-    } catch (error: any) {
-      console.error(error);
-      Alert.alert('Error', error.message || 'Failed to add weekly win.');
-    }
-  };
-
-  // Sign out the user, clearing the token and returning to HomeScreen
+  // Sign out user
   const handleLogout = async () => {
     try {
       await SecureStore.deleteItemAsync('user_token');
       router.replace('/');
     } catch (e) {
-      console.error('Failed to logout user session:', e);
+      console.error(e);
       router.replace('/');
     }
   };
@@ -342,9 +261,14 @@ export default function WeeklyWinsScreen() {
         setToken(storedToken);
         const decoded = decodeJWT(storedToken);
         setUserData(decoded);
-        
-        // Fetch wins with the verified token
-        fetchWins(storedToken);
+
+        setLoading(true);
+        await fetchBucketList(storedToken);
+        setLoading(false);
+
+        // Select a random banner quote
+        const randomIdx = Math.floor(Math.random() * quotes.length);
+        setCurrentQuote(quotes[randomIdx]);
       } catch (e) {
         console.error('Failed to load session token:', e);
         router.replace('/');
@@ -353,30 +277,146 @@ export default function WeeklyWinsScreen() {
     loadAuth();
   }, [ip]);
 
-  // Compute stats
-  const completedCount = wins.filter(w => w.done).length;
-  const totalCount = wins.length;
-  const progressPercent = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
+  // Polling loop for collaborative updates if shared
+  useEffect(() => {
+    const isShared = householdDetails?.inHousehold && householdDetails?.userSettings?.shareBucketList;
+    if (!isShared || !token) return;
 
-  // Group items by level
-  const easyWins = wins.filter(w => w.type === 'Easy');
-  const moderateWins = wins.filter(w => w.type === 'Moderate');
-  const challengingWins = wins.filter(w => w.type === 'Challenging');
+    const interval = setInterval(() => {
+      fetchBucketList();
+    }, 4000);
 
-  const getHeaderColor = (type: 'Easy' | 'Moderate' | 'Challenging') => {
-    switch (type) {
-      case 'Easy': return 'bg-[#22c55e]'; // bg-green-500
-      case 'Moderate': return 'bg-[#eab308]'; // bg-yellow-500
-      case 'Challenging': return 'bg-[#ef4444]'; // bg-red-500
+    return () => clearInterval(interval);
+  }, [token, householdDetails]);
+
+  // Add a new adventure
+  const handleAddAdventure = async () => {
+    if (!token) return;
+    if (!newAdventure.trim()) {
+      Alert.alert('Warning', 'Please enter an adventure description.');
+      return;
+    }
+    if (!newCategory) {
+      Alert.alert('Warning', 'Please choose a category.');
+      return;
+    }
+    if (newAdventure.trim().length > 50) {
+      Alert.alert('Warning', 'Adventure name must be 50 characters or less.');
+      return;
+    }
+
+    try {
+      const response = await fetch(`${baseUrl}/api/mobile/bucket-list`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+          'ngrok-skip-browser-warning': 'true',
+        },
+        body: JSON.stringify({
+          action: 'create',
+          item: newAdventure.trim(),
+          category: newCategory,
+        }),
+      });
+
+      if (response.status === 401) {
+        handleLogout();
+        return;
+      }
+
+      if (!response.ok) {
+        const err = await response.json();
+        throw new Error(err.error || 'Failed to add adventure');
+      }
+
+      const added = await response.json();
+      setItems(prev => [added, ...prev]);
+      setNewAdventure('');
+      setNewCategory('');
+    } catch (error: any) {
+      console.error(error);
+      Alert.alert('Error', error.message || 'Failed to add adventure.');
     }
   };
 
-  const getDoneColor = (type: 'Easy' | 'Moderate' | 'Challenging') => {
-    switch (type) {
-      case 'Easy': return 'bg-[#bbf7d0]'; // bg-green-200
-      case 'Moderate': return 'bg-[#fef9c3]'; // bg-yellow-100
-      case 'Challenging': return 'bg-[#fecaca]'; // bg-red-200
+  // Toggle item done status
+  const handleToggleDone = async (item: BucketListItem) => {
+    if (!token) return;
+
+    // Optimistic update
+    setItems(prev =>
+      prev.map(i => (i.id === item.id ? { ...i, done: !i.done } : i))
+    );
+
+    try {
+      const response = await fetch(`${baseUrl}/api/mobile/bucket-list`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+          'ngrok-skip-browser-warning': 'true',
+        },
+        body: JSON.stringify({
+          action: 'toggle',
+          id: item.id,
+          done: !item.done,
+        }),
+      });
+
+      if (response.status === 401) {
+        handleLogout();
+        return;
+      }
+
+      if (!response.ok) throw new Error('Failed to update task status');
+    } catch (error) {
+      console.error(error);
+      // Restore on failure
+      fetchBucketList();
     }
+  };
+
+  // Delete individual item
+  const handleDeleteItem = async (item: BucketListItem) => {
+    if (!token) return;
+
+    Alert.alert(
+      'Delete Adventure',
+      `Are you sure you want to permanently delete "${item.item}"?`,
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Delete',
+          style: 'destructive',
+          onPress: async () => {
+            // Optimistic update
+            setItems(prev => prev.filter(i => i.id !== item.id));
+
+            try {
+              const response = await fetch(`${baseUrl}/api/mobile/bucket-list?id=${item.id}`, {
+                method: 'DELETE',
+                headers: {
+                  'Authorization': `Bearer ${token}`,
+                  'ngrok-skip-browser-warning': 'true',
+                },
+              });
+
+              if (response.status === 401) {
+                handleLogout();
+                return;
+              }
+
+              if (!response.ok) throw new Error('Failed to delete adventure');
+            } catch (error) {
+              console.error(error);
+              // Restore on failure
+              fetchBucketList();
+            }
+          },
+        },
+      ]
+    );
   };
 
   const getFirstName = () => {
@@ -384,54 +424,52 @@ export default function WeeklyWinsScreen() {
     return userData.name.split(' ')[0];
   };
 
-  const renderWinSection = (type: 'Easy' | 'Moderate' | 'Challenging', sectionWins: WeeklyWin[], headerBg: string) => {
-    if (sectionWins.length === 0) return null;
+  // Group items by category and sort according to webapp logic:
+  // 1. Group active matching items into Category arrays
+  // 2. Sort Category blocks by number of items (descending), and alphabetically if equal
+  // 3. Sort items inside each category block alphabetically
+  const getOrganizedBoard = () => {
+    const filtered = items.filter(i => {
+      if (filter === 'done') return i.done;
+      if (filter === 'not-done') return !i.done;
+      return true;
+    });
 
-    return (
-      <View className="mb-6">
-        <View className={`rounded-none px-4 py-3 ${headerBg} mb-2`}>
-          <Text className="text-white font-black text-xs uppercase tracking-wider">
-            {type}
-          </Text>
-        </View>
-        {sectionWins.map(win => {
-          const itemBg = win.done ? getDoneColor(win.type) : 'bg-white';
-          return (
-            <View 
-              key={win.id} 
-              className={`flex-row justify-between items-center ${itemBg} border border-[#0F1739] p-3.5 mt-2 rounded-none`}
-            >
-              <Text className={`text-[#0F1739] text-xs font-black uppercase tracking-tight flex-1 ${
-                win.done ? 'line-through text-slate-400 font-bold' : ''
-              }`}>
-                {win.goal}
-              </Text>
+    const groups: Record<string, BucketListItem[]> = {};
+    filtered.forEach(item => {
+      if (!groups[item.category]) {
+        groups[item.category] = [];
+      }
+      groups[item.category].push(item);
+    });
 
-              <View className="flex-row items-center gap-1">
-                <TouchableOpacity 
-                  className="p-2 active:bg-slate-100"
-                  onPress={() => handleToggleDone(win)}
-                >
-                  <Text className="text-black text-sm font-black">✓</Text>
-                </TouchableOpacity>
-                <TouchableOpacity 
-                  className="p-2 active:bg-rose-100"
-                  onPress={() => handleDeleteWin(win.id)}
-                >
-                  <Text className="text-black text-sm">🗑️</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          );
-        })}
-      </View>
-    );
+    return Object.values(groups)
+      .sort((a, b) => {
+        const lenCompare = b.length - a.length;
+        if (lenCompare === 0) {
+          return a[0].category.localeCompare(b[0].category);
+        }
+        return lenCompare;
+      })
+      .map(group => {
+        return group.sort((a, b) => a.item.localeCompare(b.item));
+      });
+  };
+
+  const boardByCategory = getOrganizedBoard();
+
+  const getCategoryColors = (categoryName: string) => {
+    const found = bucketListCategories.find(c => c.name === categoryName);
+    return {
+      bgColor: found?.bgColor || '#e2e8f0',
+      textColor: found?.textColor || '#0F1739',
+    };
   };
 
   return (
     <View className="flex-1 bg-[#f8fafc]">
       
-      {/* Quote Banner (Exact Web Quote bar layout) */}
+      {/* Quote Banner */}
       {currentQuote.quote ? (
         <SafeAreaView edges={['top']} className="bg-[#0F1739]">
           <View className="px-6 py-2.5 justify-center items-center">
@@ -442,7 +480,7 @@ export default function WeeklyWinsScreen() {
         </SafeAreaView>
       ) : null}
 
-      {/* Header Container (Exact Web Header Layout) */}
+      {/* Header Container */}
       <View className="flex-row justify-between items-center bg-white border-b-2 border-[#0F1739] px-5 py-3.5">
         {/* Drawer menu button */}
         <TouchableOpacity 
@@ -478,67 +516,104 @@ export default function WeeklyWinsScreen() {
         {/* Main Neobrutalist Dashboard Card */}
         <View className="bg-white border-2 border-[#0F1739] rounded-none p-5 mb-8 shadow-[4px_4px_0px_0px_#0f1739]">
           
-          {/* Weekly Wins Header Row */}
-          <View className="flex-row justify-between items-center mb-2">
-            <Text className="text-[#0F1739] text-3xl font-black uppercase tracking-tighter">Weekly Wins</Text>
+          {/* Bucket List Header Row */}
+          <View className="flex-row justify-between items-center mb-2 flex-wrap gap-2">
+            <View className="flex-row items-center gap-2">
+              <Text className="text-[#0F1739] text-3xl font-black uppercase tracking-tighter">Bucket List</Text>
+              
+              {householdDetails?.inHousehold && householdDetails?.userSettings?.shareBucketList ? (
+                <View className="bg-violet-600 px-2 py-0.5 border border-[#0F1739]">
+                  <Text className="text-white font-bold text-[9px] uppercase tracking-wider">👥 Household</Text>
+                </View>
+              ) : (
+                <View className="bg-slate-100 px-2 py-0.5 border border-slate-300">
+                  <Text className="text-slate-500 font-bold text-[9px] uppercase tracking-wider">🔒 Personal</Text>
+                </View>
+              )}
+            </View>
             <View className="w-7 h-7 rounded-full border-2 border-[#0F1739] justify-center items-center">
               <Text className="text-[#0F1739] font-black text-xs">?</Text>
             </View>
           </View>
+
+          {/* Household members avatars row if sharing is enabled */}
+          {householdDetails?.inHousehold && householdDetails?.userSettings?.shareBucketList && householdDetails.household?.members && (
+            <View className="flex-row items-center mb-4">
+              <Text className="text-slate-400 text-xxs font-bold uppercase mr-2">Shared with:</Text>
+              <View className="flex-row -space-x-1.5">
+                {householdDetails.household.members.map((member) => (
+                  <View 
+                    key={member.id} 
+                    className="w-5 h-5 rounded-full border border-[#0F1739] bg-slate-200 overflow-hidden items-center justify-center"
+                  >
+                    {member.avatar ? (
+                      <Image source={{ uri: member.avatar }} className="w-full h-full" />
+                    ) : (
+                      <Text className="text-[7.5px] font-bold text-[#0F1739]">
+                        {(member.name || member.uid).charAt(0).toUpperCase()}
+                      </Text>
+                    )}
+                  </View>
+                ))}
+              </View>
+            </View>
+          )}
           
           <Text className="text-slate-500 text-xs font-semibold mb-6 leading-relaxed">
-            Stay focused, track progress, and celebrate your wins each week!
+            Add, explore, and cross off your next adventure.
           </Text>
 
-          {/* ADD Goal Form */}
+          {/* ADD Adventure Form */}
           <View className="mb-6">
-            {/* Goal Input */}
+            {/* Adventure Input */}
             <View className="mb-4">
               <TextInput
                 className="bg-white text-[#0F1739] font-bold rounded-none px-3.5 py-2.5 border-2 border-[#0F1739] text-sm h-12"
-                placeholder="Goal"
+                placeholder="Adventure"
                 placeholderTextColor="#94a3b8"
-                value={newGoal}
-                onChangeText={setNewGoal}
+                value={newAdventure}
+                onChangeText={setNewAdventure}
               />
-              <Text className="text-slate-400 text-xxs mt-1 uppercase font-semibold">Name your goal</Text>
+              <Text className="text-slate-400 text-xxs mt-1 uppercase font-semibold">Name your adventure</Text>
             </View>
 
-            {/* Type Dropdown Picker */}
+            {/* Category Dropdown Picker */}
             <View className="mb-4 relative z-50">
               <TouchableOpacity
                 className="bg-white border-2 border-[#0F1739] px-3.5 py-2.5 flex-row justify-between items-center rounded-none h-12"
                 onPress={() => setDropdownOpen(!dropdownOpen)}
               >
                 <Text className="text-[#0F1739] font-bold text-sm">
-                  {newType}
+                  {newCategory || 'Category'}
                 </Text>
                 <Text className="text-[#0F1739] font-bold text-xs">▼</Text>
               </TouchableOpacity>
-              <Text className="text-slate-400 text-xxs mt-1 uppercase font-semibold">Choose your goal level</Text>
+              <Text className="text-slate-400 text-xxs mt-1 uppercase font-semibold">Choose a category that best describes your adventure</Text>
 
               {dropdownOpen && (
-                <View className="absolute top-[50px] left-0 right-0 bg-white border-2 border-[#0F1739] rounded-none z-50 shadow-[3px_3px_0px_0px_#0F1739]">
-                  {(['Easy', 'Moderate', 'Challenging'] as const).map(option => (
-                    <TouchableOpacity
-                      key={option}
-                      className="p-3 border-b border-slate-100 last:border-b-0 active:bg-slate-50"
-                      onPress={() => {
-                        setNewType(option);
-                        setDropdownOpen(false);
-                      }}
-                    >
-                      <Text className="text-[#0F1739] font-bold text-sm">{option}</Text>
-                    </TouchableOpacity>
-                  ))}
+                <View className="absolute top-[50px] left-0 right-0 bg-white border-2 border-[#0F1739] rounded-none z-50 shadow-[3px_3px_0px_0px_#0F1739] max-h-[220px]">
+                  <ScrollView nestedScrollEnabled={true}>
+                    {bucketListCategories.map(cat => (
+                      <TouchableOpacity
+                        key={cat.name}
+                        className="p-3 border-b border-slate-100 active:bg-slate-50"
+                        onPress={() => {
+                          setNewCategory(cat.name);
+                          setDropdownOpen(false);
+                        }}
+                      >
+                        <Text className="text-[#0F1739] font-bold text-sm">{cat.name}</Text>
+                      </TouchableOpacity>
+                    ))}
+                  </ScrollView>
                 </View>
               )}
             </View>
 
             {/* ADD Button */}
             <TouchableOpacity
-               className="bg-[#0F1739] px-6 py-3.5 rounded-none border-2 border-[#0F1739] shadow-[3px_3px_0px_0px_#0F1739] self-start active:translate-x-[2px] active:translate-y-[2px] active:shadow-[0px_0px_0px_0px]"
-              onPress={handleAddWin}
+              className="bg-[#0F1739] px-6 py-3.5 rounded-none border-2 border-[#0F1739] shadow-[3px_3px_0px_0px_#0F1739] self-start active:translate-x-[2px] active:translate-y-[2px] active:shadow-[0px_0px_0px_0px]"
+              onPress={handleAddAdventure}
             >
               <Text className="text-white font-black text-xs uppercase tracking-widest">ADD</Text>
             </TouchableOpacity>
@@ -547,26 +622,106 @@ export default function WeeklyWinsScreen() {
           {/* Divider */}
           <View className="h-0.5 bg-slate-100 mb-6" />
 
-          {/* Wins lists */}
+          {/* Filter Tabs Layout */}
+          <View className="flex-row gap-2 justify-end mb-6">
+            {(['all', 'not-done', 'done'] as const).map(f => {
+              const isActive = filter === f;
+              const label = f === 'all' ? 'All' : f === 'not-done' ? 'To Do' : 'Done';
+              return (
+                <TouchableOpacity
+                  key={f}
+                  className={`px-3 py-1.5 border-2 rounded-none border-[#0F1739] ${
+                    isActive ? 'bg-[#0F1739]' : 'bg-white'
+                  }`}
+                  onPress={() => setFilter(f)}
+                >
+                  <Text className={`text-[10px] font-black uppercase ${
+                    isActive ? 'text-white' : 'text-[#0F1739]'
+                  }`}>
+                    {label}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
+          </View>
+
+          {/* Items Boards lists */}
           {loading ? (
             <View className="py-8 items-center justify-center">
               <ActivityIndicator color="#0F1739" size="large" />
               <Text className="text-slate-500 text-xs mt-2 font-mono font-semibold">Syncing database...</Text>
             </View>
-          ) : wins.length === 0 ? (
+          ) : boardByCategory.length === 0 ? (
             <View className="py-12 items-center justify-center bg-slate-50 border-2 border-dashed border-[#0F1739] rounded-none">
-              <Text className="text-[#0F1739] text-center font-black text-sm mb-1 uppercase">Weekly Wins Not Found 👻</Text>
+              <Text className="text-[#0F1739] text-center font-black text-sm mb-1 uppercase">Adventures Missing 👻</Text>
               <Text className="text-slate-400 text-center text-xs font-semibold px-8 leading-relaxed">
-                Looks like your week is wide open! Add a goal above and let's get those wins.
+                Every hero needs epic adventures! Start adding yours now and get ready for action!
               </Text>
             </View>
           ) : (
             <View>
-              {renderWinSection('Challenging', challengingWins, getHeaderColor('Challenging'))}
-              {renderWinSection('Moderate', moderateWins, getHeaderColor('Moderate'))}
-              {renderWinSection('Easy', easyWins, getHeaderColor('Easy'))}
+              {boardByCategory.map(catGroup => {
+                const catName = catGroup[0].category;
+                const colors = getCategoryColors(catName);
+
+                return (
+                  <View key={catName} className="mb-6">
+                    <View 
+                      className="rounded-none px-4 py-3 mb-2 border border-[#0F1739]"
+                      style={{ backgroundColor: colors.bgColor }}
+                    >
+                      <Text 
+                        className="font-black text-xs uppercase tracking-wider"
+                        style={{ color: colors.textColor }}
+                      >
+                        {catName}
+                      </Text>
+                    </View>
+                    
+                    {catGroup.map(item => (
+                      <View 
+                        key={item.id} 
+                        className={`flex-row justify-between items-center border border-[#0F1739] p-3.5 mt-2 rounded-none ${
+                          item.done ? 'bg-slate-100 opacity-60' : 'bg-white'
+                        }`}
+                      >
+                        <View className="flex-1 mr-4">
+                          <Text className={`text-[#0F1739] text-xs font-black uppercase tracking-tight ${
+                            item.done ? 'line-through text-slate-400' : ''
+                          }`}>
+                            {item.item}
+                          </Text>
+                          {householdDetails?.inHousehold && householdDetails?.userSettings?.shareBucketList && (
+                            <Text className="text-[8px] text-slate-400 uppercase font-semibold mt-0.5">
+                              Added by {item.uid.split('@')[0]}
+                            </Text>
+                          )}
+                        </View>
+
+                        <View className="flex-row items-center gap-1">
+                          <TouchableOpacity 
+                            className="p-2 active:bg-slate-100"
+                            onPress={() => handleToggleDone(item)}
+                          >
+                            <Text className="text-black text-sm font-black">
+                              {item.done ? '☑️' : '✓'}
+                            </Text>
+                          </TouchableOpacity>
+                          <TouchableOpacity 
+                            className="p-2 active:bg-rose-100"
+                            onPress={() => handleDeleteItem(item)}
+                          >
+                            <Text className="text-black text-sm">🗑️</Text>
+                          </TouchableOpacity>
+                        </View>
+                      </View>
+                    ))}
+                  </View>
+                );
+              })}
             </View>
           )}
+
         </View>
       </ScrollView>
 

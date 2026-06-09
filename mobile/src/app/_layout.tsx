@@ -32,8 +32,8 @@ export default function RootLayout() {
 
     const currentSegment = segments[0];
     
-    // Guard the wins and decision-helper routes: if no token exists, send them back to the start/login
-    if (!hasToken && (currentSegment === 'wins' || currentSegment === 'decision-helper')) {
+    // Guard the wins, decision-helper and bucket-list routes: if no token exists, send them back to the start/login
+    if (!hasToken && (currentSegment === 'wins' || currentSegment === 'decision-helper' || currentSegment === 'bucket-list')) {
       // Use setTimeout to avoid calling navigation before layout finishes mounting
       const timer = setTimeout(() => {
         router.replace('/');
@@ -57,6 +57,7 @@ export default function RootLayout() {
         <Stack.Screen name="wins" />
         <Stack.Screen name="login" />
         <Stack.Screen name="decision-helper" />
+        <Stack.Screen name="bucket-list" />
       </Stack>
     </ThemeProvider>
   );
