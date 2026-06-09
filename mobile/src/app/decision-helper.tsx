@@ -778,6 +778,26 @@ export default function DecisionHelperScreen() {
                 >
                   <Text className="text-[#0F1739] font-black text-xs uppercase tracking-wider">🖼️ Vision Board</Text>
                 </TouchableOpacity>
+
+                <TouchableOpacity
+                  className="py-3 px-4 bg-white border-2 border-[#0F1739] rounded-none active:bg-slate-100 flex-row items-center shadow-[2px_2px_0px_0px_#0F1739]"
+                  onPress={() => {
+                    setMenuOpen(false);
+                    router.push({ pathname: '/shortcuts', params: { ip } });
+                  }}
+                >
+                  <Text className="text-[#0F1739] font-black text-xs uppercase tracking-wider">⚡ Shortcuts</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  className="py-3 px-4 bg-white border-2 border-[#0F1739] rounded-none active:bg-slate-100 flex-row items-center shadow-[2px_2px_0px_0px_#0F1739]"
+                  onPress={() => {
+                    setMenuOpen(false);
+                    router.push({ pathname: '/random-question', params: { ip } });
+                  }}
+                >
+                  <Text className="text-[#0F1739] font-black text-xs uppercase tracking-wider">❓ Random Questions</Text>
+                </TouchableOpacity>
               </View>
             </View>
 
