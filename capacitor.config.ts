@@ -6,7 +6,7 @@ const config: CapacitorConfig = {
   webDir: 'out',
   server: {
     // Dynamic server URL from environment variable or fallback to the local ngrok/hosted URL
-    url: process.env.CAPACITOR_SERVER_URL || 'https://ef80-189-1-168-15.ngrok-free.app',
+    url: process.env.CAPACITOR_SERVER_URL || 'https://www.handyfor.me',
     cleartext: true
   },
   android: {
