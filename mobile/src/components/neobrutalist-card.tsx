@@ -18,9 +18,9 @@ export function NeobrutalistCard({
   ...props
 }: NeobrutalistCardProps) {
   return (
-    <View className={`relative ${containerClassName}`} {...props}>
+    <View className={`relative pb-1.5 pr-1.5 ${containerClassName}`} {...props}>
       {/* Flat Solid 3D Shadow Layer */}
-      <View className={`absolute top-1.5 left-1.5 right-[-6px] bottom-[-6px] border-2 ${borderColor} ${shadowColor} rounded-none`} />
+      <View className={`absolute top-1.5 left-1.5 right-0 bottom-0 border-2 ${borderColor} ${shadowColor} rounded-none`} />
       {/* Main Foreground Card Layer */}
       <View className={`bg-white border-2 ${borderColor} p-5 rounded-none ${cardClassName}`}>
         {children}

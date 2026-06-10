@@ -10,24 +10,12 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primary: {
-          DEFAULT: '#0F1739', // Deep navy
-          foreground: '#FFFFFF',
-        },
-        accent: {
-          DEFAULT: '#DDF906', // Neon yellow
-          foreground: '#0F1739',
-        },
-        background: '#F8FAFC', // Slate background gray
-        card: {
-          DEFAULT: '#FFFFFF',
-          foreground: '#0F1739',
-        },
-        border: '#0F1739', // Navy border
-        muted: {
-          DEFAULT: '#64748B', // Slate-500
-          foreground: '#94A3B8', // Slate-400
-        },
+        primary: '#0F1739',     // Deep navy
+        accent: '#DDF906',      // Neon yellow
+        background: '#F8FAFC',  // Slate background gray
+        card: '#FFFFFF',        // White card background
+        border: '#0F1739',      // Navy border
+        muted: '#64748B',       // Slate gray
       },
       fontFamily: {
         kumbh: ["KumbhSans-Regular"],
