@@ -191,6 +191,7 @@ export default function DashboardScreen() {
   const [userData, setUserData] = useState<UserData | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const [currentQuote, setCurrentQuote] = useState({ quote: '', author: '' });
+  const [activeTab, setActiveTab] = useState<'user' | 'weather' | 'fun-fact'>('user');
 
   // Consolidated dashboard data
   const [habits, setHabits] = useState<Habit[]>([]);
@@ -539,33 +540,31 @@ export default function DashboardScreen() {
     return { completed: false, months: remainingMonths, days: remainingDays };
   };
 
+  const showDashboardHelp = () => {
+    Alert.alert(
+      "About Dashboard",
+      "The Dashboard is your personalized snapshot of everything important! It offers quick access to highlights from your Bucket List, Vision Board, and Shortcuts.\n\nPlus, enjoy daily weather updates, inspirational quotes, and fun facts to keep things light and entertaining."
+    );
+  };
+
   return (
     <SafeAreaView className="flex-1 bg-[#F8FAFC]" edges={['top', 'left', 'right']}>
       
       {/* Dynamic Header Quote Banner */}
       {currentQuote.quote ? (
-        <View className="bg-[#DDF906] border-b-2 border-[#0F1739] px-4 py-2.5 flex-row justify-between items-center">
-          <Text className="text-[#0F1739] font-bold text-xs flex-1 mr-2" numberOfLines={1}>
+        <View className="bg-primary px-6 py-2 items-center justify-center">
+          <Text className="text-white text-center uppercase font-semibold text-[10px] tracking-wider leading-relaxed">
             "{currentQuote.quote}" — {currentQuote.author}
           </Text>
-          <TouchableOpacity 
-            onPress={() => {
-              const randomIdx = Math.floor(Math.random() * quotes.length);
-              setCurrentQuote(quotes[randomIdx]);
-            }}
-            className="w-5 h-5 border border-[#0F1739] justify-center items-center rounded-none bg-white"
-          >
-            <Text className="text-[#0F1739] font-black text-[10px]">↻</Text>
-          </TouchableOpacity>
         </View>
       ) : null}
 
       {/* Top Navbar */}
-      <View className="flex-row justify-between items-center px-4 py-3 border-b-2 border-[#0F1739] bg-white">
+      <View className="flex-row justify-between items-center px-4 py-3 border-b border-slate-200 bg-white">
         
         {/* Menu Burger Drawer Button */}
         <TouchableOpacity 
-          className="w-10 h-9 border-2 border-[#0F1739] bg-white rounded-none justify-center items-center shadow-[2px_2px_0px_0px_#0F1739] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[1px_1px_0px_0px_#0F1739]"
+          className="w-10 h-9 border border-primary bg-white justify-center items-center shadow-[1.5px_1.5px_0px_0px_#0F1739] active:translate-x-[1px] active:translate-y-[1px]"
           onPress={() => setMenuOpen(true)}
         >
           <View className="w-5 h-0.5 bg-[#0F1739] my-0.5" />
@@ -575,11 +574,11 @@ export default function DashboardScreen() {
 
         {/* Greetings and Profile Avatar */}
         <View className="flex-row items-center">
-          <Text className="text-[#0F1739] text-base font-black mr-3">
-            Howdy {getFirstName()}! 🤠
+          <Text className="text-[#0F1739] text-base font-semibold mr-3">
+            Hi {getFirstName()}! 👋
           </Text>
           <TouchableOpacity 
-            className="w-9 h-9 border-2 border-[#0F1739] rounded-none bg-slate-200 justify-center items-center shadow-[2px_2px_0px_0px_#0F1739] active:bg-rose-50"
+            className="w-9 h-9 border border-primary bg-slate-200 justify-center items-center shadow-[1.5px_1.5px_0px_0px_#0F1739] active:bg-rose-50"
             onPress={handleLogout}
           >
             {userData?.image ? (
@@ -593,7 +592,7 @@ export default function DashboardScreen() {
 
       {/* Scrollable Main Content */}
       <ScrollView 
-        className="flex-1 px-4 py-3" 
+        className="flex-1 px-4 py-6" 
         style={{ marginBottom: BottomTabInset }} 
         showsVerticalScrollIndicator={false}
       >
@@ -603,115 +602,207 @@ export default function DashboardScreen() {
           <ActivityIndicator size="large" color="#0F1739" className="my-8" />
         )}
 
-        {/* 1. TOP CARDS (Hello Profile, Weather Widget, Fun Fact of the Day) */}
-        <View className="gap-6 mb-8">
-          
-          {/* User profile block */}
-          <NeobrutalistCard cardClassName="p-5" borderColor="border-primary" shadowColor="bg-primary">
-            <View className="flex-row items-center gap-4">
-              <View className="w-12 h-12 border-2 border-primary bg-slate-100 justify-center items-center rounded-none shadow-[2px_2px_0px_0px_#0F1739]">
-                {userData?.image ? (
-                  <Image source={{ uri: userData.image }} className="w-full h-full" />
-                ) : (
-                  <Text className="text-xl">👤</Text>
-                )}
-              </View>
-              <View>
-                <Text className="text-primary font-black text-lg uppercase tracking-tight leading-none">
-                  {userData?.name || 'Hub User'}
-                </Text>
-                <Text className="text-slate-500 font-bold text-xxs lowercase mt-1">
-                  {userData?.email}
-                </Text>
-              </View>
-            </View>
-          </NeobrutalistCard>
-
-          {/* Weather Widget */}
-          {weather && location ? (
-            <NeobrutalistCard key="weather-active" cardClassName="bg-accent p-5" borderColor="border-primary" shadowColor="bg-primary">
-              <Text className="text-primary font-black text-xxs uppercase tracking-wider mb-2">☁️ Weather Bulletin</Text>
-              <View className="flex-row justify-between items-center flex-wrap gap-2">
-                <View>
-                  <Text className="text-primary text-2xl font-black uppercase tracking-tight">
-                    {location.city}
-                  </Text>
-                  <Text className="text-slate-700 text-xs font-bold capitalize">
-                    {weather.weather?.[0]?.description || 'Clear Sky'}
-                  </Text>
-                </View>
-                <View className="items-end">
-                  <Text className="text-primary text-3xl font-black tracking-tighter">
-                    {weather.main?.temp ? `${Math.round(weather.main.temp)}°C` : 'N/A'}
-                  </Text>
-                  <Text className="text-slate-700 text-[9px] font-bold uppercase tracking-widest">
-                    💨 Wind: {weather.wind?.speed || 0} m/s
-                  </Text>
-                </View>
-              </View>
-            </NeobrutalistCard>
-          ) : (
-            <View key="weather-offline" className="bg-white border-2 border-primary border-dashed rounded-none p-4 items-center justify-center">
-              <Text className="text-slate-400 font-black text-xs uppercase tracking-widest text-center">
-                ☁️ Weather Offline (out of reach) 👻
-              </Text>
-            </View>
-          )}
-
-          {/* Fun Fact Card */}
-          <NeobrutalistCard cardClassName="p-5" borderColor="border-primary" shadowColor="bg-primary">
-            <View className="bg-slate-100 px-2 py-0.5 border border-slate-300 self-start mb-4">
-              <Text className="text-slate-500 font-bold text-[9px] uppercase tracking-wider">💡 Wow Curiosity</Text>
-            </View>
-
-            <Text className="text-primary font-black text-xs uppercase tracking-wide mb-1">
-              {funFacts[funFactIndex]?.start}
+        {/* Dashboard Title block */}
+        <View className="mb-6">
+          <View className="flex-row justify-between items-center mb-1">
+            <Text className="text-primary text-3xl font-bold uppercase tracking-tight">
+              Dashboard
             </Text>
-            <Text className="text-primary text-base font-black leading-relaxed mb-4">
-              {funFacts[funFactIndex]?.curiosity}
-            </Text>
-
-            <TouchableOpacity
-              className="bg-white border-2 border-primary py-2.5 px-4 rounded-none shadow-[2px_2px_0px_0px_#0F1739] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[1px_1px_0px_0px_#0F1739] self-start"
-              onPress={handleNextFunFact}
+            {/* Help circle ? button */}
+            <TouchableOpacity 
+              className="w-7 h-7 border border-primary rounded-full justify-center items-center bg-white"
+              onPress={showDashboardHelp}
             >
-              <Text className="text-primary font-black text-xs uppercase tracking-wider">Show Another Fun Fact</Text>
+              <Text className="text-primary text-sm font-semibold">?</Text>
             </TouchableOpacity>
-          </NeobrutalistCard>
-
+          </View>
+          <Text className="text-slate-500 text-sm font-normal">
+            Everything you need, right at your fingertips.
+          </Text>
         </View>
 
-        {/* 2. HABIT TRACKER SECTION */}
-        <NeobrutalistCard containerClassName="mb-8" cardClassName="p-5" borderColor="border-primary" shadowColor="bg-primary">
-          
-          <View className="flex-row justify-between items-center mb-6 flex-wrap gap-2">
-            <View className="flex-row items-center gap-2">
-              <Text className="text-primary text-2xl font-black uppercase tracking-tighter">Habit Tracker</Text>
-              <View className="bg-red-500 px-2 py-0.5 border border-primary">
-                <Text className="text-white font-bold text-[8px] uppercase tracking-wider">⚡ Live Monitors</Text>
-              </View>
+        {/* 1. TOP TABS SWITCHER */}
+        <View className="bg-slate-100 p-1 rounded-lg flex-row justify-between mb-6">
+          <TouchableOpacity 
+            onPress={() => setActiveTab('user')}
+            className={`flex-1 py-2 px-3 rounded-md items-center justify-center ${activeTab === 'user' ? 'bg-white shadow-sm' : ''}`}
+          >
+            <Text className={`text-xs ${activeTab === 'user' ? 'text-primary font-semibold' : 'text-slate-505 font-medium'}`}>
+              Hello!
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity 
+            onPress={() => setActiveTab('weather')}
+            className={`flex-1 py-2 px-3 rounded-md items-center justify-center ${activeTab === 'weather' ? 'bg-white shadow-sm' : ''}`}
+          >
+            <Text className={`text-xs ${activeTab === 'weather' ? 'text-primary font-semibold' : 'text-slate-505 font-medium'}`}>
+              Weather
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity 
+            onPress={() => setActiveTab('fun-fact')}
+            className={`flex-1 py-2 px-3 rounded-md items-center justify-center ${activeTab === 'fun-fact' ? 'bg-white shadow-sm' : ''}`}
+          >
+            <Text className={`text-xs ${activeTab === 'fun-fact' ? 'text-primary font-semibold' : 'text-slate-505 font-medium'}`}>
+              Fun Fact
+            </Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Selected Tab Content */}
+        {activeTab === 'user' && (
+          <View className="flex-col items-center justify-center py-6 mb-6">
+            <View className="w-[100px] h-[100px] rounded-full overflow-hidden mb-4 border border-slate-200">
+              {userData?.image ? (
+                <Image source={{ uri: userData.image }} className="w-full h-full" />
+              ) : (
+                <View className="w-full h-full bg-slate-200 justify-center items-center">
+                  <Text className="text-3xl">👤</Text>
+                </View>
+              )}
             </View>
+            <Text className="text-2xl font-bold text-primary text-center">
+              Hi,{" "}
+              <Text className="text-red-500 text-4xl">
+                {getFirstName()}
+              </Text>
+              {" :)"}
+            </Text>
+            <Text className="text-sm font-normal text-slate-600 mt-2 text-center">
+              Welcome to an Easier Life!
+            </Text>
+          </View>
+        )}
+
+        {activeTab === 'weather' && (
+          <View className="relative border border-slate-300 border-dashed p-6 pt-8 bg-slate-50/50 rounded-none mb-6">
+            
+            {/* Absolute tag badge */}
+            <View className="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary px-3 py-1 z-10">
+              <Text className="text-white text-[10px] font-semibold uppercase tracking-wider">
+                Weather
+              </Text>
+            </View>
+
+            {weather && location ? (
+              <View className="flex-col gap-4">
+                
+                {/* Top row: City Name & Description, Temp */}
+                <View className="flex-row justify-between items-center pb-4 border-b border-slate-200">
+                  <View>
+                    <Text className="text-primary text-xl font-bold uppercase tracking-tight">
+                      {location.city}
+                    </Text>
+                    <Text className="text-slate-500 text-xs font-medium capitalize mt-0.5">
+                      {weather.weather?.[0]?.description || 'Clear Sky'}
+                    </Text>
+                  </View>
+                  <View className="items-end">
+                    <Text className="text-primary text-3xl font-black tracking-tighter">
+                      {weather.main?.temp ? `${Math.round(weather.main.temp)}°C` : 'N/A'}
+                    </Text>
+                  </View>
+                </View>
+
+                {/* Weather specs details */}
+                <View className="flex-row justify-between flex-wrap gap-y-3 pt-2">
+                  <View className="w-[45%]">
+                    <Text className="text-slate-400 text-[10px] uppercase font-bold">Wind</Text>
+                    <Text className="text-primary text-sm font-semibold mt-0.5">
+                      {weather.wind?.speed || 0} m/s
+                    </Text>
+                  </View>
+                  <View className="w-[45%]">
+                    <Text className="text-slate-400 text-[10px] uppercase font-bold">Humidity</Text>
+                    <Text className="text-primary text-sm font-semibold mt-0.5">
+                      {weather.main?.humidity || 0}%
+                    </Text>
+                  </View>
+                  <View className="w-[45%]">
+                    <Text className="text-slate-400 text-[10px] uppercase font-bold">Feels Like</Text>
+                    <Text className="text-primary text-sm font-semibold mt-0.5">
+                      {weather.main?.feels_like ? `${Math.round(weather.main.feels_like)}°C` : 'N/A'}
+                    </Text>
+                  </View>
+                  <View className="w-[45%]">
+                    <Text className="text-slate-400 text-[10px] uppercase font-bold">City / Country</Text>
+                    <Text className="text-primary text-sm font-semibold mt-0.5 truncate" numberOfLines={1}>
+                      {location.city}, {location.country}
+                    </Text>
+                  </View>
+                </View>
+
+              </View>
+            ) : (
+              <View className="items-center justify-center py-6">
+                <Text className="text-slate-400 text-xs font-semibold uppercase tracking-widest text-center">
+                  ☁️ Weather Offline (out of reach) 👻
+                </Text>
+              </View>
+            )}
+          </View>
+        )}
+
+        {activeTab === 'fun-fact' && (
+          <View className="relative border border-slate-300 border-dashed p-6 pt-8 bg-slate-50/50 rounded-none mb-6">
+            
+            {/* Absolute tag badge */}
+            <View className="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary px-3 py-1 z-10">
+              <Text className="text-white text-[10px] font-semibold uppercase tracking-wider">
+                Fun Fact
+              </Text>
+            </View>
+
+            <View className="flex-col gap-4">
+              <View className="flex-col items-start gap-1">
+                <Text className="text-slate-500 text-xs font-semibold">
+                  {funFacts[funFactIndex]?.start}
+                </Text>
+                <Text className="text-primary text-lg font-bold leading-normal">
+                  {funFacts[funFactIndex]?.curiosity}
+                </Text>
+              </View>
+
+              <TouchableOpacity
+                onPress={handleNextFunFact}
+                className="border border-primary bg-white py-2 px-4 rounded-none self-start"
+              >
+                <Text className="text-primary font-bold text-xs uppercase tracking-wider">
+                  Show Another Fun Fact
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        )}
+
+        {/* 2. HABIT TRACKER SECTION */}
+        <View className="mb-8">
+          
+          <View className="flex-row justify-between items-center mb-4">
+            <Text className="text-primary text-xl font-bold">
+              Habit <Text className="text-red-500">Tracker</Text>
+            </Text>
 
             {!isAddingHabit && (
               <TouchableOpacity
-                className="bg-white border border-primary px-2.5 py-1.5 rounded-none active:bg-slate-100"
+                className="flex-row items-center gap-1 bg-white border border-primary px-2.5 py-1.5 rounded-none"
                 onPress={() => setIsAddingHabit(true)}
               >
-                <Text className="text-primary font-black text-[10px] uppercase tracking-wider">+ New Monitor</Text>
+                <Text className="text-primary font-bold text-[10px] uppercase tracking-wider">+ New Monitor</Text>
               </TouchableOpacity>
             )}
           </View>
 
           {/* Add Habit inline form */}
           {isAddingHabit && (
-            <View className="bg-slate-50 border-2 border-[#0F1739] p-4 rounded-none mb-6">
-              <Text className="text-[#0F1739] font-black text-xs uppercase mb-3">Initialize Habit Monitor</Text>
+            <View className="bg-slate-50 border border-slate-300 p-4 rounded-none mb-6">
+              <Text className="text-primary font-bold text-xs uppercase mb-3">Initialize Habit Monitor</Text>
 
               {/* Tag name */}
               <View className="mb-3">
-                <Text className="text-[#0F1739] font-bold text-xxs uppercase mb-1">Habit Designation</Text>
+                <Text className="text-slate-500 font-bold text-xxs uppercase mb-1">Habit Designation</Text>
                 <TextInput
-                  className="bg-white text-[#0F1739] font-bold rounded-none px-3 py-2 border-2 border-[#0F1739] text-xs h-10"
+                  className="bg-white text-primary font-semibold rounded-none px-3 py-2 border border-slate-300 text-xs h-10"
                   placeholder="e.g. Daily Meditation, No Sugar"
                   placeholderTextColor="#94a3b8"
                   value={newHabitName}
@@ -721,9 +812,9 @@ export default function DashboardScreen() {
 
               {/* Start Date */}
               <View className="mb-3">
-                <Text className="text-[#0F1739] font-bold text-xxs uppercase mb-1">Deployment Start (YYYY-MM-DD)</Text>
+                <Text className="text-slate-500 font-bold text-xxs uppercase mb-1">Deployment Start (YYYY-MM-DD)</Text>
                 <TextInput
-                  className="bg-white text-[#0F1739] font-bold rounded-none px-3 py-2 border-2 border-[#0F1739] text-xs h-10"
+                  className="bg-white text-primary font-semibold rounded-none px-3 py-2 border border-slate-300 text-xs h-10"
                   placeholder="e.g. 2026-06-09"
                   placeholderTextColor="#94a3b8"
                   value={newHabitStart}
@@ -733,9 +824,9 @@ export default function DashboardScreen() {
 
               {/* Goal Date */}
               <View className="mb-4">
-                <Text className="text-[#0F1739] font-bold text-xxs uppercase mb-1">Target Milestone (Optional YYYY-MM-DD)</Text>
+                <Text className="text-slate-500 font-bold text-xxs uppercase mb-1">Target Milestone (Optional YYYY-MM-DD)</Text>
                 <TextInput
-                  className="bg-white text-[#0F1739] font-bold rounded-none px-3 py-2 border-2 border-[#0F1739] text-xs h-10"
+                  className="bg-white text-primary font-semibold rounded-none px-3 py-2 border border-slate-300 text-xs h-10"
                   placeholder="e.g. 2026-07-09"
                   placeholderTextColor="#94a3b8"
                   value={newHabitGoal}
@@ -745,16 +836,16 @@ export default function DashboardScreen() {
 
               <View className="flex-row gap-3">
                 <TouchableOpacity
-                  className="flex-1 bg-[#DDF906] py-2.5 rounded-none border-2 border-[#0F1739] shadow-[2px_2px_0px_0px_#0F1739] justify-center items-center"
+                  className="flex-1 bg-primary py-2.5 rounded-none justify-center items-center"
                   onPress={handleCreateHabit}
                 >
-                  <Text className="text-[#0F1739] font-black text-xs uppercase tracking-wider">Deploy Monitor</Text>
+                  <Text className="text-white font-bold text-xs uppercase tracking-wider">Deploy Monitor</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                  className="flex-1 bg-white py-2.5 rounded-none border-2 border-[#0F1739] shadow-[2px_2px_0px_0px_#0F1739] justify-center items-center"
+                  className="flex-1 bg-white py-2.5 rounded-none border border-slate-300 justify-center items-center"
                   onPress={() => setIsAddingHabit(false)}
                 >
-                  <Text className="text-[#0F1739] font-black text-xs uppercase tracking-wider">Cancel</Text>
+                  <Text className="text-slate-500 font-bold text-xs uppercase tracking-wider">Cancel</Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -766,7 +857,7 @@ export default function DashboardScreen() {
               No active streak monitors found. ⚡
             </Text>
           ) : (
-            <View className="gap-4">
+            <View className="gap-3">
               {habits.map((habit, idx) => {
                 const isOpen = openShutters[habit.id];
                 const streak = calculateStreak(habit.lastResetAt);
@@ -774,13 +865,13 @@ export default function DashboardScreen() {
                 const isEditing = editingHabitId === habit.id;
 
                 return (
-                  <View key={habit.id} className="border-2 border-[#0F1739] rounded-none bg-white">
+                  <View key={habit.id} className="border border-slate-200 rounded-none bg-white">
                     
                     {/* SECURITY SHUTTER (Closed Mode) */}
                     {!isOpen ? (
                       <TouchableOpacity
                         onPress={() => toggleShutter(habit.id)}
-                        className="bg-zinc-900 p-4 flex-row justify-between items-center rounded-none"
+                        className="bg-zinc-900 p-3 flex-row justify-between items-center rounded-none"
                       >
                         <View className="flex-row items-center gap-3">
                           <Text className="text-amber-400 text-sm">🔒</Text>
@@ -789,7 +880,7 @@ export default function DashboardScreen() {
                           </Text>
                         </View>
                         <View className="flex-row items-center gap-2">
-                          <View className="w-2.5 h-2.5 rounded-full bg-rose-600 animate-pulse" />
+                          <View className="w-2 h-2 rounded-full bg-rose-600 animate-pulse" />
                           <Text className="text-zinc-500 font-bold text-[8px] uppercase tracking-wider">Privacy Active</Text>
                         </View>
                       </TouchableOpacity>
@@ -797,9 +888,8 @@ export default function DashboardScreen() {
                       
                       // OPENED STATE (Factory Sign Details)
                       <View className="p-4 bg-zinc-950">
-                        
                         {/* Shutter controller row */}
-                        <View className="flex-row justify-between items-center border-b border-zinc-800 pb-2.5 mb-3">
+                        <View className="flex-row justify-between items-center border-b border-zinc-800 pb-2 mb-3">
                           <Text className="text-zinc-400 font-bold text-[9px] uppercase tracking-wider">STREAK LOG</Text>
                           <TouchableOpacity 
                             onPress={() => toggleShutter(habit.id)}
@@ -842,13 +932,13 @@ export default function DashboardScreen() {
                                 className="flex-1 bg-emerald-600 py-2 rounded-none justify-center items-center"
                                 onPress={handleUpdateHabit}
                               >
-                                <Text className="text-white font-black text-xxs uppercase">Save</Text>
+                                <Text className="text-white font-bold text-xxs uppercase">Save</Text>
                               </TouchableOpacity>
                               <TouchableOpacity
                                 className="flex-1 bg-zinc-800 py-2 rounded-none justify-center items-center"
                                 onPress={() => setEditingHabitId(null)}
                               >
-                                <Text className="text-zinc-300 font-black text-xxs uppercase">Cancel</Text>
+                                <Text className="text-zinc-300 font-bold text-xxs uppercase">Cancel</Text>
                               </TouchableOpacity>
                             </View>
                           </View>
@@ -856,21 +946,21 @@ export default function DashboardScreen() {
                           
                           // RENDER VIEW DETAILS MODE
                           <View>
-                            <View className="mb-4">
+                            <View className="mb-3">
                               <Text className="text-zinc-400 font-mono text-[9px] uppercase tracking-wider">Monitor Name</Text>
-                              <Text className="text-zinc-200 text-base font-black uppercase mt-0.5">{habit.name}</Text>
+                              <Text className="text-zinc-200 text-base font-bold uppercase mt-0.5">{habit.name}</Text>
                             </View>
 
                             {/* Digital counter layout */}
-                            <View className="flex-row gap-3 items-center mb-4">
+                            <View className="flex-row gap-3 items-center mb-3">
                               {streak.months > 0 && (
                                 <View className="bg-zinc-900 border border-zinc-800 px-2.5 py-1.5 flex-row items-baseline">
-                                  <Text className="text-2xl font-mono font-black text-red-500">{String(streak.months).padStart(2, '0')}</Text>
+                                  <Text className="text-2xl font-mono font-bold text-red-500">{String(streak.months).padStart(2, '0')}</Text>
                                   <Text className="text-zinc-400 text-xs font-bold ml-1 uppercase">M</Text>
                                 </View>
                               )}
                               <View className="bg-zinc-900 border border-zinc-800 px-2.5 py-1.5 flex-row items-baseline">
-                                <Text className="text-2xl font-mono font-black text-red-500">{String(streak.days).padStart(2, '0')}</Text>
+                                <Text className="text-2xl font-mono font-bold text-red-500">{String(streak.days).padStart(2, '0')}</Text>
                                 <Text className="text-zinc-400 text-xs font-bold ml-1 uppercase">D</Text>
                               </View>
                               <Text className="text-zinc-400 font-bold text-xxs uppercase tracking-wider">Without Incident</Text>
@@ -878,12 +968,12 @@ export default function DashboardScreen() {
 
                             {/* Goal tracking */}
                             {goal && (
-                              <View className="bg-zinc-900 border border-zinc-800 p-2.5 mb-4">
+                              <View className="bg-zinc-900 border border-zinc-800 p-2 mb-3">
                                 {goal.completed ? (
-                                  <Text className="text-emerald-500 font-black text-xxs uppercase tracking-wider text-center">🏆 MISSION COMPLETE 🏆</Text>
+                                  <Text className="text-emerald-500 font-bold text-xxs uppercase tracking-wider text-center">🏆 MISSION COMPLETE 🏆</Text>
                                 ) : (
                                   <View className="flex-row justify-between items-center">
-                                    <Text className="text-zinc-400 font-black text-[9px] uppercase tracking-wider">Goal Timeline:</Text>
+                                    <Text className="text-zinc-400 font-bold text-[9px] uppercase tracking-wider">Goal Timeline:</Text>
                                     <Text className="text-red-500 font-mono text-xs font-bold">
                                       {goal.months ? `${goal.months}M ` : ''}{goal.days}D REMAINING
                                     </Text>
@@ -893,12 +983,12 @@ export default function DashboardScreen() {
                             )}
 
                             {/* Row Action triggers */}
-                            <View className="flex-row justify-end items-center gap-4 mt-2">
+                            <View className="flex-row justify-end items-center gap-3 mt-2">
                               <TouchableOpacity
                                 onPress={() => handleResetHabit(habit.id, habit.name)}
                                 className="bg-amber-600 px-2.5 py-1.5 rounded-none"
                               >
-                                <Text className="text-white font-bold text-[9px] uppercase tracking-wider">↻ Reset Counter</Text>
+                                <Text className="text-white font-bold text-[9px] uppercase tracking-wider">↻ Reset</Text>
                               </TouchableOpacity>
 
                               <TouchableOpacity
@@ -931,14 +1021,19 @@ export default function DashboardScreen() {
             </View>
           )}
 
-        </NeobrutalistCard>
+        </View>
 
         {/* 3. WIDGETS PREVIEWS (Vision Board, Shortcuts, Bucket List) */}
         <View className="gap-6 mb-8">
           
           {/* Vision Board preview widget */}
-          <NeobrutalistCard cardClassName="p-5" borderColor="border-primary" shadowColor="bg-primary">
-            <Text className="text-primary text-xl font-black uppercase tracking-tight mb-2">Vision Board</Text>
+          <View className="relative border border-slate-300 border-dashed p-5 pt-8 bg-white rounded-none mb-2">
+            <View className="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary px-3 py-1 z-10">
+              <Text className="text-white text-[10px] font-semibold uppercase tracking-wider">
+                Vision Board
+              </Text>
+            </View>
+
             {visionBoardItems.length > 0 ? (
               <View className="gap-3">
                 <Text className="text-slate-500 font-semibold text-xxs uppercase">Latest Goals Added:</Text>
@@ -949,14 +1044,14 @@ export default function DashboardScreen() {
                     ) : (
                       <View className="w-8 h-8 bg-slate-200 justify-center items-center"><Text className="text-xs">🖼️</Text></View>
                     )}
-                    <Text className="text-[#0F1739] text-xs font-bold flex-1" numberOfLines={1}>{vItem.title}</Text>
+                    <Text className="text-primary text-xs font-bold flex-1" numberOfLines={1}>{vItem.title}</Text>
                   </View>
                 ))}
                 <TouchableOpacity
                   onPress={() => router.push({ pathname: '/vision-board', params: { ip } })}
-                  className="bg-white border border-[#0F1739] p-2.5 justify-center items-center mt-2"
+                  className="bg-white border border-primary p-2 justify-center items-center mt-2"
                 >
-                  <Text className="text-[#0F1739] font-black text-xs uppercase tracking-wider">Open Vision Board ➔</Text>
+                  <Text className="text-primary font-bold text-xs uppercase tracking-wider">Open Vision Board ➔</Text>
                 </TouchableOpacity>
               </View>
             ) : (
@@ -966,39 +1061,44 @@ export default function DashboardScreen() {
                 </Text>
                 <TouchableOpacity
                   onPress={() => router.push({ pathname: '/vision-board', params: { ip } })}
-                  className="bg-[#DDF906] border-2 border-[#0F1739] py-2 px-4 shadow-[2px_2px_0px_0px_#0f1739]"
+                  className="bg-accent border border-primary py-2 px-4 shadow-[1.5px_1.5px_0px_0px_#0F1739]"
                 >
-                  <Text className="text-[#0F1739] font-black text-xxs uppercase tracking-wider">Create My Vision Board</Text>
+                  <Text className="text-primary font-bold text-xxs uppercase tracking-wider">Create My Vision Board</Text>
                 </TouchableOpacity>
               </View>
             )}
-          </NeobrutalistCard>
+          </View>
 
           {/* Shortcuts widget preview */}
-          <NeobrutalistCard cardClassName="p-5" borderColor="border-primary" shadowColor="bg-primary">
-            <Text className="text-primary text-xl font-black uppercase tracking-tight mb-2">Shortcuts</Text>
+          <View className="relative border border-slate-300 border-dashed p-5 pt-8 bg-white rounded-none mb-2">
+            <View className="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary px-3 py-1 z-10">
+              <Text className="text-white text-[10px] font-semibold uppercase tracking-wider">
+                Shortcuts
+              </Text>
+            </View>
+
             {shortcuts.length > 0 ? (
               <View className="gap-3">
                 <View className="flex-row flex-wrap gap-2">
-                  {shortcuts.slice(0, 6).map((sItem) => (
+                  {shortcuts.slice(0, 8).map((sItem) => (
                     <TouchableOpacity
                       key={sItem.id}
-                      className="bg-sky-50 border border-sky-400 px-3 py-1.5 shadow-[1px_1px_0px_0px_#0284c7]"
+                      className="bg-slate-50 border border-slate-200 px-3 py-1.5"
                       onPress={() => {
                         if (sItem.url) {
                           Linking.openURL(sItem.url).catch(() => Alert.alert('Error', 'Invalid link URL'));
                         }
                       }}
                     >
-                      <Text className="text-sky-800 text-[10px] font-bold uppercase">{sItem.shortcut}</Text>
+                      <Text className="text-primary text-[10px] font-bold uppercase">{sItem.shortcut}</Text>
                     </TouchableOpacity>
                   ))}
                 </View>
                 <TouchableOpacity
                   onPress={() => router.push({ pathname: '/shortcuts', params: { ip } })}
-                  className="bg-white border border-primary p-2.5 justify-center items-center mt-2"
+                  className="bg-white border border-primary p-2 justify-center items-center mt-2"
                 >
-                  <Text className="text-primary font-black text-xs uppercase tracking-wider">Open Shortcuts ➔</Text>
+                  <Text className="text-primary font-bold text-xs uppercase tracking-wider">Open Shortcuts ➔</Text>
                 </TouchableOpacity>
               </View>
             ) : (
@@ -1008,33 +1108,37 @@ export default function DashboardScreen() {
                 </Text>
                 <TouchableOpacity
                   onPress={() => router.push({ pathname: '/shortcuts', params: { ip } })}
-                  className="bg-accent border-2 border-primary py-2 px-4 shadow-[2px_2px_0px_0px_#0f1739]"
+                  className="bg-accent border border-primary py-2 px-4 shadow-[1.5px_1.5px_0px_0px_#0F1739]"
                 >
-                  <Text className="text-primary font-black text-xxs uppercase tracking-wider">Create My First Shortcut</Text>
+                  <Text className="text-primary font-bold text-xxs uppercase tracking-wider">Create My First Shortcut</Text>
                 </TouchableOpacity>
               </View>
             )}
-          </NeobrutalistCard>
+          </View>
 
           {/* Bucket List widget preview */}
-          <NeobrutalistCard cardClassName="p-5" borderColor="border-primary" shadowColor="bg-primary">
-            <Text className="text-primary text-xl font-black uppercase tracking-tight mb-2">Bucket List</Text>
+          <View className="relative border border-slate-300 border-dashed p-5 pt-8 bg-white rounded-none mb-2">
+            <View className="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary px-3 py-1 z-10">
+              <Text className="text-white text-[10px] font-semibold uppercase tracking-wider">
+                Bucket List
+              </Text>
+            </View>
+
             {bucketListItems.length > 0 ? (
               <View className="gap-3">
                 <Text className="text-slate-500 font-semibold text-xxs uppercase">Upcoming Adventures:</Text>
-                {bucketListItems.slice(0, 3).map((bItem) => (
-                  <View key={bItem.id} className="flex-row items-center gap-2.5 bg-slate-50 border border-slate-200 p-2.5">
-                    <Text className="text-slate-400 text-xs">{bItem.done ? '✅' : '⏳'}</Text>
-                    <Text className={`text-primary text-xs font-bold flex-1 ${bItem.done ? 'line-through text-slate-400' : ''}`} numberOfLines={1}>
-                      {bItem.item}
-                    </Text>
-                  </View>
-                ))}
+                <View className="flex-row flex-wrap gap-2">
+                  {bucketListItems.filter(item => !item.done).slice(0, 6).map((bItem) => (
+                    <View key={bItem.id} className="bg-slate-50 border border-slate-200 px-3 py-1.5 flex-row items-center gap-1.5">
+                      <Text className="text-primary text-[10px] font-bold uppercase">{bItem.item}</Text>
+                    </View>
+                  ))}
+                </View>
                 <TouchableOpacity
                   onPress={() => router.push({ pathname: '/bucket-list', params: { ip } })}
-                  className="bg-white border border-primary p-2.5 justify-center items-center mt-2"
+                  className="bg-white border border-primary p-2 justify-center items-center mt-2"
                 >
-                  <Text className="text-primary font-black text-xs uppercase tracking-wider">Open Bucket List ➔</Text>
+                  <Text className="text-primary font-bold text-xs uppercase tracking-wider">Open Bucket List ➔</Text>
                 </TouchableOpacity>
               </View>
             ) : (
@@ -1044,59 +1148,104 @@ export default function DashboardScreen() {
                 </Text>
                 <TouchableOpacity
                   onPress={() => router.push({ pathname: '/bucket-list', params: { ip } })}
-                  className="bg-accent border-2 border-primary py-2 px-4 shadow-[2px_2px_0px_0px_#0f1739]"
+                  className="bg-accent border border-primary py-2 px-4 shadow-[1.5px_1.5px_0px_0px_#0F1739]"
                 >
-                  <Text className="text-primary font-black text-xxs uppercase tracking-wider">Build My Bucket List</Text>
+                  <Text className="text-primary font-bold text-xxs uppercase tracking-wider">Build My Bucket List</Text>
                 </TouchableOpacity>
               </View>
             )}
-          </NeobrutalistCard>
+          </View>
 
         </View>
 
         {/* 4. FEATURE HIGHLIGHTS */}
-        <View className="gap-5 mb-12">
-          <Text className="text-[#0F1739] font-black text-sm uppercase tracking-wider mb-1">More Features</Text>
+        <View className="gap-6 mb-12">
+          <Text className="text-primary font-bold text-sm uppercase tracking-wider">More Features</Text>
 
-          <TouchableOpacity
-            onPress={() => router.push({ pathname: '/decision-helper', params: { ip } })}
-            className="bg-white border-2 border-[#0F1739] p-4 rounded-none shadow-[3px_3px_0px_0px_#0F1739] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[2px_2px_0px_0px_#0f1739]"
-          >
-            <Text className="text-[#0F1739] font-black text-sm uppercase">🤔 Decision Helper</Text>
-            <Text className="text-slate-500 text-xxs font-bold mt-1">
-              Can't make up your mind? Spin the decision wheel to pick your next path!
-            </Text>
-          </TouchableOpacity>
+          {/* Decision Helper Highlight */}
+          <View className="relative border border-slate-300 border-dashed p-5 pt-8 bg-white rounded-none mb-2">
+            <View className="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary px-3 py-1 z-10">
+              <Text className="text-white text-[10px] font-semibold uppercase tracking-wider">
+                Decision Helper
+              </Text>
+            </View>
+            <View className="items-center gap-3">
+              <Text className="text-primary font-bold text-base uppercase text-center">Decisions Made Fun!</Text>
+              <Text className="text-slate-500 text-xs text-center leading-normal px-2">
+                Let fate decide! Perfect for quick choices, big or small. Spin the wheel and see where it lands.
+              </Text>
+              <TouchableOpacity
+                onPress={() => router.push({ pathname: '/decision-helper', params: { ip } })}
+                className="border border-primary px-4 py-2 bg-white"
+              >
+                <Text className="text-primary font-bold text-xs uppercase tracking-wider">Spin to Decide</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
 
-          <TouchableOpacity
-            onPress={() => router.push({ pathname: '/stoic-support', params: { ip } })}
-            className="bg-white border-2 border-[#0F1739] p-4 rounded-none shadow-[3px_3px_0px_0px_#0F1739] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[2px_2px_0px_0px_#0f1739]"
-          >
-            <Text className="text-[#0F1739] font-black text-sm uppercase">🧠 Stoic Support</Text>
-            <Text className="text-slate-500 text-xxs font-bold mt-1">
-              Navigate life's daily challenges using direct, ancient wisdom from Marcus Aurelius, Seneca and Epictetus.
-            </Text>
-          </TouchableOpacity>
+          {/* Stoic Support Highlight */}
+          <View className="relative border border-slate-300 border-dashed p-5 pt-8 bg-white rounded-none mb-2">
+            <View className="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary px-3 py-1 z-10">
+              <Text className="text-white text-[10px] font-semibold uppercase tracking-wider">
+                Stoic Support
+              </Text>
+            </View>
+            <View className="items-center gap-3">
+              <Text className="text-primary font-bold text-base uppercase text-center">Find Calm in the Chaos</Text>
+              <Text className="text-slate-500 text-xs text-center leading-normal px-2">
+                Life’s challenges meet ancient wisdom. Discover tailored Stoic insights to help you tackle everyday issues with resilience.
+              </Text>
+              <TouchableOpacity
+                onPress={() => router.push({ pathname: '/stoic-support', params: { ip } })}
+                className="border border-primary px-4 py-2 bg-white"
+              >
+                <Text className="text-primary font-bold text-xs uppercase tracking-wider">Show me Stoic Insights</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
 
-          <TouchableOpacity
-            onPress={() => router.push({ pathname: '/random-question', params: { ip } })}
-            className="bg-white border-2 border-[#0F1739] p-4 rounded-none shadow-[3px_3px_0px_0px_#0F1739] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[2px_2px_0px_0px_#0f1739]"
-          >
-            <Text className="text-[#0F1739] font-black text-sm uppercase">❓ Random Questions</Text>
-            <Text className="text-slate-500 text-xxs font-bold mt-1">
-              Practice and boost your English speaking skills with timer-guided conversational prompts.
-            </Text>
-          </TouchableOpacity>
+          {/* Random Questions Highlight */}
+          <View className="relative border border-slate-300 border-dashed p-5 pt-8 bg-white rounded-none mb-2">
+            <View className="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary px-3 py-1 z-10">
+              <Text className="text-white text-[10px] font-semibold uppercase tracking-wider">
+                Random Questions
+              </Text>
+            </View>
+            <View className="items-center gap-3">
+              <Text className="text-primary font-bold text-base uppercase text-center">Surprise Yourself!</Text>
+              <Text className="text-slate-500 text-xs text-center leading-normal px-2">
+                Break the routine with unexpected questions to spark thought and conversation. Perfect for reflection or fun interactions!
+              </Text>
+              <TouchableOpacity
+                onPress={() => router.push({ pathname: '/random-question', params: { ip } })}
+                className="border border-primary px-4 py-2 bg-white"
+              >
+                <Text className="text-primary font-bold text-xs uppercase tracking-wider">Get a Random Question</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
 
-          <TouchableOpacity
-            onPress={() => router.push({ pathname: '/wins', params: { ip } })}
-            className="bg-white border-2 border-[#0F1739] p-4 rounded-none shadow-[3px_3px_0px_0px_#0F1739] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[2px_2px_0px_0px_#0f1739]"
-          >
-            <Text className="text-[#0F1739] font-black text-sm uppercase">🏆 Weekly Wins</Text>
-            <Text className="text-slate-500 text-xxs font-bold mt-1">
-              Log your personal, physical, professional, and spiritual highlights of the week!
-            </Text>
-          </TouchableOpacity>
+          {/* Weekly Wins Highlight */}
+          <View className="relative border border-slate-300 border-dashed p-5 pt-8 bg-white rounded-none mb-2">
+            <View className="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary px-3 py-1 z-10">
+              <Text className="text-white text-[10px] font-semibold uppercase tracking-wider">
+                Weekly Wins
+              </Text>
+            </View>
+            <View className="items-center gap-3">
+              <Text className="text-primary font-bold text-base uppercase text-center">Log Your Highlights</Text>
+              <Text className="text-slate-500 text-xs text-center leading-normal px-2">
+                Log your personal, physical, professional, and spiritual highlights of the week! Keep a visual track of your growth.
+              </Text>
+              <TouchableOpacity
+                onPress={() => router.push({ pathname: '/wins', params: { ip } })}
+                className="border border-primary px-4 py-2 bg-white"
+              >
+                <Text className="text-primary font-bold text-xs uppercase tracking-wider">Log Weekly Wins</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+
         </View>
 
       </ScrollView>
@@ -1114,109 +1263,109 @@ export default function DashboardScreen() {
                     className="w-8 h-8 mr-2"
                     resizeMode="contain"
                   />
-                  <Text className="text-[#0F1739] font-black text-sm uppercase">Handyfor.me</Text>
+                  <Text className="text-[#0F1739] font-bold text-sm uppercase">Handyfor.me</Text>
                 </View>
                 <TouchableOpacity 
                   className="w-8 h-8 border border-slate-300 items-center justify-center rounded-none"
                   onPress={() => setMenuOpen(false)}
                 >
-                  <Text className="text-[#0F1739] font-black text-xs">✕</Text>
+                  <Text className="text-[#0F1739] font-bold text-xs">✕</Text>
                 </TouchableOpacity>
               </View>
 
               {/* Navigation Links */}
               <View className="gap-3">
                 <TouchableOpacity
-                  className="py-3 px-4 bg-[#DDF906] border-2 border-[#0F1739] rounded-none flex-row items-center shadow-[2px_2px_0px_0px_#0F1739]"
+                  className="py-3 px-4 bg-primary border border-primary rounded-none flex-row items-center shadow-[1.5px_1.5px_0px_0px_#0F1739]"
                   onPress={() => {
                     setMenuOpen(false);
                     router.push({ pathname: '/dashboard', params: { ip } });
                   }}
                 >
-                  <Text className="text-[#0F1739] font-black text-xs uppercase tracking-wider">🏠 Dashboard</Text>
+                  <Text className="text-white font-bold text-xs uppercase tracking-wider">🏠 Dashboard</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                  className="py-3 px-4 bg-white border-2 border-[#0F1739] rounded-none active:bg-slate-100 flex-row items-center shadow-[2px_2px_0px_0px_#0F1739]"
+                  className="py-3 px-4 bg-white border border-primary rounded-none active:bg-slate-100 flex-row items-center shadow-[1.5px_1.5px_0px_0px_#0F1739]"
                   onPress={() => {
                     setMenuOpen(false);
                     router.push({ pathname: '/wins', params: { ip } });
                   }}
                 >
-                  <Text className="text-[#0F1739] font-black text-xs uppercase tracking-wider">🏆 Weekly Wins</Text>
+                  <Text className="text-[#0F1739] font-bold text-xs uppercase tracking-wider">🏆 Weekly Wins</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                  className="py-3 px-4 bg-white border-2 border-[#0F1739] rounded-none active:bg-slate-100 flex-row items-center shadow-[2px_2px_0px_0px_#0F1739]"
+                  className="py-3 px-4 bg-white border border-primary rounded-none active:bg-slate-100 flex-row items-center shadow-[1.5px_1.5px_0px_0px_#0F1739]"
                   onPress={() => {
                     setMenuOpen(false);
                     router.push({ pathname: '/decision-helper', params: { ip } });
                   }}
                 >
-                  <Text className="text-[#0F1739] font-black text-xs uppercase tracking-wider">🤔 Decision Helper</Text>
+                  <Text className="text-[#0F1739] font-bold text-xs uppercase tracking-wider">🤔 Decision Helper</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                  className="py-3 px-4 bg-white border-2 border-[#0F1739] rounded-none active:bg-slate-100 flex-row items-center shadow-[2px_2px_0px_0px_#0F1739]"
+                  className="py-3 px-4 bg-white border border-primary rounded-none active:bg-slate-100 flex-row items-center shadow-[1.5px_1.5px_0px_0px_#0F1739]"
                   onPress={() => {
                     setMenuOpen(false);
                     router.push({ pathname: '/bucket-list', params: { ip } });
                   }}
                 >
-                  <Text className="text-[#0F1739] font-black text-xs uppercase tracking-wider">🪣 Bucket List</Text>
+                  <Text className="text-[#0F1739] font-bold text-xs uppercase tracking-wider">🪣 Bucket List</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                  className="py-3 px-4 bg-white border-2 border-[#0F1739] rounded-none active:bg-slate-100 flex-row items-center shadow-[2px_2px_0px_0px_#0F1739]"
+                  className="py-3 px-4 bg-white border border-primary rounded-none active:bg-slate-100 flex-row items-center shadow-[1.5px_1.5px_0px_0px_#0F1739]"
                   onPress={() => {
                     setMenuOpen(false);
                     router.push({ pathname: '/vision-board', params: { ip } });
                   }}
                 >
-                  <Text className="text-[#0F1739] font-black text-xs uppercase tracking-wider">🖼️ Vision Board</Text>
+                  <Text className="text-[#0F1739] font-bold text-xs uppercase tracking-wider">🖼️ Vision Board</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                  className="py-3 px-4 bg-white border-2 border-[#0F1739] rounded-none active:bg-slate-100 flex-row items-center shadow-[2px_2px_0px_0px_#0F1739]"
+                  className="py-3 px-4 bg-white border border-primary rounded-none active:bg-slate-100 flex-row items-center shadow-[1.5px_1.5px_0px_0px_#0F1739]"
                   onPress={() => {
                     setMenuOpen(false);
                     router.push({ pathname: '/shortcuts', params: { ip } });
                   }}
                 >
-                  <Text className="text-[#0F1739] font-black text-xs uppercase tracking-wider">⚡ Shortcuts</Text>
+                  <Text className="text-[#0F1739] font-bold text-xs uppercase tracking-wider">⚡ Shortcuts</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                  className="py-3 px-4 bg-white border-2 border-[#0F1739] rounded-none active:bg-slate-100 flex-row items-center shadow-[2px_2px_0px_0px_#0F1739]"
+                  className="py-3 px-4 bg-white border border-primary rounded-none active:bg-slate-100 flex-row items-center shadow-[1.5px_1.5px_0px_0px_#0F1739]"
                   onPress={() => {
                     setMenuOpen(false);
                     router.push({ pathname: '/random-question', params: { ip } });
                   }}
                 >
-                  <Text className="text-[#0F1739] font-black text-xs uppercase tracking-wider">❓ Random Questions</Text>
+                  <Text className="text-[#0F1739] font-bold text-xs uppercase tracking-wider">❓ Random Questions</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                  className="py-3 px-4 bg-white border-2 border-[#0F1739] rounded-none active:bg-slate-100 flex-row items-center shadow-[2px_2px_0px_0px_#0F1739]"
+                  className="py-3 px-4 bg-white border border-primary rounded-none active:bg-slate-100 flex-row items-center shadow-[1.5px_1.5px_0px_0px_#0F1739]"
                   onPress={() => {
                     setMenuOpen(false);
                     router.push({ pathname: '/stoic-support', params: { ip } });
                   }}
                 >
-                  <Text className="text-[#0F1739] font-black text-xs uppercase tracking-wider">🧠 Stoic Support</Text>
+                  <Text className="text-[#0F1739] font-bold text-xs uppercase tracking-wider">🧠 Stoic Support</Text>
                 </TouchableOpacity>
               </View>
             </View>
 
             {/* Bottom logout block */}
             <TouchableOpacity
-              className="py-3 px-4 bg-rose-50 border-2 border-rose-500 rounded-none active:bg-rose-100 flex-row justify-center items-center"
+              className="py-3 px-4 bg-rose-50 border border-rose-500 rounded-none active:bg-rose-100 flex-row justify-center items-center"
               onPress={() => {
                 setMenuOpen(false);
                 handleLogout();
               }}
             >
-              <Text className="text-rose-600 font-black text-xs uppercase tracking-wider">Sign Out</Text>
+              <Text className="text-rose-600 font-bold text-xs uppercase tracking-wider">Sign Out</Text>
             </TouchableOpacity>
           </View>
           
