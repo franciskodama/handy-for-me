@@ -12,6 +12,7 @@
     "db:backup": "tsx scripts/backup-data.ts"
   },
   "dependencies": {
+    "@capacitor/core": "^8.4.0",
     "@dnd-kit/core": "^6.3.1",
     "@dnd-kit/sortable": "^10.0.0",
     "@dnd-kit/utilities": "^3.2.2",
@@ -86,6 +87,9 @@
     "@types/react-dom": "npm:types-react-dom@19.0.0-rc.1"
   },
   "devDependencies": {
+    "@capacitor/android": "^8.4.0",
+    "@capacitor/cli": "^8.4.0",
+    "@capacitor/ios": "^8.4.0",
     "@google-cloud/storage": "^7.19.0",
     "@types/jspdf": "^2.0.0",
     "@types/leaflet": "^1.9.21",
