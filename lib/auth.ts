@@ -6,7 +6,10 @@ import { authConfig } from './auth.config';
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   ...authConfig,
-  providers: [GitHub, Google],
+  providers: [
+    GitHub({ checks: ['none'] }),
+    Google({ checks: ['none'] })
+  ],
   callbacks: {
     async signIn({ user }) {
       if (user.email) {
