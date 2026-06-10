@@ -14,6 +14,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as SecureStore from 'expo-secure-store';
 import { BottomTabInset } from '@/constants/theme';
+import { NeobrutalistCard } from '@/components/neobrutalist-card';
 
 interface ShortcutCategory {
   id: string;
@@ -507,11 +508,11 @@ export default function ShortcutsScreen() {
   };
 
   return (
-    <View className="flex-1 bg-[#f8fafc]">
+    <View className="flex-1 bg-background">
       
       {/* Quote Banner */}
       {currentQuote.quote ? (
-        <SafeAreaView edges={['top']} className="bg-[#0F1739]">
+        <SafeAreaView edges={['top']} className="bg-primary">
           <View className="px-6 py-2.5 justify-center items-center">
             <Text className="text-white text-[9.5px] font-black text-center uppercase tracking-widest leading-tight">
               "{currentQuote.quote.toUpperCase()}"  —  {currentQuote.author.toUpperCase()}
@@ -521,24 +522,24 @@ export default function ShortcutsScreen() {
       ) : null}
 
       {/* Header Container */}
-      <View className="flex-row justify-between items-center bg-white border-b-2 border-[#0F1739] px-5 py-3.5">
+      <View className="flex-row justify-between items-center bg-white border-b-2 border-primary px-5 py-3.5">
         {/* Drawer menu button */}
         <TouchableOpacity 
-          className="w-10 h-10 bg-white border-2 border-[#0F1739] rounded-none items-center justify-center shadow-[2px_2px_0px_0px_#0F1739] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[1px_1px_0px_0px_#0F1739]"
+          className="w-10 h-10 bg-white border-2 border-primary rounded-none items-center justify-center shadow-[2px_2px_0px_0px_#0F1739] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[1px_1px_0px_0px_#0F1739]"
           onPress={() => setMenuOpen(true)}
         >
-          <View className="w-5 h-0.5 bg-[#0F1739] my-0.5" />
-          <View className="w-5 h-0.5 bg-[#0F1739] my-0.5" />
-          <View className="w-5 h-0.5 bg-[#0F1739] my-0.5" />
+          <View className="w-5 h-0.5 bg-primary my-0.5" />
+          <View className="w-5 h-0.5 bg-primary my-0.5" />
+          <View className="w-5 h-0.5 bg-primary my-0.5" />
         </TouchableOpacity>
 
         {/* Greetings and Profile Avatar */}
         <View className="flex-row items-center">
-          <Text className="text-[#0F1739] text-base font-black mr-3">
+          <Text className="text-primary text-base font-black mr-3">
             Howdy {getFirstName()}! 🤠
           </Text>
           <TouchableOpacity 
-            className="w-9 h-9 border-2 border-[#0F1739] rounded-none bg-slate-200 justify-center items-center shadow-[2px_2px_0px_0px_#0F1739] active:bg-rose-50"
+            className="w-9 h-9 border-2 border-primary rounded-none bg-slate-200 justify-center items-center shadow-[2px_2px_0px_0px_#0F1739] active:bg-rose-50"
             onPress={handleLogout}
           >
             {userData?.image ? (
@@ -554,18 +555,18 @@ export default function ShortcutsScreen() {
       <ScrollView className="flex-1 px-4 py-3" style={{ marginBottom: BottomTabInset }} showsVerticalScrollIndicator={false}>
         
         {/* Main Neobrutalist Dashboard Card */}
-        <View className="bg-white border-2 border-[#0F1739] rounded-none p-5 mb-8 shadow-[4px_4px_0px_0px_#0f1739]">
+        <NeobrutalistCard containerClassName="mb-8" cardClassName="p-5" borderColor="border-primary" shadowColor="bg-primary">
           
           {/* Shortcuts Header Row */}
           <View className="flex-row justify-between items-center mb-2 flex-wrap gap-2">
             <View className="flex-row items-center gap-2">
-              <Text className="text-[#0F1739] text-3xl font-black uppercase tracking-tighter">Shortcuts</Text>
+              <Text className="text-primary text-3xl font-black uppercase tracking-tighter">Shortcuts</Text>
               <View className="bg-slate-100 px-2 py-0.5 border border-slate-300">
                 <Text className="text-slate-500 font-bold text-[9px] uppercase tracking-wider">🔒 Personal</Text>
               </View>
             </View>
-            <View className="w-7 h-7 rounded-full border-2 border-[#0F1739] justify-center items-center">
-              <Text className="text-[#0F1739] font-black text-xs">?</Text>
+            <View className="w-7 h-7 rounded-full border-2 border-primary justify-center items-center">
+              <Text className="text-primary font-black text-xs">?</Text>
             </View>
           </View>
           
@@ -578,12 +579,12 @@ export default function ShortcutsScreen() {
             
             {/* Create new category */}
             <View className="bg-slate-50 border border-slate-200 p-4 rounded-none">
-              <Text className="text-[#0F1739] font-black text-xs uppercase mb-3">Add a Category</Text>
+              <Text className="text-primary font-black text-xs uppercase mb-3">Add a Category</Text>
               
               {/* Category Name */}
               <View className="mb-3">
                 <TextInput
-                  className="bg-white text-[#0F1739] font-bold rounded-none px-3.5 py-2 border-2 border-[#0F1739] text-sm h-10"
+                  className="bg-white text-primary font-bold rounded-none px-3.5 py-2 border-2 border-primary text-sm h-10"
                   placeholder="Category Name"
                   placeholderTextColor="#94a3b8"
                   value={newCatName}
@@ -594,23 +595,23 @@ export default function ShortcutsScreen() {
               {/* Color Dropdown */}
               <View className="mb-4 relative z-50">
                 <TouchableOpacity
-                  className="bg-white border-2 border-[#0F1739] px-3.5 py-2 flex-row justify-between items-center rounded-none h-10"
+                  className="bg-white border-2 border-primary px-3.5 py-2 flex-row justify-between items-center rounded-none h-10"
                   onPress={() => setCatDropdownOpen(!catDropdownOpen)}
                 >
                   <View className="flex-row items-center">
                     <View 
                       style={{ backgroundColor: getCategoryColorStyles(newCatColor).bgColor }}
-                      className="w-3.5 h-3.5 border border-[#0F1739] mr-2"
+                      className="w-3.5 h-3.5 border border-primary mr-2"
                     />
-                    <Text className="text-[#0F1739] font-bold text-sm">
+                    <Text className="text-primary font-bold text-sm">
                       {newCatColor}
                     </Text>
                   </View>
-                  <Text className="text-[#0F1739] font-bold text-xs">▼</Text>
+                  <Text className="text-primary font-bold text-xs">▼</Text>
                 </TouchableOpacity>
 
                 {catDropdownOpen && (
-                  <View className="absolute top-[42px] left-0 right-0 bg-white border-2 border-[#0F1739] rounded-none z-50 shadow-[3px_3px_0px_0px_#0F1739] max-h-[160px]">
+                  <View className="absolute top-[42px] left-0 right-0 bg-white border-2 border-primary rounded-none z-50 shadow-[3px_3px_0px_0px_#0F1739] max-h-[160px]">
                     <ScrollView nestedScrollEnabled={true}>
                       {colorPalette.map(color => (
                         <TouchableOpacity
@@ -623,9 +624,9 @@ export default function ShortcutsScreen() {
                         >
                           <View 
                             style={{ backgroundColor: color.code }}
-                            className="w-3 h-3 border border-[#0F1739] mr-2"
+                            className="w-3 h-3 border border-primary mr-2"
                           />
-                          <Text className="text-[#0F1739] font-bold text-sm">{color.name}</Text>
+                          <Text className="text-primary font-bold text-sm">{color.name}</Text>
                         </TouchableOpacity>
                       ))}
                     </ScrollView>
@@ -634,7 +635,7 @@ export default function ShortcutsScreen() {
               </View>
 
               <TouchableOpacity
-                className="bg-[#0F1739] justify-center items-center py-2.5 px-4 rounded-none border-2 border-[#0F1739] shadow-[2px_2px_0px_0px_#0F1739] self-start"
+                className="bg-primary justify-center items-center py-2.5 px-4 rounded-none border-2 border-primary shadow-[2px_2px_0px_0px_#0F1739] self-start"
                 onPress={handleCreateCategory}
               >
                 <Text className="text-white font-black text-xs uppercase tracking-wider">Create Category</Text>
@@ -644,12 +645,12 @@ export default function ShortcutsScreen() {
             {/* Create new Shortcut */}
             {categories.length > 0 && (
               <View className="bg-slate-50 border border-slate-200 p-4 rounded-none">
-                <Text className="text-[#0F1739] font-black text-xs uppercase mb-3">Add a Shortcut</Text>
+                <Text className="text-primary font-black text-xs uppercase mb-3">Add a Shortcut</Text>
 
                 {/* Shortcut Name */}
                 <View className="mb-3">
                   <TextInput
-                    className="bg-white text-[#0F1739] font-bold rounded-none px-3.5 py-2 border-2 border-[#0F1739] text-sm h-10"
+                    className="bg-white text-primary font-bold rounded-none px-3.5 py-2 border-2 border-primary text-sm h-10"
                     placeholder="Shortcut Name"
                     placeholderTextColor="#94a3b8"
                     value={newShortcutName}
@@ -660,7 +661,7 @@ export default function ShortcutsScreen() {
                 {/* URL */}
                 <View className="mb-3">
                   <TextInput
-                    className="bg-white text-[#0F1739] font-bold rounded-none px-3.5 py-2 border-2 border-[#0F1739] text-sm h-10"
+                    className="bg-white text-primary font-bold rounded-none px-3.5 py-2 border-2 border-primary text-sm h-10"
                     placeholder="URL (e.g. google.com)"
                     placeholderTextColor="#94a3b8"
                     value={newShortcutUrl}
@@ -672,7 +673,7 @@ export default function ShortcutsScreen() {
                 {/* Description */}
                 <View className="mb-3">
                   <TextInput
-                    className="bg-white text-[#0F1739] font-bold rounded-none px-3.5 py-2 border-2 border-[#0F1739] text-sm h-10"
+                    className="bg-white text-primary font-bold rounded-none px-3.5 py-2 border-2 border-primary text-sm h-10"
                     placeholder="Description (Optional)"
                     placeholderTextColor="#94a3b8"
                     value={newShortcutDesc}
@@ -683,17 +684,17 @@ export default function ShortcutsScreen() {
                 {/* Category Picker */}
                 <View className="mb-4 relative z-50">
                   <TouchableOpacity
-                    className="bg-white border-2 border-[#0F1739] px-3.5 py-2 flex-row justify-between items-center rounded-none h-10"
+                    className="bg-white border-2 border-primary px-3.5 py-2 flex-row justify-between items-center rounded-none h-10"
                     onPress={() => setShortcutCatDropdownOpen(!shortcutCatDropdownOpen)}
                   >
-                    <Text className="text-[#0F1739] font-black text-sm uppercase">
+                    <Text className="text-primary font-black text-sm uppercase">
                       {categories.find(c => c.id === selectedCatId)?.category || 'Select Category'}
                     </Text>
-                    <Text className="text-[#0F1739] font-bold text-xs">▼</Text>
+                    <Text className="text-primary font-bold text-xs">▼</Text>
                   </TouchableOpacity>
 
                   {shortcutCatDropdownOpen && (
-                    <View className="absolute top-[42px] left-0 right-0 bg-white border-2 border-[#0F1739] rounded-none z-50 shadow-[3px_3px_0px_0px_#0F1739] max-h-[160px]">
+                    <View className="absolute top-[42px] left-0 right-0 bg-white border-2 border-primary rounded-none z-50 shadow-[3px_3px_0px_0px_#0F1739] max-h-[160px]">
                       <ScrollView nestedScrollEnabled={true}>
                         {categories.map(cat => (
                           <TouchableOpacity
@@ -704,7 +705,7 @@ export default function ShortcutsScreen() {
                               setShortcutCatDropdownOpen(false);
                             }}
                           >
-                            <Text className="text-[#0F1739] font-bold text-sm uppercase">{cat.category}</Text>
+                            <Text className="text-primary font-bold text-sm uppercase">{cat.category}</Text>
                           </TouchableOpacity>
                         ))}
                       </ScrollView>
@@ -713,7 +714,7 @@ export default function ShortcutsScreen() {
                 </View>
 
                 <TouchableOpacity
-                  className="bg-[#0F1739] justify-center items-center py-2.5 px-4 rounded-none border-2 border-[#0F1739] shadow-[2px_2px_0px_0px_#0F1739] self-start"
+                  className="bg-primary justify-center items-center py-2.5 px-4 rounded-none border-2 border-primary shadow-[2px_2px_0px_0px_#0F1739] self-start"
                   onPress={handleCreateShortcut}
                 >
                   <Text className="text-white font-black text-xs uppercase tracking-wider">Add Shortcut</Text>
@@ -733,8 +734,8 @@ export default function ShortcutsScreen() {
               <Text className="text-slate-500 text-xs mt-2 font-mono font-semibold">Syncing database...</Text>
             </View>
           ) : boardGroups.length === 0 ? (
-            <View className="py-12 items-center justify-center bg-slate-50 border-2 border-dashed border-[#0F1739] rounded-none">
-              <Text className="text-[#0F1739] text-center font-black text-sm mb-1 uppercase">Shortcut Not Found 👻</Text>
+            <View className="py-12 items-center justify-center bg-slate-50 border-2 border-dashed border-primary rounded-none">
+              <Text className="text-primary text-center font-black text-sm mb-1 uppercase">Shortcut Not Found 👻</Text>
               <Text className="text-slate-400 text-center text-xs font-semibold px-8 leading-relaxed">
                 Start by adding a category for easy organization, then save your first shortcut here. Get ready to access your favorites in a click!
               </Text>
@@ -751,7 +752,7 @@ export default function ShortcutsScreen() {
                     {/* Category Header Bar */}
                     <View 
                       style={{ backgroundColor: colors.bgColor }}
-                      className="flex-row justify-between items-center rounded-none px-4 py-3 mb-2 border border-[#0F1739]"
+                      className="flex-row justify-between items-center rounded-none px-4 py-3 mb-2 border border-primary"
                     >
                       <Text 
                         style={{ color: colors.textColor }}
@@ -760,7 +761,7 @@ export default function ShortcutsScreen() {
                         {category.category}
                       </Text>
                       <TouchableOpacity 
-                        className="w-5 h-5 bg-white border border-[#0F1739] items-center justify-center rounded-none active:bg-rose-50"
+                        className="w-5 h-5 bg-white border border-primary items-center justify-center rounded-none active:bg-rose-50"
                         onPress={() => handleDeleteCategory(category)}
                       >
                         <Text className="text-black text-[9px]">🗑️</Text>
@@ -772,12 +773,12 @@ export default function ShortcutsScreen() {
                       const expanded = expandedIds.has(shortcut.id);
                       return (
                         <View key={shortcut.id} className="mb-2">
-                          <View className="flex-row justify-between items-center border border-[#0F1739] p-3.5 bg-white rounded-none">
+                          <View className="flex-row justify-between items-center border border-primary p-3.5 bg-white rounded-none">
                             <TouchableOpacity 
                               className="flex-1 mr-4 active:opacity-60"
                               onPress={() => handleOpenLink(shortcut.url)}
                             >
-                              <Text className="text-[#0F1739] text-xs font-black uppercase tracking-tight">
+                              <Text className="text-primary text-xs font-black uppercase tracking-tight">
                                 {shortcut.shortcut}
                               </Text>
                             </TouchableOpacity>
@@ -805,7 +806,7 @@ export default function ShortcutsScreen() {
 
                           {/* Collapsible description panel */}
                           {expanded && (
-                            <View className="bg-[#0F1739] border-x border-b border-[#0F1739] p-3 rounded-none">
+                            <View className="bg-primary border-x border-b border-primary p-3 rounded-none">
                               <Text className="text-white text-xxs font-black uppercase tracking-wide leading-relaxed">
                                 {shortcut.description || 'No description available.'}
                               </Text>
@@ -823,13 +824,13 @@ export default function ShortcutsScreen() {
             </View>
           )}
 
-        </View>
+        </NeobrutalistCard>
       </ScrollView>
 
       {/* Drawer Navigation Overlay */}
       {menuOpen && (
         <View className="absolute inset-0 bg-black/60 z-50 flex-row">
-          <View className="w-[260px] h-full bg-[#f8fafc] border-r-2 border-[#0F1739] p-5 justify-between">
+          <View className="w-[260px] h-full bg-background border-r-2 border-primary p-5 justify-between">
             <View>
               {/* Drawer Header */}
               <View className="flex-row justify-between items-center mb-8 pb-4 border-b border-slate-100">
@@ -839,96 +840,96 @@ export default function ShortcutsScreen() {
                     className="w-8 h-8 mr-2"
                     resizeMode="contain"
                   />
-                  <Text className="text-[#0F1739] font-black text-sm uppercase">Handyfor.me</Text>
+                  <Text className="text-primary font-black text-sm uppercase">Handyfor.me</Text>
                 </View>
                 <TouchableOpacity 
                   className="w-8 h-8 border border-slate-300 items-center justify-center rounded-none"
                   onPress={() => setMenuOpen(false)}
                 >
-                  <Text className="text-[#0F1739] font-black text-xs">✕</Text>
+                  <Text className="text-primary font-black text-xs">✕</Text>
                 </TouchableOpacity>
               </View>
 
               {/* Navigation Links */}
               <View className="gap-3">
                 <TouchableOpacity
-                  className="py-3 px-4 bg-white border-2 border-[#0F1739] rounded-none active:bg-slate-100 flex-row items-center shadow-[2px_2px_0px_0px_#0F1739]"
+                  className="py-3 px-4 bg-white border-2 border-primary rounded-none active:bg-slate-100 flex-row items-center shadow-[2px_2px_0px_0px_#0F1739]"
                   onPress={() => {
                     setMenuOpen(false);
                     router.push({ pathname: '/dashboard', params: { ip } });
                   }}
                 >
-                  <Text className="text-[#0F1739] font-black text-xs uppercase tracking-wider">🏠 Dashboard</Text>
+                  <Text className="text-primary font-black text-xs uppercase tracking-wider">🏠 Dashboard</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                  className="py-3 px-4 bg-white border-2 border-[#0F1739] rounded-none active:bg-slate-100 flex-row items-center shadow-[2px_2px_0px_0px_#0F1739]"
+                  className="py-3 px-4 bg-white border-2 border-primary rounded-none active:bg-slate-100 flex-row items-center shadow-[2px_2px_0px_0px_#0F1739]"
                   onPress={() => {
                     setMenuOpen(false);
                     router.push({ pathname: '/wins', params: { ip } });
                   }}
                 >
-                  <Text className="text-[#0F1739] font-black text-xs uppercase tracking-wider">🏆 Weekly Wins</Text>
+                  <Text className="text-primary font-black text-xs uppercase tracking-wider">🏆 Weekly Wins</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                  className="py-3 px-4 bg-white border-2 border-[#0F1739] rounded-none active:bg-slate-100 flex-row items-center shadow-[2px_2px_0px_0px_#0F1739]"
+                  className="py-3 px-4 bg-white border-2 border-primary rounded-none active:bg-slate-100 flex-row items-center shadow-[2px_2px_0px_0px_#0F1739]"
                   onPress={() => {
                     setMenuOpen(false);
                     router.push({ pathname: '/decision-helper', params: { ip } });
                   }}
                 >
-                  <Text className="text-[#0F1739] font-black text-xs uppercase tracking-wider">🤔 Decision Helper</Text>
+                  <Text className="text-primary font-black text-xs uppercase tracking-wider">🤔 Decision Helper</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                  className="py-3 px-4 bg-white border-2 border-[#0F1739] rounded-none active:bg-slate-100 flex-row items-center shadow-[2px_2px_0px_0px_#0F1739]"
+                  className="py-3 px-4 bg-white border-2 border-primary rounded-none active:bg-slate-100 flex-row items-center shadow-[2px_2px_0px_0px_#0F1739]"
                   onPress={() => {
                     setMenuOpen(false);
                     router.push({ pathname: '/bucket-list', params: { ip } });
                   }}
                 >
-                  <Text className="text-[#0F1739] font-black text-xs uppercase tracking-wider">🪣 Bucket List</Text>
+                  <Text className="text-primary font-black text-xs uppercase tracking-wider">🪣 Bucket List</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                  className="py-3 px-4 bg-white border-2 border-[#0F1739] rounded-none active:bg-slate-100 flex-row items-center shadow-[2px_2px_0px_0px_#0F1739]"
+                  className="py-3 px-4 bg-white border-2 border-primary rounded-none active:bg-slate-100 flex-row items-center shadow-[2px_2px_0px_0px_#0F1739]"
                   onPress={() => {
                     setMenuOpen(false);
                     router.push({ pathname: '/vision-board', params: { ip } });
                   }}
                 >
-                  <Text className="text-[#0F1739] font-black text-xs uppercase tracking-wider">🖼️ Vision Board</Text>
+                  <Text className="text-primary font-black text-xs uppercase tracking-wider">🖼️ Vision Board</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                  className="py-3 px-4 bg-white border-2 border-[#0F1739] rounded-none active:bg-slate-100 flex-row items-center shadow-[2px_2px_0px_0px_#0F1739]"
+                  className="py-3 px-4 bg-white border-2 border-primary rounded-none active:bg-slate-100 flex-row items-center shadow-[2px_2px_0px_0px_#0F1739]"
                   onPress={() => {
                     setMenuOpen(false);
                     router.push({ pathname: '/shortcuts', params: { ip } });
                   }}
                 >
-                  <Text className="text-[#0F1739] font-black text-xs uppercase tracking-wider">⚡ Shortcuts</Text>
+                  <Text className="text-primary font-black text-xs uppercase tracking-wider">⚡ Shortcuts</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                  className="py-3 px-4 bg-white border-2 border-[#0F1739] rounded-none active:bg-slate-100 flex-row items-center shadow-[2px_2px_0px_0px_#0F1739]"
+                  className="py-3 px-4 bg-white border-2 border-primary rounded-none active:bg-slate-100 flex-row items-center shadow-[2px_2px_0px_0px_#0F1739]"
                   onPress={() => {
                     setMenuOpen(false);
                     router.push({ pathname: '/random-question', params: { ip } });
                   }}
                 >
-                  <Text className="text-[#0F1739] font-black text-xs uppercase tracking-wider">❓ Random Questions</Text>
+                  <Text className="text-primary font-black text-xs uppercase tracking-wider">❓ Random Questions</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                  className="py-3 px-4 bg-white border-2 border-[#0F1739] rounded-none active:bg-slate-100 flex-row items-center shadow-[2px_2px_0px_0px_#0F1739]"
+                  className="py-3 px-4 bg-white border-2 border-primary rounded-none active:bg-slate-100 flex-row items-center shadow-[2px_2px_0px_0px_#0F1739]"
                   onPress={() => {
                     setMenuOpen(false);
                     router.push({ pathname: '/stoic-support', params: { ip } });
                   }}
                 >
-                  <Text className="text-[#0F1739] font-black text-xs uppercase tracking-wider">🧠 Stoic Support</Text>
+                  <Text className="text-primary font-black text-xs uppercase tracking-wider">🧠 Stoic Support</Text>
                 </TouchableOpacity>
               </View>
             </View>

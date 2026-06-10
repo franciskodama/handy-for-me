@@ -13,6 +13,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as SecureStore from 'expo-secure-store';
 import { BottomTabInset } from '@/constants/theme';
+import { NeobrutalistCard } from '@/components/neobrutalist-card';
 
 interface UserData {
   email: string;
@@ -1161,12 +1162,12 @@ export default function StoicSupportScreen() {
   const sortedStoicResponses = [...stoicResponses].sort((a, b) => a.category.localeCompare(b.category));
 
   return (
-    <SafeAreaView className="flex-1 bg-[#F8FAFC]" edges={['top', 'left', 'right']}>
+    <SafeAreaView className="flex-1 bg-background" edges={['top', 'left', 'right']}>
       
       {/* Dynamic Header Quote Banner */}
       {currentQuote.quote ? (
-        <View className="bg-[#DDF906] border-b-2 border-[#0F1739] px-4 py-2.5 flex-row justify-between items-center">
-          <Text className="text-[#0F1739] font-bold text-xs flex-1 mr-2" numberOfLines={1}>
+        <View className="bg-accent border-b-2 border-primary px-4 py-2.5 flex-row justify-between items-center">
+          <Text className="text-primary font-bold text-xs flex-1 mr-2" numberOfLines={1}>
             "{currentQuote.quote}" — {currentQuote.author}
           </Text>
           <TouchableOpacity 
@@ -1174,33 +1175,33 @@ export default function StoicSupportScreen() {
               const randomIdx = Math.floor(Math.random() * quotes.length);
               setCurrentQuote(quotes[randomIdx]);
             }}
-            className="w-5 h-5 border border-[#0F1739] justify-center items-center rounded-none bg-white"
+            className="w-5 h-5 border border-primary justify-center items-center rounded-none bg-card"
           >
-            <Text className="text-[#0F1739] font-black text-[10px]">↻</Text>
+            <Text className="text-primary font-black text-[10px]">↻</Text>
           </TouchableOpacity>
         </View>
       ) : null}
 
       {/* Top Navbar */}
-      <View className="flex-row justify-between items-center px-4 py-3 border-b-2 border-[#0F1739] bg-white">
+      <View className="flex-row justify-between items-center px-4 py-3 border-b-2 border-primary bg-card">
         
         {/* Menu Burger Drawer Button */}
         <TouchableOpacity 
-          className="w-10 h-9 border-2 border-[#0F1739] bg-white rounded-none justify-center items-center shadow-[2px_2px_0px_0px_#0F1739] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[1px_1px_0px_0px_#0F1739]"
+          className="w-10 h-9 border-2 border-primary bg-card rounded-none justify-center items-center shadow-[2px_2px_0px_0px_#0F1739] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[1px_1px_0px_0px_#0F1739]"
           onPress={() => setMenuOpen(true)}
         >
-          <View className="w-5 h-0.5 bg-[#0F1739] my-0.5" />
-          <View className="w-5 h-0.5 bg-[#0F1739] my-0.5" />
-          <View className="w-5 h-0.5 bg-[#0F1739] my-0.5" />
+          <View className="w-5 h-0.5 bg-primary my-0.5" />
+          <View className="w-5 h-0.5 bg-primary my-0.5" />
+          <View className="w-5 h-0.5 bg-primary my-0.5" />
         </TouchableOpacity>
 
         {/* Greetings and Profile Avatar */}
         <View className="flex-row items-center">
-          <Text className="text-[#0F1739] text-base font-black mr-3">
+          <Text className="text-primary text-base font-black mr-3">
             Howdy {getFirstName()}! 🤠
           </Text>
           <TouchableOpacity 
-            className="w-9 h-9 border-2 border-[#0F1739] rounded-none bg-slate-200 justify-center items-center shadow-[2px_2px_0px_0px_#0F1739] active:bg-rose-50"
+            className="w-9 h-9 border-2 border-primary rounded-none bg-slate-200 justify-center items-center shadow-[2px_2px_0px_0px_#0F1739] active:bg-rose-50"
             onPress={handleLogout}
           >
             {userData?.image ? (
@@ -1216,21 +1217,21 @@ export default function StoicSupportScreen() {
       <ScrollView className="flex-1 px-4 py-3" style={{ marginBottom: BottomTabInset }} showsVerticalScrollIndicator={false}>
         
         {/* Main Dashboard Card */}
-        <View className="bg-white border-2 border-[#0F1739] rounded-none p-5 mb-8 shadow-[4px_4px_0px_0px_#0f1739]">
+        <NeobrutalistCard containerClassName="mb-8" cardClassName="p-5" borderColor="border-primary" shadowColor="bg-primary">
           
           {/* Header Row with Title and Help "?" Toggle */}
           <View className="flex-row justify-between items-center mb-2 flex-wrap gap-2">
             <View className="flex-row items-center gap-2">
-              <Text className="text-[#0F1739] text-3xl font-black uppercase tracking-tighter">Stoic Support</Text>
+              <Text className="text-primary text-3xl font-black uppercase tracking-tighter">Stoic Support</Text>
               <View className="bg-slate-100 px-2 py-0.5 border border-slate-300">
                 <Text className="text-slate-500 font-bold text-[9px] uppercase tracking-wider">🔒 Personal</Text>
               </View>
             </View>
             <TouchableOpacity 
               onPress={() => setShowExplanation(!showExplanation)}
-              className="w-7 h-7 rounded-full border-2 border-[#0F1739] bg-white justify-center items-center active:bg-slate-100"
+              className="w-7 h-7 rounded-full border-2 border-primary bg-card justify-center items-center active:bg-slate-100"
             >
-              <Text className="text-[#0F1739] font-black text-xs">?</Text>
+              <Text className="text-primary font-black text-xs">?</Text>
             </TouchableOpacity>
           </View>
 
@@ -1240,47 +1241,47 @@ export default function StoicSupportScreen() {
 
           {/* ExplanationBox Help Overlay */}
           {showExplanation && (
-            <View className="bg-slate-50 border-2 border-[#0F1739] p-4 rounded-none mb-6">
+            <View className="bg-slate-50 border-2 border-primary p-4 rounded-none mb-6">
               
               <View className="flex-row justify-between items-center mb-3 border-b border-slate-200 pb-2">
-                <Text className="text-[#0F1739] font-black text-xs uppercase">🌾 What's This?</Text>
+                <Text className="text-primary font-black text-xs uppercase">🌾 What's This?</Text>
               </View>
-              <Text className="text-[#0F1739] text-xs font-semibold mb-4 leading-relaxed">
+              <Text className="text-primary text-xs font-semibold mb-4 leading-relaxed">
                 Navigate life’s challenges with wisdom. Stoic Support offers guidance rooted in Stoic philosophy, helping you find clarity and resilience when facing obstacles, big or small.
               </Text>
 
               <View className="flex-row justify-between items-center mb-3 border-b border-slate-200 pb-2">
-                <Text className="text-[#0F1739] font-black text-xs uppercase">⚙️ How to use</Text>
+                <Text className="text-primary font-black text-xs uppercase">⚙️ How to use</Text>
               </View>
               <View className="gap-2 mb-4">
-                <Text className="text-[#0F1739] text-xs font-bold leading-normal">
+                <Text className="text-primary text-xs font-bold leading-normal">
                   • Select a Category: <Text className="font-semibold text-slate-500">Choose an area that resonates with your current situation.</Text>
                 </Text>
-                <Text className="text-[#0F1739] text-xs font-bold leading-normal">
+                <Text className="text-primary text-xs font-bold leading-normal">
                   • Identify Challenge: <Text className="font-semibold text-slate-500">Pick a specific topic that matches your struggle.</Text>
                 </Text>
-                <Text className="text-[#0F1739] text-xs font-bold leading-normal">
+                <Text className="text-primary text-xs font-bold leading-normal">
                   • Receive Insight: <Text className="font-semibold text-slate-500">See Stoic advice with quotes, authors and guidance.</Text>
                 </Text>
-                <Text className="text-[#0F1739] text-xs font-bold leading-normal">
+                <Text className="text-primary text-xs font-bold leading-normal">
                   • Copy: <Text className="font-semibold text-slate-500">Use the Copy button to save or share wisdom.</Text>
                 </Text>
               </View>
 
               <View className="flex-row justify-between items-center mb-3 border-b border-slate-200 pb-2">
-                <Text className="text-[#0F1739] font-black text-xs uppercase">❤️ Why You Need It</Text>
+                <Text className="text-primary font-black text-xs uppercase">❤️ Why You Need It</Text>
               </View>
               <View className="gap-2 mb-4">
-                <Text className="text-[#0F1739] text-xs font-bold leading-normal">
+                <Text className="text-primary text-xs font-bold leading-normal">
                   • Gain Perspective: <Text className="font-semibold text-slate-500">Shift viewpoints to approach life with calm and clarity.</Text>
                 </Text>
-                <Text className="text-[#0F1739] text-xs font-bold leading-normal">
+                <Text className="text-primary text-xs font-bold leading-normal">
                   • Build Resilience: <Text className="font-semibold text-slate-500">Discover inner strength through ancient principles.</Text>
                 </Text>
               </View>
 
               <TouchableOpacity
-                className="bg-[#0F1739] py-2 px-4 rounded-none border-2 border-[#0F1739] shadow-[2px_2px_0px_0px_#0F1739] active:translate-x-[1px] active:translate-y-[1px] self-start"
+                className="bg-primary py-2 px-4 rounded-none border-2 border-primary shadow-[2px_2px_0px_0px_#0F1739] active:translate-x-[1px] active:translate-y-[1px] self-start"
                 onPress={() => setShowExplanation(false)}
               >
                 <Text className="text-white font-black text-[10px] uppercase tracking-wider">Find Your Stoic Path</Text>
@@ -1289,7 +1290,7 @@ export default function StoicSupportScreen() {
           )}
 
           {/* Interactive Categories list */}
-          <Text className="text-[#0F1739] text-sm font-black text-center mb-6 uppercase tracking-wider">
+          <Text className="text-primary text-sm font-black text-center mb-6 uppercase tracking-wider">
             Click on a category, and choose a topic:
           </Text>
 
@@ -1299,37 +1300,37 @@ export default function StoicSupportScreen() {
               const emoji = categoryEmojis[catItem.category] || '🏛️';
 
               return (
-                <View key={catItem.category} className="border-2 border-[#0F1739] rounded-none bg-white">
+                <View key={catItem.category} className="border-2 border-primary rounded-none bg-card">
                   
                   {/* Category Header Button */}
                   <TouchableOpacity
                     onPress={() => toggleCategory(catItem.category)}
-                    className="flex-row justify-between items-center p-4 bg-white active:bg-slate-50"
+                    className="flex-row justify-between items-center p-4 bg-card active:bg-slate-50"
                   >
                     <View className="flex-row items-center gap-2.5">
-                      <Text className="text-[#0F1739] text-xl font-bold">{emoji}</Text>
-                      <Text className="text-[#0F1739] text-sm font-black uppercase tracking-tight">
+                      <Text className="text-primary text-xl font-bold">{emoji}</Text>
+                      <Text className="text-primary text-sm font-black uppercase tracking-tight">
                         {catItem.category}
                       </Text>
                     </View>
-                    <Text className="text-[#0F1739] text-xs font-black">
+                    <Text className="text-primary text-xs font-black">
                       {isExpanded ? '▲' : '▼'}
                     </Text>
                   </TouchableOpacity>
 
                   {/* Collapsible Accordion Topics Content */}
                   {isExpanded && (
-                    <View className="bg-slate-50 border-t-2 border-[#0F1739] p-3 gap-2">
+                    <View className="bg-slate-50 border-t-2 border-primary p-3 gap-2">
                       {catItem.topics.map((topicItem) => (
                         <TouchableOpacity
                           key={topicItem.topic}
-                          className="bg-white border border-[#0F1739] p-3 rounded-none active:bg-slate-100 shadow-[1px_1px_0px_0px_#0F1739]"
+                          className="bg-card border border-primary p-3 rounded-none active:bg-slate-100 shadow-[1px_1px_0px_0px_#0F1739]"
                           onPress={() => setSelectedTopic({
                             category: catItem.category,
                             ...topicItem
                           })}
                         >
-                          <Text className="text-[#0F1739] text-xs font-bold leading-normal">
+                          <Text className="text-primary text-xs font-bold leading-normal">
                             {topicItem.topic}
                           </Text>
                         </TouchableOpacity>
@@ -1341,7 +1342,7 @@ export default function StoicSupportScreen() {
             })}
           </View>
 
-        </View>
+        </NeobrutalistCard>
       </ScrollView>
 
       {/* Stoic Insight Dialog/Modal Pop-up */}
@@ -1353,36 +1354,36 @@ export default function StoicSupportScreen() {
           onRequestClose={() => setSelectedTopic(null)}
         >
           <View className="flex-1 items-center justify-center bg-black/60 p-6">
-            <View className="bg-white border-2 border-[#0F1739] rounded-none p-5 w-full max-w-sm shadow-[6px_6px_0px_0px_#0F1739]">
+            <NeobrutalistCard containerClassName="w-full max-w-sm" cardClassName="p-5" borderColor="border-primary" shadowColor="bg-primary">
               
               {/* Category tag */}
-              <View className="bg-[#0F1739] py-1.5 px-3 mb-4 rounded-none">
+              <View className="bg-primary py-1.5 px-3 mb-4 rounded-none">
                 <Text className="text-white text-center font-black text-xxs uppercase tracking-widest">
                   {selectedTopic.category}
                 </Text>
               </View>
 
               {/* Topic title */}
-              <Text className="text-[#0F1739] font-black text-sm uppercase mb-4 text-left leading-normal">
+              <Text className="text-primary font-black text-sm uppercase mb-4 text-left leading-normal">
                 {categoryEmojis[selectedTopic.category] || '🏛️'} {selectedTopic.topic}
               </Text>
 
               {/* Quote Card */}
-              <View className="bg-slate-100 border-2 border-[#0F1739] rounded-none p-4 mb-4 shadow-[2px_2px_0px_0px_#0f1739]">
-                <Text className="text-[#0F1739] font-bold italic text-sm leading-relaxed mb-2">
+              <View className="bg-slate-100 border-2 border-primary rounded-none p-4 mb-4 shadow-[2px_2px_0px_0px_#0f1739]">
+                <Text className="text-primary font-bold italic text-sm leading-relaxed mb-2">
                   "{selectedTopic.quote}"
                 </Text>
-                <Text className="text-[#0F1739] font-black text-right text-xs">
+                <Text className="text-primary font-black text-right text-xs">
                   — {selectedTopic.author}
                 </Text>
               </View>
 
               {/* Explanation Text */}
               <View className="bg-slate-50 border border-slate-200 p-4 rounded-none mb-6">
-                <Text className="text-[#0F1739] font-black text-xs leading-normal mb-1">
+                <Text className="text-primary font-black text-xs leading-normal mb-1">
                   {getFirstName()},
                 </Text>
-                <Text className="text-[#0F1739] font-semibold text-xs leading-relaxed">
+                <Text className="text-primary font-semibold text-xs leading-relaxed">
                   {selectedTopic.explanation}
                 </Text>
               </View>
@@ -1391,26 +1392,26 @@ export default function StoicSupportScreen() {
               <View className="flex-row gap-3">
                 
                 <TouchableOpacity
-                  className="flex-1 bg-white py-3 rounded-none border-2 border-[#0F1739] shadow-[3px_3px_0px_0px_#0f1739] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[2px_2px_0px_0px_#0f1739] justify-center items-center"
+                  className="flex-1 bg-card py-3 rounded-none border-2 border-primary shadow-[3px_3px_0px_0px_#0f1739] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[2px_2px_0px_0px_#0f1739] justify-center items-center"
                   onPress={() => handleCopy(selectedTopic.category, selectedTopic)}
                 >
-                  <Text className="text-[#0F1739] font-black text-[10px] uppercase tracking-wider text-center">
+                  <Text className="text-primary font-black text-[10px] uppercase tracking-wider text-center">
                     Copy to Clipboard
                   </Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                  className="flex-1 bg-[#DDF906] py-3 rounded-none border-2 border-[#0F1739] shadow-[3px_3px_0px_0px_#0f1739] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[2px_2px_0px_0px_#0f1739] justify-center items-center"
+                  className="flex-1 bg-accent py-3 rounded-none border-2 border-primary shadow-[3px_3px_0px_0px_#0f1739] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[2px_2px_0px_0px_#0f1739] justify-center items-center"
                   onPress={() => setSelectedTopic(null)}
                 >
-                  <Text className="text-[#0F1739] font-black text-[10px] uppercase tracking-wider text-center">
+                  <Text className="text-primary font-black text-[10px] uppercase tracking-wider text-center">
                     Close
                   </Text>
                 </TouchableOpacity>
 
               </View>
               
-            </View>
+            </NeobrutalistCard>
           </View>
         </Modal>
       )}
@@ -1418,7 +1419,7 @@ export default function StoicSupportScreen() {
       {/* Dim Menu Overlay / Navigation Drawer */}
       {menuOpen && (
         <View className="absolute inset-0 bg-black/60 z-50 flex-row">
-          <View className="w-4/5 max-w-[280px] bg-white h-full p-5 justify-between">
+          <View className="w-4/5 max-w-[280px] bg-background border-r-2 border-primary h-full p-5 justify-between">
             <View>
               {/* Drawer Header */}
               <View className="flex-row justify-between items-center mb-8 pb-4 border-b border-slate-100">
@@ -1428,96 +1429,96 @@ export default function StoicSupportScreen() {
                     className="w-8 h-8 mr-2"
                     resizeMode="contain"
                   />
-                  <Text className="text-[#0F1739] font-black text-sm uppercase">Handyfor.me</Text>
+                  <Text className="text-primary font-black text-sm uppercase">Handyfor.me</Text>
                 </View>
                 <TouchableOpacity 
                   className="w-8 h-8 border border-slate-300 items-center justify-center rounded-none"
                   onPress={() => setMenuOpen(false)}
                 >
-                  <Text className="text-[#0F1739] font-black text-xs">✕</Text>
+                  <Text className="text-primary font-black text-xs">✕</Text>
                 </TouchableOpacity>
               </View>
 
               {/* Navigation Links */}
               <View className="gap-3">
                 <TouchableOpacity
-                  className="py-3 px-4 bg-white border-2 border-[#0F1739] rounded-none active:bg-slate-100 flex-row items-center shadow-[2px_2px_0px_0px_#0F1739]"
+                  className="py-3 px-4 bg-white border-2 border-primary rounded-none active:bg-slate-100 flex-row items-center shadow-[2px_2px_0px_0px_#0F1739]"
                   onPress={() => {
                     setMenuOpen(false);
                     router.push({ pathname: '/dashboard', params: { ip } });
                   }}
                 >
-                  <Text className="text-[#0F1739] font-black text-xs uppercase tracking-wider">🏠 Dashboard</Text>
+                  <Text className="text-primary font-black text-xs uppercase tracking-wider">🏠 Dashboard</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                  className="py-3 px-4 bg-white border-2 border-[#0F1739] rounded-none active:bg-slate-100 flex-row items-center shadow-[2px_2px_0px_0px_#0F1739]"
+                  className="py-3 px-4 bg-white border-2 border-primary rounded-none active:bg-slate-100 flex-row items-center shadow-[2px_2px_0px_0px_#0F1739]"
                   onPress={() => {
                     setMenuOpen(false);
                     router.push({ pathname: '/wins', params: { ip } });
                   }}
                 >
-                  <Text className="text-[#0F1739] font-black text-xs uppercase tracking-wider">🏆 Weekly Wins</Text>
+                  <Text className="text-primary font-black text-xs uppercase tracking-wider">🏆 Weekly Wins</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                  className="py-3 px-4 bg-white border-2 border-[#0F1739] rounded-none active:bg-slate-100 flex-row items-center shadow-[2px_2px_0px_0px_#0F1739]"
+                  className="py-3 px-4 bg-white border-2 border-primary rounded-none active:bg-slate-100 flex-row items-center shadow-[2px_2px_0px_0px_#0F1739]"
                   onPress={() => {
                     setMenuOpen(false);
                     router.push({ pathname: '/decision-helper', params: { ip } });
                   }}
                 >
-                  <Text className="text-[#0F1739] font-black text-xs uppercase tracking-wider">🤔 Decision Helper</Text>
+                  <Text className="text-primary font-black text-xs uppercase tracking-wider">🤔 Decision Helper</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                  className="py-3 px-4 bg-white border-2 border-[#0F1739] rounded-none active:bg-slate-100 flex-row items-center shadow-[2px_2px_0px_0px_#0F1739]"
+                  className="py-3 px-4 bg-white border-2 border-primary rounded-none active:bg-slate-100 flex-row items-center shadow-[2px_2px_0px_0px_#0F1739]"
                   onPress={() => {
                     setMenuOpen(false);
                     router.push({ pathname: '/bucket-list', params: { ip } });
                   }}
                 >
-                  <Text className="text-[#0F1739] font-black text-xs uppercase tracking-wider">🪣 Bucket List</Text>
+                  <Text className="text-primary font-black text-xs uppercase tracking-wider">🪣 Bucket List</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                  className="py-3 px-4 bg-white border-2 border-[#0F1739] rounded-none active:bg-slate-100 flex-row items-center shadow-[2px_2px_0px_0px_#0F1739]"
+                  className="py-3 px-4 bg-white border-2 border-primary rounded-none active:bg-slate-100 flex-row items-center shadow-[2px_2px_0px_0px_#0F1739]"
                   onPress={() => {
                     setMenuOpen(false);
                     router.push({ pathname: '/vision-board', params: { ip } });
                   }}
                 >
-                  <Text className="text-[#0F1739] font-black text-xs uppercase tracking-wider">🖼️ Vision Board</Text>
+                  <Text className="text-primary font-black text-xs uppercase tracking-wider">🖼️ Vision Board</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                  className="py-3 px-4 bg-white border-2 border-[#0F1739] rounded-none active:bg-slate-100 flex-row items-center shadow-[2px_2px_0px_0px_#0F1739]"
+                  className="py-3 px-4 bg-white border-2 border-primary rounded-none active:bg-slate-100 flex-row items-center shadow-[2px_2px_0px_0px_#0F1739]"
                   onPress={() => {
                     setMenuOpen(false);
                     router.push({ pathname: '/shortcuts', params: { ip } });
                   }}
                 >
-                  <Text className="text-[#0F1739] font-black text-xs uppercase tracking-wider">⚡ Shortcuts</Text>
+                  <Text className="text-primary font-black text-xs uppercase tracking-wider">⚡ Shortcuts</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                  className="py-3 px-4 bg-white border-2 border-[#0F1739] rounded-none active:bg-slate-100 flex-row items-center shadow-[2px_2px_0px_0px_#0F1739]"
+                  className="py-3 px-4 bg-white border-2 border-primary rounded-none active:bg-slate-100 flex-row items-center shadow-[2px_2px_0px_0px_#0F1739]"
                   onPress={() => {
                     setMenuOpen(false);
                     router.push({ pathname: '/random-question', params: { ip } });
                   }}
                 >
-                  <Text className="text-[#0F1739] font-black text-xs uppercase tracking-wider">❓ Random Questions</Text>
+                  <Text className="text-primary font-black text-xs uppercase tracking-wider">❓ Random Questions</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                  className="py-3 px-4 bg-white border-2 border-[#0F1739] rounded-none active:bg-slate-100 flex-row items-center shadow-[2px_2px_0px_0px_#0F1739]"
+                  className="py-3 px-4 bg-white border-2 border-primary rounded-none active:bg-slate-100 flex-row items-center shadow-[2px_2px_0px_0px_#0F1739]"
                   onPress={() => {
                     setMenuOpen(false);
                     router.push({ pathname: '/stoic-support', params: { ip } });
                   }}
                 >
-                  <Text className="text-[#0F1739] font-black text-xs uppercase tracking-wider">🧠 Stoic Support</Text>
+                  <Text className="text-primary font-black text-xs uppercase tracking-wider">🧠 Stoic Support</Text>
                 </TouchableOpacity>
               </View>
             </View>

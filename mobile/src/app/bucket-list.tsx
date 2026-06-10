@@ -13,6 +13,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as SecureStore from 'expo-secure-store';
 import { BottomTabInset } from '@/constants/theme';
+import { NeobrutalistCard } from '@/components/neobrutalist-card';
 
 interface BucketListItem {
   id: string;
@@ -467,11 +468,11 @@ export default function BucketListScreen() {
   };
 
   return (
-    <View className="flex-1 bg-[#f8fafc]">
+    <View className="flex-1 bg-background">
       
       {/* Quote Banner */}
       {currentQuote.quote ? (
-        <SafeAreaView edges={['top']} className="bg-[#0F1739]">
+        <SafeAreaView edges={['top']} className="bg-primary">
           <View className="px-6 py-2.5 justify-center items-center">
             <Text className="text-white text-[9.5px] font-black text-center uppercase tracking-widest leading-tight">
               "{currentQuote.quote.toUpperCase()}"  —  {currentQuote.author.toUpperCase()}
@@ -481,24 +482,24 @@ export default function BucketListScreen() {
       ) : null}
 
       {/* Header Container */}
-      <View className="flex-row justify-between items-center bg-white border-b-2 border-[#0F1739] px-5 py-3.5">
+      <View className="flex-row justify-between items-center bg-white border-b-2 border-primary px-5 py-3.5">
         {/* Drawer menu button */}
         <TouchableOpacity 
-          className="w-10 h-10 bg-white border-2 border-[#0F1739] rounded-none items-center justify-center shadow-[2px_2px_0px_0px_#0F1739] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[1px_1px_0px_0px_#0F1739]"
+          className="w-10 h-10 bg-white border-2 border-primary rounded-none items-center justify-center shadow-[2px_2px_0px_0px_#0F1739] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[1px_1px_0px_0px_#0F1739]"
           onPress={() => setMenuOpen(true)}
         >
-          <View className="w-5 h-0.5 bg-[#0F1739] my-0.5" />
-          <View className="w-5 h-0.5 bg-[#0F1739] my-0.5" />
-          <View className="w-5 h-0.5 bg-[#0F1739] my-0.5" />
+          <View className="w-5 h-0.5 bg-primary my-0.5" />
+          <View className="w-5 h-0.5 bg-primary my-0.5" />
+          <View className="w-5 h-0.5 bg-primary my-0.5" />
         </TouchableOpacity>
 
         {/* Greetings and Profile Avatar */}
         <View className="flex-row items-center">
-          <Text className="text-[#0F1739] text-base font-black mr-3">
+          <Text className="text-primary text-base font-black mr-3">
             Howdy {getFirstName()}! 🤠
           </Text>
           <TouchableOpacity 
-            className="w-9 h-9 border-2 border-[#0F1739] rounded-none bg-slate-200 justify-center items-center shadow-[2px_2px_0px_0px_#0F1739] active:bg-rose-50"
+            className="w-9 h-9 border-2 border-primary rounded-none bg-slate-200 justify-center items-center shadow-[2px_2px_0px_0px_#0F1739] active:bg-rose-50"
             onPress={handleLogout}
           >
             {userData?.image ? (
@@ -514,15 +515,15 @@ export default function BucketListScreen() {
       <ScrollView className="flex-1 px-4 py-3" style={{ marginBottom: BottomTabInset }} showsVerticalScrollIndicator={false}>
         
         {/* Main Neobrutalist Dashboard Card */}
-        <View className="bg-white border-2 border-[#0F1739] rounded-none p-5 mb-8 shadow-[4px_4px_0px_0px_#0f1739]">
+        <NeobrutalistCard containerClassName="mb-8" cardClassName="p-5" borderColor="border-primary" shadowColor="bg-primary">
           
           {/* Bucket List Header Row */}
           <View className="flex-row justify-between items-center mb-2 flex-wrap gap-2">
             <View className="flex-row items-center gap-2">
-              <Text className="text-[#0F1739] text-3xl font-black uppercase tracking-tighter">Bucket List</Text>
+              <Text className="text-primary text-3xl font-black uppercase tracking-tighter">Bucket List</Text>
               
               {householdDetails?.inHousehold && householdDetails?.userSettings?.shareBucketList ? (
-                <View className="bg-violet-600 px-2 py-0.5 border border-[#0F1739]">
+                <View className="bg-violet-600 px-2 py-0.5 border border-primary">
                   <Text className="text-white font-bold text-[9px] uppercase tracking-wider">👥 Household</Text>
                 </View>
               ) : (
@@ -531,8 +532,8 @@ export default function BucketListScreen() {
                 </View>
               )}
             </View>
-            <View className="w-7 h-7 rounded-full border-2 border-[#0F1739] justify-center items-center">
-              <Text className="text-[#0F1739] font-black text-xs">?</Text>
+            <View className="w-7 h-7 rounded-full border-2 border-primary justify-center items-center">
+              <Text className="text-primary font-black text-xs">?</Text>
             </View>
           </View>
 
@@ -544,12 +545,12 @@ export default function BucketListScreen() {
                 {householdDetails.household.members.map((member) => (
                   <View 
                     key={member.id} 
-                    className="w-5 h-5 rounded-full border border-[#0F1739] bg-slate-200 overflow-hidden items-center justify-center"
+                    className="w-5 h-5 rounded-full border border-primary bg-slate-200 overflow-hidden items-center justify-center"
                   >
                     {member.avatar ? (
                       <Image source={{ uri: member.avatar }} className="w-full h-full" />
                     ) : (
-                      <Text className="text-[7.5px] font-bold text-[#0F1739]">
+                      <Text className="text-[7.5px] font-bold text-primary">
                         {(member.name || member.uid).charAt(0).toUpperCase()}
                       </Text>
                     )}
@@ -568,7 +569,7 @@ export default function BucketListScreen() {
             {/* Adventure Input */}
             <View className="mb-4">
               <TextInput
-                className="bg-white text-[#0F1739] font-bold rounded-none px-3.5 py-2.5 border-2 border-[#0F1739] text-sm h-12"
+                className="bg-white text-primary font-bold rounded-none px-3.5 py-2.5 border-2 border-primary text-sm h-12"
                 placeholder="Adventure"
                 placeholderTextColor="#94a3b8"
                 value={newAdventure}
@@ -580,18 +581,18 @@ export default function BucketListScreen() {
             {/* Category Dropdown Picker */}
             <View className="mb-4 relative z-50">
               <TouchableOpacity
-                className="bg-white border-2 border-[#0F1739] px-3.5 py-2.5 flex-row justify-between items-center rounded-none h-12"
+                className="bg-white border-2 border-primary px-3.5 py-2.5 flex-row justify-between items-center rounded-none h-12"
                 onPress={() => setDropdownOpen(!dropdownOpen)}
               >
-                <Text className="text-[#0F1739] font-bold text-sm">
+                <Text className="text-primary font-bold text-sm">
                   {newCategory || 'Category'}
                 </Text>
-                <Text className="text-[#0F1739] font-bold text-xs">▼</Text>
+                <Text className="text-primary font-bold text-xs">▼</Text>
               </TouchableOpacity>
               <Text className="text-slate-400 text-xxs mt-1 uppercase font-semibold">Choose a category that best describes your adventure</Text>
 
               {dropdownOpen && (
-                <View className="absolute top-[50px] left-0 right-0 bg-white border-2 border-[#0F1739] rounded-none z-50 shadow-[3px_3px_0px_0px_#0F1739] max-h-[220px]">
+                <View className="absolute top-[50px] left-0 right-0 bg-white border-2 border-primary rounded-none z-50 shadow-[3px_3px_0px_0px_#0F1739] max-h-[220px]">
                   <ScrollView nestedScrollEnabled={true}>
                     {bucketListCategories.map(cat => (
                       <TouchableOpacity
@@ -602,7 +603,7 @@ export default function BucketListScreen() {
                           setDropdownOpen(false);
                         }}
                       >
-                        <Text className="text-[#0F1739] font-bold text-sm">{cat.name}</Text>
+                        <Text className="text-primary font-bold text-sm">{cat.name}</Text>
                       </TouchableOpacity>
                     ))}
                   </ScrollView>
@@ -612,7 +613,7 @@ export default function BucketListScreen() {
 
             {/* ADD Button */}
             <TouchableOpacity
-              className="bg-[#0F1739] px-6 py-3.5 rounded-none border-2 border-[#0F1739] shadow-[3px_3px_0px_0px_#0F1739] self-start active:translate-x-[2px] active:translate-y-[2px] active:shadow-[0px_0px_0px_0px]"
+              className="bg-primary px-6 py-3.5 rounded-none border-2 border-primary shadow-[3px_3px_0px_0px_#0F1739] self-start active:translate-x-[2px] active:translate-y-[2px] active:shadow-[0px_0px_0px_0px]"
               onPress={handleAddAdventure}
             >
               <Text className="text-white font-black text-xs uppercase tracking-widest">ADD</Text>
@@ -630,13 +631,13 @@ export default function BucketListScreen() {
               return (
                 <TouchableOpacity
                   key={f}
-                  className={`px-3 py-1.5 border-2 rounded-none border-[#0F1739] ${
-                    isActive ? 'bg-[#0F1739]' : 'bg-white'
+                  className={`px-3 py-1.5 border-2 rounded-none border-primary ${
+                    isActive ? 'bg-primary' : 'bg-white'
                   }`}
                   onPress={() => setFilter(f)}
                 >
                   <Text className={`text-[10px] font-black uppercase ${
-                    isActive ? 'text-white' : 'text-[#0F1739]'
+                    isActive ? 'text-white' : 'text-primary'
                   }`}>
                     {label}
                   </Text>
@@ -652,8 +653,8 @@ export default function BucketListScreen() {
               <Text className="text-slate-500 text-xs mt-2 font-mono font-semibold">Syncing database...</Text>
             </View>
           ) : boardByCategory.length === 0 ? (
-            <View className="py-12 items-center justify-center bg-slate-50 border-2 border-dashed border-[#0F1739] rounded-none">
-              <Text className="text-[#0F1739] text-center font-black text-sm mb-1 uppercase">Adventures Missing 👻</Text>
+            <View className="py-12 items-center justify-center bg-slate-50 border-2 border-dashed border-primary rounded-none">
+              <Text className="text-primary text-center font-black text-sm mb-1 uppercase">Adventures Missing 👻</Text>
               <Text className="text-slate-400 text-center text-xs font-semibold px-8 leading-relaxed">
                 Every hero needs epic adventures! Start adding yours now and get ready for action!
               </Text>
@@ -667,7 +668,7 @@ export default function BucketListScreen() {
                 return (
                   <View key={catName} className="mb-6">
                     <View 
-                      className="rounded-none px-4 py-3 mb-2 border border-[#0F1739]"
+                      className="rounded-none px-4 py-3 mb-2 border border-primary"
                       style={{ backgroundColor: colors.bgColor }}
                     >
                       <Text 
@@ -681,12 +682,12 @@ export default function BucketListScreen() {
                     {catGroup.map(item => (
                       <View 
                         key={item.id} 
-                        className={`flex-row justify-between items-center border border-[#0F1739] p-3.5 mt-2 rounded-none ${
+                        className={`flex-row justify-between items-center border border-primary p-3.5 mt-2 rounded-none ${
                           item.done ? 'bg-slate-100 opacity-60' : 'bg-white'
                         }`}
                       >
                         <View className="flex-1 mr-4">
-                          <Text className={`text-[#0F1739] text-xs font-black uppercase tracking-tight ${
+                          <Text className={`text-primary text-xs font-black uppercase tracking-tight ${
                             item.done ? 'line-through text-slate-400' : ''
                           }`}>
                             {item.item}
@@ -722,13 +723,13 @@ export default function BucketListScreen() {
             </View>
           )}
 
-        </View>
+        </NeobrutalistCard>
       </ScrollView>
 
       {/* Drawer Navigation Overlay */}
       {menuOpen && (
         <View className="absolute inset-0 bg-black/60 z-50 flex-row">
-          <View className="w-[260px] h-full bg-[#f8fafc] border-r-2 border-[#0F1739] p-5 justify-between">
+          <View className="w-[260px] h-full bg-background border-r-2 border-primary p-5 justify-between">
             <View>
               {/* Drawer Header */}
               <View className="flex-row justify-between items-center mb-8 pb-4 border-b border-slate-100">
@@ -738,96 +739,96 @@ export default function BucketListScreen() {
                     className="w-8 h-8 mr-2"
                     resizeMode="contain"
                   />
-                  <Text className="text-[#0F1739] font-black text-sm uppercase">Handyfor.me</Text>
+                  <Text className="text-primary font-black text-sm uppercase">Handyfor.me</Text>
                 </View>
                 <TouchableOpacity 
                   className="w-8 h-8 border border-slate-300 items-center justify-center rounded-none"
                   onPress={() => setMenuOpen(false)}
                 >
-                  <Text className="text-[#0F1739] font-black text-xs">✕</Text>
+                  <Text className="text-primary font-black text-xs">✕</Text>
                 </TouchableOpacity>
               </View>
 
               {/* Navigation Links */}
               <View className="gap-3">
                 <TouchableOpacity
-                  className="py-3 px-4 bg-white border-2 border-[#0F1739] rounded-none active:bg-slate-100 flex-row items-center shadow-[2px_2px_0px_0px_#0F1739]"
+                  className="py-3 px-4 bg-white border-2 border-primary rounded-none active:bg-slate-100 flex-row items-center shadow-[2px_2px_0px_0px_#0F1739]"
                   onPress={() => {
                     setMenuOpen(false);
                     router.push({ pathname: '/dashboard', params: { ip } });
                   }}
                 >
-                  <Text className="text-[#0F1739] font-black text-xs uppercase tracking-wider">🏠 Dashboard</Text>
+                  <Text className="text-primary font-black text-xs uppercase tracking-wider">🏠 Dashboard</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                  className="py-3 px-4 bg-white border-2 border-[#0F1739] rounded-none active:bg-slate-100 flex-row items-center shadow-[2px_2px_0px_0px_#0F1739]"
+                  className="py-3 px-4 bg-white border-2 border-primary rounded-none active:bg-slate-100 flex-row items-center shadow-[2px_2px_0px_0px_#0F1739]"
                   onPress={() => {
                     setMenuOpen(false);
                     router.push({ pathname: '/wins', params: { ip } });
                   }}
                 >
-                  <Text className="text-[#0F1739] font-black text-xs uppercase tracking-wider">🏆 Weekly Wins</Text>
+                  <Text className="text-primary font-black text-xs uppercase tracking-wider">🏆 Weekly Wins</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                  className="py-3 px-4 bg-white border-2 border-[#0F1739] rounded-none active:bg-slate-100 flex-row items-center shadow-[2px_2px_0px_0px_#0F1739]"
+                  className="py-3 px-4 bg-white border-2 border-primary rounded-none active:bg-slate-100 flex-row items-center shadow-[2px_2px_0px_0px_#0F1739]"
                   onPress={() => {
                     setMenuOpen(false);
                     router.push({ pathname: '/decision-helper', params: { ip } });
                   }}
                 >
-                  <Text className="text-[#0F1739] font-black text-xs uppercase tracking-wider">🤔 Decision Helper</Text>
+                  <Text className="text-primary font-black text-xs uppercase tracking-wider">🤔 Decision Helper</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                  className="py-3 px-4 bg-white border-2 border-[#0F1739] rounded-none active:bg-slate-100 flex-row items-center shadow-[2px_2px_0px_0px_#0F1739]"
+                  className="py-3 px-4 bg-white border-2 border-primary rounded-none active:bg-slate-100 flex-row items-center shadow-[2px_2px_0px_0px_#0F1739]"
                   onPress={() => {
                     setMenuOpen(false);
                     router.push({ pathname: '/bucket-list', params: { ip } });
                   }}
                 >
-                  <Text className="text-[#0F1739] font-black text-xs uppercase tracking-wider">🪣 Bucket List</Text>
+                  <Text className="text-primary font-black text-xs uppercase tracking-wider">🪣 Bucket List</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                  className="py-3 px-4 bg-white border-2 border-[#0F1739] rounded-none active:bg-slate-100 flex-row items-center shadow-[2px_2px_0px_0px_#0F1739]"
+                  className="py-3 px-4 bg-white border-2 border-primary rounded-none active:bg-slate-100 flex-row items-center shadow-[2px_2px_0px_0px_#0F1739]"
                   onPress={() => {
                     setMenuOpen(false);
                     router.push({ pathname: '/vision-board', params: { ip } });
                   }}
                 >
-                  <Text className="text-[#0F1739] font-black text-xs uppercase tracking-wider">🖼️ Vision Board</Text>
+                  <Text className="text-primary font-black text-xs uppercase tracking-wider">🖼️ Vision Board</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                  className="py-3 px-4 bg-white border-2 border-[#0F1739] rounded-none active:bg-slate-100 flex-row items-center shadow-[2px_2px_0px_0px_#0F1739]"
+                  className="py-3 px-4 bg-white border-2 border-primary rounded-none active:bg-slate-100 flex-row items-center shadow-[2px_2px_0px_0px_#0F1739]"
                   onPress={() => {
                     setMenuOpen(false);
                     router.push({ pathname: '/shortcuts', params: { ip } });
                   }}
                 >
-                  <Text className="text-[#0F1739] font-black text-xs uppercase tracking-wider">⚡ Shortcuts</Text>
+                  <Text className="text-primary font-black text-xs uppercase tracking-wider">⚡ Shortcuts</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                  className="py-3 px-4 bg-white border-2 border-[#0F1739] rounded-none active:bg-slate-100 flex-row items-center shadow-[2px_2px_0px_0px_#0F1739]"
+                  className="py-3 px-4 bg-white border-2 border-primary rounded-none active:bg-slate-100 flex-row items-center shadow-[2px_2px_0px_0px_#0F1739]"
                   onPress={() => {
                     setMenuOpen(false);
                     router.push({ pathname: '/random-question', params: { ip } });
                   }}
                 >
-                  <Text className="text-[#0F1739] font-black text-xs uppercase tracking-wider">❓ Random Questions</Text>
+                  <Text className="text-primary font-black text-xs uppercase tracking-wider">❓ Random Questions</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                  className="py-3 px-4 bg-white border-2 border-[#0F1739] rounded-none active:bg-slate-100 flex-row items-center shadow-[2px_2px_0px_0px_#0F1739]"
+                  className="py-3 px-4 bg-white border-2 border-primary rounded-none active:bg-slate-100 flex-row items-center shadow-[2px_2px_0px_0px_#0F1739]"
                   onPress={() => {
                     setMenuOpen(false);
                     router.push({ pathname: '/stoic-support', params: { ip } });
                   }}
                 >
-                  <Text className="text-[#0F1739] font-black text-xs uppercase tracking-wider">🧠 Stoic Support</Text>
+                  <Text className="text-primary font-black text-xs uppercase tracking-wider">🧠 Stoic Support</Text>
                 </TouchableOpacity>
               </View>
             </View>

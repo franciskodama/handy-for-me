@@ -16,6 +16,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as SecureStore from 'expo-secure-store';
 import { BottomTabInset } from '@/constants/theme';
+import { NeobrutalistCard } from '@/components/neobrutalist-card';
 
 interface DecisionHelperList {
   id: string;
@@ -478,11 +479,11 @@ export default function DecisionHelperScreen() {
   });
 
   return (
-    <View className="flex-1 bg-[#f8fafc]">
+    <View className="flex-1 bg-background">
       
       {/* Quote Banner */}
       {currentQuote.quote ? (
-        <SafeAreaView edges={['top']} className="bg-[#0F1739]">
+        <SafeAreaView edges={['top']} className="bg-primary">
           <View className="px-6 py-2.5 justify-center items-center">
             <Text className="text-white text-[9.5px] font-black text-center uppercase tracking-widest leading-tight">
               "{currentQuote.quote.toUpperCase()}"  —  {currentQuote.author.toUpperCase()}
@@ -492,24 +493,24 @@ export default function DecisionHelperScreen() {
       ) : null}
 
       {/* Header Container */}
-      <View className="flex-row justify-between items-center bg-white border-b-2 border-[#0F1739] px-5 py-3.5">
+      <View className="flex-row justify-between items-center bg-white border-b-2 border-primary px-5 py-3.5">
         {/* Drawer menu button */}
         <TouchableOpacity 
-          className="w-10 h-10 bg-white border-2 border-[#0F1739] rounded-none items-center justify-center shadow-[2px_2px_0px_0px_#0F1739] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[1px_1px_0px_0px_#0F1739]"
+          className="w-10 h-10 bg-white border-2 border-primary rounded-none items-center justify-center shadow-[2px_2px_0px_0px_#0F1739] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[1px_1px_0px_0px_#0F1739]"
           onPress={() => setMenuOpen(true)}
         >
-          <View className="w-5 h-0.5 bg-[#0F1739] my-0.5" />
-          <View className="w-5 h-0.5 bg-[#0F1739] my-0.5" />
-          <View className="w-5 h-0.5 bg-[#0F1739] my-0.5" />
+          <View className="w-5 h-0.5 bg-primary my-0.5" />
+          <View className="w-5 h-0.5 bg-primary my-0.5" />
+          <View className="w-5 h-0.5 bg-primary my-0.5" />
         </TouchableOpacity>
 
         {/* Greetings and Profile Avatar */}
         <View className="flex-row items-center">
-          <Text className="text-[#0F1739] text-base font-black mr-3">
+          <Text className="text-primary text-base font-black mr-3">
             Howdy {getFirstName()}! 🤠
           </Text>
           <TouchableOpacity 
-            className="w-9 h-9 border-2 border-[#0F1739] rounded-none bg-slate-200 justify-center items-center shadow-[2px_2px_0px_0px_#0F1739] active:bg-rose-50"
+            className="w-9 h-9 border-2 border-primary rounded-none bg-slate-200 justify-center items-center shadow-[2px_2px_0px_0px_#0F1739] active:bg-rose-50"
             onPress={handleLogout}
           >
             {userData?.image ? (
@@ -525,15 +526,15 @@ export default function DecisionHelperScreen() {
       <ScrollView className="flex-1 px-4 py-3" style={{ marginBottom: BottomTabInset }} showsVerticalScrollIndicator={false}>
         
         {/* Neobrutalist main Card */}
-        <View className="bg-white border-2 border-[#0F1739] rounded-none p-5 mb-8 shadow-[4px_4px_0px_0px_#0f1739]">
+        <NeobrutalistCard containerClassName="mb-8" cardClassName="p-5" borderColor="border-primary" shadowColor="bg-primary">
           
           {/* Main Title Row */}
           <View className="flex-row justify-between items-center mb-2 flex-wrap gap-2">
             <View className="flex-row items-center gap-2">
-              <Text className="text-[#0F1739] text-3xl font-black uppercase tracking-tighter">Decision Helper</Text>
+              <Text className="text-primary text-3xl font-black uppercase tracking-tighter">Decision Helper</Text>
               
               {householdDetails?.inHousehold && householdDetails?.userSettings?.shareDecisionHelper ? (
-                <View className="bg-violet-600 px-2 py-0.5 border border-[#0F1739]">
+                <View className="bg-violet-600 px-2 py-0.5 border border-primary">
                   <Text className="text-white font-bold text-[9px] uppercase tracking-wider">👥 Household</Text>
                 </View>
               ) : (
@@ -542,8 +543,8 @@ export default function DecisionHelperScreen() {
                 </View>
               )}
             </View>
-            <View className="w-7 h-7 rounded-full border-2 border-[#0F1739] justify-center items-center">
-              <Text className="text-[#0F1739] font-black text-xs">?</Text>
+            <View className="w-7 h-7 rounded-full border-2 border-primary justify-center items-center">
+              <Text className="text-primary font-black text-xs">?</Text>
             </View>
           </View>
 
@@ -556,17 +557,17 @@ export default function DecisionHelperScreen() {
             
             {/* Create new list input */}
             <View>
-              <Text className="text-[#0F1739] font-black text-xs uppercase mb-1.5">Do you want to start a new list?</Text>
+              <Text className="text-primary font-black text-xs uppercase mb-1.5">Do you want to start a new list?</Text>
               <View className="flex-row gap-2">
                 <TextInput
-                  className="flex-1 bg-white text-[#0F1739] font-bold rounded-none px-3.5 py-2.5 border-2 border-[#0F1739] text-sm h-12"
+                  className="flex-1 bg-white text-primary font-bold rounded-none px-3.5 py-2.5 border-2 border-primary text-sm h-12"
                   placeholder="List's Name"
                   placeholderTextColor="#94a3b8"
                   value={listInput}
                   onChangeText={setListInput}
                 />
                 <TouchableOpacity
-                  className="bg-[#0F1739] justify-center items-center px-4 rounded-none border-2 border-[#0F1739] shadow-[2px_2px_0px_0px_#0F1739] disabled:opacity-50"
+                  className="bg-primary justify-center items-center px-4 rounded-none border-2 border-primary shadow-[2px_2px_0px_0px_#0F1739] disabled:opacity-50"
                   onPress={handleCreateList}
                   disabled={!listInput.trim()}
                 >
@@ -584,19 +585,19 @@ export default function DecisionHelperScreen() {
             {/* List Selection trigger dropdown */}
             {lists.length > 0 && (
               <View className="relative z-50">
-                <Text className="text-[#0F1739] font-black text-xs uppercase mb-1.5">Choose a List</Text>
+                <Text className="text-primary font-black text-xs uppercase mb-1.5">Choose a List</Text>
                 <TouchableOpacity
-                  className="bg-white border-2 border-[#0F1739] px-3.5 py-2.5 flex-row justify-between items-center rounded-none h-12"
+                  className="bg-white border-2 border-primary px-3.5 py-2.5 flex-row justify-between items-center rounded-none h-12"
                   onPress={() => setDropdownOpen(!dropdownOpen)}
                 >
-                  <Text className="text-[#0F1739] font-black text-sm uppercase">
+                  <Text className="text-primary font-black text-sm uppercase">
                     {activeList ? activeList.list : 'Select a List'}
                   </Text>
-                  <Text className="text-[#0F1739] font-bold text-xs">▼</Text>
+                  <Text className="text-primary font-bold text-xs">▼</Text>
                 </TouchableOpacity>
 
                 {dropdownOpen && (
-                  <View className="absolute top-[70px] left-0 right-0 bg-white border-2 border-[#0F1739] rounded-none z-50 shadow-[3px_3px_0px_0px_#0F1739] max-h-[220px]">
+                  <View className="absolute top-[70px] left-0 right-0 bg-white border-2 border-primary rounded-none z-50 shadow-[3px_3px_0px_0px_#0F1739] max-h-[220px]">
                     <ScrollView nestedScrollEnabled={true}>
                       {lists.map(el => (
                         <View key={el.id} className="flex-row items-center justify-between border-b border-slate-100 last:border-b-0">
@@ -608,7 +609,7 @@ export default function DecisionHelperScreen() {
                               setResult('');
                             }}
                           >
-                            <Text className="text-[#0F1739] font-black text-sm uppercase">{el.list}</Text>
+                            <Text className="text-primary font-black text-sm uppercase">{el.list}</Text>
                           </TouchableOpacity>
                           <TouchableOpacity
                             className="p-3.5 active:bg-rose-50"
@@ -630,17 +631,17 @@ export default function DecisionHelperScreen() {
             {/* Add item to list input */}
             {listId ? (
               <View>
-                <Text className="text-[#0F1739] font-black text-xs uppercase mb-1.5">Enter a new Item for list</Text>
+                <Text className="text-primary font-black text-xs uppercase mb-1.5">Enter a new Item for list</Text>
                 <View className="flex-row gap-2">
                   <TextInput
-                    className="flex-1 bg-white text-[#0F1739] font-bold rounded-none px-3.5 py-2.5 border-2 border-[#0F1739] text-sm h-12"
+                    className="flex-1 bg-white text-primary font-bold rounded-none px-3.5 py-2.5 border-2 border-primary text-sm h-12"
                     placeholder="New Item Name"
                     placeholderTextColor="#94a3b8"
                     value={itemInput}
                     onChangeText={setItemInput}
                   />
                   <TouchableOpacity
-                    className="bg-[#0F1739] justify-center items-center px-6 rounded-none border-2 border-[#0F1739] shadow-[2px_2px_0px_0px_#0F1739] disabled:opacity-50"
+                    className="bg-primary justify-center items-center px-6 rounded-none border-2 border-primary shadow-[2px_2px_0px_0px_#0F1739] disabled:opacity-50"
                     onPress={handleCreateItem}
                     disabled={!itemInput.trim()}
                   >
@@ -657,14 +658,14 @@ export default function DecisionHelperScreen() {
 
           {/* SPIN THE WHEEL Visual Banner */}
           {items.length > 0 ? (
-            <View className="items-center justify-center p-8 bg-white border-2 border-[#0F1739] border-dashed rounded-none mb-6">
-              <Text className="text-[#0F1739] font-black text-sm uppercase tracking-widest mb-4">
+            <View className="items-center justify-center p-8 bg-white border-2 border-primary border-dashed rounded-none mb-6">
+              <Text className="text-primary font-black text-sm uppercase tracking-widest mb-4">
                 {spinning ? 'SPINNING...' : 'SPIN THE WHEEL'}
               </Text>
               
               <Animated.View style={{ transform: [{ rotate: spinRotation }] }}>
                 <TouchableOpacity
-                  className="w-24 h-24 bg-white border-2 border-[#0F1739] justify-center items-center rounded-full shadow-[3px_3px_0px_0px_#0F1739]"
+                  className="w-24 h-24 bg-white border-2 border-primary justify-center items-center rounded-full shadow-[3px_3px_0px_0px_#0F1739]"
                   onPress={handleSpin}
                   disabled={spinning}
                 >
@@ -681,29 +682,29 @@ export default function DecisionHelperScreen() {
           {/* Items checklist rows */}
           {items.length > 0 && (
             <View className="mb-6">
-              <Text className="text-[#0F1739] font-black text-xs uppercase mb-3">Items ({items.length})</Text>
+              <Text className="text-primary font-black text-xs uppercase mb-3">Items ({items.length})</Text>
               
               {items.map(el => (
                 <View 
                   key={el.id} 
-                  className={`flex-row justify-between items-center bg-white border border-[#0F1739] p-3 mt-2 rounded-none`}
+                  className={`flex-row justify-between items-center bg-white border border-primary p-3 mt-2 rounded-none`}
                 >
-                  <Text className="text-[#0F1739] text-xs font-black uppercase tracking-tight flex-1">
+                  <Text className="text-primary text-xs font-black uppercase tracking-tight flex-1">
                     {el.item}
                   </Text>
 
                   <View className="flex-row items-center gap-2">
                     <TouchableOpacity 
-                      className={`w-6 h-6 border-2 border-[#0F1739] items-center justify-center rounded-none ${el.selected ? 'bg-[#DDF906]' : 'bg-white'}`}
+                      className={`w-6 h-6 border-2 border-primary items-center justify-center rounded-none ${el.selected ? 'bg-accent' : 'bg-white'}`}
                       onPress={() => handleItemSelection(el.id)}
                     >
-                      {el.selected && <Text className="text-[#0F1739] text-xs font-black">✓</Text>}
+                      {el.selected && <Text className="text-primary text-xs font-black">✓</Text>}
                     </TouchableOpacity>
                     <TouchableOpacity 
                       className="p-1 active:bg-rose-50"
                       onPress={() => handleDeleteItem(el.id)}
                     >
-                      <Text className="text-[#0F1739] text-sm font-bold uppercase">🗑️</Text>
+                      <Text className="text-primary text-sm font-bold uppercase">🗑️</Text>
                     </TouchableOpacity>
                   </View>
                 </View>
@@ -711,13 +712,13 @@ export default function DecisionHelperScreen() {
             </View>
           )}
 
-        </View>
+        </NeobrutalistCard>
       </ScrollView>
 
       {/* Drawer Navigation Overlay */}
       {menuOpen && (
         <View className="absolute inset-0 bg-black/60 z-50 flex-row">
-          <View className="w-[260px] h-full bg-[#f8fafc] border-r-2 border-[#0F1739] p-5 justify-between">
+          <View className="w-[260px] h-full bg-background border-r-2 border-primary p-5 justify-between">
             <View>
               {/* Drawer Header */}
               <View className="flex-row justify-between items-center mb-8 pb-4 border-b border-slate-100">
@@ -727,96 +728,96 @@ export default function DecisionHelperScreen() {
                     className="w-8 h-8 mr-2"
                     resizeMode="contain"
                   />
-                  <Text className="text-[#0F1739] font-black text-sm uppercase">Handyfor.me</Text>
+                  <Text className="text-primary font-black text-sm uppercase">Handyfor.me</Text>
                 </View>
                 <TouchableOpacity 
                   className="w-8 h-8 border border-slate-300 items-center justify-center rounded-none"
                   onPress={() => setMenuOpen(false)}
                 >
-                  <Text className="text-[#0F1739] font-black text-xs">✕</Text>
+                  <Text className="text-primary font-black text-xs">✕</Text>
                 </TouchableOpacity>
               </View>
 
               {/* Navigation Links */}
               <View className="gap-3">
                 <TouchableOpacity
-                  className="py-3 px-4 bg-white border-2 border-[#0F1739] rounded-none active:bg-slate-100 flex-row items-center shadow-[2px_2px_0px_0px_#0F1739]"
+                  className="py-3 px-4 bg-white border-2 border-primary rounded-none active:bg-slate-100 flex-row items-center shadow-[2px_2px_0px_0px_#0F1739]"
                   onPress={() => {
                     setMenuOpen(false);
                     router.push({ pathname: '/dashboard', params: { ip } });
                   }}
                 >
-                  <Text className="text-[#0F1739] font-black text-xs uppercase tracking-wider">🏠 Dashboard</Text>
+                  <Text className="text-primary font-black text-xs uppercase tracking-wider">🏠 Dashboard</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                  className="py-3 px-4 bg-white border-2 border-[#0F1739] rounded-none active:bg-slate-100 flex-row items-center shadow-[2px_2px_0px_0px_#0F1739]"
+                  className="py-3 px-4 bg-white border-2 border-primary rounded-none active:bg-slate-100 flex-row items-center shadow-[2px_2px_0px_0px_#0F1739]"
                   onPress={() => {
                     setMenuOpen(false);
                     router.push({ pathname: '/wins', params: { ip } });
                   }}
                 >
-                  <Text className="text-[#0F1739] font-black text-xs uppercase tracking-wider">🏆 Weekly Wins</Text>
+                  <Text className="text-primary font-black text-xs uppercase tracking-wider">🏆 Weekly Wins</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                  className="py-3 px-4 bg-white border-2 border-[#0F1739] rounded-none active:bg-slate-100 flex-row items-center shadow-[2px_2px_0px_0px_#0F1739]"
+                  className="py-3 px-4 bg-white border-2 border-primary rounded-none active:bg-slate-100 flex-row items-center shadow-[2px_2px_0px_0px_#0F1739]"
                   onPress={() => {
                     setMenuOpen(false);
                     router.push({ pathname: '/decision-helper', params: { ip } });
                   }}
                 >
-                  <Text className="text-[#0F1739] font-black text-xs uppercase tracking-wider">🤔 Decision Helper</Text>
+                  <Text className="text-primary font-black text-xs uppercase tracking-wider">🤔 Decision Helper</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                  className="py-3 px-4 bg-white border-2 border-[#0F1739] rounded-none active:bg-slate-100 flex-row items-center shadow-[2px_2px_0px_0px_#0F1739]"
+                  className="py-3 px-4 bg-white border-2 border-primary rounded-none active:bg-slate-100 flex-row items-center shadow-[2px_2px_0px_0px_#0F1739]"
                   onPress={() => {
                     setMenuOpen(false);
                     router.push({ pathname: '/bucket-list', params: { ip } });
                   }}
                 >
-                  <Text className="text-[#0F1739] font-black text-xs uppercase tracking-wider">🪣 Bucket List</Text>
+                  <Text className="text-primary font-black text-xs uppercase tracking-wider">🪣 Bucket List</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                  className="py-3 px-4 bg-white border-2 border-[#0F1739] rounded-none active:bg-slate-100 flex-row items-center shadow-[2px_2px_0px_0px_#0F1739]"
+                  className="py-3 px-4 bg-white border-2 border-primary rounded-none active:bg-slate-100 flex-row items-center shadow-[2px_2px_0px_0px_#0F1739]"
                   onPress={() => {
                     setMenuOpen(false);
                     router.push({ pathname: '/vision-board', params: { ip } });
                   }}
                 >
-                  <Text className="text-[#0F1739] font-black text-xs uppercase tracking-wider">🖼️ Vision Board</Text>
+                  <Text className="text-primary font-black text-xs uppercase tracking-wider">🖼️ Vision Board</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                  className="py-3 px-4 bg-white border-2 border-[#0F1739] rounded-none active:bg-slate-100 flex-row items-center shadow-[2px_2px_0px_0px_#0F1739]"
+                  className="py-3 px-4 bg-white border-2 border-primary rounded-none active:bg-slate-100 flex-row items-center shadow-[2px_2px_0px_0px_#0F1739]"
                   onPress={() => {
                     setMenuOpen(false);
                     router.push({ pathname: '/shortcuts', params: { ip } });
                   }}
                 >
-                  <Text className="text-[#0F1739] font-black text-xs uppercase tracking-wider">⚡ Shortcuts</Text>
+                  <Text className="text-primary font-black text-xs uppercase tracking-wider">⚡ Shortcuts</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                  className="py-3 px-4 bg-white border-2 border-[#0F1739] rounded-none active:bg-slate-100 flex-row items-center shadow-[2px_2px_0px_0px_#0F1739]"
+                  className="py-3 px-4 bg-white border-2 border-primary rounded-none active:bg-slate-100 flex-row items-center shadow-[2px_2px_0px_0px_#0F1739]"
                   onPress={() => {
                     setMenuOpen(false);
                     router.push({ pathname: '/random-question', params: { ip } });
                   }}
                 >
-                  <Text className="text-[#0F1739] font-black text-xs uppercase tracking-wider">❓ Random Questions</Text>
+                  <Text className="text-primary font-black text-xs uppercase tracking-wider">❓ Random Questions</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                  className="py-3 px-4 bg-white border-2 border-[#0F1739] rounded-none active:bg-slate-100 flex-row items-center shadow-[2px_2px_0px_0px_#0F1739]"
+                  className="py-3 px-4 bg-white border-2 border-primary rounded-none active:bg-slate-100 flex-row items-center shadow-[2px_2px_0px_0px_#0F1739]"
                   onPress={() => {
                     setMenuOpen(false);
                     router.push({ pathname: '/stoic-support', params: { ip } });
                   }}
                 >
-                  <Text className="text-[#0F1739] font-black text-xs uppercase tracking-wider">🧠 Stoic Support</Text>
+                  <Text className="text-primary font-black text-xs uppercase tracking-wider">🧠 Stoic Support</Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -849,23 +850,23 @@ export default function DecisionHelperScreen() {
         animationType="fade"
       >
         <View className="flex-1 items-center justify-center bg-black/60 p-6">
-          <View className="bg-white border-2 border-[#0F1739] rounded-none p-6 w-full max-w-sm shadow-[6px_6px_0px_0px_#0F1739]">
+          <View className="bg-white border-2 border-primary rounded-none p-6 w-full max-w-sm shadow-[6px_6px_0px_0px_#0F1739]">
             
-            <Text className="text-[#0F1739] font-black text-center text-sm uppercase tracking-widest mb-4 animate-bounce">
+            <Text className="text-primary font-black text-center text-sm uppercase tracking-widest mb-4 animate-bounce">
               {titleAlerts[Math.floor(Math.random() * titleAlerts.length)]} 🎉
             </Text>
 
-            <View className="bg-slate-50 border-2 border-[#0F1739] rounded-none p-5 mb-6">
-              <Text className="text-[#0F1739] font-black text-2xl text-center uppercase tracking-tight leading-normal">
+            <View className="bg-slate-50 border-2 border-primary rounded-none p-5 mb-6">
+              <Text className="text-primary font-black text-2xl text-center uppercase tracking-tight leading-normal">
                 {result}
               </Text>
             </View>
 
             <TouchableOpacity
-              className="bg-[#DDF906] py-3.5 rounded-none border-2 border-[#0F1739] shadow-[3px_3px_0px_0px_#0f1739] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[2px_2px_0px_0px_#0f1739]"
+              className="bg-accent py-3.5 rounded-none border-2 border-primary shadow-[3px_3px_0px_0px_#0f1739] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[2px_2px_0px_0px_#0f1739]"
               onPress={() => setResult('')}
             >
-              <Text className="text-[#0F1739] font-black text-xs text-center uppercase tracking-widest">
+              <Text className="text-primary font-black text-xs text-center uppercase tracking-widest">
                 Done! Back to Choices
               </Text>
             </TouchableOpacity>

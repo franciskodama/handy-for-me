@@ -16,6 +16,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as SecureStore from 'expo-secure-store';
 import { BottomTabInset } from '@/constants/theme';
+import { NeobrutalistCard } from '@/components/neobrutalist-card';
 
 interface UserData {
   email: string;
@@ -606,9 +607,9 @@ export default function DashboardScreen() {
         <View className="gap-6 mb-8">
           
           {/* User profile block */}
-          <View className="bg-white border-2 border-[#0F1739] rounded-none p-5 shadow-[4px_4px_0px_0px_#0F1739]">
+          <NeobrutalistCard cardClassName="p-5" borderColor="border-primary" shadowColor="bg-primary">
             <View className="flex-row items-center gap-4">
-              <View className="w-12 h-12 border-2 border-[#0F1739] bg-slate-100 justify-center items-center rounded-none shadow-[2px_2px_0px_0px_#0F1739]">
+              <View className="w-12 h-12 border-2 border-primary bg-slate-100 justify-center items-center rounded-none shadow-[2px_2px_0px_0px_#0F1739]">
                 {userData?.image ? (
                   <Image source={{ uri: userData.image }} className="w-full h-full" />
                 ) : (
@@ -616,7 +617,7 @@ export default function DashboardScreen() {
                 )}
               </View>
               <View>
-                <Text className="text-[#0F1739] font-black text-lg uppercase tracking-tight leading-none">
+                <Text className="text-primary font-black text-lg uppercase tracking-tight leading-none">
                   {userData?.name || 'Hub User'}
                 </Text>
                 <Text className="text-slate-500 font-bold text-xxs lowercase mt-1">
@@ -624,15 +625,15 @@ export default function DashboardScreen() {
                 </Text>
               </View>
             </View>
-          </View>
+          </NeobrutalistCard>
 
           {/* Weather Widget */}
           {weather && location ? (
-            <View key="weather-active" className="bg-[#DDF906] border-2 border-[#0F1739] rounded-none p-5 shadow-[4px_4px_0px_0px_#0F1739]">
-              <Text className="text-[#0F1739] font-black text-xxs uppercase tracking-wider mb-2">☁️ Weather Bulletin</Text>
+            <NeobrutalistCard key="weather-active" cardClassName="bg-accent p-5" borderColor="border-primary" shadowColor="bg-primary">
+              <Text className="text-primary font-black text-xxs uppercase tracking-wider mb-2">☁️ Weather Bulletin</Text>
               <View className="flex-row justify-between items-center flex-wrap gap-2">
                 <View>
-                  <Text className="text-[#0F1739] text-2xl font-black uppercase tracking-tight">
+                  <Text className="text-primary text-2xl font-black uppercase tracking-tight">
                     {location.city}
                   </Text>
                   <Text className="text-slate-700 text-xs font-bold capitalize">
@@ -640,7 +641,7 @@ export default function DashboardScreen() {
                   </Text>
                 </View>
                 <View className="items-end">
-                  <Text className="text-[#0F1739] text-3xl font-black tracking-tighter">
+                  <Text className="text-primary text-3xl font-black tracking-tighter">
                     {weather.main?.temp ? `${Math.round(weather.main.temp)}°C` : 'N/A'}
                   </Text>
                   <Text className="text-slate-700 text-[9px] font-bold uppercase tracking-widest">
@@ -648,9 +649,9 @@ export default function DashboardScreen() {
                   </Text>
                 </View>
               </View>
-            </View>
+            </NeobrutalistCard>
           ) : (
-            <View key="weather-offline" className="bg-white border-2 border-[#0F1739] border-dashed rounded-none p-4 items-center justify-center">
+            <View key="weather-offline" className="bg-white border-2 border-primary border-dashed rounded-none p-4 items-center justify-center">
               <Text className="text-slate-400 font-black text-xs uppercase tracking-widest text-center">
                 ☁️ Weather Offline (out of reach) 👻
               </Text>
@@ -658,45 +659,45 @@ export default function DashboardScreen() {
           )}
 
           {/* Fun Fact Card */}
-          <View className="bg-white border-2 border-[#0F1739] rounded-none p-5 shadow-[4px_4px_0px_0px_#0F1739]">
+          <NeobrutalistCard cardClassName="p-5" borderColor="border-primary" shadowColor="bg-primary">
             <View className="bg-slate-100 px-2 py-0.5 border border-slate-300 self-start mb-4">
               <Text className="text-slate-500 font-bold text-[9px] uppercase tracking-wider">💡 Wow Curiosity</Text>
             </View>
 
-            <Text className="text-[#0F1739] font-black text-xs uppercase tracking-wide mb-1">
+            <Text className="text-primary font-black text-xs uppercase tracking-wide mb-1">
               {funFacts[funFactIndex]?.start}
             </Text>
-            <Text className="text-[#0F1739] text-base font-black leading-relaxed mb-4">
+            <Text className="text-primary text-base font-black leading-relaxed mb-4">
               {funFacts[funFactIndex]?.curiosity}
             </Text>
 
             <TouchableOpacity
-              className="bg-white border-2 border-[#0F1739] py-2.5 px-4 rounded-none shadow-[2px_2px_0px_0px_#0F1739] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[1px_1px_0px_0px_#0F1739] self-start"
+              className="bg-white border-2 border-primary py-2.5 px-4 rounded-none shadow-[2px_2px_0px_0px_#0F1739] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[1px_1px_0px_0px_#0F1739] self-start"
               onPress={handleNextFunFact}
             >
-              <Text className="text-[#0F1739] font-black text-xs uppercase tracking-wider">Show Another Fun Fact</Text>
+              <Text className="text-primary font-black text-xs uppercase tracking-wider">Show Another Fun Fact</Text>
             </TouchableOpacity>
-          </View>
+          </NeobrutalistCard>
 
         </View>
 
         {/* 2. HABIT TRACKER SECTION */}
-        <View className="bg-white border-2 border-[#0F1739] rounded-none p-5 mb-8 shadow-[4px_4px_0px_0px_#0F1739]">
+        <NeobrutalistCard containerClassName="mb-8" cardClassName="p-5" borderColor="border-primary" shadowColor="bg-primary">
           
           <View className="flex-row justify-between items-center mb-6 flex-wrap gap-2">
             <View className="flex-row items-center gap-2">
-              <Text className="text-[#0F1739] text-2xl font-black uppercase tracking-tighter">Habit Tracker</Text>
-              <View className="bg-red-500 px-2 py-0.5 border border-[#0F1739]">
+              <Text className="text-primary text-2xl font-black uppercase tracking-tighter">Habit Tracker</Text>
+              <View className="bg-red-500 px-2 py-0.5 border border-primary">
                 <Text className="text-white font-bold text-[8px] uppercase tracking-wider">⚡ Live Monitors</Text>
               </View>
             </View>
 
             {!isAddingHabit && (
               <TouchableOpacity
-                className="bg-white border border-[#0F1739] px-2.5 py-1.5 rounded-none active:bg-slate-100"
+                className="bg-white border border-primary px-2.5 py-1.5 rounded-none active:bg-slate-100"
                 onPress={() => setIsAddingHabit(true)}
               >
-                <Text className="text-[#0F1739] font-black text-[10px] uppercase tracking-wider">+ New Monitor</Text>
+                <Text className="text-primary font-black text-[10px] uppercase tracking-wider">+ New Monitor</Text>
               </TouchableOpacity>
             )}
           </View>
@@ -930,14 +931,14 @@ export default function DashboardScreen() {
             </View>
           )}
 
-        </View>
+        </NeobrutalistCard>
 
         {/* 3. WIDGETS PREVIEWS (Vision Board, Shortcuts, Bucket List) */}
         <View className="gap-6 mb-8">
           
           {/* Vision Board preview widget */}
-          <View className="bg-white border-2 border-[#0F1739] rounded-none p-5 shadow-[4px_4px_0px_0px_#0F1739]">
-            <Text className="text-[#0F1739] text-xl font-black uppercase tracking-tight mb-2">Vision Board</Text>
+          <NeobrutalistCard cardClassName="p-5" borderColor="border-primary" shadowColor="bg-primary">
+            <Text className="text-primary text-xl font-black uppercase tracking-tight mb-2">Vision Board</Text>
             {visionBoardItems.length > 0 ? (
               <View className="gap-3">
                 <Text className="text-slate-500 font-semibold text-xxs uppercase">Latest Goals Added:</Text>
@@ -971,11 +972,11 @@ export default function DashboardScreen() {
                 </TouchableOpacity>
               </View>
             )}
-          </View>
+          </NeobrutalistCard>
 
           {/* Shortcuts widget preview */}
-          <View className="bg-white border-2 border-[#0F1739] rounded-none p-5 shadow-[4px_4px_0px_0px_#0F1739]">
-            <Text className="text-[#0F1739] text-xl font-black uppercase tracking-tight mb-2">Shortcuts</Text>
+          <NeobrutalistCard cardClassName="p-5" borderColor="border-primary" shadowColor="bg-primary">
+            <Text className="text-primary text-xl font-black uppercase tracking-tight mb-2">Shortcuts</Text>
             {shortcuts.length > 0 ? (
               <View className="gap-3">
                 <View className="flex-row flex-wrap gap-2">
@@ -995,9 +996,9 @@ export default function DashboardScreen() {
                 </View>
                 <TouchableOpacity
                   onPress={() => router.push({ pathname: '/shortcuts', params: { ip } })}
-                  className="bg-white border border-[#0F1739] p-2.5 justify-center items-center mt-2"
+                  className="bg-white border border-primary p-2.5 justify-center items-center mt-2"
                 >
-                  <Text className="text-[#0F1739] font-black text-xs uppercase tracking-wider">Open Shortcuts ➔</Text>
+                  <Text className="text-primary font-black text-xs uppercase tracking-wider">Open Shortcuts ➔</Text>
                 </TouchableOpacity>
               </View>
             ) : (
@@ -1007,33 +1008,33 @@ export default function DashboardScreen() {
                 </Text>
                 <TouchableOpacity
                   onPress={() => router.push({ pathname: '/shortcuts', params: { ip } })}
-                  className="bg-[#DDF906] border-2 border-[#0F1739] py-2 px-4 shadow-[2px_2px_0px_0px_#0f1739]"
+                  className="bg-accent border-2 border-primary py-2 px-4 shadow-[2px_2px_0px_0px_#0f1739]"
                 >
-                  <Text className="text-[#0F1739] font-black text-xxs uppercase tracking-wider">Create My First Shortcut</Text>
+                  <Text className="text-primary font-black text-xxs uppercase tracking-wider">Create My First Shortcut</Text>
                 </TouchableOpacity>
               </View>
             )}
-          </View>
+          </NeobrutalistCard>
 
           {/* Bucket List widget preview */}
-          <View className="bg-white border-2 border-[#0F1739] rounded-none p-5 shadow-[4px_4px_0px_0px_#0F1739]">
-            <Text className="text-[#0F1739] text-xl font-black uppercase tracking-tight mb-2">Bucket List</Text>
+          <NeobrutalistCard cardClassName="p-5" borderColor="border-primary" shadowColor="bg-primary">
+            <Text className="text-primary text-xl font-black uppercase tracking-tight mb-2">Bucket List</Text>
             {bucketListItems.length > 0 ? (
               <View className="gap-3">
                 <Text className="text-slate-500 font-semibold text-xxs uppercase">Upcoming Adventures:</Text>
                 {bucketListItems.slice(0, 3).map((bItem) => (
                   <View key={bItem.id} className="flex-row items-center gap-2.5 bg-slate-50 border border-slate-200 p-2.5">
                     <Text className="text-slate-400 text-xs">{bItem.done ? '✅' : '⏳'}</Text>
-                    <Text className={`text-[#0F1739] text-xs font-bold flex-1 ${bItem.done ? 'line-through text-slate-400' : ''}`} numberOfLines={1}>
+                    <Text className={`text-primary text-xs font-bold flex-1 ${bItem.done ? 'line-through text-slate-400' : ''}`} numberOfLines={1}>
                       {bItem.item}
                     </Text>
                   </View>
                 ))}
                 <TouchableOpacity
                   onPress={() => router.push({ pathname: '/bucket-list', params: { ip } })}
-                  className="bg-white border border-[#0F1739] p-2.5 justify-center items-center mt-2"
+                  className="bg-white border border-primary p-2.5 justify-center items-center mt-2"
                 >
-                  <Text className="text-[#0F1739] font-black text-xs uppercase tracking-wider">Open Bucket List ➔</Text>
+                  <Text className="text-primary font-black text-xs uppercase tracking-wider">Open Bucket List ➔</Text>
                 </TouchableOpacity>
               </View>
             ) : (
@@ -1043,13 +1044,13 @@ export default function DashboardScreen() {
                 </Text>
                 <TouchableOpacity
                   onPress={() => router.push({ pathname: '/bucket-list', params: { ip } })}
-                  className="bg-[#DDF906] border-2 border-[#0F1739] py-2 px-4 shadow-[2px_2px_0px_0px_#0f1739]"
+                  className="bg-accent border-2 border-primary py-2 px-4 shadow-[2px_2px_0px_0px_#0f1739]"
                 >
-                  <Text className="text-[#0F1739] font-black text-xxs uppercase tracking-wider">Build My Bucket List</Text>
+                  <Text className="text-primary font-black text-xxs uppercase tracking-wider">Build My Bucket List</Text>
                 </TouchableOpacity>
               </View>
             )}
-          </View>
+          </NeobrutalistCard>
 
         </View>
 
