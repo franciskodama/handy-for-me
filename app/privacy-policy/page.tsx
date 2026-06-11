@@ -33,15 +33,15 @@ export default function PrivacyPolicy() {
               2. Data We Collect
             </h2>
             <p>
-              When you authenticate with our application, we collect basic profile information through third-party authentication providers (Google and GitHub) via NextAuth:
+              When you authenticate and interact with our application, we collect the following types of information:
             </p>
             <ul className="list-disc pl-5 mt-2 space-y-1">
-              <li>Your Name</li>
-              <li>Your Email Address</li>
+              <li>Your Name and Email Address (collected via NextAuth through Google or GitHub authentication)</li>
               <li>Your Profile Picture URL</li>
+              <li>Device or other IDs (non-identifiable identifiers used strictly for app performance monitoring and analytics)</li>
             </ul>
             <p className="mt-2">
-              Additionally, we store user-generated content that you voluntarily create inside the app, including checklist tasks, decision helps, yearly promises, and dashboard settings.
+              Additionally, we store user-generated content that you voluntarily create inside the app, including checklist tasks, decision helper items, vision boards, yearly promises, and dashboard preferences.
             </p>
           </section>
 
@@ -74,6 +74,16 @@ export default function PrivacyPolicy() {
             </h2>
             <p>
               You maintain complete control over your data. You can edit, update, or permanently delete your user-generated information at any time from within the application settings.
+            </p>
+            <p className="mt-2">
+              Additionally, in compliance with Google Play Developer Policies, you may request full account and data deletion at any time by visiting our{' '}
+              <Link href="/delete-account" className="underline font-bold text-red-600">
+                Delete Account
+              </Link>{' '}
+              page or by emailing us directly at{' '}
+              <a href="mailto:fhkodama@gmail.com" className="underline font-bold text-red-600">
+                fhkodama@gmail.com
+              </a>. We will process all deletion requests within 48 hours.
             </p>
           </section>
 
