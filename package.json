@@ -12,6 +12,7 @@
     "db:backup": "tsx scripts/backup-data.ts"
   },
   "dependencies": {
+    "@capacitor/core": "^8.4.0",
     "@dnd-kit/core": "^6.3.1",
     "@dnd-kit/sortable": "^10.0.0",
     "@dnd-kit/utilities": "^3.2.2",
@@ -83,9 +84,15 @@
   },
   "resolutions": {
     "@types/react": "npm:types-react@19.0.0-rc.1",
-    "@types/react-dom": "npm:types-react-dom@19.0.0-rc.1"
+    "@types/react-dom": "npm:types-react-dom@19.0.0-rc.1",
+    "string-width": "^4.2.3",
+    "strip-ansi": "6.0.1",
+    "wrap-ansi": "^7.0.0"
   },
   "devDependencies": {
+    "@capacitor/android": "^8.4.0",
+    "@capacitor/cli": "^8.4.0",
+    "@capacitor/ios": "^8.4.0",
     "@google-cloud/storage": "^7.19.0",
     "@types/jspdf": "^2.0.0",
     "@types/leaflet": "^1.9.21",
@@ -93,6 +100,9 @@
     "@types/uuid": "^11.0.0",
     "@types/ws": "^8.18.1",
     "dotenv": "^17.3.1",
-    "tsx": "^4.21.0"
+    "string-width": "^4.2.3",
+    "strip-ansi": "^6.0.1",
+    "tsx": "^4.21.0",
+    "wrap-ansi": "^7.0.0"
   }
 }
