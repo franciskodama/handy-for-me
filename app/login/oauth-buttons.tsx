@@ -48,8 +48,15 @@ export function OAuthButtons() {
         // Successful login, redirect to dashboard / home
         router.push('/');
         router.refresh();
-      } catch (err) {
-        console.error('Native Google Sign-In error:', err);
+      } catch (err: any) {
+        if (
+          err?.message?.includes('canceled') ||
+          err?.message?.includes('cancelled')
+        ) {
+          console.log('User canceled native sign-in flow.');
+        } else {
+          console.error('Native Google Sign-In error:', err);
+        }
       } finally {
         setLoading(null);
       }
