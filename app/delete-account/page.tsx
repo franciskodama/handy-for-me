@@ -15,7 +15,9 @@ export default function DeleteAccount() {
         </h1>
 
         <p className="text-base leading-relaxed mb-6">
-          In compliance with Google Play Developer Policies, we provide an easy way for you to request the deletion of your account and all associated personal data.
+          In compliance with Google Play Developer Policies, we provide an easy
+          way for you to request the deletion of your account and all associated
+          personal data.
         </p>
 
         <div className="border-2 border-black p-4 bg-yellow-50 mb-6">
@@ -34,18 +36,24 @@ export default function DeleteAccount() {
         </p>
 
         <a
-          href="mailto:fhkodama@gmail.com?subject=HandyFor.Me Data Deletion Request"
+          href={`mailto:${process.env.MY_SUPPORT_EMAIL}?subject=HandyFor.Me Data Deletion Request`}
           className="block w-full text-center py-3 border-2 border-black bg-red-600 text-white font-extrabold uppercase hover:bg-white hover:text-red-600 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:translate-x-1 active:translate-y-1 active:shadow-none transition-all mb-8"
         >
           Request Deletion via Email
         </a>
 
         <p className="text-xs text-gray-500 mb-6 text-center">
-          Or send an email to <strong className="text-black">fhkodama@gmail.com</strong> with the subject "HandyFor.Me Data Deletion Request". We will delete your data within 48 hours.
+          Or send an email to{' '}
+          <strong className="text-black">{process.env.MY_SUPPORT_EMAIL}</strong>{' '}
+          with the subject "HandyFor.Me Data Deletion Request". We will delete
+          your data within 48 hours.
         </p>
 
         <div className="border-t-2 border-black pt-4 flex justify-center">
-          <Link href="/login" className="text-sm underline font-bold hover:bg-black hover:text-white px-2 py-1">
+          <Link
+            href="/login"
+            className="text-sm underline font-bold hover:bg-black hover:text-white px-2 py-1"
+          >
             Back to Login
           </Link>
         </div>

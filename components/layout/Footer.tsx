@@ -195,9 +195,12 @@ export default function Footer() {
                   <h2 className="text-xl font-semibold mb-2">6. Privacy</h2>
                   <p className="text-gray-700">
                     We respect your privacy. Please refer to our Privacy Policy
-                    for more information. You can request the termination of your
-                    account and deletion of your data at any time via our{' '}
-                    <Link href="/delete-account" className="text-red-500 underline">
+                    for more information. You can request the termination of
+                    your account and deletion of your data at any time via our{' '}
+                    <Link
+                      href="/delete-account"
+                      className="text-red-500 underline"
+                    >
                       Delete Account
                     </Link>{' '}
                     page.
@@ -282,9 +285,12 @@ export default function Footer() {
                       features, timestamps, and app interactions.
                     </li>
                     <li>
-                      <span className="font-semibold">Device Information & IDs:</span>{' '}
+                      <span className="font-semibold">
+                        Device Information & IDs:
+                      </span>{' '}
                       Non-identifiable data like your device type, operating
-                      system, browser version, and device or other IDs for analytics.
+                      system, browser version, and device or other IDs for
+                      analytics.
                     </li>
                   </ul>
                 </section>
@@ -355,15 +361,16 @@ export default function Footer() {
                     </li>
                     <li>
                       <span className="font-semibold">Deletion:</span> You may
-                      request that your account and all associated data be permanently erased.
-                      To submit a deletion request, please visit our{' '}
-                      <Link href="/delete-account" className="text-red-500 underline">
+                      request that your account and all associated data be
+                      permanently erased. To submit a deletion request, please
+                      visit our{' '}
+                      <Link
+                        href="/delete-account"
+                        className="text-red-500 underline"
+                      >
                         Delete Account
                       </Link>{' '}
-                      page or contact us at{' '}
-                      <a href="mailto:fhkodama@gmail.com" className="text-red-500 underline">
-                        fhkodama@gmail.com
-                      </a>.
+                      page
                     </li>
                   </ul>
                 </section>
