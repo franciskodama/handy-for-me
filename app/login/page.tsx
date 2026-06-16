@@ -1,19 +1,14 @@
 import { kumbh_sans } from 'app/ui/fonts';
 
-import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle
 } from '@/components/ui/card';
-import { signIn } from '@/lib/auth';
 import Image from 'next/image';
-import { SignIn } from './sign-in';
-import Link from 'next/link';
-import { LogoGitHub, LogoGoogle } from '@/lib/svgs';
+import { OAuthButtons } from './oauth-buttons';
 
 export default async function Login() {
   return (
@@ -57,62 +52,8 @@ export default async function Login() {
             </CardDescription>
           </CardHeader>
           <CardContent className="flex flex-col items-center my-2 sm:my-[3em]">
-            <form
-              action={async () => {
-                'use server';
-                await signIn('google', {
-                  redirectTo: '/'
-                });
-              }}
-              className="w-full"
-            >
-              <Button
-                size={'lg'}
-                type="submit"
-                className="flex items-center gap-4 w-full text-base font-normal mb-4"
-              >
-                <LogoGoogle />
-                <p>Sign in with Google</p>
-              </Button>
-            </form>
-            <form
-              action={async () => {
-                'use server';
-                await signIn('github', {
-                  redirectTo: '/'
-                });
-              }}
-              className="w-full"
-            >
-              <Button
-                size={'lg'}
-                type="submit"
-                className="flex items-center gap-4 w-full text-base font-normal"
-              >
-                <LogoGitHub />
-                <p>Sign in with GitHub</p>
-              </Button>
-            </form>
-            {/* <p className="my-4 text-sm">or</p>
-            <div className="w-full">
-              <SignIn />
-            </div> */}
+            <OAuthButtons />
           </CardContent>
-
-          {/* <CardFooter className="text-sm">
-            <div>
-              <p className="font-semibold">Not a member yet?</p>
-              Don’t worry, life gets better from here!
-              <span>
-                <Link
-                  href="/login/signup"
-                  className="underline underline-offset-4 ml-2"
-                >
-                  Sign up
-                </Link>
-              </span>
-            </div>
-          </CardFooter> */}
         </Card>
       </div>
     </div>

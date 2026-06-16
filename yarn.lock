@@ -63,6 +63,11 @@
   resolved "https://registry.yarnpkg.com/@capacitor/ios/-/ios-8.4.0.tgz#c519f06fcb2957bf4ea928bd2948cc90ab54d619"
   integrity sha512-tnwstEdbTJ2nHAfoAwnurXgYRscWeLY+IIGdz69o24gN2Crfj9Xc0TWo8L5uFLF1LmpbUywH1IT0U1oHV8c+CA==
 
+"@capawesome/capacitor-google-sign-in@^0.1.2":
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/@capawesome/capacitor-google-sign-in/-/capacitor-google-sign-in-0.1.2.tgz#3e6289844007cd90a122559ecbda41fb5a83b4b4"
+  integrity sha512-41Z5LBVZJQ/20lEbzQJUtjfm7rCUhiq0EsfKmytTfKjqUjQB4zy0zlDMowe/z5CtetL8u7WGvERtyRYil2exww==
+
 "@dnd-kit/accessibility@^3.1.1":
   version "3.1.1"
   resolved "https://registry.yarnpkg.com/@dnd-kit/accessibility/-/accessibility-3.1.1.tgz#3b4202bd6bb370a0730f6734867785919beac6af"
