@@ -61,7 +61,8 @@ import {
   getDecisionHelperLists,
   getAllDecisionHelperItems,
   getDecisionHelperSubjects,
-  getAllDecisionHelperProsConsItems
+  getAllDecisionHelperProsConsItems,
+  getDecisionHelperData
 } from '@/lib/actions/decision-helper';
 import { Checkbox } from '@/components/ui/checkbox';
 import { kumbh_sans } from '@/app/ui/fonts';
@@ -111,30 +112,28 @@ export default function DecisionHelper({
     if (!isShared) return;
 
     const interval = setInterval(async () => {
-      // Poll Spin the Wheel lists & items
-      const fetchedLists = await getDecisionHelperLists(uid);
-      if (Array.isArray(fetchedLists)) {
-        setLists(fetchedLists);
-        // If the current list was deleted by someone else, switch listId
-        if (listId && !fetchedLists.some((l) => l.id === listId)) {
-          setListId(fetchedLists.length > 0 ? fetchedLists[0].id : '');
-        } else if (!listId && fetchedLists.length > 0) {
-          setListId(fetchedLists[0].id);
+      const data = await getDecisionHelperData(uid);
+      if (data && !('error' in data)) {
+        const { lists: fetchedLists, items: fetchedItems, subjects: fetchedSubjects, prosConsItems: fetchedProsConsItems } = data;
+        
+        if (Array.isArray(fetchedLists)) {
+          setLists(fetchedLists);
+          // If the current list was deleted by someone else, switch listId
+          if (listId && !fetchedLists.some((l) => l.id === listId)) {
+            setListId(fetchedLists.length > 0 ? fetchedLists[0].id : '');
+          } else if (!listId && fetchedLists.length > 0) {
+            setListId(fetchedLists[0].id);
+          }
         }
-      }
-      const fetchedItems = await getAllDecisionHelperItems(uid);
-      if (Array.isArray(fetchedItems)) {
-        setAllItems(fetchedItems);
-      }
-
-      // Poll Pros & Cons subjects & items
-      const fetchedSubjects = await getDecisionHelperSubjects(uid);
-      if (Array.isArray(fetchedSubjects)) {
-        setSubjects(fetchedSubjects);
-      }
-      const fetchedProsConsItems = await getAllDecisionHelperProsConsItems(uid);
-      if (Array.isArray(fetchedProsConsItems)) {
-        setAllProsConsItems(fetchedProsConsItems);
+        if (Array.isArray(fetchedItems)) {
+          setAllItems(fetchedItems as DecisionHelperItem[]);
+        }
+        if (Array.isArray(fetchedSubjects)) {
+          setSubjects(fetchedSubjects as DecisionHelperSubject[]);
+        }
+        if (Array.isArray(fetchedProsConsItems)) {
+          setAllProsConsItems(fetchedProsConsItems as DecisionHelperProsConsItem[]);
+        }
       }
     }, 4000);
 

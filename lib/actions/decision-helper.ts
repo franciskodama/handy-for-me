@@ -511,3 +511,55 @@ export async function updateDecisionHelperProsConsItemWeight(id: string, weight:
     return false;
   }
 }
+
+export async function getDecisionHelperData(uid: string) {
+  try {
+    const user = await getAuthenticatedUser();
+    if (!user || user.uid !== uid) {
+      return { error: 'Unauthorized' };
+    }
+
+    const isShared = user.householdId && user.shareDecisionHelper;
+
+    const [lists, items, subjects, prosConsItems] = await Promise.all([
+      prisma.decisionHelperList.findMany({
+        where: isShared
+          ? { householdId: user.householdId }
+          : { uid, householdId: null },
+        include: { items: true }
+      }),
+      prisma.decisionHelperItem.findMany({
+        where: {
+          list: isShared
+            ? { householdId: user.householdId }
+            : { uid, householdId: null }
+        }
+      }),
+      prisma.decisionHelperSubject.findMany({
+        where: isShared
+          ? { householdId: user.householdId }
+          : { uid, householdId: null },
+        include: { items: true },
+        orderBy: { createdAt: 'asc' }
+      }),
+      prisma.decisionHelperProsConsItem.findMany({
+        where: {
+          subject: isShared
+            ? { householdId: user.householdId }
+            : { uid, householdId: null }
+        }
+      })
+    ]);
+
+    return {
+      lists,
+      items,
+      subjects,
+      prosConsItems
+    };
+  } catch (error) {
+    console.error('Error fetching decision helper data:', error);
+    return { error: 'Failed to fetch decision helper data.' };
+  }
+}
+
