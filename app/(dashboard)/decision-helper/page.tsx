@@ -1,10 +1,12 @@
 import { auth } from '@/lib/auth';
 import {
   getAllDecisionHelperItems,
-  getDecisionHelperLists
+  getDecisionHelperLists,
+  getDecisionHelperSubjects,
+  getAllDecisionHelperProsConsItems
 } from '@/lib/actions/decision-helper';
 import { getHouseholdDetails } from '@/lib/actions/household';
-import { DecisionHelperItem, DecisionHelperList } from '@/lib/types';
+import { DecisionHelperItem, DecisionHelperList, DecisionHelperSubject, DecisionHelperProsConsItem } from '@/lib/types';
 import DecisionHelper from './decision-helper';
 import SignInPrompt from '@/components/SignInPrompt';
 
@@ -18,6 +20,8 @@ export default async function DecisionHelperPage() {
 
   let lists: DecisionHelperList[] = [];
   let items: DecisionHelperItem[] = [];
+  let subjects: DecisionHelperSubject[] = [];
+  let prosConsItems: DecisionHelperProsConsItem[] = [];
 
   const fetchedLists = await getDecisionHelperLists(uid);
   if (Array.isArray(fetchedLists)) {
@@ -28,6 +32,15 @@ export default async function DecisionHelperPage() {
     items = fetchedItems;
   }
 
+  const fetchedSubjects = await getDecisionHelperSubjects(uid);
+  if (Array.isArray(fetchedSubjects)) {
+    subjects = fetchedSubjects;
+  }
+  const fetchedProsConsItems = await getAllDecisionHelperProsConsItems(uid);
+  if (Array.isArray(fetchedProsConsItems)) {
+    prosConsItems = fetchedProsConsItems;
+  }
+
   const householdDetails = await getHouseholdDetails(uid);
 
   return (
@@ -35,6 +48,8 @@ export default async function DecisionHelperPage() {
       uid={uid}
       initialLists={lists}
       initialItems={items}
+      initialSubjects={subjects}
+      initialProsConsItems={prosConsItems}
       householdDetails={householdDetails}
     />
   );

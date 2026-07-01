@@ -32,6 +32,25 @@ export type DecisionHelperItem = {
   selected: boolean;
 };
 
+export type DecisionHelperSubject = {
+  id: string;
+  createdAt: Date;
+  uid: string;
+  subject: string;
+  items: DecisionHelperProsConsItem[];
+  householdId: string | null;
+};
+
+export type DecisionHelperProsConsItem = {
+  id: string;
+  createdAt: Date;
+  uid: string;
+  content: string;
+  isPro: boolean;
+  weight: number;
+  subjectId: string;
+};
+
 export type VisualBoardItem = {
   id: string;
   createdAt: Date;
