@@ -11,7 +11,9 @@ import {
   RefreshCw,
   SquareX,
   Trash,
-  Trash2
+  Trash2,
+  Scale,
+  RotateCw
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
@@ -44,7 +46,12 @@ import {
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { DecisionHelperItem, DecisionHelperList } from '@/lib/types';
+import {
+  DecisionHelperItem,
+  DecisionHelperList,
+  DecisionHelperSubject,
+  DecisionHelperProsConsItem
+} from '@/lib/types';
 import {
   addDecisionHelperItem,
   addDecisionHelperList,
@@ -52,12 +59,17 @@ import {
   deleteDecisionHelperList,
   selectionDecisionHelperItem,
   getDecisionHelperLists,
-  getAllDecisionHelperItems
+  getAllDecisionHelperItems,
+  getDecisionHelperSubjects,
+  getAllDecisionHelperProsConsItems,
+  getDecisionHelperData
 } from '@/lib/actions/decision-helper';
 import { Checkbox } from '@/components/ui/checkbox';
 import { kumbh_sans } from '@/app/ui/fonts';
 import Help from '@/components/common/Help';
 import ExplanationDecisionHelper from './explanation-decision-helper';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import ProsConsHelper from './pros-cons-helper';
 
 export const foldit = Foldit({
   weight: ['700'],
@@ -70,15 +82,23 @@ export default function DecisionHelper({
   uid,
   initialLists,
   initialItems,
+  initialSubjects = [],
+  initialProsConsItems = [],
   householdDetails
 }: {
   uid: string;
   initialLists: DecisionHelperList[];
   initialItems: DecisionHelperItem[];
+  initialSubjects?: DecisionHelperSubject[];
+  initialProsConsItems?: DecisionHelperProsConsItem[];
   householdDetails: any;
 }) {
   const [lists, setLists] = useState<DecisionHelperList[]>(initialLists);
   const [allItems, setAllItems] = useState<DecisionHelperItem[]>(initialItems);
+  const [subjects, setSubjects] =
+    useState<DecisionHelperSubject[]>(initialSubjects);
+  const [allProsConsItems, setAllProsConsItems] =
+    useState<DecisionHelperProsConsItem[]>(initialProsConsItems);
   const [listId, setListId] = useState<string>(
     initialLists.length > 0 ? initialLists[0].id : ''
   );
@@ -86,23 +106,34 @@ export default function DecisionHelper({
 
   // Polling loop for collaborative updates when sharing is active
   useEffect(() => {
-    const isShared = householdDetails?.inHousehold && householdDetails?.userSettings?.shareDecisionHelper;
+    const isShared =
+      householdDetails?.inHousehold &&
+      householdDetails?.userSettings?.shareDecisionHelper;
     if (!isShared) return;
 
     const interval = setInterval(async () => {
-      const fetchedLists = await getDecisionHelperLists(uid);
-      if (Array.isArray(fetchedLists)) {
-        setLists(fetchedLists);
-        // If the current list was deleted by someone else, switch listId
-        if (listId && !fetchedLists.some((l) => l.id === listId)) {
-          setListId(fetchedLists.length > 0 ? fetchedLists[0].id : '');
-        } else if (!listId && fetchedLists.length > 0) {
-          setListId(fetchedLists[0].id);
+      const data = await getDecisionHelperData(uid);
+      if (data && !('error' in data)) {
+        const { lists: fetchedLists, items: fetchedItems, subjects: fetchedSubjects, prosConsItems: fetchedProsConsItems } = data;
+        
+        if (Array.isArray(fetchedLists)) {
+          setLists(fetchedLists);
+          // If the current list was deleted by someone else, switch listId
+          if (listId && !fetchedLists.some((l) => l.id === listId)) {
+            setListId(fetchedLists.length > 0 ? fetchedLists[0].id : '');
+          } else if (!listId && fetchedLists.length > 0) {
+            setListId(fetchedLists[0].id);
+          }
         }
-      }
-      const fetchedItems = await getAllDecisionHelperItems(uid);
-      if (Array.isArray(fetchedItems)) {
-        setAllItems(fetchedItems);
+        if (Array.isArray(fetchedItems)) {
+          setAllItems(fetchedItems as DecisionHelperItem[]);
+        }
+        if (Array.isArray(fetchedSubjects)) {
+          setSubjects(fetchedSubjects as DecisionHelperSubject[]);
+        }
+        if (Array.isArray(fetchedProsConsItems)) {
+          setAllProsConsItems(fetchedProsConsItems as DecisionHelperProsConsItem[]);
+        }
       }
     }, 4000);
 
@@ -215,313 +246,359 @@ export default function DecisionHelper({
         <CardTitle className="flex justify-between items-center gap-2 flex-wrap">
           <div className="flex items-center gap-3 flex-wrap">
             <p>Decision Helper</p>
-            {householdDetails?.inHousehold && householdDetails?.userSettings?.shareDecisionHelper ? (
+            {householdDetails?.inHousehold &&
+            householdDetails?.userSettings?.shareDecisionHelper ? (
               <Badge className="bg-violet-600 hover:bg-violet-700 text-white gap-1 flex items-center rounded-none">
                 👥 Household
               </Badge>
             ) : (
-              <Badge variant="secondary" className="gap-1 flex items-center rounded-none">
+              <Badge
+                variant="secondary"
+                className="gap-1 flex items-center rounded-none"
+              >
                 🔒 Personal
               </Badge>
             )}
-            {householdDetails?.inHousehold && householdDetails?.userSettings?.shareDecisionHelper && householdDetails.household?.members && (
-              <div className="flex -space-x-1.5 overflow-hidden ml-1">
-                {householdDetails.household.members.map((member: any) => (
-                  <div
-                    key={member.id}
-                    className="inline-block h-6 w-6 rounded-full ring-2 ring-background overflow-hidden"
-                    title={member.name || member.uid}
-                  >
-                    {member.avatar ? (
-                      <img
-                        src={member.avatar}
-                        alt={member.name || 'avatar'}
-                        className="h-full w-full object-cover"
-                      />
-                    ) : (
-                      <div className="h-full w-full bg-primary/25 flex items-center justify-center font-bold text-[10px]">
-                        {(member.name || member.uid).charAt(0).toUpperCase()}
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            )}
+            {householdDetails?.inHousehold &&
+              householdDetails?.userSettings?.shareDecisionHelper &&
+              householdDetails.household?.members && (
+                <div className="flex -space-x-1.5 overflow-hidden ml-1">
+                  {householdDetails.household.members.map((member: any) => (
+                    <div
+                      key={member.id}
+                      className="inline-block h-6 w-6 rounded-full ring-2 ring-background overflow-hidden"
+                      title={member.name || member.uid}
+                    >
+                      {member.avatar ? (
+                        <img
+                          src={member.avatar}
+                          alt={member.name || 'avatar'}
+                          className="h-full w-full object-cover"
+                        />
+                      ) : (
+                        <div className="h-full w-full bg-primary/25 flex items-center justify-center font-bold text-[10px]">
+                          {(member.name || member.uid).charAt(0).toUpperCase()}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
           </div>
           <div className="flex items-center gap-4">
             {!openAction ? <Help setOpenAction={setOpenAction} /> : <div />}
           </div>
         </CardTitle>
         <CardDescription>
-          A fun, random decision-maker that spins the wheel to pick your next
-          adventure!
+          Helpful tools to make choices: spin the wheel for a random decision or
+          weigh your options with a Pros & Cons analysis!
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <AnimatePresence>
-          {openAction ? (
-            <motion.div
-              layout
-              initial={{ opacity: 0, y: 50, scale: 0.3 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.5, transition: { duration: 0.2 } }}
+        <Tabs defaultValue="spin" className="w-full">
+          <TabsList className="w-full grid grid-cols-2 mb-6 border border-primary p-0.5 h-auto bg-muted">
+            <TabsTrigger
+              value="spin"
+              className="uppercase text-xl font-semibold py-2 data-[state=active]:bg-primary data-[state=active]:text-white rounded-none border border-transparent data-[state=active]:border-primary flex items-center justify-center gap-2"
             >
-              <div className="mb-12">
-                <ExplanationDecisionHelper setOpenAction={setOpenAction} />
-              </div>
-            </motion.div>
-          ) : null}
-        </AnimatePresence>
+              <RotateCw size={22} />
+              Spin the Wheel
+            </TabsTrigger>
+            <TabsTrigger
+              value="proscons"
+              className="uppercase text-xl font-semibold py-2 data-[state=active]:bg-primary data-[state=active]:text-white rounded-none border border-transparent data-[state=active]:border-primary flex items-center justify-center gap-2"
+            >
+              <Scale size={22} />
+              Pros & Cons
+            </TabsTrigger>
+          </TabsList>
 
-        <div className="flex flex-col sm:flex-row justify-start gap-8 mb-4 w-full">
-          <div className="flex flex-col gap-4 sm:w-1/2">
-            <div className="flex flex-col items-start w-full">
-              <p className="text-sm mb-2">Do you want to start a new list?</p>
-              <div className="flex gap-2 w-full">
-                <Input
-                  placeholder="List's Name"
-                  value={listInput}
-                  onChange={(e) => setListInput(e.target.value)}
-                />
-                <Button
-                  className={pendingNewList ? 'ml-1 bg-primary' : 'ml-1'}
-                  onClick={handleCreateList}
-                  disabled={pendingNewList || listInput.trim() === ''}
+          <TabsContent value="spin">
+            <AnimatePresence>
+              {openAction ? (
+                <motion.div
+                  layout
+                  initial={{ opacity: 0, y: 50, scale: 0.3 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{
+                    opacity: 0,
+                    scale: 0.5,
+                    transition: { duration: 0.2 }
+                  }}
                 >
-                  {pendingNewList ? 'Creating...' : 'Create a New List'}
-                </Button>
-              </div>
-            </div>
-            <div className="flex items-center justify-between gap-2">
-              <div className="flex items-center gap-2">
-                <CornerLeftUp size={18} strokeWidth={1.4} />
-                <p className="text-sm">or</p>
-                <CornerRightDown size={18} strokeWidth={1.4} />
-              </div>
-            </div>
-            <div className="flex flex-col gap-2">
-              <Select
-                onValueChange={(value) => {
-                  setResult('');
-                  setListId(value);
-                }}
-              >
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Choose a List" />
-                </SelectTrigger>
-                <SelectContent>
-                  {lists.map((el: DecisionHelperList) => (
-                    <div key={el.id}>
-                      {el.list && (
-                        <div className="flex items-center justify-between">
-                          <SelectItem value={el.id}>{el.list}</SelectItem>
-                          <AlertDialog>
-                            <AlertDialogTrigger asChild>
-                              <Button variant="ghost">
-                                <Trash
-                                  className="text-primary"
-                                  size={18}
-                                  strokeWidth={1.4}
-                                />
-                              </Button>
-                            </AlertDialogTrigger>
-                            <AlertDialogContent className="w-[calc(100%-35px)]">
-                              <AlertDialogHeader>
-                                <AlertDialogTitle className="flex items-center gap-2">
-                                  <Bomb size={24} strokeWidth={1.8} />
-                                  Are you absolutely sure?
-                                </AlertDialogTitle>
-                                <AlertDialogDescription className="py-4 text-base text-primary">
-                                  This will permanently delete the list
-                                  <span className="font-bold mx-1">
-                                    {el.list}
-                                  </span>
-                                  all its contents.
-                                </AlertDialogDescription>
-                              </AlertDialogHeader>
-                              <AlertDialogFooter>
-                                <AlertDialogCancel
-                                  onClick={() => {
-                                    toast({
-                                      title: 'Operation Cancelled! ❌',
-                                      description: `Phew! 😮‍💨 Crisis averted. You successfully cancelled the operation.`,
-                                      variant: 'destructive'
-                                    });
-                                  }}
-                                >
-                                  Cancel
-                                </AlertDialogCancel>
-                                <AlertDialogAction
-                                  onClick={() => handleDeleteList(el.id)}
-                                >
-                                  Delete
-                                </AlertDialogAction>
-                              </AlertDialogFooter>
-                            </AlertDialogContent>
-                          </AlertDialog>
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </SelectContent>
-              </Select>
-              <div className="flex w-full gap-2">
-                <Input
-                  className="w-full"
-                  placeholder={
-                    listId
-                      ? 'Enter a new Item for this list'
-                      : 'Select a list first'
-                  }
-                  value={itemInput}
-                  onChange={(e) => setItemInput(e.target.value)}
-                  disabled={!listId}
-                />
-                <Button
-                  className={`ml-1 w-[10ch] ${pendingNewItem ? 'bg-orange-500' : ''}`}
-                  onClick={handleCreateItem}
-                  disabled={
-                    pendingNewItem || itemInput.trim() === '' || !listId
-                  }
-                >
-                  {pendingNewItem ? 'Adding...' : 'Add'}
-                </Button>
-              </div>
-            </div>
+                  <div className="mb-12">
+                    <ExplanationDecisionHelper setOpenAction={setOpenAction} />
+                  </div>
+                </motion.div>
+              ) : null}
+            </AnimatePresence>
 
-            {items.length > 0 && (
-              <div className="flex flex-col gap-2">
-                <p className="text-sm font-semibold mt-4">Items:</p>
-                {items.map((el: DecisionHelperItem) => (
-                  <div
-                    key={el.id}
-                    className="flex gap-2 items-center justify-between text-sm w-full border px-2"
+            <div className="flex flex-col sm:flex-row justify-start gap-8 mb-4 w-full">
+              <div className="flex flex-col gap-4 sm:w-1/2">
+                <div className="flex flex-col items-start w-full">
+                  <p className="text-sm mb-2">
+                    Do you want to start a new list?
+                  </p>
+                  <div className="flex gap-2 w-full">
+                    <Input
+                      placeholder="List's Name"
+                      value={listInput}
+                      onChange={(e) => setListInput(e.target.value)}
+                    />
+                    <Button
+                      className={pendingNewList ? 'ml-1 bg-primary' : 'ml-1'}
+                      onClick={handleCreateList}
+                      disabled={pendingNewList || listInput.trim() === ''}
+                    >
+                      {pendingNewList ? 'Creating...' : 'Create a New List'}
+                    </Button>
+                  </div>
+                </div>
+                <div className="flex items-center justify-between gap-2">
+                  <div className="flex items-center gap-2">
+                    <CornerLeftUp size={18} strokeWidth={1.4} />
+                    <p className="text-sm">or</p>
+                    <CornerRightDown size={18} strokeWidth={1.4} />
+                  </div>
+                </div>
+                <div className="flex flex-col gap-2">
+                  <Select
+                    onValueChange={(value) => {
+                      setResult('');
+                      setListId(value);
+                    }}
                   >
-                    <div className="flex items-center gap-2">
-                      <p>{el.item}</p>
-                      {householdDetails?.inHousehold && householdDetails?.userSettings?.shareDecisionHelper && (
-                        <span className="text-[10px] text-muted-foreground bg-muted px-1.5 py-0.5 rounded" title={`Added by ${el.uid}`}>
-                          by {el.uid.split('@')[0]}
-                        </span>
-                      )}
-                    </div>
-                    <div className="flex items-center gap-4 pr-2">
-                      <Checkbox
-                        checked={el.selected}
-                        onCheckedChange={() => handleItemSelection(el.id)}
-                      />
-                      <Button
-                        variant={'link'}
-                        onClick={() => handleDeleteItem(el.id)}
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Choose a List" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {lists.map((el: DecisionHelperList) => (
+                        <div key={el.id}>
+                          {el.list && (
+                            <div className="flex items-center justify-between">
+                              <SelectItem value={el.id}>{el.list}</SelectItem>
+                              <AlertDialog>
+                                <AlertDialogTrigger asChild>
+                                  <Button variant="ghost">
+                                    <Trash
+                                      className="text-primary"
+                                      size={18}
+                                      strokeWidth={1.4}
+                                    />
+                                  </Button>
+                                </AlertDialogTrigger>
+                                <AlertDialogContent className="w-[calc(100%-35px)]">
+                                  <AlertDialogHeader>
+                                    <AlertDialogTitle className="flex items-center gap-2">
+                                      <Bomb size={24} strokeWidth={1.8} />
+                                      Are you absolutely sure?
+                                    </AlertDialogTitle>
+                                    <AlertDialogDescription className="py-4 text-base text-primary">
+                                      This will permanently delete the list
+                                      <span className="font-bold mx-1">
+                                        {el.list}
+                                      </span>
+                                      all its contents.
+                                    </AlertDialogDescription>
+                                  </AlertDialogHeader>
+                                  <AlertDialogFooter>
+                                    <AlertDialogCancel
+                                      onClick={() => {
+                                        toast({
+                                          title: 'Operation Cancelled! ❌',
+                                          description: `Phew! 😮‍💨 Crisis averted. You successfully cancelled the operation.`,
+                                          variant: 'destructive'
+                                        });
+                                      }}
+                                    >
+                                      Cancel
+                                    </AlertDialogCancel>
+                                    <AlertDialogAction
+                                      onClick={() => handleDeleteList(el.id)}
+                                    >
+                                      Delete
+                                    </AlertDialogAction>
+                                  </AlertDialogFooter>
+                                </AlertDialogContent>
+                              </AlertDialog>
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <div className="flex w-full gap-2">
+                    <Input
+                      className="w-full"
+                      placeholder={
+                        listId
+                          ? 'Enter a new Item for this list'
+                          : 'Select a list first'
+                      }
+                      value={itemInput}
+                      onChange={(e) => setItemInput(e.target.value)}
+                      disabled={!listId}
+                    />
+                    <Button
+                      className={`ml-1 w-[10ch] ${pendingNewItem ? 'bg-orange-500' : ''}`}
+                      onClick={handleCreateItem}
+                      disabled={
+                        pendingNewItem || itemInput.trim() === '' || !listId
+                      }
+                    >
+                      {pendingNewItem ? 'Adding...' : 'Add'}
+                    </Button>
+                  </div>
+                </div>
+
+                {items.length > 0 && (
+                  <div className="flex flex-col gap-2">
+                    <p className="text-sm font-semibold mt-4">Items:</p>
+                    {items.map((el: DecisionHelperItem) => (
+                      <div
+                        key={el.id}
+                        className="flex gap-2 items-center justify-between text-sm w-full border px-2"
                       >
-                        <Trash2 size={18} strokeWidth={1.6} />
+                        <div className="flex items-center gap-2">
+                          <p>{el.item}</p>
+                          {householdDetails?.inHousehold &&
+                            householdDetails?.userSettings
+                              ?.shareDecisionHelper && (
+                              <span
+                                className="text-[10px] text-muted-foreground bg-muted px-1.5 py-0.5 rounded"
+                                title={`Added by ${el.uid}`}
+                              >
+                                by {el.uid.split('@')[0]}
+                              </span>
+                            )}
+                        </div>
+                        <div className="flex items-center gap-4 pr-2">
+                          <Checkbox
+                            checked={el.selected}
+                            onCheckedChange={() => handleItemSelection(el.id)}
+                          />
+                          <Button
+                            variant={'link'}
+                            onClick={() => handleDeleteItem(el.id)}
+                          >
+                            <Trash2 size={18} strokeWidth={1.6} />
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              <div className="stripe-border flex flex-col items-center sm:w-1/2 justify-center p-12 mt-8 mb-8">
+                {items.length > 0 ? (
+                  <>
+                    <div className="flex flex-col">
+                      <p
+                        className={`${kumbh_sans.className} uppercase font-bold text-xl leading-none text-center mb-8`}
+                      >
+                        {spinning ? 'Spinning...' : 'Spin the Wheel'}
+                      </p>
+                      <Button
+                        className="rounded-full w-[12em] h-[12em] sm:w-[15em] sm:h-[15em] p-0"
+                        onClick={handleSpin}
+                        variant={'outline'}
+                      >
+                        <RefreshCw
+                          color={'black'}
+                          size={120}
+                          strokeWidth={0.25}
+                          className={`${spinning ? 'animate-spin' : null}`}
+                        />
                       </Button>
                     </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-
-          <div className="stripe-border flex flex-col items-center sm:w-1/2 justify-center p-12 mt-8 mb-8">
-            {items.length > 0 ? (
-              <>
-                <div className="flex flex-col">
-                  <p
-                    className={`${kumbh_sans.className} uppercase font-bold text-xl leading-none text-center mb-8`}
-                  >
-                    {spinning ? 'Spinning...' : 'Spin the Wheel'}
-                  </p>
-                  <Button
-                    className="rounded-full w-[12em] h-[12em] sm:w-[15em] sm:h-[15em] p-0"
-                    onClick={handleSpin}
-                    variant={'outline'}
-                  >
-                    <RefreshCw
-                      color={'black'}
-                      size={120}
-                      strokeWidth={0.25}
-                      className={`${spinning ? 'animate-spin' : null}`}
-                    />
-                  </Button>
-                </div>
-              </>
-            ) : (
-              <>
-                <p className="text-3xl text-slate-300 p-4 text-center animate-pulse w-full">
-                  Waiting for items...
-                </p>
-              </>
-            )}
-
-            {result && (
-              <>
-                <AlertDialog open={result.length > 0}>
-                  <AlertDialogContent className="w-[calc(100%-35px)]">
-                    <AlertDialogHeader>
-                      <AlertDialogTitle className="flex items-center gap-2 justify-center animate-pulse">
-                        <span>
-                          {
-                            titleAlert[
-                              Math.floor(Math.random() * titleAlert.length)
-                            ]
-                          }
-                        </span>
-                        <PartyPopper size={24} strokeWidth={1.8} />
-                      </AlertDialogTitle>
-                      <AlertDialogDescription asChild>
-                        <p
-                          className={`${kumbh_sans.className} ${result.length > 8 ? 'text-lg sm:text-4xl' : 'text-3xl sm:text-7xl'} text-primary uppercase font-bold leading-none text-center w-full my-8`}
-                        >
-                          {result}
-                        </p>
-                      </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter className="flex justify-center w-full">
-                      <AlertDialogCancel
-                        onClick={() => setResult('')}
-                        className="mx-auto"
+                  </>
+                ) : (
+                  <>
+                    <p
+                      className={`${kumbh_sans.className} text-center font-bold`}
+                    >
+                      Make a List to play!
+                    </p>
+                  </>
+                )}
+                <AnimatePresence>
+                  {result && (
+                    <motion.div
+                      layout
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.8 }}
+                    >
+                      <p className="mt-8 text-center text-sm font-semibold max-w-[20ch]">
+                        And the winner is...
+                      </p>
+                      <p
+                        className={`${kumbh_sans.className} uppercase font-bold text-xl text-center text-orange-600 mt-2`}
                       >
-                        Done! Back to Choices.
-                      </AlertDialogCancel>
-                    </AlertDialogFooter>
-                  </AlertDialogContent>
-                </AlertDialog>
-                <Button variant="link" onClick={() => setResult('')}>
-                  <SquareX
-                    size={18}
-                    strokeWidth={1.6}
-                    onClick={() => setResult('')}
-                  />
-                  <p className="ml-2 text-xs">Clear</p>
-                </Button>
-              </>
-            )}
-          </div>
-
-          {/* ----------------------- Third Column ----------------------- */}
-
-          {/*handle deleteDecisionHelperList(id) */}
-
-          {/* 
-            <div className="w-[25em] mt-8">
-              <p className="text-sm h-10 py-2">Do you want to delete a list?</p>
-              <div className="flex items-center gap-2">
-                <Input
-                  placeholder="List's Name"
-                  value={listInput}
-                  onChange={(e) => setListInput(e.target.value)}
-                />
-                <Button
-                  className={pendingNewList ? 'bg-primary' : ''}
-                  onClick={handleCreateList}
-                  disabled={pendingNewList || listInput.trim() === ''}
-                >
-                  {pendingNewList ? 'Creating...' : 'Create a New List'}
-                </Button>
+                        {result}
+                      </p>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+                {result && (
+                  <>
+                    <AlertDialog
+                      open={!!result}
+                      onOpenChange={() => setResult('')}
+                    >
+                      <AlertDialogContent className="w-[calc(100%-35px)]">
+                        <AlertDialogHeader className="mb-4">
+                          <AlertDialogTitle className="flex items-center gap-2">
+                            <PartyPopper size={24} strokeWidth={1.8} />
+                            {
+                              titleAlert[
+                                Math.floor(Math.random() * titleAlert.length)
+                              ]
+                            }
+                          </AlertDialogTitle>
+                          <AlertDialogDescription className="py-4 text-base text-primary">
+                            Your random pick is:
+                            <span className="font-extrabold text-orange-600 block text-center text-3xl mt-4 bg-orange-50 border border-orange-200 py-3 uppercase">
+                              {result}
+                            </span>
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter className="flex justify-center w-full">
+                          <AlertDialogCancel
+                            onClick={() => setResult('')}
+                            className="mx-auto"
+                          >
+                            Done! Back to Choices.
+                          </AlertDialogCancel>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                    <Button variant="link" onClick={() => setResult('')}>
+                      <SquareX
+                        size={18}
+                        strokeWidth={1.6}
+                        onClick={() => setResult('')}
+                      />
+                      <p className="ml-2 text-xs">Clear</p>
+                    </Button>
+                  </>
+                )}
               </div>
-            </div> */}
-        </div>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="proscons">
+            <ProsConsHelper
+              uid={uid}
+              subjects={subjects}
+              setSubjects={setSubjects}
+              allItems={allProsConsItems}
+              setAllItems={setAllProsConsItems}
+              householdDetails={householdDetails}
+            />
+          </TabsContent>
+        </Tabs>
       </CardContent>
     </Card>
   );

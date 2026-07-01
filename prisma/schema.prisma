@@ -38,6 +38,26 @@ model DecisionHelperItem {
   listId    String
 }
 
+model DecisionHelperSubject {
+  id          String   @id @default(uuid()) @db.VarChar(255)
+  createdAt   DateTime @default(now()) @db.Timestamp(6)
+  uid         String   
+  subject     String   
+  items       DecisionHelperProsConsItem[]
+  householdId String?  @db.VarChar(255)
+}
+
+model DecisionHelperProsConsItem {
+  id        String   @id @default(uuid()) @db.VarChar(255)
+  createdAt DateTime @default(now()) @db.Timestamp(6)
+  uid       String   
+  content   String   
+  isPro     Boolean   @default(true)
+  weight    Int       @default(1)
+  subject   DecisionHelperSubject @relation(fields: [subjectId], references: [id])
+  subjectId String
+}
+
 model VisualBoardItem {
   id        String   @id @default(uuid()) @db.VarChar(255)
   createdAt DateTime @default(now()) @db.Timestamp(6)
