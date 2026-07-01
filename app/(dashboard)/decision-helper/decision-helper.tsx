@@ -11,7 +11,9 @@ import {
   RefreshCw,
   SquareX,
   Trash,
-  Trash2
+  Trash2,
+  Scale,
+  RotateCw
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
@@ -298,15 +300,17 @@ export default function DecisionHelper({
           <TabsList className="w-full grid grid-cols-2 mb-6 border border-primary p-0.5 h-auto bg-muted">
             <TabsTrigger
               value="spin"
-              className="uppercase font-bold py-2 data-[state=active]:bg-primary data-[state=active]:text-white rounded-none border border-transparent data-[state=active]:border-primary"
+              className="uppercase text-xl font-semibold py-2 data-[state=active]:bg-primary data-[state=active]:text-white rounded-none border border-transparent data-[state=active]:border-primary flex items-center justify-center gap-2"
             >
-              🎡 Spin the Wheel
+              <RotateCw size={22} />
+              Spin the Wheel
             </TabsTrigger>
             <TabsTrigger
               value="proscons"
-              className="uppercase font-bold py-2 data-[state=active]:bg-primary data-[state=active]:text-white rounded-none border border-transparent data-[state=active]:border-primary"
+              className="uppercase text-xl font-semibold py-2 data-[state=active]:bg-primary data-[state=active]:text-white rounded-none border border-transparent data-[state=active]:border-primary flex items-center justify-center gap-2"
             >
-              ⚖️ Pros & Cons Analysis
+              <Scale size={22} />
+              Pros & Cons
             </TabsTrigger>
           </TabsList>
 
