@@ -44,7 +44,12 @@ import {
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { DecisionHelperItem, DecisionHelperList, DecisionHelperSubject, DecisionHelperProsConsItem } from '@/lib/types';
+import {
+  DecisionHelperItem,
+  DecisionHelperList,
+  DecisionHelperSubject,
+  DecisionHelperProsConsItem
+} from '@/lib/types';
 import {
   addDecisionHelperItem,
   addDecisionHelperList,
@@ -87,8 +92,10 @@ export default function DecisionHelper({
 }) {
   const [lists, setLists] = useState<DecisionHelperList[]>(initialLists);
   const [allItems, setAllItems] = useState<DecisionHelperItem[]>(initialItems);
-  const [subjects, setSubjects] = useState<DecisionHelperSubject[]>(initialSubjects);
-  const [allProsConsItems, setAllProsConsItems] = useState<DecisionHelperProsConsItem[]>(initialProsConsItems);
+  const [subjects, setSubjects] =
+    useState<DecisionHelperSubject[]>(initialSubjects);
+  const [allProsConsItems, setAllProsConsItems] =
+    useState<DecisionHelperProsConsItem[]>(initialProsConsItems);
   const [listId, setListId] = useState<string>(
     initialLists.length > 0 ? initialLists[0].id : ''
   );
@@ -96,7 +103,9 @@ export default function DecisionHelper({
 
   // Polling loop for collaborative updates when sharing is active
   useEffect(() => {
-    const isShared = householdDetails?.inHousehold && householdDetails?.userSettings?.shareDecisionHelper;
+    const isShared =
+      householdDetails?.inHousehold &&
+      householdDetails?.userSettings?.shareDecisionHelper;
     if (!isShared) return;
 
     const interval = setInterval(async () => {
@@ -236,45 +245,52 @@ export default function DecisionHelper({
         <CardTitle className="flex justify-between items-center gap-2 flex-wrap">
           <div className="flex items-center gap-3 flex-wrap">
             <p>Decision Helper</p>
-            {householdDetails?.inHousehold && householdDetails?.userSettings?.shareDecisionHelper ? (
+            {householdDetails?.inHousehold &&
+            householdDetails?.userSettings?.shareDecisionHelper ? (
               <Badge className="bg-violet-600 hover:bg-violet-700 text-white gap-1 flex items-center rounded-none">
                 👥 Household
               </Badge>
             ) : (
-              <Badge variant="secondary" className="gap-1 flex items-center rounded-none">
+              <Badge
+                variant="secondary"
+                className="gap-1 flex items-center rounded-none"
+              >
                 🔒 Personal
               </Badge>
             )}
-            {householdDetails?.inHousehold && householdDetails?.userSettings?.shareDecisionHelper && householdDetails.household?.members && (
-              <div className="flex -space-x-1.5 overflow-hidden ml-1">
-                {householdDetails.household.members.map((member: any) => (
-                  <div
-                    key={member.id}
-                    className="inline-block h-6 w-6 rounded-full ring-2 ring-background overflow-hidden"
-                    title={member.name || member.uid}
-                  >
-                    {member.avatar ? (
-                      <img
-                        src={member.avatar}
-                        alt={member.name || 'avatar'}
-                        className="h-full w-full object-cover"
-                      />
-                    ) : (
-                      <div className="h-full w-full bg-primary/25 flex items-center justify-center font-bold text-[10px]">
-                        {(member.name || member.uid).charAt(0).toUpperCase()}
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            )}
+            {householdDetails?.inHousehold &&
+              householdDetails?.userSettings?.shareDecisionHelper &&
+              householdDetails.household?.members && (
+                <div className="flex -space-x-1.5 overflow-hidden ml-1">
+                  {householdDetails.household.members.map((member: any) => (
+                    <div
+                      key={member.id}
+                      className="inline-block h-6 w-6 rounded-full ring-2 ring-background overflow-hidden"
+                      title={member.name || member.uid}
+                    >
+                      {member.avatar ? (
+                        <img
+                          src={member.avatar}
+                          alt={member.name || 'avatar'}
+                          className="h-full w-full object-cover"
+                        />
+                      ) : (
+                        <div className="h-full w-full bg-primary/25 flex items-center justify-center font-bold text-[10px]">
+                          {(member.name || member.uid).charAt(0).toUpperCase()}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
           </div>
           <div className="flex items-center gap-4">
             {!openAction ? <Help setOpenAction={setOpenAction} /> : <div />}
           </div>
         </CardTitle>
         <CardDescription>
-          Helpful tools to make choices: spin the wheel for a random decision or weigh your options with a Pros & Cons analysis!
+          Helpful tools to make choices: spin the wheel for a random decision or
+          weigh your options with a Pros & Cons analysis!
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -301,7 +317,11 @@ export default function DecisionHelper({
                   layout
                   initial={{ opacity: 0, y: 50, scale: 0.3 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.5, transition: { duration: 0.2 } }}
+                  exit={{
+                    opacity: 0,
+                    scale: 0.5,
+                    transition: { duration: 0.2 }
+                  }}
                 >
                   <div className="mb-12">
                     <ExplanationDecisionHelper setOpenAction={setOpenAction} />
@@ -313,7 +333,9 @@ export default function DecisionHelper({
             <div className="flex flex-col sm:flex-row justify-start gap-8 mb-4 w-full">
               <div className="flex flex-col gap-4 sm:w-1/2">
                 <div className="flex flex-col items-start w-full">
-                  <p className="text-sm mb-2">Do you want to start a new list?</p>
+                  <p className="text-sm mb-2">
+                    Do you want to start a new list?
+                  </p>
                   <div className="flex gap-2 w-full">
                     <Input
                       placeholder="List's Name"
@@ -436,11 +458,16 @@ export default function DecisionHelper({
                       >
                         <div className="flex items-center gap-2">
                           <p>{el.item}</p>
-                          {householdDetails?.inHousehold && householdDetails?.userSettings?.shareDecisionHelper && (
-                            <span className="text-[10px] text-muted-foreground bg-muted px-1.5 py-0.5 rounded" title={`Added by ${el.uid}`}>
-                              by {el.uid.split('@')[0]}
-                            </span>
-                          )}
+                          {householdDetails?.inHousehold &&
+                            householdDetails?.userSettings
+                              ?.shareDecisionHelper && (
+                              <span
+                                className="text-[10px] text-muted-foreground bg-muted px-1.5 py-0.5 rounded"
+                                title={`Added by ${el.uid}`}
+                              >
+                                by {el.uid.split('@')[0]}
+                              </span>
+                            )}
                         </div>
                         <div className="flex items-center gap-4 pr-2">
                           <Checkbox
@@ -513,12 +540,19 @@ export default function DecisionHelper({
                 </AnimatePresence>
                 {result && (
                   <>
-                    <AlertDialog open={!!result} onOpenChange={() => setResult('')}>
+                    <AlertDialog
+                      open={!!result}
+                      onOpenChange={() => setResult('')}
+                    >
                       <AlertDialogContent className="w-[calc(100%-35px)]">
                         <AlertDialogHeader className="mb-4">
                           <AlertDialogTitle className="flex items-center gap-2">
                             <PartyPopper size={24} strokeWidth={1.8} />
-                            {titleAlert[Math.floor(Math.random() * titleAlert.length)]}
+                            {
+                              titleAlert[
+                                Math.floor(Math.random() * titleAlert.length)
+                              ]
+                            }
                           </AlertDialogTitle>
                           <AlertDialogDescription className="py-4 text-base text-primary">
                             Your random pick is:

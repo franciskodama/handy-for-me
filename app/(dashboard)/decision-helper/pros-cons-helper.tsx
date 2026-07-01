@@ -21,11 +21,22 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger
 } from '@/components/ui/alert-dialog';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle
+} from '@/components/ui/card';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { DecisionHelperSubject, DecisionHelperProsConsItem } from '@/lib/types';
 import { kumbh_sans } from '@/app/ui/fonts';
 import {
@@ -75,7 +86,8 @@ export default function ProsConsHelper({
   const totalProWeight = pros.reduce((sum, item) => sum + item.weight, 0);
   const totalConWeight = cons.reduce((sum, item) => sum + item.weight, 0);
   const totalWeight = totalProWeight + totalConWeight;
-  const proPercentage = totalWeight > 0 ? (totalProWeight / totalWeight) * 100 : 50;
+  const proPercentage =
+    totalWeight > 0 ? (totalProWeight / totalWeight) * 100 : 50;
   const scoreDiff = totalProWeight - totalConWeight;
 
   const handleCreateSubject = async () => {
@@ -128,7 +140,13 @@ export default function ProsConsHelper({
     if (isPro) setPendingProItem(true);
     else setPendingConItem(true);
 
-    const newItem = await addDecisionHelperProsConsItem(uid, subjectId, content, isPro, weight);
+    const newItem = await addDecisionHelperProsConsItem(
+      uid,
+      subjectId,
+      content,
+      isPro,
+      weight
+    );
 
     if (isPro) setPendingProItem(false);
     else setPendingConItem(false);
@@ -192,7 +210,9 @@ export default function ProsConsHelper({
       <div className="flex flex-col sm:flex-row justify-start gap-8 w-full">
         <div className="flex flex-col gap-4 sm:w-1/2">
           <div className="flex flex-col items-start w-full">
-            <p className="text-sm mb-2 font-medium">Create a Subject to Analyze:</p>
+            <p className="text-sm mb-2 font-medium">
+              Create a Subject to Analyze:
+            </p>
             <div className="flex gap-2 w-full">
               <Input
                 placeholder="e.g., have a baby, buy a house..."
@@ -231,8 +251,16 @@ export default function ProsConsHelper({
                     <SelectItem value={s.id}>{s.subject}</SelectItem>
                     <AlertDialog>
                       <AlertDialogTrigger asChild>
-                        <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                          <Trash className="text-primary" size={14} strokeWidth={1.4} />
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-8 w-8 p-0"
+                        >
+                          <Trash
+                            className="text-primary"
+                            size={14}
+                            strokeWidth={1.4}
+                          />
                         </Button>
                       </AlertDialogTrigger>
                       <AlertDialogContent className="w-[calc(100%-35px)]">
@@ -243,13 +271,17 @@ export default function ProsConsHelper({
                           </AlertDialogTitle>
                           <AlertDialogDescription className="py-4 text-base text-primary">
                             This will permanently delete the subject
-                            <span className="font-bold mx-1">"{s.subject}"</span>
+                            <span className="font-bold mx-1">
+                              "{s.subject}"
+                            </span>
                             and all its Pros and Cons.
                           </AlertDialogDescription>
                         </AlertDialogHeader>
                         <AlertDialogFooter>
                           <AlertDialogCancel>Cancel</AlertDialogCancel>
-                          <AlertDialogAction onClick={() => handleDeleteSubject(s.id)}>
+                          <AlertDialogAction
+                            onClick={() => handleDeleteSubject(s.id)}
+                          >
                             Delete
                           </AlertDialogAction>
                         </AlertDialogFooter>
@@ -267,7 +299,9 @@ export default function ProsConsHelper({
         <div className="flex flex-col gap-8 w-full mt-4">
           {/* Decision Leaning Banner */}
           <div className="w-full border border-primary p-4 shadow-[0_0px_0px_0px_inset,#FFF_-3px_3px_0_-1px,#0F1739_-3px_3px]">
-            <p className={`${kumbh_sans.className} uppercase font-bold text-lg mb-2 text-center`}>
+            <p
+              className={`${kumbh_sans.className} uppercase font-bold text-lg mb-2 text-center`}
+            >
               Decision Balance: {currentSubject.subject}
             </p>
             {/* Visual Gauge Container */}
@@ -276,23 +310,35 @@ export default function ProsConsHelper({
                 className="h-full bg-emerald-500 transition-all duration-500 ease-out border-r border-primary"
                 style={{ width: `${proPercentage}%` }}
               />
-              <div className="absolute top-0 bottom-0 left-1/2 -ml-px w-0.5 bg-black z-10" />
+              <div className="absolute top-0 bottom-0 left-1/2 -ml-px border-l-2 border-dashed border-black z-10" />
             </div>
 
             <div className="flex justify-between items-center text-xs font-bold uppercase mt-1 px-1">
-              <span className="text-emerald-600">Pros Total Weight: {totalProWeight}</span>
+              <span className="text-emerald-600">
+                Pros Total Weight: {totalProWeight}
+              </span>
               <span className="text-center text-sm font-extrabold text-primary">
                 {scoreDiff > 0 ? (
-                  <span className="text-emerald-600">Leaning Pro (+{scoreDiff})</span>
+                  <span className="text-emerald-600">
+                    Leaning Pro (+{scoreDiff})
+                  </span>
                 ) : scoreDiff < 0 ? (
-                  <span className="text-rose-600">Leaning Con ({scoreDiff})</span>
+                  <span className="text-rose-600">
+                    Leaning Con ({scoreDiff})
+                  </span>
                 ) : totalWeight > 0 ? (
-                  <span className="text-gray-500">Perfectly Balanced (50/50)</span>
+                  <span className="text-gray-500">
+                    Perfectly Balanced (50/50)
+                  </span>
                 ) : (
-                  <span className="text-gray-400 font-normal">Add items to weigh decision</span>
+                  <span className="text-gray-400 font-normal">
+                    Add items to weigh decision
+                  </span>
                 )}
               </span>
-              <span className="text-rose-600">Cons Total Weight: {totalConWeight}</span>
+              <span className="text-rose-600">
+                Cons Total Weight: {totalConWeight}
+              </span>
             </div>
           </div>
 
@@ -301,7 +347,9 @@ export default function ProsConsHelper({
             {/* PROS COLUMN */}
             <Card className="border border-emerald-500 shadow-[-3px_3px_0px_0px_#10b981] md:shadow-[-4px_4px_0px_0px_#10b981]">
               <CardHeader className="bg-emerald-50/50 border-b border-emerald-200">
-                <CardTitle className="text-emerald-700 text-2xl">Pros</CardTitle>
+                <CardTitle className="text-emerald-700 text-2xl">
+                  Pros
+                </CardTitle>
                 <CardDescription>Reasons to do this decision</CardDescription>
               </CardHeader>
               <CardContent className="pt-6 flex flex-col gap-4">
@@ -327,7 +375,9 @@ export default function ProsConsHelper({
                     </Button>
                   </div>
                   <div className="flex items-center gap-2 text-xs">
-                    <span className="font-semibold text-muted-foreground">Weight:</span>
+                    <span className="font-semibold text-muted-foreground">
+                      Weight:
+                    </span>
                     <div className="flex gap-1">
                       {[1, 2, 3, 4, 5].map((w) => (
                         <button
@@ -362,11 +412,13 @@ export default function ProsConsHelper({
                       >
                         <div className="flex flex-col gap-1">
                           <p className="font-medium">{item.content}</p>
-                          {householdDetails?.inHousehold && householdDetails?.userSettings?.shareDecisionHelper && (
-                            <span className="text-[9px] text-muted-foreground bg-muted px-1 py-0.5 rounded w-max">
-                              by {item.uid.split('@')[0]}
-                            </span>
-                          )}
+                          {householdDetails?.inHousehold &&
+                            householdDetails?.userSettings
+                              ?.shareDecisionHelper && (
+                              <span className="text-[9px] text-muted-foreground bg-muted px-1 py-0.5 rounded w-max">
+                                by {item.uid.split('@')[0]}
+                              </span>
+                            )}
                         </div>
 
                         <div className="flex items-center gap-3 self-end sm:self-center">
@@ -411,7 +463,9 @@ export default function ProsConsHelper({
                     ))}
                   </AnimatePresence>
                   {pros.length === 0 && (
-                    <p className="text-xs text-muted-foreground text-center py-4">No pros added yet.</p>
+                    <p className="text-xs text-muted-foreground text-center py-4">
+                      No pros added yet.
+                    </p>
                   )}
                 </div>
               </CardContent>
@@ -421,7 +475,9 @@ export default function ProsConsHelper({
             <Card className="border border-rose-500 shadow-[-3px_3px_0px_0px_#f43f5e] md:shadow-[-4px_4px_0px_0px_#f43f5e]">
               <CardHeader className="bg-rose-50/50 border-b border-rose-200">
                 <CardTitle className="text-rose-700 text-2xl">Cons</CardTitle>
-                <CardDescription>Reasons against doing this decision</CardDescription>
+                <CardDescription>
+                  Reasons against doing this decision
+                </CardDescription>
               </CardHeader>
               <CardContent className="pt-6 flex flex-col gap-4">
                 {/* Form to add Con */}
@@ -446,7 +502,9 @@ export default function ProsConsHelper({
                     </Button>
                   </div>
                   <div className="flex items-center gap-2 text-xs">
-                    <span className="font-semibold text-muted-foreground">Weight:</span>
+                    <span className="font-semibold text-muted-foreground">
+                      Weight:
+                    </span>
                     <div className="flex gap-1">
                       {[1, 2, 3, 4, 5].map((w) => (
                         <button
@@ -481,11 +539,13 @@ export default function ProsConsHelper({
                       >
                         <div className="flex flex-col gap-1">
                           <p className="font-medium">{item.content}</p>
-                          {householdDetails?.inHousehold && householdDetails?.userSettings?.shareDecisionHelper && (
-                            <span className="text-[9px] text-muted-foreground bg-muted px-1 py-0.5 rounded w-max">
-                              by {item.uid.split('@')[0]}
-                            </span>
-                          )}
+                          {householdDetails?.inHousehold &&
+                            householdDetails?.userSettings
+                              ?.shareDecisionHelper && (
+                              <span className="text-[9px] text-muted-foreground bg-muted px-1 py-0.5 rounded w-max">
+                                by {item.uid.split('@')[0]}
+                              </span>
+                            )}
                         </div>
 
                         <div className="flex items-center gap-3 self-end sm:self-center">
@@ -530,7 +590,9 @@ export default function ProsConsHelper({
                     ))}
                   </AnimatePresence>
                   {cons.length === 0 && (
-                    <p className="text-xs text-muted-foreground text-center py-4">No cons added yet.</p>
+                    <p className="text-xs text-muted-foreground text-center py-4">
+                      No cons added yet.
+                    </p>
                   )}
                 </div>
               </CardContent>
@@ -540,7 +602,10 @@ export default function ProsConsHelper({
       ) : (
         <div className="stripe-border flex flex-col items-center justify-center p-12 mt-8 mb-8 text-center text-muted-foreground">
           <p className="font-bold mb-2">No Subject Selected</p>
-          <p className="text-sm">Create a new subject or choose an existing one from the dropdown to start your Pros and Cons Analysis.</p>
+          <p className="text-sm">
+            Create a new subject or choose an existing one from the dropdown to
+            start your Pros and Cons Analysis.
+          </p>
         </div>
       )}
     </div>
