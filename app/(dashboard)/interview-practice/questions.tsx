@@ -484,7 +484,21 @@ It categorizes customer requirements into five distinct categories:
       {
         name: 'Porter’s Five Forces',
         description:
-          'Competitive Rivalry, Supplier Power, Buyer Power, Threat of Substitution, Threat of New Entry.'
+          'Competitive Rivalry, Supplier Power, Buyer Power, Threat of Substitution, Threat of New Entry.',
+        longDescription: `Porter's Five Forces is a business analysis model that helps to explain why various industries are able to sustain different levels of profitability.
+
+The framework identifies five industry forces that shape market attractiveness and competitive pressure:
+
+- Competitive Rivalry: The intensity of competition between existing players in the market (e.g., pricing wars, advertising campaigns, product updates).
+
+- Supplier Power: The ability of suppliers to dictate prices, terms, and quality. Power is higher when there are fewer supplier alternatives or high switching costs.
+
+- Buyer Power: The leverage customers have to drive down prices, demand higher quality, or play competitors against each other.
+
+- Threat of Substitution: The threat of alternative products or services that satisfy the same consumer needs in a different way (e.g., email substituting mail).
+
+- Threat of New Entry: The ease with which new competitors can enter the market and disrupt existing market share. High entry barriers (e.g., capital, patents) limit this threat.`,
+        image: '/porters_five_forces.png'
       },
       {
         name: 'Blue Ocean Strategy',
