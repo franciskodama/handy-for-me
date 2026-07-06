@@ -438,7 +438,17 @@ export const pmFrameworks = [
       },
       {
         name: 'Kano Model',
-        description: 'Basic, Performance, and Excitement features.'
+        description: 'Basic, Performance, and Excitement features.',
+        longDescription: `The Kano Model is a product development and customer satisfaction framework used to prioritize features on a product roadmap based on how they affect customer satisfaction and implementation execution.
+
+It categorizes customer requirements into five distinct categories:
+
+- Must-Be / Basic (Threshold): Essential features that customers expect as a default. If missing, customers are extremely dissatisfied; if present, satisfaction does not increase beyond neutral. (e.g., call functionality on a smartphone).
+- One-Dimensional / Performance: Features that linearly increase customer satisfaction when present/optimized and decrease satisfaction when absent/poor. (e.g., battery life or application speed).
+- Attractive / Delighters: Unexpected or innovative features that delight the customer. If missing, they cause no dissatisfaction; if present, they significantly boost satisfaction. (e.g., intuitive gestures or smart shortcuts).
+- Indifferent: Features that customers do not care about either way. Fulfilling them has no impact on satisfaction. (e.g., backend refactoring).
+- Reverse: Features that actively cause dissatisfaction when present (e.g., invasive advertising, overly complex flows).`,
+        image: '/kano_model_framework.png'
       }
     ]
   },
