@@ -409,8 +409,10 @@ export const pmFrameworks = [
     items: [
       {
         name: 'CIRCLES Method',
-        description: 'Comprehend, Identify, Report, Cut, List, Evaluate, Summarize.',
-        longDescription: 'The CIRCLES Method™ is a framework that helps product managers provide a complete, thoughtful response to any product design question. It guides you through understanding the context, identifying the user, uncovering their needs, prioritizing problems, brainstorming solutions, evaluating trade-offs, and summarizing your recommendation.',
+        description:
+          'Comprehend, Identify, Report, Cut, List, Evaluate, Summarize.',
+        longDescription:
+          'The CIRCLES Method™ is a framework that helps product managers provide a complete, thoughtful response to any product design question. It guides you through understanding the context, identifying the user, uncovering their needs, prioritizing problems, brainstorming solutions, evaluating trade-offs, and summarizing your recommendation.',
         image: '/circles_method_framework_1778180739414.png'
       },
       {
@@ -419,7 +421,8 @@ export const pmFrameworks = [
       },
       {
         name: 'User Journey Mapping',
-        description: 'Visualize the process a user goes through to reach a goal.'
+        description:
+          'Visualize the process a user goes through to reach a goal.'
       }
     ]
   },
@@ -429,12 +432,24 @@ export const pmFrameworks = [
       {
         name: 'RICE',
         description: 'Reach, Impact, Confidence, Effort.',
-        longDescription: 'RICE is a prioritization framework designed to help product managers determine which features, products, and tasks to prioritize. By scoring each factor, you can calculate a single score that helps in making objective decisions about the roadmap.',
+        longDescription:
+          'RICE is a prioritization framework designed to help product managers determine which features, products, and tasks to prioritize. By scoring each factor, you can calculate a single score that helps in making objective decisions about the roadmap.',
         image: '/rice_prioritization_framework_1778180764816.png'
       },
       {
         name: 'MoSCoW',
-        description: 'Must have, Should have, Could have, Won’t have.'
+        description: 'Must have, Should have, Could have, Won’t have.',
+        longDescription: `MoSCoW is a popular prioritization framework used to reach agreement with stakeholders on the importance of delivery for each requirement or feature.
+
+The acronym stands for:
+
+- Must Have: Non-negotiable requirements that are vital for the product launch. Without these, the release or product is considered a failure (e.g., core login, checkout flow).
+
+- Should Have: Important, high-value features that should be included but are not strictly critical for the current release (e.g., search filters, basic reports).
+
+- Could Have: Nice-to-have features that improve user experience or add delight but can be dropped or postponed if time/resources are limited (e.g., dark mode, social sharing).
+
+- Won't Have: Low-priority requirements that are explicitly ruled out for the current scope. These are deferred to future releases or roadmaps to keep the current launch focused.`
       },
       {
         name: 'Kano Model',
@@ -444,9 +459,13 @@ export const pmFrameworks = [
 It categorizes customer requirements into five distinct categories:
 
 - Must-Be / Basic (Threshold): Essential features that customers expect as a default. If missing, customers are extremely dissatisfied; if present, satisfaction does not increase beyond neutral. (e.g., call functionality on a smartphone).
+
 - One-Dimensional / Performance: Features that linearly increase customer satisfaction when present/optimized and decrease satisfaction when absent/poor. (e.g., battery life or application speed).
+
 - Attractive / Delighters: Unexpected or innovative features that delight the customer. If missing, they cause no dissatisfaction; if present, they significantly boost satisfaction. (e.g., intuitive gestures or smart shortcuts).
+
 - Indifferent: Features that customers do not care about either way. Fulfilling them has no impact on satisfaction. (e.g., backend refactoring).
+
 - Reverse: Features that actively cause dissatisfaction when present (e.g., invasive advertising, overly complex flows).`,
         image: '/kano_model_framework.png'
       }
@@ -458,16 +477,19 @@ It categorizes customer requirements into five distinct categories:
       {
         name: 'SWOT',
         description: 'Strengths, Weaknesses, Opportunities, Threats.',
-        longDescription: 'SWOT Analysis is a strategic planning technique used to help a person or organization identify strengths, weaknesses, opportunities, and threats related to business competition or project planning. It is designed for use in the preliminary stages of decision-making processes.',
+        longDescription:
+          'SWOT Analysis is a strategic planning technique used to help a person or organization identify strengths, weaknesses, opportunities, and threats related to business competition or project planning. It is designed for use in the preliminary stages of decision-making processes.',
         image: '/swot_analysis_framework_1778180792266.png'
       },
       {
         name: 'Porter’s Five Forces',
-        description: 'Competitive Rivalry, Supplier Power, Buyer Power, Threat of Substitution, Threat of New Entry.'
+        description:
+          'Competitive Rivalry, Supplier Power, Buyer Power, Threat of Substitution, Threat of New Entry.'
       },
       {
         name: 'Blue Ocean Strategy',
-        description: 'Creating uncontested market space and making competition irrelevant.'
+        description:
+          'Creating uncontested market space and making competition irrelevant.'
       }
     ]
   },
@@ -476,25 +498,31 @@ It categorizes customer requirements into five distinct categories:
     items: [
       {
         name: 'HEART Framework',
-        description: 'Happiness, Engagement, Adoption, Retention, Task Success.',
-        longDescription: 'The HEART framework is a set of user-centered metrics developed by Google. It is designed to help product teams measure the user experience of their products and services across five key categories: Happiness, Engagement, Adoption, Retention, and Task Success.',
+        description:
+          'Happiness, Engagement, Adoption, Retention, Task Success.',
+        longDescription:
+          'The HEART framework is a set of user-centered metrics developed by Google. It is designed to help product teams measure the user experience of their products and services across five key categories: Happiness, Engagement, Adoption, Retention, and Task Success.',
         image: '/heart_framework_pm_1778180916305.png'
       },
       {
         name: 'AARRR (Pirate Metrics)',
         description: 'Acquisition, Activation, Retention, Referral, Revenue.',
-        longDescription: 'AARRR is a framework for customer lifecycle and growth, popularized by Dave McClure. It stands for Acquisition (how users find you), Activation (their first good experience), Retention (do they come back?), Referral (do they tell others?), and Revenue (do they pay?).',
+        longDescription:
+          'AARRR is a framework for customer lifecycle and growth, popularized by Dave McClure. It stands for Acquisition (how users find you), Activation (their first good experience), Retention (do they come back?), Referral (do they tell others?), and Revenue (do they pay?).',
         image: '/aarrr_pirate_metrics_framework_1778180950478.png'
       },
       {
         name: 'North Star Metric',
-        description: 'The single metric that best captures the core value your product delivers.',
+        description:
+          'The single metric that best captures the core value your product delivers.',
         longDescription: `The North Star Metric is the key measure of success for the product team in a company. It defines the relationship between the customer problems that the product team is trying to solve and the revenue that the business aims to generate by doing so.
 
 Core Components of a North Star Metric
 
 - Customer Success Moment: It must reflect when a customer actually experiences the core value of the product, not just a feature the founder likes.
+
 - Measurable Progress: The metric requires a time element (daily, weekly, or monthly) to track growth effectively.
+
 - Path to Revenue: There must be a direct connection between the metric and the company's profitability.`,
         image: '/north_star_metric_framework_1778181998860.png'
       }
@@ -505,21 +533,27 @@ Core Components of a North Star Metric
     items: [
       {
         name: 'OKR',
-        description: 'Objectives and Key Results: A collaborative goal-setting tool used by teams to set challenging, ambitious goals with measurable results.',
+        description:
+          'Objectives and Key Results: A collaborative goal-setting tool used by teams to set challenging, ambitious goals with measurable results.',
         longDescription: `OKRs are a goal-setting framework used to define measurable goals and track their outcomes. They focus on growth, change, and innovation.
 
 - Objective: A qualitative, inspirational statement of what is to be achieved (e.g., "Create a world-class user onboarding experience").
+
 - Key Results: 3 to 5 quantitative, time-bound metrics used to measure the achievement of the objective (e.g., "Reduce sign-up drop-off by 20%").
+
 - Nature: Aggressive, temporary, and aspirational.`,
         image: '/okr_framework_explanation_1778181528675.png'
       },
       {
         name: 'KPI',
-        description: 'Key Performance Indicators: Quantifiable measures of performance over time for a specific objective, providing targets for teams to shoot for.',
+        description:
+          'Key Performance Indicators: Quantifiable measures of performance over time for a specific objective, providing targets for teams to shoot for.',
         longDescription: `KPIs are quantifiable measures used to evaluate the success of an organization or employee in meeting objectives for performance. They focus on the health and stability of ongoing processes.
 
 - Function: They measure "business as usual" performance.
+
 - Nature: Usually steady, ongoing, and descriptive (e.g., "Monthly Recurring Revenue" or "Average Response Time").
+
 - Analogy: A car's dashboard (speedometer, fuel gauge) which tells you if the vehicle is operating correctly.`,
         image: '/kpi_dashboard_analogy_1778181486830.png'
       }
