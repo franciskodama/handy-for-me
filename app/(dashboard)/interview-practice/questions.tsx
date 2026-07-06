@@ -503,7 +503,19 @@ The framework identifies five industry forces that shape market attractiveness a
       {
         name: 'Blue Ocean Strategy',
         description:
-          'Creating uncontested market space and making competition irrelevant.'
+          'Creating uncontested market space and making competition irrelevant.',
+        longDescription: `Blue Ocean Strategy is a business strategy framework that focuses on creating uncontested market space (a "blue ocean") rather than competing head-to-head in an crowded, existing market (a "red ocean").
+
+Key Concepts of the Framework:
+
+- Red Oceans: Existing market spaces where industries are defined and competitors fight for a share of limited demand. Competition is cutthroat, turning the ocean bloody red.
+
+- Blue Oceans: Unexplored, high-potential market spaces where demand is created rather than fought over. Growth is rapid and highly profitable because rules of the game are waiting to be set.
+
+- Value Innovation: The core principle of creating a leap in value for both buyers and the company, simultaneously pursuing differentiation and low cost to break the value-cost trade-off.
+
+- The ERRC Grid (Eliminate, Reduce, Raise, Create): A tool to drive value innovation by asking which industry-standard factors should be eliminated, which should be reduced below standard, which should be raised above standard, and which new factors should be created.`,
+        image: '/blue_ocean_strategy.png'
       }
     ]
   },
