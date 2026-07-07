@@ -422,7 +422,21 @@ export const pmFrameworks = [
       {
         name: 'User Journey Mapping',
         description:
-          'Visualize the process a user goes through to reach a goal.'
+          'Visualize the process a user goes through to reach a goal.',
+        longDescription: `A User Journey Map is a visual representation of the process a customer goes through to achieve a goal with your product or service. It helps product managers and designers empathize with users, identify pain points, and uncover opportunities for improvement.
+
+Key Stages of a User Journey Map:
+
+- Define the Persona: Establish who the user is, along with their goals, needs, and behaviors.
+
+- Map the Stages: The phases of the user's experience (e.g., Discovery, Onboarding, Engagement, Retention).
+
+- Track User Actions: Document what the user is actually doing at each touchpoint in the journey.
+
+- Identify Thoughts & Emotions: Track what the user is thinking and feeling at each stage. Note emotional highs (delight) and lows (frustrations).
+
+- Uncover Pain Points & Opportunities: Locate bottlenecks in the flow and brainstorm features or design changes to solve them.`,
+        image: '/user_journey_mapping.png'
       }
     ]
   },
