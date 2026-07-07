@@ -409,8 +409,10 @@ export const pmFrameworks = [
     items: [
       {
         name: 'CIRCLES Method',
-        description: 'Comprehend, Identify, Report, Cut, List, Evaluate, Summarize.',
-        longDescription: 'The CIRCLES Method™ is a framework that helps product managers provide a complete, thoughtful response to any product design question. It guides you through understanding the context, identifying the user, uncovering their needs, prioritizing problems, brainstorming solutions, evaluating trade-offs, and summarizing your recommendation.',
+        description:
+          'Comprehend, Identify, Report, Cut, List, Evaluate, Summarize.',
+        longDescription:
+          'The CIRCLES Method™ is a framework that helps product managers provide a complete, thoughtful response to any product design question. It guides you through understanding the context, identifying the user, uncovering their needs, prioritizing problems, brainstorming solutions, evaluating trade-offs, and summarizing your recommendation.',
         image: '/circles_method_framework_1778180739414.png'
       },
       {
@@ -419,7 +421,22 @@ export const pmFrameworks = [
       },
       {
         name: 'User Journey Mapping',
-        description: 'Visualize the process a user goes through to reach a goal.'
+        description:
+          'Visualize the process a user goes through to reach a goal.',
+        longDescription: `A User Journey Map is a visual representation of the process a customer goes through to achieve a goal with your product or service. It helps product managers and designers empathize with users, identify pain points, and uncover opportunities for improvement.
+
+Key Stages of a User Journey Map:
+
+- Define the Persona: Establish who the user is, along with their goals, needs, and behaviors.
+
+- Map the Stages: The phases of the user's experience (e.g., Discovery, Onboarding, Engagement, Retention).
+
+- Track User Actions: Document what the user is actually doing at each touchpoint in the journey.
+
+- Identify Thoughts & Emotions: Track what the user is thinking and feeling at each stage. Note emotional highs (delight) and lows (frustrations).
+
+- Uncover Pain Points & Opportunities: Locate bottlenecks in the flow and brainstorm features or design changes to solve them.`,
+        image: '/user_journey_mapping.png'
       }
     ]
   },
@@ -429,16 +446,42 @@ export const pmFrameworks = [
       {
         name: 'RICE',
         description: 'Reach, Impact, Confidence, Effort.',
-        longDescription: 'RICE is a prioritization framework designed to help product managers determine which features, products, and tasks to prioritize. By scoring each factor, you can calculate a single score that helps in making objective decisions about the roadmap.',
+        longDescription:
+          'RICE is a prioritization framework designed to help product managers determine which features, products, and tasks to prioritize. By scoring each factor, you can calculate a single score that helps in making objective decisions about the roadmap.',
         image: '/rice_prioritization_framework_1778180764816.png'
       },
       {
         name: 'MoSCoW',
-        description: 'Must have, Should have, Could have, Won’t have.'
+        description: 'Must have, Should have, Could have, Won’t have.',
+        longDescription: `MoSCoW is a popular prioritization framework used to reach agreement with stakeholders on the importance of delivery for each requirement or feature.
+
+The acronym stands for:
+
+- Must Have: Non-negotiable requirements that are vital for the product launch. Without these, the release or product is considered a failure (e.g., core login, checkout flow).
+
+- Should Have: Important, high-value features that should be included but are not strictly critical for the current release (e.g., search filters, basic reports).
+
+- Could Have: Nice-to-have features that improve user experience or add delight but can be dropped or postponed if time/resources are limited (e.g., dark mode, social sharing).
+
+- Won't Have: Low-priority requirements that are explicitly ruled out for the current scope. These are deferred to future releases or roadmaps to keep the current launch focused.`
       },
       {
         name: 'Kano Model',
-        description: 'Basic, Performance, and Excitement features.'
+        description: 'Basic, Performance, and Excitement features.',
+        longDescription: `The Kano Model is a product development and customer satisfaction framework used to prioritize features on a product roadmap based on how they affect customer satisfaction and implementation execution.
+
+It categorizes customer requirements into five distinct categories:
+
+- Must-Be / Basic (Threshold): Essential features that customers expect as a default. If missing, customers are extremely dissatisfied; if present, satisfaction does not increase beyond neutral. (e.g., call functionality on a smartphone).
+
+- One-Dimensional / Performance: Features that linearly increase customer satisfaction when present/optimized and decrease satisfaction when absent/poor. (e.g., battery life or application speed).
+
+- Attractive / Delighters: Unexpected or innovative features that delight the customer. If missing, they cause no dissatisfaction; if present, they significantly boost satisfaction. (e.g., intuitive gestures or smart shortcuts).
+
+- Indifferent: Features that customers do not care about either way. Fulfilling them has no impact on satisfaction. (e.g., backend refactoring).
+
+- Reverse: Features that actively cause dissatisfaction when present (e.g., invasive advertising, overly complex flows).`,
+        image: '/kano_model_framework.png'
       }
     ]
   },
@@ -448,16 +491,45 @@ export const pmFrameworks = [
       {
         name: 'SWOT',
         description: 'Strengths, Weaknesses, Opportunities, Threats.',
-        longDescription: 'SWOT Analysis is a strategic planning technique used to help a person or organization identify strengths, weaknesses, opportunities, and threats related to business competition or project planning. It is designed for use in the preliminary stages of decision-making processes.',
+        longDescription:
+          'SWOT Analysis is a strategic planning technique used to help a person or organization identify strengths, weaknesses, opportunities, and threats related to business competition or project planning. It is designed for use in the preliminary stages of decision-making processes.',
         image: '/swot_analysis_framework_1778180792266.png'
       },
       {
         name: 'Porter’s Five Forces',
-        description: 'Competitive Rivalry, Supplier Power, Buyer Power, Threat of Substitution, Threat of New Entry.'
+        description:
+          'Competitive Rivalry, Supplier Power, Buyer Power, Threat of Substitution, Threat of New Entry.',
+        longDescription: `Porter's Five Forces is a business analysis model that helps to explain why various industries are able to sustain different levels of profitability.
+
+The framework identifies five industry forces that shape market attractiveness and competitive pressure:
+
+- Competitive Rivalry: The intensity of competition between existing players in the market (e.g., pricing wars, advertising campaigns, product updates).
+
+- Supplier Power: The ability of suppliers to dictate prices, terms, and quality. Power is higher when there are fewer supplier alternatives or high switching costs.
+
+- Buyer Power: The leverage customers have to drive down prices, demand higher quality, or play competitors against each other.
+
+- Threat of Substitution: The threat of alternative products or services that satisfy the same consumer needs in a different way (e.g., email substituting mail).
+
+- Threat of New Entry: The ease with which new competitors can enter the market and disrupt existing market share. High entry barriers (e.g., capital, patents) limit this threat.`,
+        image: '/porters_five_forces.png'
       },
       {
         name: 'Blue Ocean Strategy',
-        description: 'Creating uncontested market space and making competition irrelevant.'
+        description:
+          'Creating uncontested market space and making competition irrelevant.',
+        longDescription: `Blue Ocean Strategy is a business strategy framework that focuses on creating uncontested market space (a "blue ocean") rather than competing head-to-head in an crowded, existing market (a "red ocean").
+
+Key Concepts of the Framework:
+
+- Red Oceans: Existing market spaces where industries are defined and competitors fight for a share of limited demand. Competition is cutthroat, turning the ocean bloody red.
+
+- Blue Oceans: Unexplored, high-potential market spaces where demand is created rather than fought over. Growth is rapid and highly profitable because rules of the game are waiting to be set.
+
+- Value Innovation: The core principle of creating a leap in value for both buyers and the company, simultaneously pursuing differentiation and low cost to break the value-cost trade-off.
+
+- The ERRC Grid (Eliminate, Reduce, Raise, Create): A tool to drive value innovation by asking which industry-standard factors should be eliminated, which should be reduced below standard, which should be raised above standard, and which new factors should be created.`,
+        image: '/blue_ocean_strategy.png'
       }
     ]
   },
@@ -466,25 +538,31 @@ export const pmFrameworks = [
     items: [
       {
         name: 'HEART Framework',
-        description: 'Happiness, Engagement, Adoption, Retention, Task Success.',
-        longDescription: 'The HEART framework is a set of user-centered metrics developed by Google. It is designed to help product teams measure the user experience of their products and services across five key categories: Happiness, Engagement, Adoption, Retention, and Task Success.',
+        description:
+          'Happiness, Engagement, Adoption, Retention, Task Success.',
+        longDescription:
+          'The HEART framework is a set of user-centered metrics developed by Google. It is designed to help product teams measure the user experience of their products and services across five key categories: Happiness, Engagement, Adoption, Retention, and Task Success.',
         image: '/heart_framework_pm_1778180916305.png'
       },
       {
         name: 'AARRR (Pirate Metrics)',
         description: 'Acquisition, Activation, Retention, Referral, Revenue.',
-        longDescription: 'AARRR is a framework for customer lifecycle and growth, popularized by Dave McClure. It stands for Acquisition (how users find you), Activation (their first good experience), Retention (do they come back?), Referral (do they tell others?), and Revenue (do they pay?).',
+        longDescription:
+          'AARRR is a framework for customer lifecycle and growth, popularized by Dave McClure. It stands for Acquisition (how users find you), Activation (their first good experience), Retention (do they come back?), Referral (do they tell others?), and Revenue (do they pay?).',
         image: '/aarrr_pirate_metrics_framework_1778180950478.png'
       },
       {
         name: 'North Star Metric',
-        description: 'The single metric that best captures the core value your product delivers.',
+        description:
+          'The single metric that best captures the core value your product delivers.',
         longDescription: `The North Star Metric is the key measure of success for the product team in a company. It defines the relationship between the customer problems that the product team is trying to solve and the revenue that the business aims to generate by doing so.
 
 Core Components of a North Star Metric
 
 - Customer Success Moment: It must reflect when a customer actually experiences the core value of the product, not just a feature the founder likes.
+
 - Measurable Progress: The metric requires a time element (daily, weekly, or monthly) to track growth effectively.
+
 - Path to Revenue: There must be a direct connection between the metric and the company's profitability.`,
         image: '/north_star_metric_framework_1778181998860.png'
       }
@@ -495,21 +573,27 @@ Core Components of a North Star Metric
     items: [
       {
         name: 'OKR',
-        description: 'Objectives and Key Results: A collaborative goal-setting tool used by teams to set challenging, ambitious goals with measurable results.',
+        description:
+          'Objectives and Key Results: A collaborative goal-setting tool used by teams to set challenging, ambitious goals with measurable results.',
         longDescription: `OKRs are a goal-setting framework used to define measurable goals and track their outcomes. They focus on growth, change, and innovation.
 
 - Objective: A qualitative, inspirational statement of what is to be achieved (e.g., "Create a world-class user onboarding experience").
+
 - Key Results: 3 to 5 quantitative, time-bound metrics used to measure the achievement of the objective (e.g., "Reduce sign-up drop-off by 20%").
+
 - Nature: Aggressive, temporary, and aspirational.`,
         image: '/okr_framework_explanation_1778181528675.png'
       },
       {
         name: 'KPI',
-        description: 'Key Performance Indicators: Quantifiable measures of performance over time for a specific objective, providing targets for teams to shoot for.',
+        description:
+          'Key Performance Indicators: Quantifiable measures of performance over time for a specific objective, providing targets for teams to shoot for.',
         longDescription: `KPIs are quantifiable measures used to evaluate the success of an organization or employee in meeting objectives for performance. They focus on the health and stability of ongoing processes.
 
 - Function: They measure "business as usual" performance.
+
 - Nature: Usually steady, ongoing, and descriptive (e.g., "Monthly Recurring Revenue" or "Average Response Time").
+
 - Analogy: A car's dashboard (speedometer, fuel gauge) which tells you if the vehicle is operating correctly.`,
         image: '/kpi_dashboard_analogy_1778181486830.png'
       }
