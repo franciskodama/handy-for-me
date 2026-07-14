@@ -162,3 +162,25 @@ model VisitedPlace {
   notes     String?  @db.VarChar(1000)
   visitDate DateTime? @db.Timestamp(6)
 }
+
+model KanbanColumn {
+  id        String         @id @default(uuid()) @db.VarChar(255)
+  createdAt DateTime       @default(now()) @db.Timestamp(6)
+  uid       String         @db.VarChar(255)
+  title     String         @db.VarChar(255)
+  order     Int            @default(0)
+  tickets   KanbanTicket[]
+}
+
+model KanbanTicket {
+  id          String       @id @default(uuid()) @db.VarChar(255)
+  createdAt   DateTime     @default(now()) @db.Timestamp(6)
+  updatedAt   DateTime     @updatedAt @db.Timestamp(6)
+  uid         String       @db.VarChar(255)
+  title       String       @db.VarChar(255)
+  description String?      @db.VarChar(1000)
+  priority    String       @default("NONE") @db.VarChar(50) // "Q1", "Q2", "Q3", "Q4", "NONE"
+  order       Int          @default(0)
+  columnId    String       @db.VarChar(255)
+  column      KanbanColumn @relation(fields: [columnId], references: [id], onDelete: Cascade)
+}
