@@ -10,7 +10,8 @@ import {
   Briefcase,
   Scale,
   ListOrdered,
-  Map
+  Map,
+  Trello
 } from 'lucide-react';
 
 export const menuItems = [
@@ -18,6 +19,11 @@ export const menuItems = [
     label: 'Dashboard',
     href: '/dashboard',
     icon: <Home className="h-5 w-5" />
+  },
+  {
+    label: 'Kanban Board',
+    href: '/kanban',
+    icon: <Trello className="h-5 w-5" />
   },
   {
     label: 'Decision Helper',
