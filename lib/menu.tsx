@@ -14,72 +14,100 @@ import {
   Trello
 } from 'lucide-react';
 
-export const menuItems = [
+export interface NavMenuItem {
+  label: string;
+  href: string;
+  icon: React.ReactNode;
+  group: string;
+  restricted?: boolean;
+}
+
+export const menuGroups = [
+  { key: 'main', label: null },
+  { key: 'Productivity', label: 'Productivity' },
+  { key: 'Goals & Growth', label: 'Goals & Growth' },
+  { key: 'Mindset', label: 'Mindset' },
+  { key: 'Fun', label: 'Fun' }
+];
+
+export const menuItems: NavMenuItem[] = [
   {
     label: 'Dashboard',
     href: '/dashboard',
-    icon: <Home className="h-5 w-5" />
+    icon: <Home className="h-5 w-5" />,
+    group: 'main'
   },
   {
     label: 'Kanban Board',
     href: '/kanban',
-    icon: <Trello className="h-5 w-5" />
+    icon: <Trello className="h-5 w-5" />,
+    group: 'Productivity'
   },
   {
     label: 'Decision Helper',
     href: '/decision-helper',
-    icon: <Scale className="h-5 w-5" />
-  },
-  {
-    label: 'Bucket List',
-    href: '/bucket-list',
-    icon: <ListOrdered className="h-5 w-5" />
-  },
-  {
-    label: 'Vision Board',
-    href: '/vision-board',
-    icon: <Grid3x3 className="h-5 w-5" />
-  },
-  {
-    label: 'Atlas',
-    href: '/atlas',
-    icon: <Map className="h-5 w-5" />
+    icon: <Scale className="h-5 w-5" />,
+    group: 'Productivity'
   },
   {
     label: 'Shortcuts',
     href: '/shortcuts',
-    icon: <ExternalLink className="h-5 w-5" />
+    icon: <ExternalLink className="h-5 w-5" />,
+    group: 'Productivity'
   },
-
   {
-    label: 'Weekly Wins',
-    href: '/weekly-wins',
-    icon: <Trophy className="h-5 w-5" />
+    label: 'Bucket List',
+    href: '/bucket-list',
+    icon: <ListOrdered className="h-5 w-5" />,
+    group: 'Goals & Growth'
+  },
+  {
+    label: 'Vision Board',
+    href: '/vision-board',
+    icon: <Grid3x3 className="h-5 w-5" />,
+    group: 'Goals & Growth'
   },
   {
     label: 'Yearly Promises',
     href: '/promises',
-    icon: <Flag className="h-5 w-5" />
+    icon: <Flag className="h-5 w-5" />,
+    group: 'Goals & Growth'
+  },
+  {
+    label: 'Weekly Wins',
+    href: '/weekly-wins',
+    icon: <Trophy className="h-5 w-5" />,
+    group: 'Goals & Growth'
   },
   {
     label: 'Stoic Support',
     href: '/stoic-support',
-    icon: <HandHeart className="h-5 w-5" />
+    icon: <HandHeart className="h-5 w-5" />,
+    group: 'Mindset'
   },
   {
     label: 'Random Questions',
     href: '/random-question',
-    icon: <MessageCircleQuestion className="h-5 w-5" />
+    icon: <MessageCircleQuestion className="h-5 w-5" />,
+    group: 'Fun'
   },
   {
     label: 'Letter Leap',
     href: '/letter-leap',
-    icon: <BookA className="h-5 w-5" />
+    icon: <BookA className="h-5 w-5" />,
+    group: 'Fun'
+  },
+  {
+    label: 'Atlas',
+    href: '/atlas',
+    icon: <Map className="h-5 w-5" />,
+    group: 'Fun'
   },
   {
     label: 'Interview Practice',
     href: '/interview-practice',
     icon: <Briefcase className="h-5 w-5" />,
+    group: 'Productivity',
     restricted: true
   }
   // { label: 'Artificial Intelligence', href: '/ai', icon: Bot },

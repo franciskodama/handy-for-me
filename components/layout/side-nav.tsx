@@ -4,7 +4,7 @@ import * as React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import { Menu } from 'lucide-react';
+import { Menu, ChevronDown } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -23,20 +23,76 @@ import {
 import { NavItem } from '@/components/NavItem';
 import CardDivulgationHelp from '@/app/(dashboard)/dashboard/components/cards/card-divulgation-help';
 import { cn } from '@/lib/utils';
+import { menuGroups, NavMenuItem } from '@/lib/menu';
 
-interface NavMenuItem {
+function groupItems(items: NavMenuItem[]) {
+  const grouped: { key: string; label: string | null; items: NavMenuItem[] }[] =
+    [];
+
+  for (const group of menuGroups) {
+    const groupItems = items.filter((item) => item.group === group.key);
+    if (groupItems.length > 0) {
+      grouped.push({ key: group.key, label: group.label, items: groupItems });
+    }
+  }
+
+  // Catch any items with groups not in menuGroups (safety net)
+  const knownKeys = new Set(menuGroups.map((g) => g.key));
+  const ungrouped = items.filter((item) => !knownKeys.has(item.group));
+  if (ungrouped.length > 0) {
+    grouped.push({ key: '_other', label: 'Other', items: ungrouped });
+  }
+
+  return grouped;
+}
+
+function CollapsibleGroup({
+  label,
+  children,
+  defaultOpen
+}: {
   label: string;
-  href: string;
-  icon: React.ReactNode;
-  restricted?: boolean;
+  children: React.ReactNode;
+  defaultOpen: boolean;
+}) {
+  const [isOpen, setIsOpen] = React.useState(defaultOpen);
+
+  return (
+    <div>
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="flex items-center justify-between w-full px-2.5 py-1.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground/70 hover:text-muted-foreground transition-colors"
+      >
+        <span>{label}</span>
+        <ChevronDown
+          size={14}
+          className={cn(
+            'transition-transform duration-200',
+            isOpen ? 'rotate-0' : '-rotate-90'
+          )}
+        />
+      </button>
+      <div
+        className={cn(
+          'grid transition-all duration-200 ease-in-out',
+          isOpen
+            ? 'grid-rows-[1fr] opacity-100'
+            : 'grid-rows-[0fr] opacity-0'
+        )}
+      >
+        <div className="overflow-hidden">
+          <div className="flex flex-col gap-3 pt-1">{children}</div>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 export function MobileNav({ items }: { items: NavMenuItem[] }) {
   const [open, setOpen] = React.useState(false);
+  const pathname = usePathname();
+  const grouped = React.useMemo(() => groupItems(items), [items]);
 
-  // Use useEffect to handle mounting state if needed, 
-  // but standard Radix Sheet should work.
-  
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
@@ -45,11 +101,11 @@ export function MobileNav({ items }: { items: NavMenuItem[] }) {
           <span className="sr-only">Toggle Menu</span>
         </Button>
       </SheetTrigger>
-      <SheetContent side="left" className="sm:max-w-xs">
+      <SheetContent side="left" className="sm:max-w-xs overflow-y-auto">
         <SheetHeader>
           <SheetTitle className="sr-only">Menu</SheetTitle>
         </SheetHeader>
-        <nav className="grid gap-6 text-lg font-medium">
+        <nav className="flex flex-col gap-4 text-lg font-medium">
           <Link
             href="/"
             onClick={() => setOpen(false)}
@@ -64,17 +120,55 @@ export function MobileNav({ items }: { items: NavMenuItem[] }) {
             />
             <span className="sr-only">HandyFor.me</span>
           </Link>
-          {items.map((item) => (
-            <SheetClose asChild key={item.label}>
-              <Link
-                href={item.href}
-                className="flex items-center gap-4 px-2.5 text-left text-muted-foreground hover:text-foreground"
+
+          {grouped.map((group) => {
+            // "main" group (Dashboard) — render directly, no header
+            if (group.key === 'main') {
+              return group.items.map((item) => (
+                <SheetClose asChild key={item.label}>
+                  <Link
+                    href={item.href}
+                    className={cn(
+                      'flex items-center gap-4 px-2.5 text-left text-muted-foreground hover:text-foreground transition-colors',
+                      pathname === item.href && 'text-foreground font-semibold'
+                    )}
+                  >
+                    {item.icon}
+                    <span>{item.label}</span>
+                  </Link>
+                </SheetClose>
+              ));
+            }
+
+            // Named groups — collapsible sections
+            const hasActiveItem = group.items.some(
+              (item) => pathname === item.href
+            );
+
+            return (
+              <CollapsibleGroup
+                key={group.key}
+                label={group.label!}
+                defaultOpen={hasActiveItem || true}
               >
-                {item.icon}
-                <span>{item.label}</span>
-              </Link>
-            </SheetClose>
-          ))}
+                {group.items.map((item) => (
+                  <SheetClose asChild key={item.label}>
+                    <Link
+                      href={item.href}
+                      className={cn(
+                        'flex items-center gap-4 px-2.5 pl-4 text-left text-muted-foreground hover:text-foreground transition-colors',
+                        pathname === item.href &&
+                          'text-foreground font-semibold'
+                      )}
+                    >
+                      {item.icon}
+                      <span>{item.label}</span>
+                    </Link>
+                  </SheetClose>
+                ))}
+              </CollapsibleGroup>
+            );
+          })}
         </nav>
       </SheetContent>
     </Sheet>
@@ -82,6 +176,8 @@ export function MobileNav({ items }: { items: NavMenuItem[] }) {
 }
 
 export function DesktopNav({ items }: { items: NavMenuItem[] }) {
+  const grouped = React.useMemo(() => groupItems(items), [items]);
+
   return (
     <aside className="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-background sm:flex">
       <nav className="flex flex-col items-center gap-4 px-2 sm:py-5">
@@ -97,10 +193,18 @@ export function DesktopNav({ items }: { items: NavMenuItem[] }) {
             priority
           />
         </Link>
-        {items.map((item) => (
-          <NavItem key={item.href} href={item.href} label={item.label}>
-            {item.icon}
-          </NavItem>
+        {grouped.map((group, groupIndex) => (
+          <React.Fragment key={group.key}>
+            {/* Divider between groups (skip before the first group) */}
+            {groupIndex > 0 && (
+              <div className="w-8 border-t border-border/50" />
+            )}
+            {group.items.map((item) => (
+              <NavItem key={item.href} href={item.href} label={item.label}>
+                {item.icon}
+              </NavItem>
+            ))}
+          </React.Fragment>
         ))}
       </nav>
       <nav className="mt-auto flex flex-col items-center gap-4 px-2 sm:py-5">
