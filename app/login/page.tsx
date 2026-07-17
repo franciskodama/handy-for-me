@@ -13,14 +13,14 @@ import { OAuthButtons } from './oauth-buttons';
 export default async function Login() {
   return (
     <div
-      className="min-h-screen flex flex-col sm:flex-row justify-center items-start md:items-center p-8 bg-[#ffffff] opacity-80"
+      className="min-h-screen flex flex-col sm:flex-row justify-center items-start md:items-center p-8 bg-[#ffffff] opacity-80 overflow-x-hidden"
       style={{
         backgroundSize: '10px 10px',
         backgroundImage:
           'repeating-linear-gradient(45deg, #000000 0, #030303 1px, #ffffff 0, #ffffff 50%)'
       }}
     >
-      <div className="flex flex-col sm:flex-row items-center">
+      <div className="flex flex-col sm:flex-row items-center w-full sm:w-auto">
         <div className="flex flex-col p-4 sm:p-12 border-red-500bg bg-white sm:mr-12 mb-8 sm:mb-0 sm:w-[90ch] border border-primary shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
           <Image
             className="mb-6 sm:mb-12 w-20 h-20 sm:w-32 sm:h-32"
