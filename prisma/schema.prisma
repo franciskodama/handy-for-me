@@ -168,6 +168,7 @@ model KanbanBoard {
   createdAt DateTime       @default(now()) @db.Timestamp(6)
   uid       String         @db.VarChar(255)
   title     String         @db.VarChar(255)
+  emoji     String         @default("📋") @db.VarChar(10)
   order     Int            @default(0)
   columns   KanbanColumn[]
 }

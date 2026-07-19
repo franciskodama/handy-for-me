@@ -50,7 +50,7 @@ export async function getKanbanBoards(uid: string) {
   }
 }
 
-export async function createKanbanBoard(uid: string, title: string) {
+export async function createKanbanBoard(uid: string, title: string, emoji: string = '📋') {
   try {
     const boardCount = await prisma.kanbanBoard.count({ where: { uid } });
     const boardId = v4();
@@ -60,6 +60,7 @@ export async function createKanbanBoard(uid: string, title: string) {
         id: boardId,
         uid,
         title: title.trim(),
+        emoji,
         order: boardCount
       }
     });
@@ -84,7 +85,11 @@ export async function createKanbanBoard(uid: string, title: string) {
   }
 }
 
-export async function updateKanbanBoardTitle(uid: string, id: string, title: string) {
+export async function updateKanbanBoard(
+  uid: string,
+  id: string,
+  data: { title?: string; emoji?: string }
+) {
   try {
     const board = await prisma.kanbanBoard.findUnique({ where: { id } });
     if (!board || board.uid !== uid) {
@@ -92,13 +97,17 @@ export async function updateKanbanBoardTitle(uid: string, id: string, title: str
       return null;
     }
 
+    const updatedData: { title?: string; emoji?: string } = {};
+    if (data.title !== undefined) updatedData.title = data.title.trim();
+    if (data.emoji !== undefined) updatedData.emoji = data.emoji;
+
     const updated = await prisma.kanbanBoard.update({
       where: { id },
-      data: { title: title.trim() }
+      data: updatedData
     });
     return updated;
   } catch (error) {
-    console.error('Error updating Kanban board title:', error);
+    console.error('Error updating Kanban board:', error);
     return null;
   }
 }
