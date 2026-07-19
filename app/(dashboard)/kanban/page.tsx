@@ -1,6 +1,6 @@
 import { auth } from '@/lib/auth';
-import { getKanbanBoard } from '@/lib/actions/kanban';
-import KanbanView from './kanban-view';
+import { getKanbanBoards } from '@/lib/actions/kanban';
+import BoardList from './board-list';
 import SignInPrompt from '@/components/SignInPrompt';
 
 export default async function KanbanPage() {
@@ -11,7 +11,7 @@ export default async function KanbanPage() {
     return <SignInPrompt />;
   }
 
-  const initialColumns = await getKanbanBoard(user?.email ?? '');
+  const initialBoards = await getKanbanBoards(user?.email ?? '');
 
-  return <KanbanView uid={user?.email ?? ''} initialColumns={initialColumns} />;
+  return <BoardList uid={user?.email ?? ''} initialBoards={initialBoards} />;
 }

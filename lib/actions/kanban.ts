@@ -6,11 +6,134 @@ import prisma from '@/lib/prisma';
 // SEED DEFAULT COLUMNS
 const DEFAULT_COLUMNS = ['Backlog', 'Waiting', 'In Progress', 'Review', 'Done'];
 
-export async function getKanbanBoard(uid: string) {
+// ──────────────────────────────────────────────
+// BOARD ACTIONS
+// ──────────────────────────────────────────────
+
+export async function getKanbanBoards(uid: string) {
   try {
-    // 1. Fetch user columns with tickets
-    let columns = await prisma.kanbanColumn.findMany({
+    let boards = await prisma.kanbanBoard.findMany({
       where: { uid },
+      orderBy: { order: 'asc' },
+      include: {
+        columns: {
+          include: {
+            _count: { select: { tickets: true } }
+          }
+        }
+      }
+    });
+
+    // Seed a default board if none exist
+    if (boards.length === 0) {
+      const board = await createKanbanBoard(uid, 'My Board');
+      if (board) {
+        // Re-fetch with the same shape
+        boards = await prisma.kanbanBoard.findMany({
+          where: { uid },
+          orderBy: { order: 'asc' },
+          include: {
+            columns: {
+              include: {
+                _count: { select: { tickets: true } }
+              }
+            }
+          }
+        });
+      }
+    }
+
+    return boards;
+  } catch (error) {
+    console.error('Error fetching Kanban boards:', error);
+    return [];
+  }
+}
+
+export async function createKanbanBoard(uid: string, title: string) {
+  try {
+    const boardCount = await prisma.kanbanBoard.count({ where: { uid } });
+    const boardId = v4();
+
+    const newBoard = await prisma.kanbanBoard.create({
+      data: {
+        id: boardId,
+        uid,
+        title: title.trim(),
+        order: boardCount
+      }
+    });
+
+    // Seed default columns for the new board
+    for (let i = 0; i < DEFAULT_COLUMNS.length; i++) {
+      await prisma.kanbanColumn.create({
+        data: {
+          id: v4(),
+          uid,
+          boardId,
+          title: DEFAULT_COLUMNS[i],
+          order: i
+        }
+      });
+    }
+
+    return newBoard;
+  } catch (error) {
+    console.error('Error creating Kanban board:', error);
+    return null;
+  }
+}
+
+export async function updateKanbanBoardTitle(uid: string, id: string, title: string) {
+  try {
+    const board = await prisma.kanbanBoard.findUnique({ where: { id } });
+    if (!board || board.uid !== uid) {
+      console.error('Unauthorized board update attempt');
+      return null;
+    }
+
+    const updated = await prisma.kanbanBoard.update({
+      where: { id },
+      data: { title: title.trim() }
+    });
+    return updated;
+  } catch (error) {
+    console.error('Error updating Kanban board title:', error);
+    return null;
+  }
+}
+
+export async function deleteKanbanBoard(uid: string, id: string) {
+  try {
+    const board = await prisma.kanbanBoard.findUnique({ where: { id } });
+    if (!board || board.uid !== uid) {
+      console.error('Unauthorized board delete attempt');
+      return false;
+    }
+
+    await prisma.kanbanBoard.delete({ where: { id } });
+    return true;
+  } catch (error) {
+    console.error('Error deleting Kanban board:', error);
+    return false;
+  }
+}
+
+// ──────────────────────────────────────────────
+// COLUMN ACTIONS
+// ──────────────────────────────────────────────
+
+export async function getKanbanBoard(uid: string, boardId: string) {
+  try {
+    // Verify board ownership
+    const board = await prisma.kanbanBoard.findUnique({ where: { id: boardId } });
+    if (!board || board.uid !== uid) {
+      console.error('Unauthorized board access attempt');
+      return [];
+    }
+
+    const columns = await prisma.kanbanColumn.findMany({
+      where: { uid, boardId },
       orderBy: { order: 'asc' },
       include: {
         tickets: {
@@ -19,26 +142,6 @@ export async function getKanbanBoard(uid: string) {
       }
     });
 
-    // 2. Seed default columns if none exist
-    if (columns.length === 0) {
-      const createdColumns = [];
-      for (let i = 0; i < DEFAULT_COLUMNS.length; i++) {
-        const col = await prisma.kanbanColumn.create({
-          data: {
-            id: v4(),
-            uid,
-            title: DEFAULT_COLUMNS[i],
-            order: i
-          },
-          include: {
-            tickets: true
-          }
-        });
-        createdColumns.push(col);
-      }
-      columns = createdColumns;
-    }
-
     return columns;
   } catch (error) {
     console.error('Error fetching Kanban board:', error);
@@ -46,12 +149,20 @@ export async function getKanbanBoard(uid: string) {
   }
 }
 
-export async function createKanbanColumn(uid: string, title: string, order: number) {
+export async function createKanbanColumn(uid: string, boardId: string, title: string, order: number) {
   try {
+    // Verify board ownership
+    const board = await prisma.kanbanBoard.findUnique({ where: { id: boardId } });
+    if (!board || board.uid !== uid) {
+      console.error('Unauthorized column creation attempt on foreign board');
+      return null;
+    }
+
     const newCol = await prisma.kanbanColumn.create({
       data: {
         id: v4(),
         uid,
+        boardId,
         title,
         order
       },
@@ -120,6 +231,10 @@ export async function updateKanbanColumnsOrder(uid: string, columnOrders: { id: 
     return false;
   }
 }
+
+// ──────────────────────────────────────────────
+// TICKET ACTIONS
+// ──────────────────────────────────────────────
 
 export async function createKanbanTicket(
   uid: string,
