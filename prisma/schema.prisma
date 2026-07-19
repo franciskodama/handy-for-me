@@ -163,12 +163,24 @@ model VisitedPlace {
   visitDate DateTime? @db.Timestamp(6)
 }
 
+model KanbanBoard {
+  id        String         @id @default(uuid()) @db.VarChar(255)
+  createdAt DateTime       @default(now()) @db.Timestamp(6)
+  uid       String         @db.VarChar(255)
+  title     String         @db.VarChar(255)
+  emoji     String         @default("📋") @db.VarChar(10)
+  order     Int            @default(0)
+  columns   KanbanColumn[]
+}
+
 model KanbanColumn {
   id        String         @id @default(uuid()) @db.VarChar(255)
   createdAt DateTime       @default(now()) @db.Timestamp(6)
   uid       String         @db.VarChar(255)
   title     String         @db.VarChar(255)
   order     Int            @default(0)
+  boardId   String         @db.VarChar(255)
+  board     KanbanBoard    @relation(fields: [boardId], references: [id], onDelete: Cascade)
   tickets   KanbanTicket[]
 }
 

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useTransition } from 'react';
+import Link from 'next/link';
 import {
   DndContext,
   DragOverlay,
@@ -28,7 +29,8 @@ import {
   CheckSquare,
   Trash,
   Clock,
-  Sparkles
+  Sparkles,
+  ArrowLeft
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -64,6 +66,9 @@ type ColumnWithTickets = KanbanColumn & { tickets: KanbanTicket[] };
 
 interface KanbanViewProps {
   uid: string;
+  boardId: string;
+  boardTitle: string;
+  boardEmoji: string;
   initialColumns: ColumnWithTickets[];
 }
 
@@ -82,7 +87,7 @@ const getPriorityWeight = (priority: string) => {
   }
 };
 
-export default function KanbanView({ uid, initialColumns }: KanbanViewProps) {
+export default function KanbanView({ uid, boardId, boardTitle, boardEmoji, initialColumns }: KanbanViewProps) {
   const [columns, setColumns] = useState<KanbanColumn[]>(
     initialColumns.map(({ tickets, ...col }) => col)
   );
@@ -120,7 +125,7 @@ export default function KanbanView({ uid, initialColumns }: KanbanViewProps) {
     if (!trimmed) return;
 
     const order = columns.length;
-    const res = await createKanbanColumn(uid, trimmed, order);
+    const res = await createKanbanColumn(uid, boardId, trimmed, order);
     if (res) {
       setColumns((prev) => [...prev, res]);
       setNewColumnTitle('');
@@ -372,9 +377,16 @@ export default function KanbanView({ uid, initialColumns }: KanbanViewProps) {
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b pb-4 border-border">
         <div>
+          <Link
+            href="/kanban"
+            className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors mb-2"
+          >
+            <ArrowLeft size={14} />
+            Back to Boards
+          </Link>
           <h1 className={`${barlow.className} text-3xl font-extrabold text-foreground tracking-tight flex items-center gap-2`}>
-            <Trello className="h-7 w-7 text-primary" />
-            Kanban Board
+            <span className="text-2xl">{boardEmoji}</span>
+            {boardTitle}
           </h1>
           <p className="text-sm text-muted-foreground mt-1">
             Drag & drop tickets to organize work. The <span className="font-semibold underline">Backlog</span> sorts by Eisenhower priority automatically!

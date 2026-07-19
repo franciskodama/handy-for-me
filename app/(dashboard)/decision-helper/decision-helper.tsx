@@ -301,14 +301,14 @@ export default function DecisionHelper({
               value="spin"
               className="uppercase text-xl font-semibold py-2 data-[state=active]:bg-primary data-[state=active]:text-white rounded-none border border-transparent data-[state=active]:border-primary flex items-center justify-center gap-2"
             >
-              <RotateCw size={22} />
+              <RotateCw size={22} className="hidden sm:block" />
               Spin the Wheel
             </TabsTrigger>
             <TabsTrigger
               value="proscons"
               className="uppercase text-xl font-semibold py-2 data-[state=active]:bg-primary data-[state=active]:text-white rounded-none border border-transparent data-[state=active]:border-primary flex items-center justify-center gap-2"
             >
-              <Scale size={22} />
+              <Scale size={22} className="hidden sm:block" />
               Pros & Cons
             </TabsTrigger>
           </TabsList>
