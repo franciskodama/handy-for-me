@@ -36,6 +36,7 @@ export default async function BoardPage({ params }: BoardPageProps) {
       uid={uid}
       boardId={boardId}
       boardTitle={board.title}
+      boardEmoji={board.emoji}
       initialColumns={initialColumns}
     />
   );

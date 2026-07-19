@@ -68,6 +68,7 @@ interface KanbanViewProps {
   uid: string;
   boardId: string;
   boardTitle: string;
+  boardEmoji: string;
   initialColumns: ColumnWithTickets[];
 }
 
@@ -86,7 +87,7 @@ const getPriorityWeight = (priority: string) => {
   }
 };
 
-export default function KanbanView({ uid, boardId, boardTitle, initialColumns }: KanbanViewProps) {
+export default function KanbanView({ uid, boardId, boardTitle, boardEmoji, initialColumns }: KanbanViewProps) {
   const [columns, setColumns] = useState<KanbanColumn[]>(
     initialColumns.map(({ tickets, ...col }) => col)
   );
@@ -384,7 +385,7 @@ export default function KanbanView({ uid, boardId, boardTitle, initialColumns }:
             Back to Boards
           </Link>
           <h1 className={`${barlow.className} text-3xl font-extrabold text-foreground tracking-tight flex items-center gap-2`}>
-            <Trello className="h-7 w-7 text-primary" />
+            <span className="text-2xl">{boardEmoji}</span>
             {boardTitle}
           </h1>
           <p className="text-sm text-muted-foreground mt-1">

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { KanbanBoard } from '@prisma/client';
 import {
@@ -10,7 +10,6 @@ import {
   Trash2,
   Columns3,
   Ticket,
-  HelpCircle,
   Flame,
   Sparkles,
   LayoutGrid
@@ -41,9 +40,41 @@ import Help from '@/components/common/Help';
 import ExplanationBox from '@/components/ExplanationBox';
 import {
   createKanbanBoard,
-  updateKanbanBoardTitle,
+  updateKanbanBoard,
   deleteKanbanBoard
 } from '@/lib/actions/kanban';
+
+// ──────────────────────────────────────────────
+// EMOJI INPUT
+// ──────────────────────────────────────────────
+
+function EmojiInput({
+  value,
+  onChange
+}: {
+  value: string;
+  onChange: (emoji: string) => void;
+}) {
+  return (
+    <input
+      type="text"
+      value={value}
+      onChange={(e) => {
+        // Take only the last grapheme (emoji) entered, so the field always holds exactly one
+        const raw = e.target.value;
+        const segments = Array.from(new Intl.Segmenter().segment(raw)).map(s => s.segment);
+        const last = segments[segments.length - 1] ?? '📋';
+        onChange(last);
+      }}
+      className="flex items-center justify-center h-10 w-10 rounded-lg border border-input bg-background text-center text-xl focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 cursor-pointer"
+      title="Click to type or paste an emoji"
+    />
+  );
+}
+
+// ──────────────────────────────────────────────
+// BOARD LIST
+// ──────────────────────────────────────────────
 
 type BoardWithStats = KanbanBoard & {
   columns: {
@@ -65,19 +96,20 @@ export default function BoardList({ uid, initialBoards }: BoardListProps) {
   // Create board dialog
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [newBoardTitle, setNewBoardTitle] = useState('');
+  const [newBoardEmoji, setNewBoardEmoji] = useState('📋');
 
-  // Rename board dialog
-  const [isRenameOpen, setIsRenameOpen] = useState(false);
-  const [renamingBoard, setRenamingBoard] = useState<BoardWithStats | null>(null);
-  const [renameTitle, setRenameTitle] = useState('');
+  // Edit board dialog
+  const [isEditOpen, setIsEditOpen] = useState(false);
+  const [editingBoard, setEditingBoard] = useState<BoardWithStats | null>(null);
+  const [editTitle, setEditTitle] = useState('');
+  const [editEmoji, setEditEmoji] = useState('📋');
 
   const handleCreateBoard = async () => {
     const trimmed = newBoardTitle.trim();
     if (!trimmed) return;
 
-    const res = await createKanbanBoard(uid, trimmed);
+    const res = await createKanbanBoard(uid, trimmed, newBoardEmoji);
     if (res) {
-      // Re-fetch to get the full shape with columns
       setBoards((prev) => [
         ...prev,
         {
@@ -89,6 +121,7 @@ export default function BoardList({ uid, initialBoards }: BoardListProps) {
         }
       ]);
       setNewBoardTitle('');
+      setNewBoardEmoji('📋');
       setIsCreateOpen(false);
       toast({
         title: 'Board Created! 🎉',
@@ -105,29 +138,40 @@ export default function BoardList({ uid, initialBoards }: BoardListProps) {
     }
   };
 
-  const handleOpenRename = (board: BoardWithStats) => {
-    setRenamingBoard(board);
-    setRenameTitle(board.title);
-    setIsRenameOpen(true);
+  const handleOpenEdit = (board: BoardWithStats) => {
+    setEditingBoard(board);
+    setEditTitle(board.title);
+    setEditEmoji(board.emoji);
+    setIsEditOpen(true);
   };
 
-  const handleRenameBoard = async () => {
-    if (!renamingBoard) return;
-    const trimmed = renameTitle.trim();
-    if (!trimmed || trimmed === renamingBoard.title) {
-      setIsRenameOpen(false);
+  const handleEditBoard = async () => {
+    if (!editingBoard) return;
+    const trimmed = editTitle.trim();
+    if (!trimmed) return;
+
+    const hasChanges = trimmed !== editingBoard.title || editEmoji !== editingBoard.emoji;
+    if (!hasChanges) {
+      setIsEditOpen(false);
       return;
     }
 
-    const res = await updateKanbanBoardTitle(uid, renamingBoard.id, trimmed);
+    const res = await updateKanbanBoard(uid, editingBoard.id, {
+      title: trimmed,
+      emoji: editEmoji
+    });
     if (res) {
       setBoards((prev) =>
-        prev.map((b) => (b.id === renamingBoard.id ? { ...b, title: res.title } : b))
+        prev.map((b) =>
+          b.id === editingBoard.id
+            ? { ...b, title: res.title, emoji: res.emoji }
+            : b
+        )
       );
-      setIsRenameOpen(false);
+      setIsEditOpen(false);
       toast({
-        title: 'Board Renamed',
-        description: `Board renamed to "${trimmed}".`
+        title: 'Board Updated',
+        description: `Board updated successfully.`
       });
     }
   };
@@ -242,8 +286,10 @@ export default function BoardList({ uid, initialBoards }: BoardListProps) {
               >
                 {/* Board Title */}
                 <div className="flex items-start justify-between gap-2 mb-4">
-                  <div className="flex items-center gap-2 min-w-0">
-                    <Trello className="h-5 w-5 text-primary shrink-0" />
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <span className="text-xl shrink-0" role="img" aria-label="board icon">
+                      {board.emoji}
+                    </span>
                     <h3 className="font-bold text-foreground text-base truncate">
                       {board.title}
                     </h3>
@@ -258,7 +304,7 @@ export default function BoardList({ uid, initialBoards }: BoardListProps) {
                       variant="ghost"
                       size="icon"
                       className="h-7 w-7 text-muted-foreground hover:text-foreground"
-                      onClick={() => handleOpenRename(board)}
+                      onClick={() => handleOpenEdit(board)}
                     >
                       <Pencil size={14} />
                     </Button>
@@ -328,19 +374,30 @@ export default function BoardList({ uid, initialBoards }: BoardListProps) {
           <DialogHeader>
             <DialogTitle>Create New Board</DialogTitle>
           </DialogHeader>
-          <div className="py-4">
-            <label htmlFor="boardName" className="text-sm font-medium">
-              Board Title
-            </label>
-            <Input
-              id="boardName"
-              placeholder="e.g. Work, Personal, Side Project..."
-              value={newBoardTitle}
-              onChange={(e) => setNewBoardTitle(e.target.value)}
-              className="mt-2"
-              onKeyDown={(e) => e.key === 'Enter' && handleCreateBoard()}
-            />
-            <p className="text-xs text-muted-foreground mt-2">
+          <div className="py-4 space-y-4">
+            <div>
+              <label className="text-sm font-medium">Icon</label>
+              <div className="mt-2">
+                <EmojiInput value={newBoardEmoji} onChange={setNewBoardEmoji} />
+              </div>
+              <p className="text-xs text-muted-foreground mt-1.5">
+                Paste any emoji or press <kbd className="px-1 py-0.5 rounded bg-muted border border-border text-[10px] font-mono">⌘ Ctrl Space</kbd> to open the emoji picker.
+              </p>
+            </div>
+            <div>
+              <label htmlFor="boardName" className="text-sm font-medium">
+                Board Title
+              </label>
+              <Input
+                id="boardName"
+                placeholder="e.g. Work, Personal, Side Project..."
+                value={newBoardTitle}
+                onChange={(e) => setNewBoardTitle(e.target.value)}
+                className="mt-2"
+                onKeyDown={(e) => e.key === 'Enter' && handleCreateBoard()}
+              />
+            </div>
+            <p className="text-xs text-muted-foreground">
               Your board will be created with 5 default columns that you can customize.
             </p>
           </div>
@@ -355,30 +412,41 @@ export default function BoardList({ uid, initialBoards }: BoardListProps) {
         </DialogContent>
       </Dialog>
 
-      {/* Rename Board Dialog */}
-      <Dialog open={isRenameOpen} onOpenChange={setIsRenameOpen}>
+      {/* Edit Board Dialog */}
+      <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
         <DialogContent className="w-[calc(100%-35px)] max-w-md rounded-lg">
           <DialogHeader>
-            <DialogTitle>Rename Board</DialogTitle>
+            <DialogTitle>Edit Board</DialogTitle>
           </DialogHeader>
-          <div className="py-4">
-            <label htmlFor="renameBoard" className="text-sm font-medium">
-              Board Title
-            </label>
-            <Input
-              id="renameBoard"
-              placeholder="Board name..."
-              value={renameTitle}
-              onChange={(e) => setRenameTitle(e.target.value)}
-              className="mt-2"
-              onKeyDown={(e) => e.key === 'Enter' && handleRenameBoard()}
-            />
+          <div className="py-4 space-y-4">
+            <div>
+              <label className="text-sm font-medium">Icon</label>
+              <div className="mt-2">
+                <EmojiInput value={editEmoji} onChange={setEditEmoji} />
+              </div>
+              <p className="text-xs text-muted-foreground mt-1.5">
+                Paste any emoji or press <kbd className="px-1 py-0.5 rounded bg-muted border border-border text-[10px] font-mono">⌘ Ctrl Space</kbd> to open the emoji picker.
+              </p>
+            </div>
+            <div>
+              <label htmlFor="editBoardTitle" className="text-sm font-medium">
+                Board Title
+              </label>
+              <Input
+                id="editBoardTitle"
+                placeholder="Board name..."
+                value={editTitle}
+                onChange={(e) => setEditTitle(e.target.value)}
+                className="mt-2"
+                onKeyDown={(e) => e.key === 'Enter' && handleEditBoard()}
+              />
+            </div>
           </div>
           <DialogFooter className="gap-2 sm:gap-0">
-            <Button variant="ghost" onClick={() => setIsRenameOpen(false)}>
+            <Button variant="ghost" onClick={() => setIsEditOpen(false)}>
               Cancel
             </Button>
-            <Button onClick={handleRenameBoard} className="bg-primary text-primary-foreground">
+            <Button onClick={handleEditBoard} className="bg-primary text-primary-foreground">
               Save
             </Button>
           </DialogFooter>
