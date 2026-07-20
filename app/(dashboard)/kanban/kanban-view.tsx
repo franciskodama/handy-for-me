@@ -225,7 +225,8 @@ export default function KanbanView({ uid, boardId, boardTitle, boardEmoji, initi
         targetColumnId,
         trimmedTitle,
         ticketPriority,
-        order
+        order,
+        ticketDescription
       );
 
       if (res) {
