@@ -62,7 +62,9 @@ function EmojiInput({
       onChange={(e) => {
         // Take only the last grapheme (emoji) entered, so the field always holds exactly one
         const raw = e.target.value;
-        const segments = Array.from(new Intl.Segmenter().segment(raw)).map(s => s.segment);
+        const segments = Array.from(new Intl.Segmenter().segment(raw)).map(
+          (s) => s.segment
+        );
         const last = segments[segments.length - 1] ?? '📋';
         onChange(last);
       }}
@@ -81,6 +83,7 @@ type BoardWithStats = KanbanBoard & {
     id: string;
     _count: { tickets: number };
   }[];
+  urgentImportantCount: number;
 };
 
 interface BoardListProps {
@@ -117,7 +120,8 @@ export default function BoardList({ uid, initialBoards }: BoardListProps) {
           columns: Array.from({ length: 5 }, (_, i) => ({
             id: `temp-${i}`,
             _count: { tickets: 0 }
-          }))
+          })),
+          urgentImportantCount: 0
         }
       ]);
       setNewBoardTitle('');
@@ -150,7 +154,8 @@ export default function BoardList({ uid, initialBoards }: BoardListProps) {
     const trimmed = editTitle.trim();
     if (!trimmed) return;
 
-    const hasChanges = trimmed !== editingBoard.title || editEmoji !== editingBoard.emoji;
+    const hasChanges =
+      trimmed !== editingBoard.title || editEmoji !== editingBoard.emoji;
     if (!hasChanges) {
       setIsEditOpen(false);
       return;
@@ -193,7 +198,9 @@ export default function BoardList({ uid, initialBoards }: BoardListProps) {
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b pb-4 border-border">
         <div>
-          <h1 className={`${barlow.className} text-3xl font-extrabold text-foreground tracking-tight flex items-center gap-2`}>
+          <h1
+            className={`${barlow.className} text-3xl font-extrabold text-foreground tracking-tight flex items-center gap-2`}
+          >
             <Trello className="h-7 w-7 text-primary" />
             Kanban Boards
           </h1>
@@ -225,9 +232,18 @@ export default function BoardList({ uid, initialBoards }: BoardListProps) {
             <div className="text-sm text-muted-foreground space-y-2">
               <p>Create separate boards for different contexts:</p>
               <ul className="list-disc list-inside space-y-1">
-                <li><strong className="text-foreground">Work:</strong> Track tasks and sprints</li>
-                <li><strong className="text-foreground">Personal:</strong> Household chores, errands</li>
-                <li><strong className="text-foreground">Side Projects:</strong> Learning goals, ideas</li>
+                <li>
+                  <strong className="text-foreground">Work:</strong> Track tasks
+                  and sprints
+                </li>
+                <li>
+                  <strong className="text-foreground">Personal:</strong>{' '}
+                  Household chores, errands
+                </li>
+                <li>
+                  <strong className="text-foreground">Side Projects:</strong>{' '}
+                  Learning goals, ideas
+                </li>
               </ul>
             </div>
           }
@@ -236,7 +252,9 @@ export default function BoardList({ uid, initialBoards }: BoardListProps) {
           contentTwo={
             <div className="text-sm text-muted-foreground space-y-2">
               <p>
-                Each board has full Eisenhower priority support. The <strong className="text-foreground">Backlog</strong> column auto-sorts by priority.
+                Each board has full Eisenhower priority support. The{' '}
+                <strong className="text-foreground">Backlog</strong> column
+                auto-sorts by priority.
               </p>
             </div>
           }
@@ -245,7 +263,8 @@ export default function BoardList({ uid, initialBoards }: BoardListProps) {
           contentThree={
             <div className="text-sm text-muted-foreground space-y-2">
               <p>
-                New boards come with 5 default columns: Backlog, Waiting, In Progress, Review, and Done. Customize them as you like!
+                New boards come with 5 default columns: Backlog, Waiting, In
+                Progress, Review, and Done. Customize them as you like!
               </p>
             </div>
           }
@@ -264,7 +283,10 @@ export default function BoardList({ uid, initialBoards }: BoardListProps) {
           <p className="text-sm text-muted-foreground/60 mb-6 max-w-md">
             Create your first board to start organizing your tasks.
           </p>
-          <Button onClick={() => setIsCreateOpen(true)} className="bg-primary text-primary-foreground">
+          <Button
+            onClick={() => setIsCreateOpen(true)}
+            className="bg-primary text-primary-foreground"
+          >
             <Plus size={16} className="mr-2" />
             Create Your First Board
           </Button>
@@ -286,11 +308,15 @@ export default function BoardList({ uid, initialBoards }: BoardListProps) {
               >
                 {/* Board Title */}
                 <div className="flex items-start justify-between gap-2 mb-4">
-                  <div className="flex items-center gap-2.5 min-w-0">
-                    <span className="text-xl shrink-0" role="img" aria-label="board icon">
+                  <div className="flex items-center gap-3.5 min-w-0">
+                    <span
+                      className="text-2xl shrink-0"
+                      role="img"
+                      aria-label="board icon"
+                    >
                       {board.emoji}
                     </span>
-                    <h3 className="font-bold text-foreground text-base truncate">
+                    <h3 className="font-bold text-foreground text-lg uppercase truncate">
                       {board.title}
                     </h3>
                   </div>
@@ -321,10 +347,14 @@ export default function BoardList({ uid, initialBoards }: BoardListProps) {
                       </AlertDialogTrigger>
                       <AlertDialogContent className="w-[calc(100%-35px)] max-w-md rounded-lg">
                         <AlertDialogHeader>
-                          <AlertDialogTitle>Delete &quot;{board.title}&quot;?</AlertDialogTitle>
+                          <AlertDialogTitle>
+                            Delete &quot;{board.title}&quot;?
+                          </AlertDialogTitle>
                           <AlertDialogDescription>
                             <span className="text-destructive font-medium">
-                              This will permanently delete the board, all {columnCount} column(s), and {ticketCount} ticket(s) inside it. This action cannot be undone.
+                              This will permanently delete the board, all{' '}
+                              {columnCount} column(s), and {ticketCount}{' '}
+                              ticket(s) inside it. This action cannot be undone.
                             </span>
                           </AlertDialogDescription>
                         </AlertDialogHeader>
@@ -343,20 +373,31 @@ export default function BoardList({ uid, initialBoards }: BoardListProps) {
                 </div>
 
                 {/* Stats */}
-                <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                <div className="flex items-center gap-4 text-sm text-muted-foreground">
                   <div className="flex items-center gap-1.5">
-                    <Columns3 size={14} className="text-muted-foreground/60" />
-                    <span>{columnCount} column{columnCount !== 1 ? 's' : ''}</span>
+                    <Columns3 size={18} className="text-muted-foreground/60" />
+                    <span>
+                      {columnCount} column{columnCount !== 1 ? 's' : ''}
+                    </span>
                   </div>
                   <div className="flex items-center gap-1.5">
-                    <Ticket size={14} className="text-muted-foreground/60" />
-                    <span>{ticketCount} ticket{ticketCount !== 1 ? 's' : ''}</span>
+                    <Ticket size={18} className="text-muted-foreground/60" />
+                    <span>
+                      {ticketCount} ticket{ticketCount !== 1 ? 's' : ''}
+                    </span>
                   </div>
+                  {board.urgentImportantCount > 0 && (
+                    <div className="px-2 py-0.5 font-medium rounded-full flex items-center gap-1.5 border-rose-500/30 bg-rose-500/10 text-rose-500">
+                      <Flame size={18} className="text-rose-500/60" />
+                      <span>{board.urgentImportantCount}</span>
+                    </div>
+                  )}
                 </div>
 
                 {/* Created date */}
-                <p className="text-[10px] text-muted-foreground/50 mt-3">
-                  Created {new Date(board.createdAt).toLocaleDateString(undefined, {
+                <p className="text-[11px] text-muted-foreground/60 mt-3">
+                  Created{' '}
+                  {new Date(board.createdAt).toLocaleDateString(undefined, {
                     month: 'short',
                     day: 'numeric',
                     year: 'numeric'
@@ -381,7 +422,11 @@ export default function BoardList({ uid, initialBoards }: BoardListProps) {
                 <EmojiInput value={newBoardEmoji} onChange={setNewBoardEmoji} />
               </div>
               <p className="text-xs text-muted-foreground mt-1.5">
-                Paste any emoji or press <kbd className="px-1 py-0.5 rounded bg-muted border border-border text-[10px] font-mono">⌘ Ctrl Space</kbd> to open the emoji picker.
+                Paste any emoji or press{' '}
+                <kbd className="px-1 py-0.5 rounded bg-muted border border-border text-[10px] font-mono">
+                  ⌘ Ctrl Space
+                </kbd>{' '}
+                to open the emoji picker.
               </p>
             </div>
             <div>
@@ -398,14 +443,18 @@ export default function BoardList({ uid, initialBoards }: BoardListProps) {
               />
             </div>
             <p className="text-xs text-muted-foreground">
-              Your board will be created with 5 default columns that you can customize.
+              Your board will be created with 5 default columns that you can
+              customize.
             </p>
           </div>
           <DialogFooter className="gap-2 sm:gap-0">
             <Button variant="ghost" onClick={() => setIsCreateOpen(false)}>
               Cancel
             </Button>
-            <Button onClick={handleCreateBoard} className="bg-primary text-primary-foreground">
+            <Button
+              onClick={handleCreateBoard}
+              className="bg-primary text-primary-foreground"
+            >
               Create Board
             </Button>
           </DialogFooter>
@@ -425,7 +474,11 @@ export default function BoardList({ uid, initialBoards }: BoardListProps) {
                 <EmojiInput value={editEmoji} onChange={setEditEmoji} />
               </div>
               <p className="text-xs text-muted-foreground mt-1.5">
-                Paste any emoji or press <kbd className="px-1 py-0.5 rounded bg-muted border border-border text-[10px] font-mono">⌘ Ctrl Space</kbd> to open the emoji picker.
+                Paste any emoji or press{' '}
+                <kbd className="px-1 py-0.5 rounded bg-muted border border-border text-[10px] font-mono">
+                  ⌘ Ctrl Space
+                </kbd>{' '}
+                to open the emoji picker.
               </p>
             </div>
             <div>
@@ -446,7 +499,10 @@ export default function BoardList({ uid, initialBoards }: BoardListProps) {
             <Button variant="ghost" onClick={() => setIsEditOpen(false)}>
               Cancel
             </Button>
-            <Button onClick={handleEditBoard} className="bg-primary text-primary-foreground">
+            <Button
+              onClick={handleEditBoard}
+              className="bg-primary text-primary-foreground"
+            >
               Save
             </Button>
           </DialogFooter>

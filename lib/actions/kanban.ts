@@ -43,7 +43,23 @@ export async function getKanbanBoards(uid: string) {
       }
     }
 
-    return boards;
+    // Add urgent‑important ticket count per board (priority "Q1")
+    const boardsWithUrgent = await Promise.all(
+      boards.map(async (b) => {
+        // Collect column IDs for the board
+        const columnIds = b.columns.map((c) => c.id);
+        const urgentCount = await prisma.kanbanTicket.count({
+          where: {
+            uid,
+            columnId: { in: columnIds },
+            priority: 'Q1'
+          }
+        });
+        return { ...b, urgentImportantCount: urgentCount };
+      })
+    );
+
+    return boardsWithUrgent;
   } catch (error) {
     console.error('Error fetching Kanban boards:', error);
     return [];
