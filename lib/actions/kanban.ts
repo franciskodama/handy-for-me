@@ -266,7 +266,8 @@ export async function createKanbanTicket(
   columnId: string,
   title: string,
   priority: string = 'NONE',
-  order: number = 0
+  order: number = 0,
+  description: string = ''
 ) {
   try {
     // Access control: Ensure user owns the column they are adding a ticket to
@@ -284,7 +285,7 @@ export async function createKanbanTicket(
         title: title.trim(),
         priority,
         order,
-        description: ''
+        description: description
       }
     });
     return newTicket;
