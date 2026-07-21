@@ -76,7 +76,7 @@ export function ColumnContainer({
   };
 
   return (
-    <div className="flex flex-col w-full min-w-[280px] max-w-[340px] md:max-w-none bg-muted/40 border border-border rounded-xl p-4 h-[70vh] max-h-[75vh]">
+    <div className="flex flex-col w-full bg-muted/40 border border-border rounded-xl p-4 h-[70vh] max-h-[75vh]">
       {/* Column Header */}
       <div className="flex items-center justify-between mb-4">
         {isEditing ? (

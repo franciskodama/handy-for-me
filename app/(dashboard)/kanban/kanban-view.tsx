@@ -474,7 +474,7 @@ export default function KanbanView({ uid, boardId, boardTitle, boardEmoji, initi
             });
 
             return (
-              <div key={col.id} className="snap-center">
+              <div key={col.id} className="snap-center flex-1 basis-0 min-w-[280px]">
                 <ColumnContainer
                   column={{ ...col, tickets: sortedColumnTickets }}
                   onAddTicket={handleOpenAddTicket}
