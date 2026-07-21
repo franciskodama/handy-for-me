@@ -55,7 +55,7 @@ export function TicketCard({
       <div
         ref={setNodeRef}
         style={style}
-        className="h-[110px] bg-muted/20 border-2 border-dashed border-primary/20 rounded-lg"
+        className="h-[95px] bg-primary/10 border-2 border-dashed border-primary/50 rounded-lg animate-pulse transition-all duration-150"
       />
     );
   }

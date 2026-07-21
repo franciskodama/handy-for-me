@@ -31,6 +31,12 @@ export default async function BoardPage({ params }: BoardPageProps) {
 
   const initialColumns = await getKanbanBoard(uid, boardId);
 
+  const allBoards = await prisma.kanbanBoard.findMany({
+    where: { uid },
+    orderBy: { order: 'asc' },
+    select: { id: true, title: true, emoji: true }
+  });
+
   return (
     <KanbanView
       uid={uid}
@@ -38,6 +44,7 @@ export default async function BoardPage({ params }: BoardPageProps) {
       boardTitle={board.title}
       boardEmoji={board.emoji}
       initialColumns={initialColumns}
+      allBoards={allBoards}
     />
   );
 }

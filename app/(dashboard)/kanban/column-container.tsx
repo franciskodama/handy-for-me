@@ -41,7 +41,7 @@ export function ColumnContainer({
   onDeleteTicket,
   isSortingActive
 }: ColumnContainerProps) {
-  const { setNodeRef } = useDroppable({
+  const { setNodeRef, isOver } = useDroppable({
     id: column.id
   });
 
@@ -76,7 +76,13 @@ export function ColumnContainer({
   };
 
   return (
-    <div className="flex flex-col w-full min-w-[280px] max-w-[340px] md:max-w-none bg-muted/40 border border-border rounded-xl p-4 h-[70vh] max-h-[75vh]">
+    <div
+      ref={setNodeRef}
+      className={cn(
+        'flex flex-col w-full bg-muted/40 border border-border rounded-xl p-4 h-[70vh] max-h-[75vh] transition-all duration-200',
+        isOver && 'border-primary/60 bg-primary/10 ring-2 ring-primary/40 shadow-lg scale-[1.01]'
+      )}
+    >
       {/* Column Header */}
       <div className="flex items-center justify-between mb-4">
         {isEditing ? (
@@ -169,10 +175,7 @@ export function ColumnContainer({
       </div>
 
       {/* Ticket List area */}
-      <div
-        ref={setNodeRef}
-        className="flex-1 overflow-y-auto pr-1 flex flex-col gap-3 rounded-lg min-h-[150px]"
-      >
+      <div className="flex-1 overflow-y-auto pr-1 flex flex-col gap-3 rounded-lg min-h-[150px]">
         <SortableContext
           items={column.tickets.map((t) => t.id)}
           strategy={verticalListSortingStrategy}
@@ -186,6 +189,12 @@ export function ColumnContainer({
             />
           ))}
         </SortableContext>
+
+        {column.tickets.length === 0 && (
+          <div className="flex-1 flex flex-col items-center justify-center border-2 border-dashed border-primary/25 rounded-lg p-6 text-center text-muted-foreground/50 bg-background/20 min-h-[120px] select-none">
+            <p className="text-xs font-semibold">Drop ticket here</p>
+          </div>
+        )}
       </div>
 
       {/* Add Ticket Footer Button */}
