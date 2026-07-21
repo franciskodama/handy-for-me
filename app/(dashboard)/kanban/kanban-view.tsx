@@ -19,6 +19,14 @@ import { KanbanColumn, KanbanTicket } from '@prisma/client';
 import { ColumnContainer } from './column-container';
 import { TicketCard } from './ticket-card';
 import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger
+} from '@/components/ui/dropdown-menu';
+import {
   Trello,
   Plus,
   HelpCircle,
@@ -30,7 +38,10 @@ import {
   Trash,
   Clock,
   Sparkles,
-  ArrowLeft
+  ArrowLeft,
+  ChevronDown,
+  Check,
+  LayoutGrid
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -70,6 +81,7 @@ interface KanbanViewProps {
   boardTitle: string;
   boardEmoji: string;
   initialColumns: ColumnWithTickets[];
+  allBoards?: Array<{ id: string; title: string; emoji: string }>;
 }
 
 const getPriorityWeight = (priority: string) => {
@@ -87,7 +99,14 @@ const getPriorityWeight = (priority: string) => {
   }
 };
 
-export default function KanbanView({ uid, boardId, boardTitle, boardEmoji, initialColumns }: KanbanViewProps) {
+export default function KanbanView({
+  uid,
+  boardId,
+  boardTitle,
+  boardEmoji,
+  initialColumns,
+  allBoards = []
+}: KanbanViewProps) {
   const [columns, setColumns] = useState<KanbanColumn[]>(
     initialColumns.map(({ tickets, ...col }) => col)
   );
@@ -385,10 +404,63 @@ export default function KanbanView({ uid, boardId, boardTitle, boardEmoji, initi
             <ArrowLeft size={14} />
             Back to Boards
           </Link>
-          <h1 className={`${barlow.className} text-3xl font-extrabold text-foreground tracking-tight flex items-center gap-2`}>
-            <span className="text-2xl">{boardEmoji}</span>
-            {boardTitle}
-          </h1>
+          {allBoards.length > 0 ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button
+                  type="button"
+                  className="group flex items-center gap-2 text-left focus:outline-none rounded-lg py-1 px-1.5 -ml-1.5 hover:bg-muted/60 transition-colors"
+                >
+                  <h1 className={`${barlow.className} text-3xl font-extrabold text-foreground tracking-tight flex items-center gap-2 group-hover:text-primary transition-colors`}>
+                    <span className="text-2xl">{boardEmoji}</span>
+                    <span>{boardTitle}</span>
+                    <ChevronDown size={20} className="text-muted-foreground group-hover:text-primary transition-colors ml-0.5 mt-0.5" />
+                  </h1>
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="w-64 p-2 rounded-xl shadow-lg border border-border bg-popover">
+                <DropdownMenuLabel className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-2 py-1.5">
+                  Switch Board
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                {allBoards.map((b) => (
+                  <DropdownMenuItem
+                    key={b.id}
+                    asChild
+                    className="p-0 focus:bg-transparent"
+                  >
+                    <Link
+                      href={`/kanban/${b.id}`}
+                      className={`flex items-center gap-2.5 px-2.5 py-2 rounded-lg cursor-pointer text-sm font-medium transition-colors w-full ${
+                        b.id === boardId
+                          ? 'bg-primary/10 text-primary font-semibold'
+                          : 'hover:bg-accent hover:text-foreground text-foreground'
+                      }`}
+                    >
+                      <span className="text-base">{b.emoji}</span>
+                      <span className="flex-1 truncate">{b.title}</span>
+                      {b.id === boardId && <Check size={16} className="text-primary ml-auto" />}
+                    </Link>
+                  </DropdownMenuItem>
+                ))}
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild className="p-0 focus:bg-transparent">
+                  <Link
+                    href="/kanban"
+                    className="flex items-center gap-2 px-2.5 py-2 rounded-lg cursor-pointer text-xs font-semibold text-muted-foreground hover:text-foreground hover:bg-accent transition-colors w-full"
+                  >
+                    <LayoutGrid size={14} />
+                    View All Boards Dashboard
+                  </Link>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <h1 className={`${barlow.className} text-3xl font-extrabold text-foreground tracking-tight flex items-center gap-2`}>
+              <span className="text-2xl">{boardEmoji}</span>
+              {boardTitle}
+            </h1>
+          )}
           <p className="text-sm text-muted-foreground mt-1">
             Drag & drop tickets to organize work. The <span className="font-semibold underline">Backlog</span> sorts by Eisenhower priority automatically!
           </p>
