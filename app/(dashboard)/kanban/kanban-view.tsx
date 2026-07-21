@@ -5,14 +5,16 @@ import Link from 'next/link';
 import {
   DndContext,
   DragOverlay,
-  closestCorners,
   KeyboardSensor,
   PointerSensor,
   useSensor,
   useSensors,
   DragStartEvent,
   DragOverEvent,
-  DragEndEvent
+  DragEndEvent,
+  pointerWithin,
+  rectIntersection,
+  CollisionDetection
 } from '@dnd-kit/core';
 import { arrayMove } from '@dnd-kit/sortable';
 import { KanbanColumn, KanbanTicket } from '@prisma/client';
@@ -83,6 +85,16 @@ interface KanbanViewProps {
   initialColumns: ColumnWithTickets[];
   allBoards?: Array<{ id: string; title: string; emoji: string }>;
 }
+
+const customCollisionDetection: CollisionDetection = (args) => {
+  // First check pointerWithin (where mouse cursor actually is)
+  const pointerCollisions = pointerWithin(args);
+  if (pointerCollisions.length > 0) {
+    return pointerCollisions;
+  }
+  // Fallback to rectIntersection
+  return rectIntersection(args);
+};
 
 const getPriorityWeight = (priority: string) => {
   switch (priority) {
@@ -222,7 +234,8 @@ export default function KanbanView({
       const res = await updateKanbanTicket(uid, editingTicket.id, {
         title: trimmedTitle,
         description: ticketDescription,
-        priority: ticketPriority
+        priority: ticketPriority,
+        columnId: targetColumnId
       });
 
       if (res) {
@@ -525,7 +538,7 @@ export default function KanbanView({
       {/* Kanban Board Container */}
       <DndContext
         sensors={sensors}
-        collisionDetection={closestCorners}
+        collisionDetection={customCollisionDetection}
         onDragStart={onDragStart}
         onDragOver={onDragOver}
         onDragEnd={onDragEnd}
@@ -642,6 +655,27 @@ export default function KanbanView({
                   <SelectItem value="Q2">Q2: Important & Not Urgent</SelectItem>
                   <SelectItem value="Q3">Q3: Urgent & Not Important</SelectItem>
                   <SelectItem value="Q4">Q4: Not Urgent & Not Important</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <label htmlFor="ticketColumn" className="text-sm font-medium">
+                Column
+              </label>
+              <Select
+                value={targetColumnId}
+                onValueChange={setTargetColumnId}
+              >
+                <SelectTrigger id="ticketColumn">
+                  <SelectValue placeholder="Select column" />
+                </SelectTrigger>
+                <SelectContent>
+                  {columns.map((c) => (
+                    <SelectItem key={c.id} value={c.id}>
+                      {c.title}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
