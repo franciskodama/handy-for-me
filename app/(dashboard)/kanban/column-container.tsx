@@ -1,12 +1,22 @@
 import { useState, useRef, useEffect } from 'react';
-import { useDroppable } from '@dnd-kit/core';
 import {
+  useSortable,
   SortableContext,
   verticalListSortingStrategy
 } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 import { KanbanColumn, KanbanTicket } from '@prisma/client';
 import { TicketCard } from './ticket-card';
-import { Plus, Trash2, Edit2, Check, X } from 'lucide-react';
+import {
+  Plus,
+  Trash2,
+  Edit2,
+  Check,
+  X,
+  GripVertical,
+  ChevronLeft,
+  ChevronRight
+} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
@@ -30,6 +40,9 @@ interface ColumnContainerProps {
   onEditTicket: (ticket: KanbanTicket) => void;
   onDeleteTicket: (id: string) => void;
   isSortingActive: boolean;
+  onMoveColumn?: (id: string, direction: 'left' | 'right') => void;
+  isFirst?: boolean;
+  isLast?: boolean;
 }
 
 export function ColumnContainer({
@@ -39,11 +52,30 @@ export function ColumnContainer({
   onDeleteColumn,
   onEditTicket,
   onDeleteTicket,
-  isSortingActive
+  isSortingActive,
+  onMoveColumn,
+  isFirst,
+  isLast
 }: ColumnContainerProps) {
-  const { setNodeRef, isOver } = useDroppable({
-    id: column.id
+  const {
+    setNodeRef,
+    attributes,
+    listeners,
+    transform,
+    transition,
+    isDragging
+  } = useSortable({
+    id: column.id,
+    data: {
+      type: 'Column',
+      column
+    }
   });
+
+  const style = {
+    transform: CSS.Translate.toString(transform),
+    transition
+  };
 
   const [isEditing, setIsEditing] = useState(false);
   const [titleInput, setTitleInput] = useState(column.title);
@@ -75,12 +107,22 @@ export function ColumnContainer({
     }
   };
 
+  if (isDragging) {
+    return (
+      <div
+        ref={setNodeRef}
+        style={style}
+        className="flex flex-col w-full bg-muted/20 border-2 border-dashed border-primary/40 rounded-xl p-4 h-[70vh] max-h-[75vh] opacity-40"
+      />
+    );
+  }
+
   return (
     <div
       ref={setNodeRef}
+      style={style}
       className={cn(
-        'flex flex-col w-full bg-muted/40 border border-border rounded-xl p-4 h-[70vh] max-h-[75vh] transition-all duration-200',
-        isOver && 'border-primary/60 bg-primary/10 ring-2 ring-primary/40 shadow-lg scale-[1.01]'
+        'flex flex-col w-full bg-muted/40 border border-border rounded-xl p-4 h-[70vh] max-h-[75vh] transition-all duration-200 shadow-sm hover:shadow-md'
       )}
     >
       {/* Column Header */}
@@ -116,9 +158,46 @@ export function ColumnContainer({
             </Button>
           </div>
         ) : (
-          <div className="flex items-center gap-2 group/title min-w-0 mr-2">
+          <div className="flex items-center gap-1.5 group/title min-w-0 mr-2">
+            {/* Drag Handle */}
+            <button
+              type="button"
+              {...attributes}
+              {...listeners}
+              className="cursor-grab active:cursor-grabbing p-1 text-muted-foreground/50 hover:text-foreground rounded transition-colors touch-none"
+              title="Drag to reorder column"
+            >
+              <GripVertical size={16} />
+            </button>
+
+            {/* Move Left / Right buttons */}
+            {onMoveColumn && (
+              <div className="flex items-center gap-0.5">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  disabled={isFirst}
+                  onClick={() => onMoveColumn(column.id, 'left')}
+                  className="h-6 w-6 text-muted-foreground hover:text-foreground disabled:opacity-20"
+                  title="Move column left"
+                >
+                  <ChevronLeft size={14} />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  disabled={isLast}
+                  onClick={() => onMoveColumn(column.id, 'right')}
+                  className="h-6 w-6 text-muted-foreground hover:text-foreground disabled:opacity-20"
+                  title="Move column right"
+                >
+                  <ChevronRight size={14} />
+                </Button>
+              </div>
+            )}
+
             <h3
-              className="font-bold text-sm text-foreground uppercase tracking-wider truncate cursor-pointer select-none"
+              className="font-bold text-sm text-foreground uppercase tracking-wider truncate cursor-pointer select-none ml-1"
               onClick={() => setIsEditing(true)}
             >
               {column.title}
@@ -143,7 +222,7 @@ export function ColumnContainer({
             <Button
               variant="ghost"
               size="icon"
-              className="h-8 w-8 text-muted-foreground hover:text-destructive transition-colors rounded-lg"
+              className="h-8 w-8 text-muted-foreground hover:text-destructive transition-colors rounded-lg shrink-0"
             >
               <Trash2 size={15} />
             </Button>
@@ -209,3 +288,4 @@ export function ColumnContainer({
     </div>
   );
 }
+
