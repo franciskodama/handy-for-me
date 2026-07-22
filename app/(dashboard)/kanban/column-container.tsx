@@ -1,15 +1,33 @@
 import { useState, useRef, useEffect } from 'react';
-import { useDroppable } from '@dnd-kit/core';
 import {
+  useSortable,
   SortableContext,
   verticalListSortingStrategy
 } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 import { KanbanColumn, KanbanTicket } from '@prisma/client';
 import { TicketCard } from './ticket-card';
-import { Plus, Trash2, Edit2, Check, X } from 'lucide-react';
+import {
+  Plus,
+  Trash2,
+  Edit2,
+  Check,
+  X,
+  GripVertical,
+  ChevronLeft,
+  ChevronRight,
+  MoreHorizontal
+} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger
+} from '@/components/ui/dropdown-menu';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -18,8 +36,7 @@ import {
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger
+  AlertDialogTitle
 } from '@/components/ui/alert-dialog';
 
 interface ColumnContainerProps {
@@ -30,6 +47,9 @@ interface ColumnContainerProps {
   onEditTicket: (ticket: KanbanTicket) => void;
   onDeleteTicket: (id: string) => void;
   isSortingActive: boolean;
+  onMoveColumn?: (id: string, direction: 'left' | 'right') => void;
+  isFirst?: boolean;
+  isLast?: boolean;
 }
 
 export function ColumnContainer({
@@ -39,13 +59,33 @@ export function ColumnContainer({
   onDeleteColumn,
   onEditTicket,
   onDeleteTicket,
-  isSortingActive
+  isSortingActive,
+  onMoveColumn,
+  isFirst,
+  isLast
 }: ColumnContainerProps) {
-  const { setNodeRef, isOver } = useDroppable({
-    id: column.id
+  const {
+    setNodeRef,
+    attributes,
+    listeners,
+    transform,
+    transition,
+    isDragging
+  } = useSortable({
+    id: column.id,
+    data: {
+      type: 'Column',
+      column
+    }
   });
 
+  const style = {
+    transform: CSS.Translate.toString(transform),
+    transition
+  };
+
   const [isEditing, setIsEditing] = useState(false);
+  const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] = useState(false);
   const [titleInput, setTitleInput] = useState(column.title);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -75,18 +115,28 @@ export function ColumnContainer({
     }
   };
 
+  if (isDragging) {
+    return (
+      <div
+        ref={setNodeRef}
+        style={style}
+        className="flex flex-col w-full bg-muted/20 border-2 border-dashed border-primary/40 rounded-xl p-4 h-[70vh] max-h-[75vh] opacity-40"
+      />
+    );
+  }
+
   return (
     <div
       ref={setNodeRef}
+      style={style}
       className={cn(
-        'flex flex-col w-full bg-muted/40 border border-border rounded-xl p-4 h-[70vh] max-h-[75vh] transition-all duration-200',
-        isOver && 'border-primary/60 bg-primary/10 ring-2 ring-primary/40 shadow-lg scale-[1.01]'
+        'flex flex-col w-full bg-muted/40 border border-border rounded-xl p-4 h-[70vh] max-h-[75vh] transition-all duration-200 shadow-sm hover:shadow-md'
       )}
     >
       {/* Column Header */}
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center justify-between mb-4 gap-2">
         {isEditing ? (
-          <div className="flex items-center gap-1.5 w-full mr-2">
+          <div className="flex items-center gap-1.5 w-full">
             <Input
               ref={inputRef}
               value={titleInput}
@@ -98,7 +148,7 @@ export function ColumnContainer({
             <Button
               size="icon"
               variant="ghost"
-              className="h-8 w-8 text-green-600 hover:text-green-700 hover:bg-green-50"
+              className="h-8 w-8 text-green-600 hover:text-green-700 hover:bg-green-50 shrink-0"
               onClick={handleSaveTitle}
             >
               <Check size={16} />
@@ -106,7 +156,7 @@ export function ColumnContainer({
             <Button
               size="icon"
               variant="ghost"
-              className="h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10"
+              className="h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10 shrink-0"
               onClick={() => {
                 setTitleInput(column.title);
                 setIsEditing(false);
@@ -116,38 +166,86 @@ export function ColumnContainer({
             </Button>
           </div>
         ) : (
-          <div className="flex items-center gap-2 group/title min-w-0 mr-2">
-            <h3
-              className="font-bold text-sm text-foreground uppercase tracking-wider truncate cursor-pointer select-none"
-              onClick={() => setIsEditing(true)}
-            >
-              {column.title}
-            </h3>
-            <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-muted border border-border text-muted-foreground">
-              {column.tickets.length}
-            </span>
-            <Button
-              size="icon"
-              variant="ghost"
-              className="h-6 w-6 opacity-0 group-hover/title:opacity-100 text-muted-foreground hover:text-foreground transition-opacity"
-              onClick={() => setIsEditing(true)}
-            >
-              <Edit2 size={12} />
-            </Button>
-          </div>
+          <>
+            {/* Left: Drag Handle + Title + Count */}
+            <div className="flex items-center gap-2 min-w-0 flex-1">
+              <button
+                type="button"
+                {...attributes}
+                {...listeners}
+                className="cursor-grab active:cursor-grabbing p-1 text-muted-foreground/50 hover:text-foreground rounded transition-colors touch-none shrink-0"
+                title="Drag to reorder column"
+              >
+                <GripVertical size={16} />
+              </button>
+
+              <h3
+                className="font-bold text-sm text-foreground uppercase tracking-wider truncate cursor-pointer select-none"
+                onClick={() => setIsEditing(true)}
+                title={column.title}
+              >
+                {column.title}
+              </h3>
+              <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-muted border border-border text-muted-foreground shrink-0">
+                {column.tickets.length}
+              </span>
+            </div>
+
+            {/* Right: 3-Dots Action Menu */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8 text-muted-foreground hover:text-foreground rounded-lg shrink-0"
+                >
+                  <MoreHorizontal size={16} />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-44">
+                {onMoveColumn && (
+                  <>
+                    <DropdownMenuItem
+                      disabled={isFirst}
+                      onClick={() => onMoveColumn(column.id, 'left')}
+                      className="flex items-center gap-2 cursor-pointer text-xs"
+                    >
+                      <ChevronLeft size={14} />
+                      Move Left
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      disabled={isLast}
+                      onClick={() => onMoveColumn(column.id, 'right')}
+                      className="flex items-center gap-2 cursor-pointer text-xs"
+                    >
+                      <ChevronRight size={14} />
+                      Move Right
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                  </>
+                )}
+                <DropdownMenuItem
+                  onClick={() => setIsEditing(true)}
+                  className="flex items-center gap-2 cursor-pointer text-xs"
+                >
+                  <Edit2 size={14} />
+                  Rename Column
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  onClick={() => setIsConfirmDeleteOpen(true)}
+                  className="flex items-center gap-2 cursor-pointer text-xs text-destructive focus:text-destructive"
+                >
+                  <Trash2 size={14} />
+                  Delete Column
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </>
         )}
 
-        {/* Delete Column (Alert if tickets exist) */}
-        <AlertDialog>
-          <AlertDialogTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-8 w-8 text-muted-foreground hover:text-destructive transition-colors rounded-lg"
-            >
-              <Trash2 size={15} />
-            </Button>
-          </AlertDialogTrigger>
+        {/* Delete Confirmation Dialog */}
+        <AlertDialog open={isConfirmDeleteOpen} onOpenChange={setIsConfirmDeleteOpen}>
           <AlertDialogContent className="w-[calc(100%-35px)] max-w-md rounded-lg">
             <AlertDialogHeader>
               <AlertDialogTitle>Delete Column &quot;{column.title}&quot;?</AlertDialogTitle>
@@ -209,3 +307,4 @@ export function ColumnContainer({
     </div>
   );
 }
+
