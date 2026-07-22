@@ -33,7 +33,8 @@ export const topicsRandomQuestions = [
   { id: 'dreamsAndAmbitions', name: 'Dreams & Ambitions' },
   { id: 'currentEvents', name: 'Current Events' },
   { id: 'personalStories', name: 'Personal Stories' },
-  { id: 'funAndRandom', name: 'Fun & Random' }
+  { id: 'funAndRandom', name: 'Fun & Random' },
+  { id: 'star', name: 'Star Method' }
 ];
 
 const questions: Topic = {
@@ -627,5 +628,58 @@ const questions: Topic = {
     'What’s a conspiracy theory you secretly believe?',
     'If you could design your own planet, what would it look like?',
     'What’s something you’ve always wanted to try but never have?'
+  ],
+
+  star: [
+    'Can you describe a time when you had to learn a completely new skill in a short period?',
+    'What is a specific goal you set for yourself recently, and how did you achieve it?',
+    'Describe a situation where you had to step outside your comfort zone to try something new.',
+    'Can you share an experience where you turned a mistake into a valuable lesson?',
+    'Tell a story about a time you had to adapt quickly to an unexpected change in your routine.',
+    'Describe a moment when you felt proud of a project or craft you finished.',
+    'Can you share a time when you successfully broke a bad habit or built a healthy new one?',
+    'Tell me about a time you gave yourself a challenge and stuck with it until the end.',
+    'Describe a situation where you had to manage your time very carefully to complete two daily tasks.',
+    'What is an instance where you asked for help when struggling with a personal task?',
+    'Describe a time when something went wrong during a trip, and how you handled it.',
+    'Tell me about a situation where an item broke at home and you had to fix it yourself.',
+    'Share an experience where you had to make a tough decision between two appealing options.',
+    'Describe a time when a plan with friends or family fell through, and what you did instead.',
+    'Tell me about a situation where you lost something valuable and how you dealt with it.',
+    'Can you share an experience where you had to solve a tricky technical or household problem?',
+    'Describe a time when you were stuck in traffic or delayed, and how you managed your schedule.',
+    'Tell me about a time you had to deal with bad weather during an outdoor activity.',
+    'Share a situation where you had to negotiate a price or a service agreement.',
+    'Describe a time when you had to organize a messy space or system from scratch.',
+    'Describe a situation where you helped a friend or family member resolve a difficult issue.',
+    'Tell me about a time you had a misunderstanding with someone and how you cleared it up.',
+    'Share an experience where you had to explain a complex topic to someone who knew nothing about it.',
+    'Describe a time when you planned a surprise or special event for a loved one.',
+    'Tell me about a moment when you had to give honest feedback to a friend.',
+    'Can you share a time when you had to collaborate with someone whose personality was very different from yours?',
+    'Describe an experience where you had to stand up for an opinion you believed in.',
+    'Tell me about a time you welcomed a newcomer or made someone feel included in a group.',
+    'Share a situation where you had to convince a friend to try an activity they were hesitant about.',
+    'Describe a time when listening carefully to someone made a huge difference in helping them.',
+    'Tell me about a time you took a risk on a new experience and it paid off.',
+    'Describe a creative solution you came up with when resources or budget were limited.',
+    'Share a story about a memorable purchase you made and the research that went into it.',
+    'Tell me about a time you had to choose a gift for someone who is hard to shop for.',
+    'Describe a situation where you changed your mind completely about a topic or activity.',
+    'Share an experience where you organized a gathering, dinner, or trip for a group of people.',
+    'Tell me about a time you tried a difficult recipe or cooking technique for the first time.',
+    'Describe a situation where you had to prioritize quality over speed while making or doing something.',
+    'Share a story about an unexpected discovery you made while exploring a new location or neighborhood.',
+    'Tell me about a time you redesigned or reorganized a personal project to make it better.',
+    'Describe a time when you attended an event or concert that exceeded your expectations.',
+    'Share an experience where a hobby or passion project took much longer than expected.',
+    'Tell me about a memorable outdoor adventure or sport activity where things got challenging.',
+    'Describe a situation where you competed in a game or contest and what you learned from it.',
+    'Share a story about a DIY project where you had to improvise with the tools available.',
+    'Tell me about a time you assembled furniture or built something without clear instructions.',
+    'Describe an experience where you volunteered your time or helped out in your local community.',
+    'Share a time when you successfully decluttered or simplified an area of your life.',
+    'Tell me about a memorable conversation with a stranger that left a lasting impression.',
+    'Describe a situation where you spent a day completely disconnected from technology and what happened.'
   ]
 };
