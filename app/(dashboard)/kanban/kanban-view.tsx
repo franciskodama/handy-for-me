@@ -16,7 +16,7 @@ import {
   rectIntersection,
   CollisionDetection
 } from '@dnd-kit/core';
-import { arrayMove } from '@dnd-kit/sortable';
+import { arrayMove, SortableContext, horizontalListSortingStrategy } from '@dnd-kit/sortable';
 import { KanbanColumn, KanbanTicket } from '@prisma/client';
 import { ColumnContainer } from './column-container';
 import { TicketCard } from './ticket-card';
@@ -69,6 +69,7 @@ import {
   createKanbanColumn,
   updateKanbanColumnTitle,
   deleteKanbanColumn,
+  updateKanbanColumnsOrder,
   createKanbanTicket,
   updateKanbanTicket,
   deleteKanbanTicket,
@@ -173,6 +174,28 @@ export default function KanbanView({
         variant: 'destructive'
       });
     }
+  };
+
+  const handleMoveColumn = (id: string, direction: 'left' | 'right') => {
+    const index = columns.findIndex((c) => c.id === id);
+    if (index === -1) return;
+
+    const targetIndex = direction === 'left' ? index - 1 : index + 1;
+    if (targetIndex < 0 || targetIndex >= columns.length) return;
+
+    const newCols = arrayMove(columns, index, targetIndex);
+    const reordered = newCols.map((c, idx) => ({ ...c, order: idx }));
+
+    setColumns(reordered);
+
+    const columnOrdersToPersist = reordered.map((c) => ({
+      id: c.id,
+      order: c.order
+    }));
+
+    startTransition(async () => {
+      await updateKanbanColumnsOrder(uid, columnOrdersToPersist);
+    });
   };
 
   const handleEditColumnTitle = async (id: string, title: string) => {
@@ -296,6 +319,9 @@ export default function KanbanView({
     const activeId = active.id as string;
     const overId = over.id as string;
 
+    const isColumnDragging = columns.some((c) => c.id === activeId);
+    if (isColumnDragging) return;
+
     const activeTicket = tickets.find((t) => t.id === activeId);
     if (!activeTicket) return;
 
@@ -331,6 +357,31 @@ export default function KanbanView({
     const activeId = active.id as string;
     const overId = over.id as string;
 
+    // 1. COLUMN REORDERING
+    const isColumnDragging = columns.some((c) => c.id === activeId);
+    if (isColumnDragging) {
+      if (activeId !== overId) {
+        const oldIndex = columns.findIndex((c) => c.id === activeId);
+        const newIndex = columns.findIndex((c) => c.id === overId);
+        if (oldIndex !== -1 && newIndex !== -1) {
+          const newCols = arrayMove(columns, oldIndex, newIndex);
+          const reordered = newCols.map((c, idx) => ({ ...c, order: idx }));
+          setColumns(reordered);
+
+          const columnOrdersToPersist = reordered.map((c) => ({
+            id: c.id,
+            order: c.order
+          }));
+
+          startTransition(async () => {
+            await updateKanbanColumnsOrder(uid, columnOrdersToPersist);
+          });
+        }
+      }
+      return;
+    }
+
+    // 2. TICKET REORDERING
     const activeTicket = tickets.find((t) => t.id === activeId);
     if (!activeTicket) return;
 
@@ -404,6 +455,7 @@ export default function KanbanView({
   };
 
   const activeTicket = activeId ? tickets.find((t) => t.id === activeId) : null;
+  const activeColumn = activeId ? columns.find((c) => c.id === activeId) : null;
 
   return (
     <div className="flex flex-col gap-4">
@@ -544,38 +596,61 @@ export default function KanbanView({
         onDragEnd={onDragEnd}
       >
         <div className="flex gap-4 overflow-x-auto pb-4 pt-2 snap-x select-none">
-          {columns.map((col) => {
-            const columnTickets = tickets.filter((t) => t.columnId === col.id);
-            const isBacklog = col.title.toLowerCase() === 'backlog';
+          <SortableContext
+            items={columns.map((c) => c.id)}
+            strategy={horizontalListSortingStrategy}
+          >
+            {columns.map((col, idx) => {
+              const columnTickets = tickets.filter((t) => t.columnId === col.id);
+              const isBacklog = col.title.toLowerCase() === 'backlog';
 
-            // Sort column tickets
-            const sortedColumnTickets = [...columnTickets].sort((a, b) => {
-              if (isBacklog) {
-                const weightA = getPriorityWeight(a.priority);
-                const weightB = getPriorityWeight(b.priority);
-                if (weightA !== weightB) return weightA - weightB;
-              }
-              return a.order - b.order;
-            });
+              // Sort column tickets
+              const sortedColumnTickets = [...columnTickets].sort((a, b) => {
+                if (isBacklog) {
+                  const weightA = getPriorityWeight(a.priority);
+                  const weightB = getPriorityWeight(b.priority);
+                  if (weightA !== weightB) return weightA - weightB;
+                }
+                return a.order - b.order;
+              });
 
-            return (
-              <div key={col.id} className="snap-center flex-1 basis-0 min-w-[280px]">
-                <ColumnContainer
-                  column={{ ...col, tickets: sortedColumnTickets }}
-                  onAddTicket={handleOpenAddTicket}
-                  onEditColumnTitle={handleEditColumnTitle}
-                  onDeleteColumn={handleDeleteColumn}
-                  onEditTicket={handleOpenEditTicket}
-                  onDeleteTicket={handleDeleteTicket}
-                  isSortingActive={isBacklog}
-                />
-              </div>
-            );
-          })}
+              return (
+                <div key={col.id} className="snap-center flex-1 basis-0 min-w-[280px]">
+                  <ColumnContainer
+                    column={{ ...col, tickets: sortedColumnTickets }}
+                    onAddTicket={handleOpenAddTicket}
+                    onEditColumnTitle={handleEditColumnTitle}
+                    onDeleteColumn={handleDeleteColumn}
+                    onEditTicket={handleOpenEditTicket}
+                    onDeleteTicket={handleDeleteTicket}
+                    isSortingActive={isBacklog}
+                    onMoveColumn={handleMoveColumn}
+                    isFirst={idx === 0}
+                    isLast={idx === columns.length - 1}
+                  />
+                </div>
+              );
+            })}
+          </SortableContext>
         </div>
 
         <DragOverlay>
-          {activeTicket ? (
+          {activeColumn ? (
+            <ColumnContainer
+              column={{
+                ...activeColumn,
+                tickets: tickets
+                  .filter((t) => t.columnId === activeColumn.id)
+                  .sort((a, b) => a.order - b.order)
+              }}
+              onAddTicket={() => {}}
+              onEditColumnTitle={() => {}}
+              onDeleteColumn={() => {}}
+              onEditTicket={() => {}}
+              onDeleteTicket={() => {}}
+              isSortingActive={false}
+            />
+          ) : activeTicket ? (
             <TicketCard
               ticket={activeTicket}
               isOverlay

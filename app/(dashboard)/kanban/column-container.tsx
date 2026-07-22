@@ -15,11 +15,19 @@ import {
   X,
   GripVertical,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  MoreHorizontal
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger
+} from '@/components/ui/dropdown-menu';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -28,8 +36,7 @@ import {
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger
+  AlertDialogTitle
 } from '@/components/ui/alert-dialog';
 
 interface ColumnContainerProps {
@@ -78,6 +85,7 @@ export function ColumnContainer({
   };
 
   const [isEditing, setIsEditing] = useState(false);
+  const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] = useState(false);
   const [titleInput, setTitleInput] = useState(column.title);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -126,9 +134,9 @@ export function ColumnContainer({
       )}
     >
       {/* Column Header */}
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center justify-between mb-4 gap-2">
         {isEditing ? (
-          <div className="flex items-center gap-1.5 w-full mr-2">
+          <div className="flex items-center gap-1.5 w-full">
             <Input
               ref={inputRef}
               value={titleInput}
@@ -140,7 +148,7 @@ export function ColumnContainer({
             <Button
               size="icon"
               variant="ghost"
-              className="h-8 w-8 text-green-600 hover:text-green-700 hover:bg-green-50"
+              className="h-8 w-8 text-green-600 hover:text-green-700 hover:bg-green-50 shrink-0"
               onClick={handleSaveTitle}
             >
               <Check size={16} />
@@ -148,7 +156,7 @@ export function ColumnContainer({
             <Button
               size="icon"
               variant="ghost"
-              className="h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10"
+              className="h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10 shrink-0"
               onClick={() => {
                 setTitleInput(column.title);
                 setIsEditing(false);
@@ -158,75 +166,86 @@ export function ColumnContainer({
             </Button>
           </div>
         ) : (
-          <div className="flex items-center gap-1.5 group/title min-w-0 mr-2">
-            {/* Drag Handle */}
-            <button
-              type="button"
-              {...attributes}
-              {...listeners}
-              className="cursor-grab active:cursor-grabbing p-1 text-muted-foreground/50 hover:text-foreground rounded transition-colors touch-none"
-              title="Drag to reorder column"
-            >
-              <GripVertical size={16} />
-            </button>
+          <>
+            {/* Left: Drag Handle + Title + Count */}
+            <div className="flex items-center gap-2 min-w-0 flex-1">
+              <button
+                type="button"
+                {...attributes}
+                {...listeners}
+                className="cursor-grab active:cursor-grabbing p-1 text-muted-foreground/50 hover:text-foreground rounded transition-colors touch-none shrink-0"
+                title="Drag to reorder column"
+              >
+                <GripVertical size={16} />
+              </button>
 
-            {/* Move Left / Right buttons */}
-            {onMoveColumn && (
-              <div className="flex items-center gap-0.5">
+              <h3
+                className="font-bold text-sm text-foreground uppercase tracking-wider truncate cursor-pointer select-none"
+                onClick={() => setIsEditing(true)}
+                title={column.title}
+              >
+                {column.title}
+              </h3>
+              <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-muted border border-border text-muted-foreground shrink-0">
+                {column.tickets.length}
+              </span>
+            </div>
+
+            {/* Right: 3-Dots Action Menu */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
                 <Button
                   variant="ghost"
                   size="icon"
-                  disabled={isFirst}
-                  onClick={() => onMoveColumn(column.id, 'left')}
-                  className="h-6 w-6 text-muted-foreground hover:text-foreground disabled:opacity-20"
-                  title="Move column left"
+                  className="h-8 w-8 text-muted-foreground hover:text-foreground rounded-lg shrink-0"
                 >
-                  <ChevronLeft size={14} />
+                  <MoreHorizontal size={16} />
                 </Button>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  disabled={isLast}
-                  onClick={() => onMoveColumn(column.id, 'right')}
-                  className="h-6 w-6 text-muted-foreground hover:text-foreground disabled:opacity-20"
-                  title="Move column right"
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-44">
+                {onMoveColumn && (
+                  <>
+                    <DropdownMenuItem
+                      disabled={isFirst}
+                      onClick={() => onMoveColumn(column.id, 'left')}
+                      className="flex items-center gap-2 cursor-pointer text-xs"
+                    >
+                      <ChevronLeft size={14} />
+                      Move Left
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      disabled={isLast}
+                      onClick={() => onMoveColumn(column.id, 'right')}
+                      className="flex items-center gap-2 cursor-pointer text-xs"
+                    >
+                      <ChevronRight size={14} />
+                      Move Right
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                  </>
+                )}
+                <DropdownMenuItem
+                  onClick={() => setIsEditing(true)}
+                  className="flex items-center gap-2 cursor-pointer text-xs"
                 >
-                  <ChevronRight size={14} />
-                </Button>
-              </div>
-            )}
-
-            <h3
-              className="font-bold text-sm text-foreground uppercase tracking-wider truncate cursor-pointer select-none ml-1"
-              onClick={() => setIsEditing(true)}
-            >
-              {column.title}
-            </h3>
-            <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-muted border border-border text-muted-foreground">
-              {column.tickets.length}
-            </span>
-            <Button
-              size="icon"
-              variant="ghost"
-              className="h-6 w-6 opacity-0 group-hover/title:opacity-100 text-muted-foreground hover:text-foreground transition-opacity"
-              onClick={() => setIsEditing(true)}
-            >
-              <Edit2 size={12} />
-            </Button>
-          </div>
+                  <Edit2 size={14} />
+                  Rename Column
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  onClick={() => setIsConfirmDeleteOpen(true)}
+                  className="flex items-center gap-2 cursor-pointer text-xs text-destructive focus:text-destructive"
+                >
+                  <Trash2 size={14} />
+                  Delete Column
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </>
         )}
 
-        {/* Delete Column (Alert if tickets exist) */}
-        <AlertDialog>
-          <AlertDialogTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-8 w-8 text-muted-foreground hover:text-destructive transition-colors rounded-lg shrink-0"
-            >
-              <Trash2 size={15} />
-            </Button>
-          </AlertDialogTrigger>
+        {/* Delete Confirmation Dialog */}
+        <AlertDialog open={isConfirmDeleteOpen} onOpenChange={setIsConfirmDeleteOpen}>
           <AlertDialogContent className="w-[calc(100%-35px)] max-w-md rounded-lg">
             <AlertDialogHeader>
               <AlertDialogTitle>Delete Column &quot;{column.title}&quot;?</AlertDialogTitle>
