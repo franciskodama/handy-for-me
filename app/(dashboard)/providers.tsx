@@ -3,6 +3,7 @@
 import posthog from 'posthog-js';
 import { PostHogProvider } from 'posthog-js/react';
 import { TooltipProvider } from '@/components/ui/tooltip';
+import { BreadcrumbProvider } from '@/components/layout/header/breadcrumb-context';
 
 if (typeof window !== 'undefined' && process.env.NEXT_PUBLIC_POSTHOG_TOKEN) {
   posthog.init(process.env.NEXT_PUBLIC_POSTHOG_TOKEN, {
@@ -17,5 +18,9 @@ export function CSPostHogProvider({ children }: { children: React.ReactNode }) {
 }
 
 export default function Providers({ children }: { children: React.ReactNode }) {
-  return <TooltipProvider>{children}</TooltipProvider>;
+  return (
+    <BreadcrumbProvider>
+      <TooltipProvider>{children}</TooltipProvider>
+    </BreadcrumbProvider>
+  );
 }

@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from 'react';
 import Link from 'next/link';
+import { useSetBreadcrumbTitle } from '@/components/layout/header/breadcrumb-context';
 import {
   DndContext,
   DragOverlay,
@@ -120,6 +121,8 @@ export default function KanbanView({
   initialColumns,
   allBoards = []
 }: KanbanViewProps) {
+  useSetBreadcrumbTitle(boardEmoji ? `${boardEmoji} ${boardTitle}` : boardTitle);
+
   const [columns, setColumns] = useState<KanbanColumn[]>(
     initialColumns.map(({ tickets, ...col }) => col)
   );
