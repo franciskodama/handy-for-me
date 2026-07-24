@@ -226,7 +226,7 @@ export default function BoardList({ uid, initialBoards }: BoardListProps) {
       {/* Explanation Box */}
       {openExplanation && (
         <ExplanationBox
-          iconOne={<LayoutGrid className="h-6 w-6 text-blue-500" />}
+          iconOne={<LayoutGrid className="h-6 w-6" />}
           titleOne="Multiple Boards"
           contentOne={
             <div className="text-sm text-muted-foreground space-y-2">
@@ -247,7 +247,7 @@ export default function BoardList({ uid, initialBoards }: BoardListProps) {
               </ul>
             </div>
           }
-          iconTwo={<Flame className="h-6 w-6 text-rose-500" />}
+          iconTwo={<Flame className="h-6 w-6" />}
           titleTwo="Eisenhower Priorities"
           contentTwo={
             <div className="text-sm text-muted-foreground space-y-2">
@@ -258,7 +258,7 @@ export default function BoardList({ uid, initialBoards }: BoardListProps) {
               </p>
             </div>
           }
-          iconThree={<Sparkles className="h-6 w-6 text-amber-500" />}
+          iconThree={<Sparkles className="h-6 w-6" />}
           titleThree="Default Columns"
           contentThree={
             <div className="text-sm text-muted-foreground space-y-2">
