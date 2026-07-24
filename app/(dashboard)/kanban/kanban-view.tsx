@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from 'react';
 import Link from 'next/link';
+import { useSetBreadcrumbTitle } from '@/components/layout/header/breadcrumb-context';
 import {
   DndContext,
   DragOverlay,
@@ -16,7 +17,11 @@ import {
   rectIntersection,
   CollisionDetection
 } from '@dnd-kit/core';
-import { arrayMove, SortableContext, horizontalListSortingStrategy } from '@dnd-kit/sortable';
+import {
+  arrayMove,
+  SortableContext,
+  horizontalListSortingStrategy
+} from '@dnd-kit/sortable';
 import { KanbanColumn, KanbanTicket } from '@prisma/client';
 import { ColumnContainer } from './column-container';
 import { TicketCard } from './ticket-card';
@@ -120,6 +125,10 @@ export default function KanbanView({
   initialColumns,
   allBoards = []
 }: KanbanViewProps) {
+  useSetBreadcrumbTitle(
+    boardEmoji ? `${boardEmoji} ${boardTitle}` : boardTitle
+  );
+
   const [columns, setColumns] = useState<KanbanColumn[]>(
     initialColumns.map(({ tickets, ...col }) => col)
   );
@@ -273,7 +282,9 @@ export default function KanbanView({
       }
     } else {
       // ADD TICKET
-      const sameColumnTickets = tickets.filter((t) => t.columnId === targetColumnId);
+      const sameColumnTickets = tickets.filter(
+        (t) => t.columnId === targetColumnId
+      );
       const order = sameColumnTickets.length;
       const res = await createKanbanTicket(
         uid,
@@ -437,7 +448,9 @@ export default function KanbanView({
     );
 
     const finalTickets = updatedTickets.map((t) => {
-      const found = targetColumnTicketsWithNewOrder.find((nt) => nt.id === t.id);
+      const found = targetColumnTicketsWithNewOrder.find(
+        (nt) => nt.id === t.id
+      );
       return found ? found : t;
     });
 
@@ -476,14 +489,22 @@ export default function KanbanView({
                   type="button"
                   className="group flex items-center gap-2 text-left focus:outline-none rounded-lg py-1 px-1.5 -ml-1.5 hover:bg-muted/60 transition-colors"
                 >
-                  <h1 className={`${barlow.className} text-3xl font-extrabold text-foreground tracking-tight flex items-center gap-2 group-hover:text-primary transition-colors`}>
+                  <h1
+                    className={`${barlow.className} text-3xl font-extrabold text-foreground tracking-tight flex items-center gap-2 group-hover:text-primary transition-colors`}
+                  >
                     <span className="text-2xl">{boardEmoji}</span>
                     <span>{boardTitle}</span>
-                    <ChevronDown size={20} className="text-muted-foreground group-hover:text-primary transition-colors ml-0.5 mt-0.5" />
+                    <ChevronDown
+                      size={20}
+                      className="text-muted-foreground group-hover:text-primary transition-colors ml-0.5 mt-0.5"
+                    />
                   </h1>
                 </button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="start" className="w-64 p-2 rounded-xl shadow-lg border border-border bg-popover">
+              <DropdownMenuContent
+                align="start"
+                className="w-64 p-2 rounded-xl shadow-lg border border-border bg-popover"
+              >
                 <DropdownMenuLabel className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-2 py-1.5">
                   Switch Board
                 </DropdownMenuLabel>
@@ -504,7 +525,9 @@ export default function KanbanView({
                     >
                       <span className="text-base">{b.emoji}</span>
                       <span className="flex-1 truncate">{b.title}</span>
-                      {b.id === boardId && <Check size={16} className="text-primary ml-auto" />}
+                      {b.id === boardId && (
+                        <Check size={16} className="text-primary ml-auto" />
+                      )}
                     </Link>
                   </DropdownMenuItem>
                 ))}
@@ -521,13 +544,17 @@ export default function KanbanView({
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <h1 className={`${barlow.className} text-3xl font-extrabold text-foreground tracking-tight flex items-center gap-2`}>
+            <h1
+              className={`${barlow.className} text-3xl font-extrabold text-foreground tracking-tight flex items-center gap-2`}
+            >
               <span className="text-2xl">{boardEmoji}</span>
               {boardTitle}
             </h1>
           )}
           <p className="text-sm text-muted-foreground mt-1">
-            Drag & drop tickets to organize work. The <span className="font-semibold underline">Backlog</span> sorts by Eisenhower priority automatically!
+            Drag & drop tickets to organize work. The{' '}
+            <span className="font-semibold underline">Backlog</span> sorts by
+            Eisenhower priority automatically!
           </p>
         </div>
 
@@ -548,37 +575,54 @@ export default function KanbanView({
       {/* Explanation Box */}
       {openExplanation && (
         <ExplanationBox
-          iconOne={<Flame className="h-6 w-6 text-rose-500" />}
+          iconOne={<Flame className="h-6 w-6" />}
           titleOne="Eisenhower Quadrants"
           contentOne={
             <div className="text-sm text-muted-foreground space-y-2">
               <p>Prioritize your tasks using the Eisenhower Matrix:</p>
               <ul className="list-disc list-inside space-y-1">
-                <li><strong className="text-foreground">Q1:</strong> Do First (Urgent & Important)</li>
-                <li><strong className="text-foreground">Q2:</strong> Schedule (Important, Not Urgent)</li>
-                <li><strong className="text-foreground">Q3:</strong> Delegate (Urgent, Not Important)</li>
-                <li><strong className="text-foreground">Q4:</strong> Eliminate (Neither)</li>
+                <li>
+                  <strong className="text-foreground">Q1:</strong> Do First
+                  (Urgent & Important)
+                </li>
+                <li>
+                  <strong className="text-foreground">Q2:</strong> Schedule
+                  (Important, Not Urgent)
+                </li>
+                <li>
+                  <strong className="text-foreground">Q3:</strong> Delegate
+                  (Urgent, Not Important)
+                </li>
+                <li>
+                  <strong className="text-foreground">Q4:</strong> Eliminate
+                  (Neither)
+                </li>
               </ul>
             </div>
           }
-          iconTwo={<Sparkles className="h-6 w-6 text-indigo-500" />}
+          iconTwo={<Sparkles className="h-6 w-6" />}
           titleTwo="Auto-Priority Sorting"
           contentTwo={
             <div className="text-sm text-muted-foreground space-y-2">
               <p>
-                In the <strong className="text-foreground">Backlog</strong> column, tickets are automatically sorted by priority.
+                In the <strong className="text-foreground">Backlog</strong>{' '}
+                column, tickets are automatically sorted by priority.
               </p>
               <p>
-                Giving a ticket a badge like <span className="underline">Urgent & Important</span> will immediately move it to the top of your Backlog column.
+                Giving a ticket a badge like{' '}
+                <span className="underline">Urgent & Important</span> will
+                immediately move it to the top of your Backlog column.
               </p>
             </div>
           }
-          iconThree={<Trello className="h-6 w-6 text-amber-500" />}
+          iconThree={<Trello className="h-6 w-6" />}
           titleThree="Customize Columns"
           contentThree={
             <div className="text-sm text-muted-foreground space-y-2">
               <p>
-                Double-click or click the edit icon next to any column title to rename it. Drag tasks between columns as your workflow progresses.
+                Double-click or click the edit icon next to any column title to
+                rename it. Drag tasks between columns as your workflow
+                progresses.
               </p>
             </div>
           }
@@ -601,7 +645,9 @@ export default function KanbanView({
             strategy={horizontalListSortingStrategy}
           >
             {columns.map((col, idx) => {
-              const columnTickets = tickets.filter((t) => t.columnId === col.id);
+              const columnTickets = tickets.filter(
+                (t) => t.columnId === col.id
+              );
               const isBacklog = col.title.toLowerCase() === 'backlog';
 
               // Sort column tickets
@@ -615,7 +661,10 @@ export default function KanbanView({
               });
 
               return (
-                <div key={col.id} className="snap-center flex-1 basis-0 min-w-[280px]">
+                <div
+                  key={col.id}
+                  className="snap-center flex-1 basis-0 min-w-[280px]"
+                >
                   <ColumnContainer
                     column={{ ...col, tickets: sortedColumnTickets }}
                     onAddTicket={handleOpenAddTicket}
@@ -684,7 +733,10 @@ export default function KanbanView({
             <Button variant="ghost" onClick={() => setIsAddColumnOpen(false)}>
               Cancel
             </Button>
-            <Button onClick={handleAddColumn} className="bg-primary text-primary-foreground">
+            <Button
+              onClick={handleAddColumn}
+              className="bg-primary text-primary-foreground"
+            >
               Add
             </Button>
           </DialogFooter>
@@ -717,10 +769,7 @@ export default function KanbanView({
               <label htmlFor="ticketPriority" className="text-sm font-medium">
                 Eisenhower Priority
               </label>
-              <Select
-                value={ticketPriority}
-                onValueChange={setTicketPriority}
-              >
+              <Select value={ticketPriority} onValueChange={setTicketPriority}>
                 <SelectTrigger id="ticketPriority">
                   <SelectValue placeholder="Select priority" />
                 </SelectTrigger>
@@ -729,7 +778,9 @@ export default function KanbanView({
                   <SelectItem value="Q1">Q1: Urgent & Important</SelectItem>
                   <SelectItem value="Q2">Q2: Important & Not Urgent</SelectItem>
                   <SelectItem value="Q3">Q3: Urgent & Not Important</SelectItem>
-                  <SelectItem value="Q4">Q4: Not Urgent & Not Important</SelectItem>
+                  <SelectItem value="Q4">
+                    Q4: Not Urgent & Not Important
+                  </SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -738,10 +789,7 @@ export default function KanbanView({
               <label htmlFor="ticketColumn" className="text-sm font-medium">
                 Column
               </label>
-              <Select
-                value={targetColumnId}
-                onValueChange={setTargetColumnId}
-              >
+              <Select value={targetColumnId} onValueChange={setTargetColumnId}>
                 <SelectTrigger id="ticketColumn">
                   <SelectValue placeholder="Select column" />
                 </SelectTrigger>
@@ -770,10 +818,16 @@ export default function KanbanView({
           </div>
 
           <DialogFooter className="gap-2 sm:gap-0">
-            <Button variant="ghost" onClick={() => setIsTicketDialogOpen(false)}>
+            <Button
+              variant="ghost"
+              onClick={() => setIsTicketDialogOpen(false)}
+            >
               Cancel
             </Button>
-            <Button onClick={handleSaveTicket} className="bg-primary text-primary-foreground">
+            <Button
+              onClick={handleSaveTicket}
+              className="bg-primary text-primary-foreground"
+            >
               Save
             </Button>
           </DialogFooter>

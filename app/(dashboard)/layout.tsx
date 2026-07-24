@@ -35,7 +35,7 @@ export default async function DashboardLayout({
               <MobileNav items={filteredMenuItems} />
               <DashboardBreadcrumb />
               {/* <SearchInput /> */}
-              <div className="flex items-center gap-4 sm:gap-8">
+              <div className="flex items-center gap-4 sm:gap-8 ml-auto">
                 <Greeting />
                 <User />
               </div>
