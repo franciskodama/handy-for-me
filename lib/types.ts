@@ -124,6 +124,15 @@ export type YearPromise = {
   done: boolean;
 };
 
+export type HabitHistory = {
+  id: string;
+  createdAt: Date;
+  habitId: string;
+  startedAt: Date;
+  endedAt: Date;
+  note?: string | null;
+};
+
 export type Habit = {
   id: string;
   createdAt: Date;
@@ -132,4 +141,6 @@ export type Habit = {
   lastResetAt: Date;
   color: string | null;
   targetDate: Date | null;
+  history?: HabitHistory[];
 };
+
