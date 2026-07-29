@@ -3,7 +3,8 @@
 import { Habit } from '@/lib/types';
 import { resetHabit, updateHabit } from '@/lib/actions/habits';
 import { toast } from 'sonner';
-import { RefreshCcw, Settings, Trash2, X, Check, Pen } from 'lucide-react';
+import { RefreshCcw, Settings, Trash2, X, Check, Pen, History } from 'lucide-react';
+import HabitHistoryModal from './habit-history-modal';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -26,6 +27,8 @@ export default function FactorySign({
 }) {
   const [isResetting, setIsResetting] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [isHistoryOpen, setIsHistoryOpen] = useState(false);
+  const [resetNote, setResetNote] = useState('');
   const [editName, setEditName] = useState(habit.name);
   const [editDate, setEditDate] = useState(
     new Date(habit.lastResetAt).toISOString().split('T')[0]
@@ -54,6 +57,17 @@ export default function FactorySign({
 
   const diffTime = Math.max(0, now.getTime() - tempDate.getTime());
   const finalDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+  // Calculate best streak for quick badge display
+  const historyList = habit.history || [];
+  const currentDiffMs = Math.max(0, now.getTime() - lastReset.getTime());
+  const currentStreakDays = Math.floor(currentDiffMs / (1000 * 60 * 60 * 24));
+  const pastStreakDays = historyList.map((item) => {
+    const start = new Date(item.startedAt);
+    const end = new Date(item.endedAt);
+    return Math.floor(Math.max(0, end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
+  });
+  const bestStreak = Math.max(currentStreakDays, ...pastStreakDays, 0);
 
   // Goal calculation
   const targetDate = habit.targetDate ? new Date(habit.targetDate) : null;
@@ -85,9 +99,10 @@ export default function FactorySign({
 
   const onResetConfirm = async () => {
     setIsResetting(true);
-    const res = await resetHabit(habit.id);
+    const res = await resetHabit(habit.id, resetNote);
     if (res.success) {
-      toast.success(`${habit.name} has been reset. Stay strong!`);
+      toast.success(`${habit.name} reset logged. Stay strong!`);
+      setResetNote('');
     } else {
       toast.error('Failed to reset habit.');
     }
@@ -278,6 +293,19 @@ export default function FactorySign({
 
       {/* Right: Actions */}
       <div className="absolute right-4 top-[48px] flex flex-col items-center gap-2 z-30 md:static md:flex-row md:gap-3 md:mr-12 md:top-auto md:right-auto">
+        <button
+          onClick={() => setIsHistoryOpen(true)}
+          className="p-1.5 flex items-center gap-1 text-xs uppercase font-bold text-zinc-400 hover:text-amber-400 transition-colors group/hist"
+          title="View Habit History & Telemetry"
+        >
+          <History className="w-4 h-4 text-amber-500/80 group-hover/hist:scale-110 transition-transform" />
+          {bestStreak > 0 && (
+            <span className="hidden sm:inline-block text-[9px] font-mono text-amber-500/90 font-bold bg-amber-950/40 border border-amber-900/50 px-1 py-0 rounded">
+              BEST: {bestStreak}d
+            </span>
+          )}
+        </button>
+
         <AlertDialog>
           <AlertDialogTrigger asChild>
             <button
@@ -300,9 +328,24 @@ export default function FactorySign({
                 <span className="text-red-500 font-bold uppercase">
                   "{habit.name}"
                 </span>{' '}
-                monitor? This will reset the counter to zero.
+                monitor? This will archive your current streak and reset the counter to zero.
               </AlertDialogDescription>
             </AlertDialogHeader>
+
+            <div className="mt-3">
+              <label htmlFor="resetNote" className="text-[10px] text-zinc-400 uppercase tracking-wider block mb-1">
+                Accident Reflection / Trigger (Optional):
+              </label>
+              <input
+                type="text"
+                id="resetNote"
+                placeholder="e.g. Stressful day, social gathering..."
+                value={resetNote}
+                onChange={(e) => setResetNote(e.target.value)}
+                className="w-full bg-zinc-900 border border-zinc-800 px-3 py-1.5 text-xs text-zinc-200 focus:border-red-500 outline-none rounded"
+              />
+            </div>
+
             <AlertDialogFooter className="mt-4">
               <AlertDialogCancel className="bg-zinc-900 border-zinc-800 text-zinc-400 hover:bg-zinc-800 hover:text-zinc-100 uppercase text-[10px] font-bold">
                 Cancel
@@ -316,6 +359,7 @@ export default function FactorySign({
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
+
         <div className="flex flex-col md:flex-row items-center gap-2 md:gap-1">
           <button
             onClick={() => setIsEditing(true)}
@@ -363,6 +407,13 @@ export default function FactorySign({
         </div>
       </div>
 
+      {/* Habit History Modal */}
+      <HabitHistoryModal
+        habit={habit}
+        isOpen={isHistoryOpen}
+        onOpenChange={setIsHistoryOpen}
+      />
+
       {/* Decorative Screws */}
       <div className="absolute top-1 left-4 w-1 h-1 rounded-full bg-zinc-800 opacity-30" />
       <div className="absolute top-1 right-4 w-1 h-1 rounded-full bg-zinc-800 opacity-30" />
@@ -371,3 +422,4 @@ export default function FactorySign({
     </div>
   );
 }
+

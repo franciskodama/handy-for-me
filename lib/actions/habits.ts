@@ -7,6 +7,11 @@ export async function getHabits(uid: string) {
   try {
     const habits = await prisma.habit.findMany({
       where: { uid },
+      include: {
+        history: {
+          orderBy: { endedAt: 'desc' }
+        }
+      },
       orderBy: { createdAt: 'desc' }
     });
     return habits;
@@ -46,12 +51,34 @@ export async function createHabit(uid: string, name: string, startDate?: Date, t
   }
 }
 
-export async function resetHabit(id: string) {
+export async function resetHabit(id: string, note?: string) {
   try {
+    const currentHabit = await prisma.habit.findUnique({
+      where: { id }
+    });
+
+    if (!currentHabit) {
+      return { success: false, error: 'Habit not found' };
+    }
+
+    const now = new Date();
+
+    // Create history entry for the completed streak
+    await prisma.habitHistory.create({
+      data: {
+        habitId: id,
+        startedAt: currentHabit.lastResetAt,
+        endedAt: now,
+        note: note?.trim() || null
+      }
+    });
+
+    // Reset habit counter
     await prisma.habit.update({
       where: { id },
-      data: { lastResetAt: new Date() }
+      data: { lastResetAt: now }
     });
+
     revalidatePath('/dashboard');
     return { success: true };
   } catch (error) {
@@ -98,3 +125,17 @@ export async function deleteHabit(id: string) {
     return { success: false, error: 'Failed to delete habit' };
   }
 }
+
+export async function deleteHabitHistoryItem(historyId: string) {
+  try {
+    await prisma.habitHistory.delete({
+      where: { id: historyId }
+    });
+    revalidatePath('/dashboard');
+    return { success: true };
+  } catch (error) {
+    console.error('Error deleting habit history item:', error);
+    return { success: false, error: 'Failed to delete history item' };
+  }
+}
+
