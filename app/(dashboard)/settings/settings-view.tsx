@@ -60,6 +60,7 @@ type HouseholdDetails = {
   userSettings: {
     shareDecisionHelper: boolean;
     shareBucketList: boolean;
+    shareGroceryList?: boolean;
   };
 } | null;
 
@@ -167,18 +168,23 @@ export default function SettingsView({
   };
 
   const handleToggle = async (
-    feature: 'decisionHelper' | 'bucketList',
+    feature: 'decisionHelper' | 'bucketList' | 'groceryList',
     enabled: boolean
   ) => {
+    const settingKey =
+      feature === 'decisionHelper'
+        ? 'shareDecisionHelper'
+        : feature === 'bucketList'
+        ? 'shareBucketList'
+        : 'shareGroceryList';
+
     // Optimistic UI update
     if (details) {
       setDetails({
         ...details,
         userSettings: {
           ...details.userSettings,
-          [feature === 'decisionHelper'
-            ? 'shareDecisionHelper'
-            : 'shareBucketList']: enabled
+          [settingKey]: enabled
         }
       });
     }
@@ -191,9 +197,7 @@ export default function SettingsView({
           ...details,
           userSettings: {
             ...details.userSettings,
-            [feature === 'decisionHelper'
-              ? 'shareDecisionHelper'
-              : 'shareBucketList']: !enabled
+            [settingKey]: !enabled
           }
         });
       }
@@ -203,9 +207,16 @@ export default function SettingsView({
         variant: 'destructive'
       });
     } else {
+      const featureName =
+        feature === 'decisionHelper'
+          ? 'Decision Helper'
+          : feature === 'bucketList'
+          ? 'Bucket List'
+          : 'Grocery List';
+
       toast({
         title: 'Settings Updated',
-        description: `${feature === 'decisionHelper' ? 'Decision Helper' : 'Bucket List'} sharing is now ${enabled ? 'enabled' : 'disabled'}.`,
+        description: `${featureName} sharing is now ${enabled ? 'enabled' : 'disabled'}.`,
         variant: 'success'
       });
       router.refresh();
@@ -459,6 +470,30 @@ export default function SettingsView({
                       Collaborate on personal growth and lifetime goals with
                       your household. Changes and checkoffs are visible to all
                       members in real-time.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Grocery List Toggle */}
+                <div className="flex items-start gap-4 p-4 border rounded-lg hover:bg-muted/10 transition-colors">
+                  <Checkbox
+                    id="shareGroceryList"
+                    checked={details.userSettings.shareGroceryList}
+                    onCheckedChange={(checked) =>
+                      handleToggle('groceryList', checked === true)
+                    }
+                    className="mt-1"
+                  />
+                  <div className="grid gap-1.5 leading-none">
+                    <label
+                      htmlFor="shareGroceryList"
+                      className="text-sm font-semibold leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
+                    >
+                      Grocery & Co-Shopping List Sharing
+                    </label>
+                    <p className="text-xs text-muted-foreground">
+                      Collaborate with your partner on weekly grocery planning,
+                      department item notes, and live in-store cart checkoffs in real time.
                     </p>
                   </div>
                 </div>
