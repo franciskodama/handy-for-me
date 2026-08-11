@@ -380,3 +380,76 @@ export async function addMultipleStaples(
     return false;
   }
 }
+
+export async function batchAddGroceryItems(
+  uid: string,
+  items: Array<{
+    name: string;
+    category?: string;
+    quantity?: string;
+    notes?: string;
+    isStaple?: boolean;
+  }>
+) {
+  try {
+    const user = await getAuthenticatedUser();
+    if (!user || user.uid !== uid) return false;
+
+    const isShared = user.householdId && user.shareGroceryList;
+    const addedItems = [];
+
+    for (const item of items) {
+      const cleanName = item.name.trim();
+      if (!cleanName) continue;
+
+      const category = item.category || inferCategory(cleanName);
+
+      const existing = await prisma.groceryItem.findFirst({
+        where: {
+          ...(isShared ? { householdId: user.householdId } : { uid, householdId: null }),
+          name: { equals: cleanName, mode: 'insensitive' }
+        }
+      });
+
+      if (existing) {
+        const updated = await prisma.groceryItem.update({
+          where: { id: existing.id },
+          data: {
+            archived: false,
+            inCart: false,
+            category: item.category || existing.category,
+            quantity: item.quantity !== undefined ? item.quantity : existing.quantity,
+            notes: item.notes !== undefined ? item.notes : existing.notes,
+            isStaple: item.isStaple !== undefined ? item.isStaple : existing.isStaple,
+            pickedByUid: null
+          }
+        });
+        addedItems.push(updated);
+      } else {
+        const created = await prisma.groceryItem.create({
+          data: {
+            id: uuidv4(),
+            uid,
+            householdId: isShared ? user.householdId : null,
+            name: cleanName,
+            category,
+            quantity: item.quantity?.trim() || null,
+            notes: item.notes?.trim() || null,
+            inCart: false,
+            isStaple: item.isStaple || false,
+            archived: false,
+            createdAt: new Date(),
+            updatedAt: new Date()
+          }
+        });
+        addedItems.push(created);
+      }
+    }
+
+    return addedItems;
+  } catch (error) {
+    console.error('Error batch adding grocery items:', error);
+    return false;
+  }
+}
+
