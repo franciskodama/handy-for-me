@@ -740,8 +740,19 @@ export default function GroceriesView({
     return activeItems;
   }, [activeItems, filter, remainingItems, inCartItems]);
 
-  // Group items by category / department order
+  // Group items by category / department order and sort: uncrossed A-Z first, crossed A-Z at end
   const groupedDepartments = useMemo(() => {
+    const sortItems = (items: GroceryItem[]) => {
+      return [...items].sort((a, b) => {
+        // 1. Not-in-cart (uncollected) items first, in-cart (collected) items after
+        if (a.inCart !== b.inCart) {
+          return a.inCart ? 1 : -1;
+        }
+        // 2. Alphabetical order A-Z within each group
+        return a.name.localeCompare(b.name, undefined, { sensitivity: 'base' });
+      });
+    };
+
     const groups: {
       category: (typeof GROCERY_CATEGORIES)[0];
       items: GroceryItem[];
@@ -752,7 +763,7 @@ export default function GroceriesView({
         (i) => i.category.toLowerCase() === cat.name.toLowerCase()
       );
       if (itemsInCat.length > 0) {
-        groups.push({ category: cat, items: itemsInCat });
+        groups.push({ category: cat, items: sortItems(itemsInCat) });
       }
     });
 
@@ -763,7 +774,7 @@ export default function GroceriesView({
     );
     if (extraItems.length > 0) {
       const otherCat = GROCERY_CATEGORIES.find((c) => c.name === 'Other')!;
-      groups.push({ category: otherCat, items: extraItems });
+      groups.push({ category: otherCat, items: sortItems(extraItems) });
     }
 
     return groups.sort((a, b) => a.category.order - b.category.order);
@@ -1229,7 +1240,9 @@ export default function GroceriesView({
             {/* Department Items List */}
             <CardContent className="p-2 sm:p-4 divide-y divide-border/60">
               {items.map((item) => (
-                <div
+                <motion.div
+                  layout
+                  transition={{ type: 'spring', damping: 25, stiffness: 300 }}
                   key={item.id}
                   className={`group flex items-center justify-between p-3 rounded-lg transition-all ${
                     item.inCart
@@ -1349,7 +1362,7 @@ export default function GroceriesView({
                       </AlertDialogContent>
                     </AlertDialog>
                   </div>
-                </div>
+                </motion.div>
               ))}
             </CardContent>
           </Card>
