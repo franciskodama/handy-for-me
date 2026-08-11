@@ -27,7 +27,9 @@ import {
   ArrowRight,
   Info,
   Clock,
-  HeartHandshake
+  HeartHandshake,
+  Wand2,
+  FileText
 } from 'lucide-react';
 import { useForm, Controller } from 'react-hook-form';
 
@@ -69,9 +71,10 @@ import {
   updateGroceryItem,
   deleteGroceryItem,
   restockGroceryItem,
-  finishShoppingTrip
+  finishShoppingTrip,
+  batchAddGroceryItems
 } from '@/lib/actions/groceries';
-import { inferCategory } from '@/lib/groceries.utils';
+import { inferCategory, parseRawGroceryText, ParsedGroceryItem } from '@/lib/groceries.utils';
 import { barlow, kumbh_sans } from '@/app/ui/fonts';
 import { toast } from '@/hooks/use-toast';
 import Help from '@/components/common/Help';
@@ -266,8 +269,111 @@ export default function GroceriesView({
   const [isFinishingTrip, setIsFinishingTrip] = useState(false);
   const [lastSyncTime, setLastSyncTime] = useState<Date>(new Date());
   const [showInCartTray, setShowInCartTray] = useState(true);
+  const [showSmartPasteModal, setShowSmartPasteModal] = useState(false);
+  const [rawPasteText, setRawPasteText] = useState('');
+  const [parsedPreviewItems, setParsedPreviewItems] = useState<ParsedGroceryItem[]>([]);
+  const [isBatchAdding, setIsBatchAdding] = useState(false);
 
   const printRef = useRef<HTMLDivElement>(null);
+
+  const handleParseRawText = () => {
+    if (!rawPasteText.trim()) return;
+    const parsed = parseRawGroceryText(rawPasteText);
+    setParsedPreviewItems(parsed);
+    if (parsed.length === 0) {
+      toast({
+        title: 'No items recognized',
+        description: 'Please check your text format and try again.',
+        variant: 'destructive'
+      });
+    } else {
+      toast({
+        title: `Recognized ${parsed.length} items! ✨`,
+        description: 'Review the extracted quantities and departments below.',
+        variant: 'success'
+      });
+    }
+  };
+
+  const handleUpdateParsedItem = (
+    index: number,
+    field: keyof ParsedGroceryItem,
+    value: any
+  ) => {
+    setParsedPreviewItems((prev) =>
+      prev.map((item, i) => (i === index ? { ...item, [field]: value } : item))
+    );
+  };
+
+  const handleDeleteParsedItem = (index: number) => {
+    setParsedPreviewItems((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const handleAddNewParsedRow = () => {
+    setParsedPreviewItems((prev) => [
+      ...prev,
+      {
+        id: `ai-item-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+        name: '',
+        category: 'Produce',
+        quantity: '',
+        notes: '',
+        isStaple: false
+      }
+    ]);
+  };
+
+  const handleSaveAllParsedItems = async () => {
+    const validItems = parsedPreviewItems.filter((i) => i.name.trim().length > 0);
+    if (validItems.length === 0) {
+      toast({
+        title: 'No valid items',
+        description: 'Please enter at least one item name.',
+        variant: 'destructive'
+      });
+      return;
+    }
+
+    setIsBatchAdding(true);
+    try {
+      const added = await batchAddGroceryItems(uid, validItems);
+      if (added && Array.isArray(added)) {
+        // Refresh active and archived items
+        const res = await getGroceryItems(uid);
+        if (res && typeof res === 'object') {
+          setActiveItems(res.active);
+          setArchivedItems(res.archived);
+        }
+
+        confetti({
+          particleCount: 70,
+          spread: 60,
+          origin: { y: 0.6 }
+        });
+
+        toast({
+          title: `Added ${validItems.length} items to list! ✨🛒`,
+          description: 'All items were auto-categorized into your store aisles.',
+          variant: 'success'
+        });
+
+        setRawPasteText('');
+        setParsedPreviewItems([]);
+        setShowSmartPasteModal(false);
+      } else {
+        throw new Error('Failed to save parsed items');
+      }
+    } catch (error) {
+      console.error(error);
+      toast({
+        title: 'Error importing items',
+        description: 'Could not batch add items. Please try again.',
+        variant: 'destructive'
+      });
+    } finally {
+      setIsBatchAdding(false);
+    }
+  };
 
   // Sync state when props change
   useEffect(() => {
@@ -783,6 +889,16 @@ export default function GroceriesView({
               <Button
                 variant="outline"
                 size="sm"
+                onClick={() => setShowSmartPasteModal(true)}
+                className="gap-1.5 text-xs font-semibold h-9 border-purple-300 bg-purple-50/50 hover:bg-purple-100 text-purple-800 dark:border-purple-800 dark:bg-purple-950/30 dark:text-purple-300"
+              >
+                <Wand2 className="h-3.5 w-3.5 text-purple-600 dark:text-purple-400" />
+                ✨ AI Smart Paste
+              </Button>
+
+              <Button
+                variant="outline"
+                size="sm"
                 onClick={() => setShowStaplesDrawer(true)}
                 className="gap-1.5 text-xs font-semibold h-9"
               >
@@ -966,6 +1082,16 @@ export default function GroceriesView({
                 </div>
 
                 <div className="flex items-center gap-2 ml-auto">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => setShowSmartPasteModal(true)}
+                    className="h-9 text-xs font-semibold gap-1.5 border-purple-300 text-purple-800 hover:bg-purple-50 dark:border-purple-800 dark:text-purple-300"
+                  >
+                    <Wand2 className="h-3.5 w-3.5 text-purple-600 dark:text-purple-400" />
+                    Paste List
+                  </Button>
+
                   <Button
                     type="submit"
                     disabled={isSubmitting}
@@ -1456,6 +1582,211 @@ export default function GroceriesView({
             >
               Done
             </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* AI Smart Paste / Bulk Import Dialog */}
+      <Dialog open={showSmartPasteModal} onOpenChange={setShowSmartPasteModal}>
+        <DialogContent className="sm:max-w-3xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-xl font-bold">
+              <Wand2 className="h-5 w-5 text-purple-600" />
+              AI Smart Paste & Bulk Importer
+            </DialogTitle>
+            <p className="text-xs text-muted-foreground">
+              Paste a messy grocery list from WhatsApp, notes, or recipes. Our AI parses items, quantities, brands, and automatically routes them to the correct store departments.
+            </p>
+          </DialogHeader>
+
+          <div className="flex flex-col gap-4 py-2">
+            {/* Textarea Input Section */}
+            <div className="flex flex-col gap-2">
+              <div className="flex items-center justify-between">
+                <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
+                  <FileText className="h-3.5 w-3.5" />
+                  Paste Raw Grocery Text
+                </label>
+                <button
+                  type="button"
+                  onClick={() =>
+                    setRawPasteText(
+                      `6 Banana\nOrange 12\nLimes  12\n2L Oat Milk (Oatly)\n1kg chicken breast\n1 sourdough bread\nsalted butter`
+                    )
+                  }
+                  className="text-xs text-purple-600 dark:text-purple-400 hover:underline font-semibold"
+                >
+                  Fill with example
+                </button>
+              </div>
+
+              <textarea
+                value={rawPasteText}
+                onChange={(e) => setRawPasteText(e.target.value)}
+                placeholder={`Paste your list here, e.g.:\n6 Banana\nOrange 12\nLimes  12\n2L Oat Milk (Oatly)\n1kg chicken breast\n1 pack paper towels`}
+                rows={5}
+                className="w-full rounded-md border border-input bg-background p-3 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              />
+
+              <div className="flex items-center justify-between gap-2 flex-wrap">
+                <p className="text-[11px] text-muted-foreground">
+                  💡 Supports quantities at the start (<code>6 Banana</code>) or end (<code>Orange 12</code>), notes in parentheses, and bullet points.
+                </p>
+
+                <Button
+                  type="button"
+                  onClick={handleParseRawText}
+                  disabled={!rawPasteText.trim()}
+                  className="bg-purple-600 hover:bg-purple-700 text-white gap-1.5 text-xs font-semibold h-8 ml-auto"
+                >
+                  <Wand2 className="h-3.5 w-3.5" />
+                  Parse List ✨
+                </Button>
+              </div>
+            </div>
+
+            {/* Parsed Preview Section */}
+            {parsedPreviewItems.length > 0 && (
+              <div className="flex flex-col gap-3 pt-4 border-t">
+                <div className="flex items-center justify-between">
+                  <h4 className={`${kumbh_sans.className} text-sm font-bold text-primary uppercase tracking-wider flex items-center gap-2`}>
+                    <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+                    Recognized Items ({parsedPreviewItems.length})
+                  </h4>
+
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={handleAddNewParsedRow}
+                    className="text-xs h-7 text-primary hover:bg-primary/5"
+                  >
+                    <Plus className="h-3 w-3 mr-1" />
+                    Add Row
+                  </Button>
+                </div>
+
+                <div className="flex flex-col gap-2 max-h-72 overflow-y-auto pr-1">
+                  {parsedPreviewItems.map((item, idx) => (
+                    <div
+                      key={item.id || idx}
+                      className="grid grid-cols-1 sm:grid-cols-12 gap-2 p-2 rounded-lg border bg-card/60 items-center text-xs"
+                    >
+                      {/* Name (col 4) */}
+                      <div className="sm:col-span-4">
+                        <Input
+                          value={item.name}
+                          onChange={(e) =>
+                            handleUpdateParsedItem(idx, 'name', e.target.value)
+                          }
+                          placeholder="Item Name"
+                          className="h-8 text-xs font-semibold"
+                        />
+                      </div>
+
+                      {/* Department / Category (col 3) */}
+                      <div className="sm:col-span-3">
+                        <Select
+                          value={item.category}
+                          onValueChange={(val) =>
+                            handleUpdateParsedItem(idx, 'category', val)
+                          }
+                        >
+                          <SelectTrigger className="h-8 text-xs">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {GROCERY_CATEGORIES.map((cat) => (
+                              <SelectItem key={cat.name} value={cat.name}>
+                                {cat.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+
+                      {/* Qty (col 2) */}
+                      <div className="sm:col-span-2">
+                        <Input
+                          value={item.quantity || ''}
+                          onChange={(e) =>
+                            handleUpdateParsedItem(idx, 'quantity', e.target.value)
+                          }
+                          placeholder="Qty"
+                          className="h-8 text-xs"
+                        />
+                      </div>
+
+                      {/* Notes (col 2) */}
+                      <div className="sm:col-span-2">
+                        <Input
+                          value={item.notes || ''}
+                          onChange={(e) =>
+                            handleUpdateParsedItem(idx, 'notes', e.target.value)
+                          }
+                          placeholder="Brand / Note"
+                          className="h-8 text-xs"
+                        />
+                      </div>
+
+                      {/* Delete button (col 1) */}
+                      <div className="sm:col-span-1 flex justify-end">
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleDeleteParsedItem(idx)}
+                          className="h-7 w-7 p-0 text-muted-foreground hover:text-destructive"
+                        >
+                          <Trash2 className="h-3.5 w-3.5" />
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
+          <DialogFooter className="gap-2 sm:gap-0">
+            {parsedPreviewItems.length > 0 && (
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => {
+                  setParsedPreviewItems([]);
+                  setRawPasteText('');
+                }}
+                disabled={isBatchAdding}
+                className="text-xs"
+              >
+                Clear
+              </Button>
+            )}
+
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setShowSmartPasteModal(false)}
+              disabled={isBatchAdding}
+              className="text-xs"
+            >
+              Cancel
+            </Button>
+
+            {parsedPreviewItems.length > 0 && (
+              <Button
+                type="button"
+                onClick={handleSaveAllParsedItems}
+                disabled={isBatchAdding || parsedPreviewItems.length === 0}
+                className="bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs gap-1.5"
+              >
+                <Plus className="h-4 w-4" />
+                {isBatchAdding
+                  ? 'Adding to List...'
+                  : `Add All ${parsedPreviewItems.length} Items to List`}
+              </Button>
+            )}
           </DialogFooter>
         </DialogContent>
       </Dialog>

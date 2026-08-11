@@ -315,7 +315,7 @@ export function parseRawGroceryText(rawText: string): ParsedGroceryItem[] {
   const results: ParsedGroceryItem[] = [];
 
   const unitRegexPart =
-    '(?:x|\\*|lbs?|pounds?|kg|kilos?|g|grams?|oz|ounces?|l|liters?|litres?|ml|cartons?|packs?|boxes?|bags?|cans?|bottles?|bunches?|bunch|heads?|dozen|doz|slices?|pcs|pieces?|count)';
+    '(?:x|\\*|lbs?|pounds?|kg|kilos?|g|grams?|oz|ounces?|l|liters?|litres?|ml|cartons?|packs?|boxes?|box|bags?|bag|cans?|can|bottles?|bottle|bunches?|bunch|heads?|head|dozen|doz|slices?|pcs|pieces?|count)';
 
   for (let line of rawLines) {
     line = line.trim();
