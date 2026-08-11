@@ -163,24 +163,59 @@ export const GROCERY_CATEGORIES = [
 ];
 
 export const POPULAR_STAPLES = [
-  { name: 'Whole Milk', category: 'Dairy & Eggs', quantity: '1 gal' },
-  { name: 'Oat Milk', category: 'Dairy & Eggs', quantity: '1 carton', notes: 'Barista blend' },
-  { name: 'Eggs (Dozen)', category: 'Dairy & Eggs', quantity: '1 carton', notes: 'Pasture-raised' },
+  // { name: 'Whole Milk', category: 'Dairy & Eggs', quantity: '1 gal' },
+  {
+    name: 'Oat Milk',
+    category: 'Dairy & Eggs',
+    quantity: '1 carton',
+    notes: 'Barista blend'
+  },
+  {
+    name: 'Eggs (Dozen)',
+    category: 'Dairy & Eggs',
+    quantity: '1 carton',
+    notes: 'Pasture-raised'
+  },
   { name: 'Butter', category: 'Dairy & Eggs', quantity: '1 box' },
   { name: 'Cheddar Cheese', category: 'Dairy & Eggs', quantity: '1 block' },
-  { name: 'Greek Yogurt', category: 'Dairy & Eggs', quantity: '1 tub', notes: 'Plain / Unsweetened' },
+  {
+    name: 'Greek Yogurt',
+    category: 'Dairy & Eggs',
+    quantity: '1 tub',
+    notes: 'Plain / Unsweetened'
+  },
   { name: 'Bananas', category: 'Produce', quantity: '1 bunch' },
-  { name: 'Avocados', category: 'Produce', quantity: '3 count', notes: 'Medium ripe' },
+  {
+    name: 'Avocados',
+    category: 'Produce',
+    quantity: '3 count',
+    notes: 'Medium ripe'
+  },
   { name: 'Spinach', category: 'Produce', quantity: '1 box' },
   { name: 'Tomatoes', category: 'Produce', quantity: '4 count' },
   { name: 'Garlic & Onions', category: 'Produce', quantity: '1 bag' },
-  { name: 'Apples', category: 'Produce', quantity: '1 bag', notes: 'Honeycrisp' },
+  {
+    name: 'Apples',
+    category: 'Produce',
+    quantity: '1 bag',
+    notes: 'Honeycrisp'
+  },
   { name: 'Sourdough Bread', category: 'Bakery', quantity: '1 loaf' },
   { name: 'Bagels', category: 'Bakery', quantity: '1 pack' },
   { name: 'Chicken Breast', category: 'Meat & Seafood', quantity: '2 lbs' },
   { name: 'Salmon Fillet', category: 'Meat & Seafood', quantity: '1 lb' },
-  { name: 'Olive Oil', category: 'Pantry', quantity: '1 bottle', notes: 'Extra Virgin' },
-  { name: 'Coffee Beans', category: 'Pantry', quantity: '1 bag', notes: 'Medium roast' },
+  {
+    name: 'Olive Oil',
+    category: 'Pantry',
+    quantity: '1 bottle',
+    notes: 'Extra Virgin'
+  },
+  {
+    name: 'Coffee Beans',
+    category: 'Pantry',
+    quantity: '1 bag',
+    notes: 'Medium roast'
+  },
   { name: 'Pasta & Sauce', category: 'Pantry', quantity: '2 boxes' },
   { name: 'Sparkling Water', category: 'Snacks & Drinks', quantity: '1 pack' },
   { name: 'Paper Towels', category: 'Household', quantity: '1 pack' }
@@ -217,10 +252,14 @@ export default function GroceriesView({
   initialArchivedItems,
   householdDetails
 }: GroceriesViewProps) {
-  const [activeItems, setActiveItems] = useState<GroceryItem[]>(initialActiveItems);
-  const [archivedItems, setArchivedItems] = useState<GroceryItem[]>(initialArchivedItems);
+  const [activeItems, setActiveItems] =
+    useState<GroceryItem[]>(initialActiveItems);
+  const [archivedItems, setArchivedItems] =
+    useState<GroceryItem[]>(initialArchivedItems);
   const [viewMode, setViewMode] = useState<'plan' | 'store'>('plan');
-  const [filter, setFilter] = useState<'all' | 'remaining' | 'inCart' | 'staples'>('all');
+  const [filter, setFilter] = useState<
+    'all' | 'remaining' | 'inCart' | 'staples'
+  >('all');
   const [openAction, setOpenAction] = useState(false);
   const [showStaplesDrawer, setShowStaplesDrawer] = useState(false);
   const [editingItem, setEditingItem] = useState<GroceryItem | null>(null);
@@ -329,8 +368,17 @@ export default function GroceriesView({
       };
 
       // Optimistic update
-      setActiveItems((prev) => [optimisticItem, ...prev.filter((i) => i.name.toLowerCase() !== data.name.trim().toLowerCase())]);
-      setArchivedItems((prev) => prev.filter((i) => i.name.toLowerCase() !== data.name.trim().toLowerCase()));
+      setActiveItems((prev) => [
+        optimisticItem,
+        ...prev.filter(
+          (i) => i.name.toLowerCase() !== data.name.trim().toLowerCase()
+        )
+      ]);
+      setArchivedItems((prev) =>
+        prev.filter(
+          (i) => i.name.toLowerCase() !== data.name.trim().toLowerCase()
+        )
+      );
 
       reset({
         name: '',
@@ -421,16 +469,12 @@ export default function GroceriesView({
     try {
       const res = await toggleGroceryItemInCart(item.id, nextState);
       if (res) {
-        setActiveItems((prev) =>
-          prev.map((i) => (i.id === item.id ? res : i))
-        );
+        setActiveItems((prev) => prev.map((i) => (i.id === item.id ? res : i)));
       }
     } catch (error) {
       console.error(error);
       // Revert on error
-      setActiveItems((prev) =>
-        prev.map((i) => (i.id === item.id ? item : i))
-      );
+      setActiveItems((prev) => prev.map((i) => (i.id === item.id ? item : i)));
       toast({
         title: 'Status sync error',
         description: 'Failed to update cart status.',
@@ -463,13 +507,14 @@ export default function GroceriesView({
     try {
       // Optimistic
       setArchivedItems((prev) => prev.filter((i) => i.id !== item.id));
-      setActiveItems((prev) => [{ ...item, archived: false, inCart: false }, ...prev]);
+      setActiveItems((prev) => [
+        { ...item, archived: false, inCart: false },
+        ...prev
+      ]);
 
       const res = await restockGroceryItem(item.id);
       if (res) {
-        setActiveItems((prev) =>
-          prev.map((i) => (i.id === item.id ? res : i))
-        );
+        setActiveItems((prev) => prev.map((i) => (i.id === item.id ? res : i)));
         toast({
           title: 'Restocked! 🔄',
           description: `Added "${item.name}" back to the active list.`,
@@ -485,7 +530,12 @@ export default function GroceriesView({
     }
   };
 
-  const handleQuickAddStaple = async (staple: { name: string; category: string; quantity?: string; notes?: string }) => {
+  const handleQuickAddStaple = async (staple: {
+    name: string;
+    category: string;
+    quantity?: string;
+    notes?: string;
+  }) => {
     await onAddSubmit({
       name: staple.name,
       category: staple.category,
@@ -572,7 +622,9 @@ export default function GroceriesView({
   const inCartItems = activeItems.filter((i) => i.inCart);
   const remainingItems = activeItems.filter((i) => !i.inCart);
   const cartPercentage =
-    totalItemsCount > 0 ? Math.round((inCartItems.length / totalItemsCount) * 100) : 0;
+    totalItemsCount > 0
+      ? Math.round((inCartItems.length / totalItemsCount) * 100)
+      : 0;
 
   // Filtered active items
   const displayedActiveItems = useMemo(() => {
@@ -584,7 +636,10 @@ export default function GroceriesView({
 
   // Group items by category / department order
   const groupedDepartments = useMemo(() => {
-    const groups: { category: typeof GROCERY_CATEGORIES[0]; items: GroceryItem[] }[] = [];
+    const groups: {
+      category: (typeof GROCERY_CATEGORIES)[0];
+      items: GroceryItem[];
+    }[] = [];
 
     GROCERY_CATEGORIES.forEach((cat) => {
       const itemsInCat = displayedActiveItems.filter(
@@ -626,7 +681,9 @@ export default function GroceriesView({
           <CardTitle className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div className="flex flex-col gap-1.5">
               <div className="flex items-center gap-3 flex-wrap">
-                <h1 className={`${kumbh_sans.className} text-2xl md:text-3xl font-bold flex items-center gap-2.5`}>
+                <h1
+                  className={`${kumbh_sans.className} text-2xl md:text-3xl font-bold flex items-center gap-2.5`}
+                >
                   <ShoppingCart className="h-7 w-7 text-primary" />
                   Groceries & Co-Shopping
                 </h1>
@@ -638,7 +695,10 @@ export default function GroceriesView({
                     👥 Shared with Household
                   </Badge>
                 ) : (
-                  <Badge variant="secondary" className="gap-1 flex items-center text-xs">
+                  <Badge
+                    variant="secondary"
+                    className="gap-1 flex items-center text-xs"
+                  >
                     🔒 Personal List
                   </Badge>
                 )}
@@ -646,11 +706,14 @@ export default function GroceriesView({
                 {householdDetails?.inHousehold &&
                   householdDetails?.userSettings?.shareGroceryList &&
                   householdDetails.household?.members && (
-                    <div className="flex -space-x-1.5 overflow-hidden ml-1" title="Active household co-shoppers">
+                    <div
+                      className="flex -space-x-1.5 overflow-hidden ml-1"
+                      title="Active household co-shoppers"
+                    >
                       {householdDetails.household.members.map((member: any) => (
                         <div
                           key={member.id}
-                          className="inline-block h-6 w-6 rounded-full ring-2 ring-background overflow-hidden bg-primary/15 text-[10px] font-bold flex items-center justify-center"
+                          className="inline-block h-6 w-6 rounded-full ring-2 ring-background overflow-hidden bg-primary/15 text-[10px] font-bold items-center justify-center"
                           title={member.name || member.uid}
                         >
                           {member.avatar ? (
@@ -660,7 +723,11 @@ export default function GroceriesView({
                               className="h-full w-full object-cover"
                             />
                           ) : (
-                            <span>{(member.name || member.uid).charAt(0).toUpperCase()}</span>
+                            <span>
+                              {(member.name || member.uid)
+                                .charAt(0)
+                                .toUpperCase()}
+                            </span>
                           )}
                         </div>
                       ))}
@@ -668,12 +735,19 @@ export default function GroceriesView({
                   )}
 
                 <div className="block md:hidden ml-auto">
-                  {!openAction ? <Help setOpenAction={setOpenAction} /> : <div />}
+                  {!openAction ? (
+                    <Help setOpenAction={setOpenAction} />
+                  ) : (
+                    <div />
+                  )}
                 </div>
               </div>
 
-              <p className={`${barlow.className} text-sm text-muted-foreground font-normal`}>
-                Plan together, coordinate item preferences, and shop aisles efficiently in real time.
+              <p
+                className={`${barlow.className} text-sm text-muted-foreground font-normal`}
+              >
+                Plan together, coordinate item preferences, and shop aisles
+                efficiently in real time.
               </p>
             </div>
 
@@ -715,7 +789,10 @@ export default function GroceriesView({
                 <RotateCcw className="h-3.5 w-3.5 text-primary" />
                 Restock & Staples
                 {archivedItems.length > 0 && (
-                  <Badge variant="secondary" className="ml-1 px-1.5 py-0 text-[10px]">
+                  <Badge
+                    variant="secondary"
+                    className="ml-1 px-1.5 py-0 text-[10px]"
+                  >
                     {archivedItems.length}
                   </Badge>
                 )}
@@ -744,10 +821,14 @@ export default function GroceriesView({
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2 text-xs">
               <div className="flex items-center gap-3">
                 <span className="font-semibold text-foreground">
-                  Cart Progress: {inCartItems.length} of {totalItemsCount} items ({cartPercentage}%)
+                  Cart Progress: {inCartItems.length} of {totalItemsCount} items
+                  ({cartPercentage}%)
                 </span>
                 {remainingItems.length > 0 ? (
-                  <Badge variant="outline" className="text-amber-700 bg-amber-50 border-amber-200">
+                  <Badge
+                    variant="outline"
+                    className="text-amber-700 bg-amber-50 border-amber-200"
+                  >
                     {remainingItems.length} remaining
                   </Badge>
                 ) : (
@@ -801,12 +882,17 @@ export default function GroceriesView({
       {viewMode === 'plan' && (
         <Card className="border-border shadow-sm bg-card/60 backdrop-blur">
           <CardContent className="p-4 sm:p-6">
-            <h3 className={`${kumbh_sans.className} text-base font-semibold mb-3 flex items-center gap-2`}>
+            <h3
+              className={`${kumbh_sans.className} text-base font-semibold mb-3 flex items-center gap-2`}
+            >
               <Plus className="h-4 w-4 text-primary" />
               Quick-Add Grocery Item
             </h3>
 
-            <form onSubmit={handleSubmit(onAddSubmit)} className="flex flex-col gap-3">
+            <form
+              onSubmit={handleSubmit(onAddSubmit)}
+              className="flex flex-col gap-3"
+            >
               <div className="grid grid-cols-1 sm:grid-cols-12 gap-3">
                 {/* Item Name (col-span 5) */}
                 <div className="sm:col-span-4 flex flex-col gap-1">
@@ -816,7 +902,9 @@ export default function GroceriesView({
                     className="h-10"
                   />
                   {errors.name && (
-                    <span className="text-destructive text-xs">{errors.name.message}</span>
+                    <span className="text-destructive text-xs">
+                      {errors.name.message}
+                    </span>
                   )}
                 </div>
 
@@ -826,7 +914,10 @@ export default function GroceriesView({
                     name="category"
                     control={control}
                     render={({ field }) => (
-                      <Select onValueChange={field.onChange} value={field.value || ''}>
+                      <Select
+                        onValueChange={field.onChange}
+                        value={field.value || ''}
+                      >
                         <SelectTrigger className="h-10">
                           <SelectValue placeholder="Department / Aisle" />
                         </SelectTrigger>
@@ -875,7 +966,11 @@ export default function GroceriesView({
                 </div>
 
                 <div className="flex items-center gap-2 ml-auto">
-                  <Button type="submit" disabled={isSubmitting} className="h-9 font-semibold gap-1.5 px-4">
+                  <Button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="h-9 font-semibold gap-1.5 px-4"
+                  >
                     <Plus className="h-4 w-4" />
                     {isSubmitting ? 'Adding...' : 'Add to List'}
                   </Button>
@@ -949,7 +1044,9 @@ export default function GroceriesView({
             icon={<ShoppingBag size={32} strokeWidth={1.6} />}
             titleOne={'Fridge looking empty?'}
             titleTwo={'No Grocery Items Yet'}
-            subtitle={'Add items to your list or tap "Restock & Staples" to quickly add household essentials.'}
+            subtitle={
+              'Add items to your list or tap "Restock & Staples" to quickly add household essentials.'
+            }
             setOpenAction={setShowStaplesDrawer}
             buttonCopy={'Quick-Add Staples'}
             hasButton={true}
@@ -971,22 +1068,34 @@ export default function GroceriesView({
             {/* Department Header */}
             <div
               className="px-4 py-3 border-b flex items-center justify-between rounded-t-lg"
-              style={{ backgroundColor: category.bgColor, borderColor: category.borderColor }}
+              style={{
+                backgroundColor: category.bgColor,
+                borderColor: category.borderColor
+              }}
             >
               <div className="flex items-center gap-2">
-                <span className="text-base font-bold" style={{ color: category.textColor }}>
+                <span
+                  className="text-base font-bold"
+                  style={{ color: category.textColor }}
+                >
                   {category.label}
                 </span>
                 <Badge
                   variant="outline"
                   className="bg-white/80 font-bold text-xs"
-                  style={{ color: category.textColor, borderColor: category.borderColor }}
+                  style={{
+                    color: category.textColor,
+                    borderColor: category.borderColor
+                  }}
                 >
                   {items.length} {items.length === 1 ? 'item' : 'items'}
                 </Badge>
               </div>
 
-              <span className="text-[11px] font-medium tracking-wide uppercase" style={{ color: category.textColor }}>
+              <span
+                className="text-[11px] font-medium tracking-wide uppercase"
+                style={{ color: category.textColor }}
+              >
                 Aisle {category.order}
               </span>
             </div>
@@ -1098,7 +1207,8 @@ export default function GroceriesView({
                         <AlertDialogHeader>
                           <AlertDialogTitle>Remove from list?</AlertDialogTitle>
                           <AlertDialogDescription>
-                            Are you sure you want to remove &quot;{item.name}&quot; from your grocery list?
+                            Are you sure you want to remove &quot;{item.name}
+                            &quot; from your grocery list?
                           </AlertDialogDescription>
                         </AlertDialogHeader>
                         <AlertDialogFooter>
@@ -1121,7 +1231,10 @@ export default function GroceriesView({
       </div>
 
       {/* Edit Item Dialog */}
-      <Dialog open={!!editingItem} onOpenChange={(open) => !open && setEditingItem(null)}>
+      <Dialog
+        open={!!editingItem}
+        onOpenChange={(open) => !open && setEditingItem(null)}
+      >
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
@@ -1131,14 +1244,21 @@ export default function GroceriesView({
           </DialogHeader>
 
           {editingItem && (
-            <form onSubmit={handleSubmitEdit(onEditSubmit)} className="flex flex-col gap-4 py-2">
+            <form
+              onSubmit={handleSubmitEdit(onEditSubmit)}
+              className="flex flex-col gap-4 py-2"
+            >
               <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-semibold text-muted-foreground">Item Name</label>
+                <label className="text-xs font-semibold text-muted-foreground">
+                  Item Name
+                </label>
                 <Input {...registerEdit('name', { required: true })} />
               </div>
 
               <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-semibold text-muted-foreground">Department / Aisle</label>
+                <label className="text-xs font-semibold text-muted-foreground">
+                  Department / Aisle
+                </label>
                 <Controller
                   name="category"
                   control={controlEdit}
@@ -1162,13 +1282,23 @@ export default function GroceriesView({
 
               <div className="grid grid-cols-2 gap-3">
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-xs font-semibold text-muted-foreground">Quantity / Unit</label>
-                  <Input placeholder="e.g. 2 packs" {...registerEdit('quantity')} />
+                  <label className="text-xs font-semibold text-muted-foreground">
+                    Quantity / Unit
+                  </label>
+                  <Input
+                    placeholder="e.g. 2 packs"
+                    {...registerEdit('quantity')}
+                  />
                 </div>
 
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-xs font-semibold text-muted-foreground">Brand / Note</label>
-                  <Input placeholder="e.g. Organic, Oatly" {...registerEdit('notes')} />
+                  <label className="text-xs font-semibold text-muted-foreground">
+                    Brand / Note
+                  </label>
+                  <Input
+                    placeholder="e.g. Organic, Oatly"
+                    {...registerEdit('notes')}
+                  />
                 </div>
               </div>
 
@@ -1179,13 +1309,20 @@ export default function GroceriesView({
                   {...registerEdit('isStaple')}
                   className="rounded border-gray-300 text-primary focus:ring-primary h-4 w-4"
                 />
-                <label htmlFor="editIsStaple" className="text-xs font-medium text-muted-foreground cursor-pointer">
+                <label
+                  htmlFor="editIsStaple"
+                  className="text-xs font-medium text-muted-foreground cursor-pointer"
+                >
                   Frequent Household Staple
                 </label>
               </div>
 
               <DialogFooter className="mt-4">
-                <Button type="button" variant="outline" onClick={() => setEditingItem(null)}>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setEditingItem(null)}
+                >
                   Cancel
                 </Button>
                 <Button type="submit" disabled={isSubmittingEdit}>
@@ -1206,14 +1343,17 @@ export default function GroceriesView({
               Restock & Staples Catalog
             </DialogTitle>
             <p className="text-xs text-muted-foreground">
-              Quickly re-add staples or items from past shopping trips with a single click.
+              Quickly re-add staples or items from past shopping trips with a
+              single click.
             </p>
           </DialogHeader>
 
           <div className="flex flex-col gap-6 py-3">
             {/* Section 1: Popular Household Essentials */}
             <div>
-              <h4 className={`${kumbh_sans.className} text-sm font-bold text-primary uppercase tracking-wider mb-3 flex items-center gap-2`}>
+              <h4
+                className={`${kumbh_sans.className} text-sm font-bold text-primary uppercase tracking-wider mb-3 flex items-center gap-2`}
+              >
                 <Sparkles className="h-4 w-4 text-amber-500" />
                 Popular Household Staples (1-Click Add)
               </h4>
@@ -1230,12 +1370,22 @@ export default function GroceriesView({
                       disabled={alreadyOnList}
                       onClick={() => handleQuickAddStaple(staple)}
                       className={`text-xs font-medium h-8 gap-1.5 transition-all ${
-                        alreadyOnList ? 'opacity-50' : 'hover:border-primary hover:bg-primary/5'
+                        alreadyOnList
+                          ? 'opacity-50'
+                          : 'hover:border-primary hover:bg-primary/5'
                       }`}
                     >
-                      {alreadyOnList ? <Check className="h-3 w-3 text-emerald-600" /> : <Plus className="h-3 w-3" />}
+                      {alreadyOnList ? (
+                        <Check className="h-3 w-3 text-emerald-600" />
+                      ) : (
+                        <Plus className="h-3 w-3" />
+                      )}
                       <span>{staple.name}</span>
-                      {staple.quantity && <span className="text-[10px] text-muted-foreground">({staple.quantity})</span>}
+                      {staple.quantity && (
+                        <span className="text-[10px] text-muted-foreground">
+                          ({staple.quantity})
+                        </span>
+                      )}
                     </Button>
                   );
                 })}
@@ -1244,19 +1394,25 @@ export default function GroceriesView({
 
             {/* Section 2: Previous Trip History (Archived Items) */}
             <div>
-              <h4 className={`${kumbh_sans.className} text-sm font-bold text-primary uppercase tracking-wider mb-3 flex items-center gap-2`}>
+              <h4
+                className={`${kumbh_sans.className} text-sm font-bold text-primary uppercase tracking-wider mb-3 flex items-center gap-2`}
+              >
                 <Clock className="h-4 w-4 text-primary" />
                 Past Shopping Trips History ({archivedItems.length} items)
               </h4>
 
               {archivedItems.length === 0 ? (
                 <div className="p-6 text-center border border-dashed rounded-lg text-xs text-muted-foreground">
-                  No previous shopping trip history yet. Items you check off and finish will appear here for fast re-ordering.
+                  No previous shopping trip history yet. Items you check off and
+                  finish will appear here for fast re-ordering.
                 </div>
               ) : (
                 <div className="flex flex-col gap-4">
                   {Object.entries(archivedByCat).map(([catName, items]) => (
-                    <div key={catName} className="border rounded-lg p-3 bg-muted/20">
+                    <div
+                      key={catName}
+                      className="border rounded-lg p-3 bg-muted/20"
+                    >
                       <h5 className="text-xs font-bold text-muted-foreground uppercase mb-2">
                         {catName}
                       </h5>
@@ -1269,7 +1425,9 @@ export default function GroceriesView({
                             <div className="flex flex-col">
                               <span className="font-semibold">{item.name}</span>
                               {item.quantity && (
-                                <span className="text-[10px] text-muted-foreground">{item.quantity}</span>
+                                <span className="text-[10px] text-muted-foreground">
+                                  {item.quantity}
+                                </span>
                               )}
                             </div>
                             <Button
@@ -1292,7 +1450,10 @@ export default function GroceriesView({
           </div>
 
           <DialogFooter>
-            <Button onClick={() => setShowStaplesDrawer(false)} className="w-full sm:w-auto">
+            <Button
+              onClick={() => setShowStaplesDrawer(false)}
+              className="w-full sm:w-auto"
+            >
               Done
             </Button>
           </DialogFooter>
