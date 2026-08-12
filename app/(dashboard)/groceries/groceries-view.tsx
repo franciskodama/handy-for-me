@@ -33,7 +33,13 @@ import {
 } from 'lucide-react';
 import { useForm, Controller } from 'react-hook-form';
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle
+} from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -74,7 +80,11 @@ import {
   finishShoppingTrip,
   batchAddGroceryItems
 } from '@/lib/actions/groceries';
-import { inferCategory, parseRawGroceryText, ParsedGroceryItem } from '@/lib/groceries.utils';
+import {
+  inferCategory,
+  parseRawGroceryText,
+  ParsedGroceryItem
+} from '@/lib/groceries.utils';
 import { barlow, kumbh_sans } from '@/app/ui/fonts';
 import { toast } from '@/hooks/use-toast';
 import Help from '@/components/common/Help';
@@ -271,7 +281,10 @@ export default function GroceriesView({
   const [showInCartTray, setShowInCartTray] = useState(true);
   const [showSmartPasteModal, setShowSmartPasteModal] = useState(false);
   const [rawPasteText, setRawPasteText] = useState('');
-  const [parsedPreviewItems, setParsedPreviewItems] = useState<ParsedGroceryItem[]>([]);
+  const [saveAllAsStaples, setSaveAllAsStaples] = useState(false);
+  const [parsedPreviewItems, setParsedPreviewItems] = useState<
+    ParsedGroceryItem[]
+  >([]);
   const [isBatchAdding, setIsBatchAdding] = useState(false);
 
   const printRef = useRef<HTMLDivElement>(null);
@@ -279,8 +292,12 @@ export default function GroceriesView({
   const handleParseRawText = () => {
     if (!rawPasteText.trim()) return;
     const parsed = parseRawGroceryText(rawPasteText);
-    setParsedPreviewItems(parsed);
-    if (parsed.length === 0) {
+    const withStapleState = parsed.map((item) => ({
+      ...item,
+      isStaple: saveAllAsStaples
+    }));
+    setParsedPreviewItems(withStapleState);
+    if (withStapleState.length === 0) {
       toast({
         title: 'No items recognized',
         description: 'Please check your text format and try again.',
@@ -288,11 +305,18 @@ export default function GroceriesView({
       });
     } else {
       toast({
-        title: `Recognized ${parsed.length} items! ✨`,
+        title: `Recognized ${withStapleState.length} items! ✨`,
         description: 'Review the extracted quantities and departments below.',
         variant: 'success'
       });
     }
+  };
+
+  const handleToggleAllStaples = (checked: boolean) => {
+    setSaveAllAsStaples(checked);
+    setParsedPreviewItems((prev) =>
+      prev.map((item) => ({ ...item, isStaple: checked }))
+    );
   };
 
   const handleUpdateParsedItem = (
@@ -300,9 +324,16 @@ export default function GroceriesView({
     field: keyof ParsedGroceryItem,
     value: any
   ) => {
-    setParsedPreviewItems((prev) =>
-      prev.map((item, i) => (i === index ? { ...item, [field]: value } : item))
-    );
+    setParsedPreviewItems((prev) => {
+      const updated = prev.map((item, i) =>
+        i === index ? { ...item, [field]: value } : item
+      );
+      if (field === 'isStaple') {
+        const allStaples = updated.every((i) => i.isStaple);
+        setSaveAllAsStaples(allStaples);
+      }
+      return updated;
+    });
   };
 
   const handleDeleteParsedItem = (index: number) => {
@@ -318,13 +349,15 @@ export default function GroceriesView({
         category: 'Produce',
         quantity: '',
         notes: '',
-        isStaple: false
+        isStaple: saveAllAsStaples
       }
     ]);
   };
 
   const handleSaveAllParsedItems = async () => {
-    const validItems = parsedPreviewItems.filter((i) => i.name.trim().length > 0);
+    const validItems = parsedPreviewItems.filter(
+      (i) => i.name.trim().length > 0
+    );
     if (validItems.length === 0) {
       toast({
         title: 'No valid items',
@@ -353,7 +386,8 @@ export default function GroceriesView({
 
         toast({
           title: `Added ${validItems.length} items to list! ✨🛒`,
-          description: 'All items were auto-categorized into your store aisles.',
+          description:
+            'All items were auto-categorized into your store aisles.',
           variant: 'success'
         });
 
@@ -840,7 +874,8 @@ export default function GroceriesView({
           </div>
         </CardTitle>
         <CardDescription>
-          Plan together, coordinate item preferences, and shop aisles efficiently in real time.
+          Plan together, coordinate item preferences, and shop aisles
+          efficiently in real time.
         </CardDescription>
       </CardHeader>
 
@@ -878,7 +913,7 @@ export default function GroceriesView({
               }`}
             >
               <Package className="h-3.5 w-3.5" />
-              📝 Plan & Prepare
+              Plan & Prepare
             </button>
             <button
               type="button"
@@ -890,7 +925,7 @@ export default function GroceriesView({
               }`}
             >
               <Store className="h-3.5 w-3.5" />
-              🛒 In-Store Mode
+              In-Store Mode
             </button>
           </div>
 
@@ -983,48 +1018,416 @@ export default function GroceriesView({
           </div>
         )}
 
-      {/* Phase 1: Plan & Prepare - Quick Add Toolbar */}
-      {viewMode === 'plan' && (
-        <Card className="border-border shadow-sm bg-card/60 backdrop-blur">
-          <CardContent className="p-4 sm:p-6">
-            <h3
-              className={`${kumbh_sans.className} text-base font-semibold mb-3 flex items-center gap-2`}
-            >
-              <Plus className="h-4 w-4 text-primary" />
-              Quick-Add Grocery Item
-            </h3>
+        {/* Phase 1: Plan & Prepare - Quick Add Toolbar */}
+        {viewMode === 'plan' && (
+          <Card className="border-border shadow-sm bg-card/60 backdrop-blur">
+            <CardContent className="p-4 sm:p-6">
+              <h3
+                className={`${kumbh_sans.className} text-base font-semibold mb-3 flex items-center gap-2`}
+              >
+                <Plus className="h-4 w-4 text-primary" />
+                Quick-Add Grocery Item
+              </h3>
 
-            <form
-              onSubmit={handleSubmit(onAddSubmit)}
-              className="flex flex-col gap-3"
-            >
-              <div className="grid grid-cols-1 sm:grid-cols-12 gap-3">
-                {/* Item Name (col-span 5) */}
-                <div className="sm:col-span-4 flex flex-col gap-1">
-                  <Input
-                    placeholder="e.g. Oat Milk, Avocados, Sourdough"
-                    {...register('name', { required: 'Item name is required' })}
-                    className="h-10"
-                  />
-                  {errors.name && (
-                    <span className="text-destructive text-xs">
-                      {errors.name.message}
-                    </span>
-                  )}
+              <form
+                onSubmit={handleSubmit(onAddSubmit)}
+                className="flex flex-col gap-3"
+              >
+                <div className="grid grid-cols-1 sm:grid-cols-12 gap-3">
+                  {/* Item Name (col-span 5) */}
+                  <div className="sm:col-span-4 flex flex-col gap-1">
+                    <Input
+                      placeholder="e.g. Oat Milk, Avocados, Sourdough"
+                      {...register('name', {
+                        required: 'Item name is required'
+                      })}
+                      className="h-10"
+                    />
+                    {errors.name && (
+                      <span className="text-destructive text-xs">
+                        {errors.name.message}
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Category Selector (col-span 3) */}
+                  <div className="sm:col-span-3 flex flex-col gap-1">
+                    <Controller
+                      name="category"
+                      control={control}
+                      render={({ field }) => (
+                        <Select
+                          onValueChange={field.onChange}
+                          value={field.value || ''}
+                        >
+                          <SelectTrigger className="h-10">
+                            <SelectValue placeholder="Department / Aisle" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {GROCERY_CATEGORIES.map((cat) => (
+                              <SelectItem key={cat.name} value={cat.name}>
+                                {cat.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      )}
+                    />
+                  </div>
+
+                  {/* Quantity (col-span 2) */}
+                  <div className="sm:col-span-2">
+                    <Input
+                      placeholder="Qty (e.g. 2 bags, 1kg)"
+                      {...register('quantity')}
+                      className="h-10"
+                    />
+                  </div>
+
+                  {/* Brand / Preference Note (col-span 3) */}
+                  <div className="sm:col-span-3">
+                    <Input
+                      placeholder="Brand / Note (e.g. Oatly, Ripe)"
+                      {...register('notes')}
+                      className="h-10"
+                    />
+                  </div>
                 </div>
 
-                {/* Category Selector (col-span 3) */}
-                <div className="sm:col-span-3 flex flex-col gap-1">
+                <div className="flex items-center justify-between mt-1 pt-2 border-t border-border flex-wrap gap-2">
+                  <div className="flex items-center gap-2">
+                    <label className="flex items-center gap-2 text-xs text-muted-foreground cursor-pointer select-none">
+                      <input
+                        type="checkbox"
+                        {...register('isStaple')}
+                        className="rounded border-gray-300 text-primary focus:ring-primary h-4 w-4"
+                      />
+                      <Star className="h-3.5 w-3.5 text-amber-500 fill-amber-500/20" />
+                      Save as frequent household staple
+                    </label>
+                  </div>
+
+                  <div className="flex items-center gap-2 ml-auto">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => setShowSmartPasteModal(true)}
+                      className="h-9 text-xs font-semibold gap-1.5 border-purple-300 text-purple-800 hover:bg-purple-50 dark:border-purple-800 dark:text-purple-300"
+                    >
+                      <Wand2 className="h-3.5 w-3.5 text-purple-600 dark:text-purple-400" />
+                      Paste List
+                    </Button>
+
+                    <Button
+                      type="submit"
+                      disabled={isSubmitting}
+                      className="h-9 font-semibold gap-1.5 px-4"
+                    >
+                      <Plus className="h-4 w-4" />
+                      {isSubmitting ? 'Adding...' : 'Add to List'}
+                    </Button>
+                  </div>
+                </div>
+              </form>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Filter Tabs & View Controls */}
+        <div className="flex items-center justify-between gap-3 flex-wrap">
+          <div className="flex items-center gap-1.5 bg-muted p-1 rounded-lg border text-xs overflow-x-auto">
+            <button
+              onClick={() => setFilter('all')}
+              className={`px-3 py-1 font-semibold rounded transition-colors whitespace-nowrap ${
+                filter === 'all'
+                  ? 'bg-background text-foreground shadow-sm'
+                  : 'text-muted-foreground hover:text-foreground'
+              }`}
+            >
+              All Items ({activeItems.length})
+            </button>
+            <button
+              onClick={() => setFilter('remaining')}
+              className={`px-3 py-1 font-semibold rounded transition-colors whitespace-nowrap ${
+                filter === 'remaining'
+                  ? 'bg-background text-foreground shadow-sm'
+                  : 'text-muted-foreground hover:text-foreground'
+              }`}
+            >
+              To Buy ({remainingItems.length})
+            </button>
+            <button
+              onClick={() => setFilter('inCart')}
+              className={`px-3 py-1 font-semibold rounded transition-colors whitespace-nowrap ${
+                filter === 'inCart'
+                  ? 'bg-background text-foreground shadow-sm'
+                  : 'text-muted-foreground hover:text-foreground'
+              }`}
+            >
+              In Cart ({inCartItems.length})
+            </button>
+            <button
+              onClick={() => setFilter('staples')}
+              className={`px-3 py-1 font-semibold rounded transition-colors whitespace-nowrap ${
+                filter === 'staples'
+                  ? 'bg-background text-foreground shadow-sm'
+                  : 'text-muted-foreground hover:text-foreground'
+              }`}
+            >
+              ⭐ Staples ({activeItems.filter((i) => i.isStaple).length})
+            </button>
+          </div>
+
+          {viewMode === 'store' && (
+            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+              <span className="inline-block h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+              Live In-Store Mode • Tap items as you pick them
+            </div>
+          )}
+        </div>
+
+        {/* Empty State */}
+        {activeItems.length === 0 && (
+          <div className="mt-4">
+            <MessageEmpty
+              image={'/superman-where.webp'}
+              objectPosition={'50% 10%'}
+              alt={'Grocery list is empty'}
+              icon={<ShoppingBag size={32} strokeWidth={1.6} />}
+              titleOne={'Fridge looking empty?'}
+              titleTwo={'No Grocery Items Yet'}
+              subtitle={
+                'Add items to your list or tap "Restock & Staples" to quickly add household essentials.'
+              }
+              setOpenAction={setShowStaplesDrawer}
+              buttonCopy={'Quick-Add Staples'}
+              hasButton={true}
+            />
+          </div>
+        )}
+
+        {/* Printable / Board Container */}
+        <div ref={printRef} className="flex flex-col gap-6">
+          {/* Department / Aisle Groupings */}
+          {groupedDepartments.map(({ category, items }) => (
+            <Card
+              key={category.name}
+              className={`border transition-all ${
+                viewMode === 'store' ? 'border-2 shadow-md' : 'shadow-sm'
+              }`}
+              style={{ borderColor: category.borderColor }}
+            >
+              {/* Department Header */}
+              <div
+                className="px-4 py-3 border-b flex items-center justify-between rounded-t-lg"
+                style={{
+                  backgroundColor: category.bgColor,
+                  borderColor: category.borderColor
+                }}
+              >
+                <div className="flex items-center gap-2">
+                  <span
+                    className="text-base font-bold"
+                    style={{ color: category.textColor }}
+                  >
+                    {category.label}
+                  </span>
+                  <Badge
+                    variant="outline"
+                    className="bg-white/80 font-bold text-xs"
+                    style={{
+                      color: category.textColor,
+                      borderColor: category.borderColor
+                    }}
+                  >
+                    {items.length} {items.length === 1 ? 'item' : 'items'}
+                  </Badge>
+                </div>
+
+                <span
+                  className="text-[11px] font-medium tracking-wide uppercase"
+                  style={{ color: category.textColor }}
+                >
+                  Aisle {category.order}
+                </span>
+              </div>
+
+              {/* Department Items List */}
+              <CardContent className="p-2 sm:p-4 divide-y divide-border/60">
+                {items.map((item) => (
+                  <motion.div
+                    layout
+                    transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+                    key={item.id}
+                    className={`group flex items-center justify-between p-3 rounded-lg transition-all ${
+                      item.inCart
+                        ? 'bg-muted/40 opacity-75'
+                        : 'hover:bg-accent/40 bg-card'
+                    } ${viewMode === 'store' ? 'py-3.5 my-1 border border-border/40' : ''}`}
+                  >
+                    {/* Left: Cart Checkbox & Item Info */}
+                    <div
+                      onClick={() => handleToggleCart(item)}
+                      className="flex items-center gap-3.5 flex-1 cursor-pointer select-none"
+                    >
+                      <button
+                        type="button"
+                        className="flex-shrink-0 transition-transform active:scale-90"
+                      >
+                        {item.inCart ? (
+                          <CheckCircle2 className="h-6 w-6 text-emerald-600 fill-emerald-100" />
+                        ) : (
+                          <Circle className="h-6 w-6 text-muted-foreground hover:text-primary transition-colors" />
+                        )}
+                      </button>
+
+                      <div className="flex flex-col items-start gap-0.5">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span
+                            className={`font-semibold text-sm sm:text-base ${
+                              item.inCart
+                                ? 'line-through text-muted-foreground'
+                                : 'text-foreground'
+                            }`}
+                          >
+                            {item.name}
+                          </span>
+
+                          {item.quantity && (
+                            <Badge
+                              variant="secondary"
+                              className="text-xs px-2 py-0.5 font-bold bg-primary/10 text-primary border-primary/20"
+                            >
+                              {item.quantity}
+                            </Badge>
+                          )}
+
+                          {item.isStaple && (
+                            <span title="Household Staple">
+                              <Star className="h-3.5 w-3.5 text-amber-500 fill-amber-500/20" />
+                            </span>
+                          )}
+                        </div>
+
+                        {/* Notes / Brand / Preference coordination */}
+                        {item.notes && (
+                          <p className="text-xs text-muted-foreground font-medium flex items-center gap-1">
+                            <Tag className="h-3 w-3 text-muted-foreground/70" />
+                            <span>{item.notes}</span>
+                          </p>
+                        )}
+
+                        {/* Co-Shopper Attribution Badges */}
+                        <div className="flex items-center gap-2 mt-0.5">
+                          {item.inCart && item.pickedByUid && (
+                            <span className="text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200 flex items-center gap-1">
+                              <Check className="h-3 w-3" />
+                              Picked by {item.pickedByUid}
+                            </span>
+                          )}
+                          {!item.inCart && item.uid && (
+                            <span className="text-[10px] text-muted-foreground">
+                              Added by {item.uid.split('@')[0]}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Right Actions: Edit & Delete */}
+                    <div className="flex items-center gap-1 ml-2 flex-shrink-0">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => openEditModal(item)}
+                        className="h-8 w-8 p-0 text-muted-foreground hover:text-foreground"
+                        title="Edit Item"
+                      >
+                        <Edit2 className="h-4 w-4" />
+                      </Button>
+
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-8 w-8 p-0 text-muted-foreground hover:text-destructive"
+                            title="Delete Item"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>
+                              Remove from list?
+                            </AlertDialogTitle>
+                            <AlertDialogDescription>
+                              Are you sure you want to remove &quot;{item.name}
+                              &quot; from your grocery list?
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                            <AlertDialogAction
+                              onClick={() =>
+                                handleDeleteItem(item.id, item.name)
+                              }
+                              className="bg-destructive hover:bg-destructive/90"
+                            >
+                              Remove
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
+                    </div>
+                  </motion.div>
+                ))}
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+
+        {/* Edit Item Dialog */}
+        <Dialog
+          open={!!editingItem}
+          onOpenChange={(open) => !open && setEditingItem(null)}
+        >
+          <DialogContent className="sm:max-w-md">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2">
+                <Edit2 className="h-4 w-4 text-primary" />
+                Edit Grocery Item
+              </DialogTitle>
+            </DialogHeader>
+
+            {editingItem && (
+              <form
+                onSubmit={handleSubmitEdit(onEditSubmit)}
+                className="flex flex-col gap-4 py-2"
+              >
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-semibold text-muted-foreground">
+                    Item Name
+                  </label>
+                  <Input {...registerEdit('name', { required: true })} />
+                </div>
+
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-semibold text-muted-foreground">
+                    Department / Aisle
+                  </label>
                   <Controller
                     name="category"
-                    control={control}
+                    control={controlEdit}
+                    defaultValue={editingItem.category}
                     render={({ field }) => (
                       <Select
                         onValueChange={field.onChange}
-                        value={field.value || ''}
+                        value={field.value}
                       >
-                        <SelectTrigger className="h-10">
-                          <SelectValue placeholder="Department / Aisle" />
+                        <SelectTrigger>
+                          <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
                           {GROCERY_CATEGORIES.map((cat) => (
@@ -1038,749 +1441,454 @@ export default function GroceriesView({
                   />
                 </div>
 
-                {/* Quantity (col-span 2) */}
-                <div className="sm:col-span-2">
-                  <Input
-                    placeholder="Qty (e.g. 2 bags, 1kg)"
-                    {...register('quantity')}
-                    className="h-10"
-                  />
-                </div>
-
-                {/* Brand / Preference Note (col-span 3) */}
-                <div className="sm:col-span-3">
-                  <Input
-                    placeholder="Brand / Note (e.g. Oatly, Ripe)"
-                    {...register('notes')}
-                    className="h-10"
-                  />
-                </div>
-              </div>
-
-              <div className="flex items-center justify-between mt-1 pt-2 border-t border-border flex-wrap gap-2">
-                <div className="flex items-center gap-2">
-                  <label className="flex items-center gap-2 text-xs text-muted-foreground cursor-pointer select-none">
-                    <input
-                      type="checkbox"
-                      {...register('isStaple')}
-                      className="rounded border-gray-300 text-primary focus:ring-primary h-4 w-4"
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-xs font-semibold text-muted-foreground">
+                      Quantity / Unit
+                    </label>
+                    <Input
+                      placeholder="e.g. 2 packs"
+                      {...registerEdit('quantity')}
                     />
-                    <Star className="h-3.5 w-3.5 text-amber-500 fill-amber-500/20" />
-                    Save as frequent household staple
+                  </div>
+
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-xs font-semibold text-muted-foreground">
+                      Brand / Note
+                    </label>
+                    <Input
+                      placeholder="e.g. Organic, Oatly"
+                      {...registerEdit('notes')}
+                    />
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2 pt-2">
+                  <input
+                    type="checkbox"
+                    id="editIsStaple"
+                    {...registerEdit('isStaple')}
+                    className="rounded border-gray-300 text-primary focus:ring-primary h-4 w-4"
+                  />
+                  <label
+                    htmlFor="editIsStaple"
+                    className="text-xs font-medium text-muted-foreground cursor-pointer"
+                  >
+                    Frequent Household Staple
                   </label>
                 </div>
 
-                <div className="flex items-center gap-2 ml-auto">
+                <DialogFooter className="mt-4">
                   <Button
                     type="button"
                     variant="outline"
-                    onClick={() => setShowSmartPasteModal(true)}
-                    className="h-9 text-xs font-semibold gap-1.5 border-purple-300 text-purple-800 hover:bg-purple-50 dark:border-purple-800 dark:text-purple-300"
+                    onClick={() => setEditingItem(null)}
                   >
-                    <Wand2 className="h-3.5 w-3.5 text-purple-600 dark:text-purple-400" />
-                    Paste List
+                    Cancel
                   </Button>
-
-                  <Button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="h-9 font-semibold gap-1.5 px-4"
-                  >
-                    <Plus className="h-4 w-4" />
-                    {isSubmitting ? 'Adding...' : 'Add to List'}
+                  <Button type="submit" disabled={isSubmittingEdit}>
+                    {isSubmittingEdit ? 'Saving...' : 'Save Changes'}
                   </Button>
-                </div>
-              </div>
-            </form>
-          </CardContent>
-        </Card>
-      )}
+                </DialogFooter>
+              </form>
+            )}
+          </DialogContent>
+        </Dialog>
 
-      {/* Filter Tabs & View Controls */}
-      <div className="flex items-center justify-between gap-3 flex-wrap">
-        <div className="flex items-center gap-1.5 bg-muted p-1 rounded-lg border text-xs overflow-x-auto">
-          <button
-            onClick={() => setFilter('all')}
-            className={`px-3 py-1 font-semibold rounded transition-colors whitespace-nowrap ${
-              filter === 'all'
-                ? 'bg-background text-foreground shadow-sm'
-                : 'text-muted-foreground hover:text-foreground'
-            }`}
-          >
-            All Items ({activeItems.length})
-          </button>
-          <button
-            onClick={() => setFilter('remaining')}
-            className={`px-3 py-1 font-semibold rounded transition-colors whitespace-nowrap ${
-              filter === 'remaining'
-                ? 'bg-background text-foreground shadow-sm'
-                : 'text-muted-foreground hover:text-foreground'
-            }`}
-          >
-            To Buy ({remainingItems.length})
-          </button>
-          <button
-            onClick={() => setFilter('inCart')}
-            className={`px-3 py-1 font-semibold rounded transition-colors whitespace-nowrap ${
-              filter === 'inCart'
-                ? 'bg-background text-foreground shadow-sm'
-                : 'text-muted-foreground hover:text-foreground'
-            }`}
-          >
-            In Cart ({inCartItems.length})
-          </button>
-          <button
-            onClick={() => setFilter('staples')}
-            className={`px-3 py-1 font-semibold rounded transition-colors whitespace-nowrap ${
-              filter === 'staples'
-                ? 'bg-background text-foreground shadow-sm'
-                : 'text-muted-foreground hover:text-foreground'
-            }`}
-          >
-            ⭐ Staples ({activeItems.filter((i) => i.isStaple).length})
-          </button>
-        </div>
+        {/* Restock & Staples Drawer / Modal */}
+        <Dialog open={showStaplesDrawer} onOpenChange={setShowStaplesDrawer}>
+          <DialogContent className="sm:max-w-2xl max-h-[85vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2 text-xl font-bold">
+                <RotateCcw className="h-5 w-5 text-primary" />
+                Restock & Staples Catalog
+              </DialogTitle>
+              <p className="text-xs text-muted-foreground">
+                Quickly re-add staples or items from past shopping trips with a
+                single click.
+              </p>
+            </DialogHeader>
 
-        {viewMode === 'store' && (
-          <div className="flex items-center gap-2 text-xs text-muted-foreground">
-            <span className="inline-block h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-            Live In-Store Mode • Tap items as you pick them
-          </div>
-        )}
-      </div>
-
-      {/* Empty State */}
-      {activeItems.length === 0 && (
-        <div className="mt-4">
-          <MessageEmpty
-            image={'/superman-where.webp'}
-            objectPosition={'50% 10%'}
-            alt={'Grocery list is empty'}
-            icon={<ShoppingBag size={32} strokeWidth={1.6} />}
-            titleOne={'Fridge looking empty?'}
-            titleTwo={'No Grocery Items Yet'}
-            subtitle={
-              'Add items to your list or tap "Restock & Staples" to quickly add household essentials.'
-            }
-            setOpenAction={setShowStaplesDrawer}
-            buttonCopy={'Quick-Add Staples'}
-            hasButton={true}
-          />
-        </div>
-      )}
-
-      {/* Printable / Board Container */}
-      <div ref={printRef} className="flex flex-col gap-6">
-        {/* Department / Aisle Groupings */}
-        {groupedDepartments.map(({ category, items }) => (
-          <Card
-            key={category.name}
-            className={`border transition-all ${
-              viewMode === 'store' ? 'border-2 shadow-md' : 'shadow-sm'
-            }`}
-            style={{ borderColor: category.borderColor }}
-          >
-            {/* Department Header */}
-            <div
-              className="px-4 py-3 border-b flex items-center justify-between rounded-t-lg"
-              style={{
-                backgroundColor: category.bgColor,
-                borderColor: category.borderColor
-              }}
-            >
-              <div className="flex items-center gap-2">
-                <span
-                  className="text-base font-bold"
-                  style={{ color: category.textColor }}
+            <div className="flex flex-col gap-6 py-3">
+              {/* Section 1: Popular Household Essentials */}
+              <div>
+                <h4
+                  className={`${kumbh_sans.className} text-sm font-bold text-primary uppercase tracking-wider mb-3 flex items-center gap-2`}
                 >
-                  {category.label}
-                </span>
-                <Badge
-                  variant="outline"
-                  className="bg-white/80 font-bold text-xs"
-                  style={{
-                    color: category.textColor,
-                    borderColor: category.borderColor
-                  }}
-                >
-                  {items.length} {items.length === 1 ? 'item' : 'items'}
-                </Badge>
-              </div>
-
-              <span
-                className="text-[11px] font-medium tracking-wide uppercase"
-                style={{ color: category.textColor }}
-              >
-                Aisle {category.order}
-              </span>
-            </div>
-
-            {/* Department Items List */}
-            <CardContent className="p-2 sm:p-4 divide-y divide-border/60">
-              {items.map((item) => (
-                <motion.div
-                  layout
-                  transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-                  key={item.id}
-                  className={`group flex items-center justify-between p-3 rounded-lg transition-all ${
-                    item.inCart
-                      ? 'bg-muted/40 opacity-75'
-                      : 'hover:bg-accent/40 bg-card'
-                  } ${viewMode === 'store' ? 'py-3.5 my-1 border border-border/40' : ''}`}
-                >
-                  {/* Left: Cart Checkbox & Item Info */}
-                  <div
-                    onClick={() => handleToggleCart(item)}
-                    className="flex items-center gap-3.5 flex-1 cursor-pointer select-none"
-                  >
-                    <button
-                      type="button"
-                      className="flex-shrink-0 transition-transform active:scale-90"
-                    >
-                      {item.inCart ? (
-                        <CheckCircle2 className="h-6 w-6 text-emerald-600 fill-emerald-100" />
-                      ) : (
-                        <Circle className="h-6 w-6 text-muted-foreground hover:text-primary transition-colors" />
-                      )}
-                    </button>
-
-                    <div className="flex flex-col items-start gap-0.5">
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <span
-                          className={`font-semibold text-sm sm:text-base ${
-                            item.inCart
-                              ? 'line-through text-muted-foreground'
-                              : 'text-foreground'
-                          }`}
-                        >
-                          {item.name}
-                        </span>
-
-                        {item.quantity && (
-                          <Badge
-                            variant="secondary"
-                            className="text-xs px-2 py-0.5 font-bold bg-primary/10 text-primary border-primary/20"
-                          >
-                            {item.quantity}
-                          </Badge>
+                  <Sparkles className="h-4 w-4 text-amber-500" />
+                  Popular Household Staples (1-Click Add)
+                </h4>
+                <div className="flex flex-wrap gap-2">
+                  {POPULAR_STAPLES.map((staple) => {
+                    const alreadyOnList = activeItems.some(
+                      (i) => i.name.toLowerCase() === staple.name.toLowerCase()
+                    );
+                    return (
+                      <Button
+                        key={staple.name}
+                        variant={alreadyOnList ? 'secondary' : 'outline'}
+                        size="sm"
+                        disabled={alreadyOnList}
+                        onClick={() => handleQuickAddStaple(staple)}
+                        className={`text-xs font-medium h-8 gap-1.5 transition-all ${
+                          alreadyOnList
+                            ? 'opacity-50'
+                            : 'hover:border-primary hover:bg-primary/5'
+                        }`}
+                      >
+                        {alreadyOnList ? (
+                          <Check className="h-3 w-3 text-emerald-600" />
+                        ) : (
+                          <Plus className="h-3 w-3" />
                         )}
-
-                        {item.isStaple && (
-                          <span title="Household Staple">
-                            <Star className="h-3.5 w-3.5 text-amber-500 fill-amber-500/20" />
-                          </span>
-                        )}
-                      </div>
-
-                      {/* Notes / Brand / Preference coordination */}
-                      {item.notes && (
-                        <p className="text-xs text-muted-foreground font-medium flex items-center gap-1">
-                          <Tag className="h-3 w-3 text-muted-foreground/70" />
-                          <span>{item.notes}</span>
-                        </p>
-                      )}
-
-                      {/* Co-Shopper Attribution Badges */}
-                      <div className="flex items-center gap-2 mt-0.5">
-                        {item.inCart && item.pickedByUid && (
-                          <span className="text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200 flex items-center gap-1">
-                            <Check className="h-3 w-3" />
-                            Picked by {item.pickedByUid}
-                          </span>
-                        )}
-                        {!item.inCart && item.uid && (
+                        <span>{staple.name}</span>
+                        {staple.quantity && (
                           <span className="text-[10px] text-muted-foreground">
-                            Added by {item.uid.split('@')[0]}
+                            ({staple.quantity})
                           </span>
                         )}
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Right Actions: Edit & Delete */}
-                  <div className="flex items-center gap-1 ml-2 flex-shrink-0">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => openEditModal(item)}
-                      className="h-8 w-8 p-0 text-muted-foreground hover:text-foreground"
-                      title="Edit Item"
-                    >
-                      <Edit2 className="h-4 w-4" />
-                    </Button>
-
-                    <AlertDialog>
-                      <AlertDialogTrigger asChild>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="h-8 w-8 p-0 text-muted-foreground hover:text-destructive"
-                          title="Delete Item"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </AlertDialogTrigger>
-                      <AlertDialogContent>
-                        <AlertDialogHeader>
-                          <AlertDialogTitle>Remove from list?</AlertDialogTitle>
-                          <AlertDialogDescription>
-                            Are you sure you want to remove &quot;{item.name}
-                            &quot; from your grocery list?
-                          </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                          <AlertDialogCancel>Cancel</AlertDialogCancel>
-                          <AlertDialogAction
-                            onClick={() => handleDeleteItem(item.id, item.name)}
-                            className="bg-destructive hover:bg-destructive/90"
-                          >
-                            Remove
-                          </AlertDialogAction>
-                        </AlertDialogFooter>
-                      </AlertDialogContent>
-                    </AlertDialog>
-                  </div>
-                </motion.div>
-              ))}
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-
-      {/* Edit Item Dialog */}
-      <Dialog
-        open={!!editingItem}
-        onOpenChange={(open) => !open && setEditingItem(null)}
-      >
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <Edit2 className="h-4 w-4 text-primary" />
-              Edit Grocery Item
-            </DialogTitle>
-          </DialogHeader>
-
-          {editingItem && (
-            <form
-              onSubmit={handleSubmitEdit(onEditSubmit)}
-              className="flex flex-col gap-4 py-2"
-            >
-              <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-semibold text-muted-foreground">
-                  Item Name
-                </label>
-                <Input {...registerEdit('name', { required: true })} />
-              </div>
-
-              <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-semibold text-muted-foreground">
-                  Department / Aisle
-                </label>
-                <Controller
-                  name="category"
-                  control={controlEdit}
-                  defaultValue={editingItem.category}
-                  render={({ field }) => (
-                    <Select onValueChange={field.onChange} value={field.value}>
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {GROCERY_CATEGORIES.map((cat) => (
-                          <SelectItem key={cat.name} value={cat.name}>
-                            {cat.label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  )}
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                <div className="flex flex-col gap-1.5">
-                  <label className="text-xs font-semibold text-muted-foreground">
-                    Quantity / Unit
-                  </label>
-                  <Input
-                    placeholder="e.g. 2 packs"
-                    {...registerEdit('quantity')}
-                  />
-                </div>
-
-                <div className="flex flex-col gap-1.5">
-                  <label className="text-xs font-semibold text-muted-foreground">
-                    Brand / Note
-                  </label>
-                  <Input
-                    placeholder="e.g. Organic, Oatly"
-                    {...registerEdit('notes')}
-                  />
+                      </Button>
+                    );
+                  })}
                 </div>
               </div>
 
-              <div className="flex items-center gap-2 pt-2">
-                <input
-                  type="checkbox"
-                  id="editIsStaple"
-                  {...registerEdit('isStaple')}
-                  className="rounded border-gray-300 text-primary focus:ring-primary h-4 w-4"
-                />
-                <label
-                  htmlFor="editIsStaple"
-                  className="text-xs font-medium text-muted-foreground cursor-pointer"
+              {/* Section 2: Previous Trip History (Archived Items) */}
+              <div>
+                <h4
+                  className={`${kumbh_sans.className} text-sm font-bold text-primary uppercase tracking-wider mb-3 flex items-center gap-2`}
                 >
-                  Frequent Household Staple
-                </label>
-              </div>
+                  <Clock className="h-4 w-4 text-primary" />
+                  Past Shopping Trips History ({archivedItems.length} items)
+                </h4>
 
-              <DialogFooter className="mt-4">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => setEditingItem(null)}
-                >
-                  Cancel
-                </Button>
-                <Button type="submit" disabled={isSubmittingEdit}>
-                  {isSubmittingEdit ? 'Saving...' : 'Save Changes'}
-                </Button>
-              </DialogFooter>
-            </form>
-          )}
-        </DialogContent>
-      </Dialog>
-
-      {/* Restock & Staples Drawer / Modal */}
-      <Dialog open={showStaplesDrawer} onOpenChange={setShowStaplesDrawer}>
-        <DialogContent className="sm:max-w-2xl max-h-[85vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2 text-xl font-bold">
-              <RotateCcw className="h-5 w-5 text-primary" />
-              Restock & Staples Catalog
-            </DialogTitle>
-            <p className="text-xs text-muted-foreground">
-              Quickly re-add staples or items from past shopping trips with a
-              single click.
-            </p>
-          </DialogHeader>
-
-          <div className="flex flex-col gap-6 py-3">
-            {/* Section 1: Popular Household Essentials */}
-            <div>
-              <h4
-                className={`${kumbh_sans.className} text-sm font-bold text-primary uppercase tracking-wider mb-3 flex items-center gap-2`}
-              >
-                <Sparkles className="h-4 w-4 text-amber-500" />
-                Popular Household Staples (1-Click Add)
-              </h4>
-              <div className="flex flex-wrap gap-2">
-                {POPULAR_STAPLES.map((staple) => {
-                  const alreadyOnList = activeItems.some(
-                    (i) => i.name.toLowerCase() === staple.name.toLowerCase()
-                  );
-                  return (
-                    <Button
-                      key={staple.name}
-                      variant={alreadyOnList ? 'secondary' : 'outline'}
-                      size="sm"
-                      disabled={alreadyOnList}
-                      onClick={() => handleQuickAddStaple(staple)}
-                      className={`text-xs font-medium h-8 gap-1.5 transition-all ${
-                        alreadyOnList
-                          ? 'opacity-50'
-                          : 'hover:border-primary hover:bg-primary/5'
-                      }`}
-                    >
-                      {alreadyOnList ? (
-                        <Check className="h-3 w-3 text-emerald-600" />
-                      ) : (
-                        <Plus className="h-3 w-3" />
-                      )}
-                      <span>{staple.name}</span>
-                      {staple.quantity && (
-                        <span className="text-[10px] text-muted-foreground">
-                          ({staple.quantity})
-                        </span>
-                      )}
-                    </Button>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Section 2: Previous Trip History (Archived Items) */}
-            <div>
-              <h4
-                className={`${kumbh_sans.className} text-sm font-bold text-primary uppercase tracking-wider mb-3 flex items-center gap-2`}
-              >
-                <Clock className="h-4 w-4 text-primary" />
-                Past Shopping Trips History ({archivedItems.length} items)
-              </h4>
-
-              {archivedItems.length === 0 ? (
-                <div className="p-6 text-center border border-dashed rounded-lg text-xs text-muted-foreground">
-                  No previous shopping trip history yet. Items you check off and
-                  finish will appear here for fast re-ordering.
-                </div>
-              ) : (
-                <div className="flex flex-col gap-4">
-                  {Object.entries(archivedByCat).map(([catName, items]) => (
-                    <div
-                      key={catName}
-                      className="border rounded-lg p-3 bg-muted/20"
-                    >
-                      <h5 className="text-xs font-bold text-muted-foreground uppercase mb-2">
-                        {catName}
-                      </h5>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                        {items.map((item) => (
-                          <div
-                            key={item.id}
-                            className="flex items-center justify-between p-2 rounded bg-card border text-xs"
-                          >
-                            <div className="flex flex-col">
-                              <span className="font-semibold">{item.name}</span>
-                              {item.quantity && (
-                                <span className="text-[10px] text-muted-foreground">
-                                  {item.quantity}
-                                </span>
-                              )}
-                            </div>
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              onClick={() => handleRestockItem(item)}
-                              className="h-7 text-[11px] font-semibold gap-1 hover:bg-primary hover:text-white"
+                {archivedItems.length === 0 ? (
+                  <div className="p-6 text-center border border-dashed rounded-lg text-xs text-muted-foreground">
+                    No previous shopping trip history yet. Items you check off
+                    and finish will appear here for fast re-ordering.
+                  </div>
+                ) : (
+                  <div className="flex flex-col gap-4">
+                    {Object.entries(archivedByCat).map(([catName, items]) => (
+                      <div
+                        key={catName}
+                        className="border rounded-lg p-3 bg-muted/20"
+                      >
+                        <h5 className="text-xs font-bold text-muted-foreground uppercase mb-2">
+                          {catName}
+                        </h5>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                          {items.map((item) => (
+                            <div
+                              key={item.id}
+                              className="flex items-center justify-between p-2 rounded bg-card border text-xs"
                             >
-                              <Plus className="h-3 w-3" />
-                              Add Back
-                            </Button>
-                          </div>
-                        ))}
+                              <div className="flex flex-col">
+                                <span className="font-semibold">
+                                  {item.name}
+                                </span>
+                                {item.quantity && (
+                                  <span className="text-[10px] text-muted-foreground">
+                                    {item.quantity}
+                                  </span>
+                                )}
+                              </div>
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => handleRestockItem(item)}
+                                className="h-7 text-[11px] font-semibold gap-1 hover:bg-primary hover:text-white"
+                              >
+                                <Plus className="h-3 w-3" />
+                                Add Back
+                              </Button>
+                            </div>
+                          ))}
+                        </div>
                       </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
-
-          <DialogFooter>
-            <Button
-              onClick={() => setShowStaplesDrawer(false)}
-              className="w-full sm:w-auto"
-            >
-              Done
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      {/* AI Smart Paste / Bulk Import Dialog */}
-      <Dialog open={showSmartPasteModal} onOpenChange={setShowSmartPasteModal}>
-        <DialogContent className="sm:max-w-3xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2 text-xl font-bold">
-              <Wand2 className="h-5 w-5 text-purple-600" />
-              AI Smart Paste & Bulk Importer
-            </DialogTitle>
-            <p className="text-xs text-muted-foreground">
-              Paste a messy grocery list from WhatsApp, notes, or recipes. Our AI parses items, quantities, brands, and automatically routes them to the correct store departments.
-            </p>
-          </DialogHeader>
-
-          <div className="flex flex-col gap-4 py-2">
-            {/* Textarea Input Section */}
-            <div className="flex flex-col gap-2">
-              <div className="flex items-center justify-between">
-                <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
-                  <FileText className="h-3.5 w-3.5" />
-                  Paste Raw Grocery Text
-                </label>
-                <button
-                  type="button"
-                  onClick={() =>
-                    setRawPasteText(
-                      `6 Banana\nOrange 12\nLimes  12\n2L Oat Milk (Oatly)\n1kg chicken breast\n1 sourdough bread\nsalted butter`
-                    )
-                  }
-                  className="text-xs text-purple-600 dark:text-purple-400 hover:underline font-semibold"
-                >
-                  Fill with example
-                </button>
-              </div>
-
-              <textarea
-                value={rawPasteText}
-                onChange={(e) => setRawPasteText(e.target.value)}
-                placeholder={`Paste your list here, e.g.:\n6 Banana\nOrange 12\nLimes  12\n2L Oat Milk (Oatly)\n1kg chicken breast\n1 pack paper towels`}
-                rows={5}
-                className="w-full rounded-md border border-input bg-background p-3 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-              />
-
-              <div className="flex items-center justify-between gap-2 flex-wrap">
-                <p className="text-[11px] text-muted-foreground">
-                  💡 Supports quantities at the start (<code>6 Banana</code>) or end (<code>Orange 12</code>), notes in parentheses, and bullet points.
-                </p>
-
-                <Button
-                  type="button"
-                  onClick={handleParseRawText}
-                  disabled={!rawPasteText.trim()}
-                  className="bg-purple-600 hover:bg-purple-700 text-white gap-1.5 text-xs font-semibold h-8 ml-auto"
-                >
-                  <Wand2 className="h-3.5 w-3.5" />
-                  Parse List ✨
-                </Button>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
 
-            {/* Parsed Preview Section */}
-            {parsedPreviewItems.length > 0 && (
-              <div className="flex flex-col gap-3 pt-4 border-t">
+            <DialogFooter>
+              <Button
+                onClick={() => setShowStaplesDrawer(false)}
+                className="w-full sm:w-auto"
+              >
+                Done
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+        {/* AI Smart Paste / Bulk Import Dialog */}
+        <Dialog
+          open={showSmartPasteModal}
+          onOpenChange={setShowSmartPasteModal}
+        >
+          <DialogContent className="sm:max-w-3xl max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2 text-xl font-bold">
+                <Wand2 className="h-5 w-5 text-purple-600" />
+                AI Smart Paste & Bulk Importer
+              </DialogTitle>
+              <p className="text-xs text-muted-foreground">
+                Paste a messy grocery list from WhatsApp, notes, or recipes. Our
+                AI parses items, quantities, brands, and automatically routes
+                them to the correct store departments.
+              </p>
+            </DialogHeader>
+
+            <div className="flex flex-col gap-4 py-2">
+              {/* Textarea Input Section */}
+              <div className="flex flex-col gap-2">
                 <div className="flex items-center justify-between">
-                  <h4 className={`${kumbh_sans.className} text-sm font-bold text-primary uppercase tracking-wider flex items-center gap-2`}>
-                    <CheckCircle2 className="h-4 w-4 text-emerald-600" />
-                    Recognized Items ({parsedPreviewItems.length})
-                  </h4>
+                  <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
+                    <FileText className="h-3.5 w-3.5" />
+                    Paste Raw Grocery Text
+                  </label>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setRawPasteText(
+                        `6 Banana\nOrange 12\nLimes  12\n2L Oat Milk (Oatly)\n1kg chicken breast\n1 sourdough bread\nsalted butter`
+                      )
+                    }
+                    className="text-xs text-purple-600 dark:text-purple-400 hover:underline font-semibold"
+                  >
+                    Fill with example
+                  </button>
+                </div>
+
+                <textarea
+                  value={rawPasteText}
+                  onChange={(e) => setRawPasteText(e.target.value)}
+                  placeholder={`Paste your list here, e.g.:\n6 Banana\nOrange 12\nLimes  12\n2L Oat Milk (Oatly)\n1kg chicken breast\n1 pack paper towels`}
+                  rows={5}
+                  className="w-full rounded-md border border-input bg-background p-3 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                />
+
+                <div className="flex items-center justify-between gap-2 flex-wrap">
+                  <p className="text-[11px] text-muted-foreground">
+                    💡 Supports quantities at the start (<code>6 Banana</code>)
+                    or end (<code>Orange 12</code>), notes in parentheses, and
+                    bullet points.
+                  </p>
 
                   <Button
                     type="button"
-                    variant="ghost"
-                    size="sm"
-                    onClick={handleAddNewParsedRow}
-                    className="text-xs h-7 text-primary hover:bg-primary/5"
+                    onClick={handleParseRawText}
+                    disabled={!rawPasteText.trim()}
+                    className="bg-purple-600 hover:bg-purple-700 text-white gap-1.5 text-xs font-semibold h-8 ml-auto"
                   >
-                    <Plus className="h-3 w-3 mr-1" />
-                    Add Row
+                    <Wand2 className="h-3.5 w-3.5" />
+                    Parse List ✨
                   </Button>
                 </div>
-
-                <div className="flex flex-col gap-2 max-h-72 overflow-y-auto pr-1">
-                  {parsedPreviewItems.map((item, idx) => (
-                    <div
-                      key={item.id || idx}
-                      className="grid grid-cols-1 sm:grid-cols-12 gap-2 p-2 rounded-lg border bg-card/60 items-center text-xs"
-                    >
-                      {/* Name (col 4) */}
-                      <div className="sm:col-span-4">
-                        <Input
-                          value={item.name}
-                          onChange={(e) =>
-                            handleUpdateParsedItem(idx, 'name', e.target.value)
-                          }
-                          placeholder="Item Name"
-                          className="h-8 text-xs font-semibold"
-                        />
-                      </div>
-
-                      {/* Department / Category (col 3) */}
-                      <div className="sm:col-span-3">
-                        <Select
-                          value={item.category}
-                          onValueChange={(val) =>
-                            handleUpdateParsedItem(idx, 'category', val)
-                          }
-                        >
-                          <SelectTrigger className="h-8 text-xs">
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {GROCERY_CATEGORIES.map((cat) => (
-                              <SelectItem key={cat.name} value={cat.name}>
-                                {cat.label}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </div>
-
-                      {/* Qty (col 2) */}
-                      <div className="sm:col-span-2">
-                        <Input
-                          value={item.quantity || ''}
-                          onChange={(e) =>
-                            handleUpdateParsedItem(idx, 'quantity', e.target.value)
-                          }
-                          placeholder="Qty"
-                          className="h-8 text-xs"
-                        />
-                      </div>
-
-                      {/* Notes (col 2) */}
-                      <div className="sm:col-span-2">
-                        <Input
-                          value={item.notes || ''}
-                          onChange={(e) =>
-                            handleUpdateParsedItem(idx, 'notes', e.target.value)
-                          }
-                          placeholder="Brand / Note"
-                          className="h-8 text-xs"
-                        />
-                      </div>
-
-                      {/* Delete button (col 1) */}
-                      <div className="sm:col-span-1 flex justify-end">
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleDeleteParsedItem(idx)}
-                          className="h-7 w-7 p-0 text-muted-foreground hover:text-destructive"
-                        >
-                          <Trash2 className="h-3.5 w-3.5" />
-                        </Button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
               </div>
-            )}
-          </div>
 
-          <DialogFooter className="gap-2 sm:gap-0">
-            {parsedPreviewItems.length > 0 && (
+              {/* Parsed Preview Section */}
+              {parsedPreviewItems.length > 0 && (
+                <div className="flex flex-col gap-3 pt-4 border-t">
+                  <div className="flex items-center justify-between">
+                    <h4
+                      className={`${kumbh_sans.className} text-sm font-bold text-primary uppercase tracking-wider flex items-center gap-2`}
+                    >
+                      <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+                      Recognized Items ({parsedPreviewItems.length})
+                    </h4>
+
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={handleAddNewParsedRow}
+                      className="text-xs h-7 text-primary hover:bg-primary/5"
+                    >
+                      <Plus className="h-3 w-3 mr-1" />
+                      Add Row
+                    </Button>
+                  </div>
+
+                  {/* Bulk Household Staple Banner */}
+                  <div className="flex items-center justify-between p-2.5 rounded-lg bg-amber-500/10 border border-amber-500/20 text-xs">
+                    <label className="flex items-center gap-2 font-semibold text-foreground cursor-pointer select-none">
+                      <input
+                        type="checkbox"
+                        checked={saveAllAsStaples}
+                        onChange={(e) => handleToggleAllStaples(e.target.checked)}
+                        className="rounded border-gray-300 text-amber-600 focus:ring-amber-500 h-4 w-4"
+                      />
+                      <Star className="h-4 w-4 text-amber-500 fill-amber-500/20" />
+                      Save all items as frequent household staples
+                    </label>
+                    <span className="text-[11px] text-muted-foreground hidden sm:inline">
+                      Will appear in your 1-Click Restock catalog
+                    </span>
+                  </div>
+
+                  <div className="flex flex-col gap-2 max-h-72 overflow-y-auto pr-1">
+                    {parsedPreviewItems.map((item, idx) => (
+                      <div
+                        key={item.id || idx}
+                        className="grid grid-cols-1 sm:grid-cols-12 gap-2 p-2 rounded-lg border bg-card/60 items-center text-xs"
+                      >
+                        {/* Name (col 4) */}
+                        <div className="sm:col-span-4">
+                          <Input
+                            value={item.name}
+                            onChange={(e) =>
+                              handleUpdateParsedItem(
+                                idx,
+                                'name',
+                                e.target.value
+                              )
+                            }
+                            placeholder="Item Name"
+                            className="h-8 text-xs font-semibold"
+                          />
+                        </div>
+
+                        {/* Department / Category (col 3) */}
+                        <div className="sm:col-span-3">
+                          <Select
+                            value={item.category}
+                            onValueChange={(val) =>
+                              handleUpdateParsedItem(idx, 'category', val)
+                            }
+                          >
+                            <SelectTrigger className="h-8 text-xs">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {GROCERY_CATEGORIES.map((cat) => (
+                                <SelectItem key={cat.name} value={cat.name}>
+                                  {cat.label}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+
+                        {/* Qty (col 2) */}
+                        <div className="sm:col-span-2">
+                          <Input
+                            value={item.quantity || ''}
+                            onChange={(e) =>
+                              handleUpdateParsedItem(
+                                idx,
+                                'quantity',
+                                e.target.value
+                              )
+                            }
+                            placeholder="Qty"
+                            className="h-8 text-xs"
+                          />
+                        </div>
+
+                        {/* Notes (col 2) */}
+                        <div className="sm:col-span-2">
+                          <Input
+                            value={item.notes || ''}
+                            onChange={(e) =>
+                              handleUpdateParsedItem(
+                                idx,
+                                'notes',
+                                e.target.value
+                              )
+                            }
+                            placeholder="Brand / Note"
+                            className="h-8 text-xs"
+                          />
+                        </div>
+
+                        {/* Actions: Staple Star & Delete button (col 1) */}
+                        <div className="sm:col-span-1 flex items-center justify-end gap-1">
+                          <button
+                            type="button"
+                            onClick={() =>
+                              handleUpdateParsedItem(idx, 'isStaple', !item.isStaple)
+                            }
+                            title={
+                              item.isStaple
+                                ? 'Saved as Household Staple'
+                                : 'Mark as Household Staple'
+                            }
+                            className={`h-7 w-7 flex items-center justify-center rounded hover:bg-muted transition-colors ${
+                              item.isStaple
+                                ? 'text-amber-500'
+                                : 'text-muted-foreground/50 hover:text-amber-500'
+                            }`}
+                          >
+                            <Star
+                              className={`h-3.5 w-3.5 ${
+                                item.isStaple ? 'fill-amber-500' : ''
+                              }`}
+                            />
+                          </button>
+
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleDeleteParsedItem(idx)}
+                            className="h-7 w-7 p-0 text-muted-foreground hover:text-destructive"
+                            title="Delete Row"
+                          >
+                            <Trash2 className="h-3.5 w-3.5" />
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <DialogFooter className="gap-2 sm:gap-0">
+              {parsedPreviewItems.length > 0 && (
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => {
+                    setParsedPreviewItems([]);
+                    setRawPasteText('');
+                  }}
+                  disabled={isBatchAdding}
+                  className="text-xs"
+                >
+                  Clear
+                </Button>
+              )}
+
               <Button
                 type="button"
                 variant="outline"
-                onClick={() => {
-                  setParsedPreviewItems([]);
-                  setRawPasteText('');
-                }}
+                onClick={() => setShowSmartPasteModal(false)}
                 disabled={isBatchAdding}
                 className="text-xs"
               >
-                Clear
+                Cancel
               </Button>
-            )}
 
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => setShowSmartPasteModal(false)}
-              disabled={isBatchAdding}
-              className="text-xs"
-            >
-              Cancel
-            </Button>
-
-            {parsedPreviewItems.length > 0 && (
-              <Button
-                type="button"
-                onClick={handleSaveAllParsedItems}
-                disabled={isBatchAdding || parsedPreviewItems.length === 0}
-                className="bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs gap-1.5"
-              >
-                <Plus className="h-4 w-4" />
-                {isBatchAdding
-                  ? 'Adding to List...'
-                  : `Add All ${parsedPreviewItems.length} Items to List`}
-              </Button>
-            )}
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+              {parsedPreviewItems.length > 0 && (
+                <Button
+                  type="button"
+                  onClick={handleSaveAllParsedItems}
+                  disabled={isBatchAdding || parsedPreviewItems.length === 0}
+                  className="bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs gap-1.5"
+                >
+                  <Plus className="h-4 w-4" />
+                  {isBatchAdding
+                    ? 'Adding to List...'
+                    : `Add All ${parsedPreviewItems.length} Items to List`}
+                </Button>
+              )}
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </CardContent>
     </Card>
   );
