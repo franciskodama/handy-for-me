@@ -569,9 +569,15 @@ export default function GroceriesView({
       });
 
       if (updated) {
-        setActiveItems((prev) =>
-          prev.map((item) => (item.id === editingItem.id ? updated : item))
-        );
+        if (editingItem.archived) {
+          setArchivedItems((prev) =>
+            prev.map((item) => (item.id === editingItem.id ? updated : item))
+          );
+        } else {
+          setActiveItems((prev) =>
+            prev.map((item) => (item.id === editingItem.id ? updated : item))
+          );
+        }
         toast({
           title: 'Item updated ✨',
           description: `Updated "${updated.name}".`,
@@ -1538,27 +1544,55 @@ export default function GroceriesView({
                           {items.map((item) => (
                             <div
                               key={item.id}
-                              className="flex items-center justify-between p-2 rounded bg-card border text-xs"
+                              className="flex items-center justify-between p-2.5 rounded-lg bg-card border text-xs gap-2 hover:border-primary/40 transition-colors"
                             >
-                              <div className="flex flex-col">
-                                <span className="font-semibold">
-                                  {item.name}
-                                </span>
-                                {item.quantity && (
-                                  <span className="text-[10px] text-muted-foreground">
-                                    {item.quantity}
+                              <div className="flex flex-col gap-0.5 flex-1 min-w-0">
+                                <div className="flex items-center gap-1.5 flex-wrap">
+                                  <span className="font-semibold text-foreground truncate">
+                                    {item.name}
                                   </span>
-                                )}
+                                  {item.isStaple && (
+                                    <span title="Household Staple">
+                                      <Star className="h-3 w-3 text-amber-500 fill-amber-500 flex-shrink-0" />
+                                    </span>
+                                  )}
+                                </div>
+                                <div className="flex items-center gap-2 flex-wrap text-[10px] text-muted-foreground">
+                                  {item.quantity && (
+                                    <span className="bg-muted px-1.5 py-0.5 rounded font-medium text-foreground">
+                                      {item.quantity}
+                                    </span>
+                                  )}
+                                  {item.notes && (
+                                    <span className="italic text-muted-foreground/90 truncate max-w-[140px]">
+                                      {item.notes}
+                                    </span>
+                                  )}
+                                </div>
                               </div>
-                              <Button
-                                size="sm"
-                                variant="outline"
-                                onClick={() => handleRestockItem(item)}
-                                className="h-7 text-[11px] font-semibold gap-1 hover:bg-primary hover:text-white"
-                              >
-                                <Plus className="h-3 w-3" />
-                                Add Back
-                              </Button>
+
+                              <div className="flex items-center gap-1 flex-shrink-0">
+                                <Button
+                                  size="sm"
+                                  variant="ghost"
+                                  onClick={() => openEditModal(item)}
+                                  className="h-7 w-7 p-0 text-muted-foreground hover:text-foreground"
+                                  title="Edit item details (name, quantity, notes)"
+                                >
+                                  <Edit2 className="h-3.5 w-3.5" />
+                                </Button>
+
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  onClick={() => handleRestockItem(item)}
+                                  className="h-7 text-[11px] font-semibold gap-1 hover:bg-primary hover:text-white"
+                                  title="Add back to current grocery list"
+                                >
+                                  <Plus className="h-3 w-3" />
+                                  Add Back
+                                </Button>
+                              </div>
                             </div>
                           ))}
                         </div>
