@@ -1484,17 +1484,39 @@ export default function GroceriesView({
                   </label>
                 </div>
 
-                <DialogFooter className="mt-4">
+                <DialogFooter className="mt-4 flex flex-row items-center justify-between sm:justify-between w-full gap-2 pt-2 border-t">
                   <Button
                     type="button"
-                    variant="outline"
-                    onClick={() => setEditingItem(null)}
+                    variant="ghost"
+                    onClick={() => {
+                      if (editingItem) {
+                        handleDeleteItem(editingItem.id, editingItem.name);
+                        setEditingItem(null);
+                      }
+                    }}
+                    className="text-destructive hover:bg-destructive/10 hover:text-destructive text-xs font-semibold gap-1.5 h-9 px-2.5"
                   >
-                    Cancel
+                    <Trash2 className="h-4 w-4" />
+                    Delete Item
                   </Button>
-                  <Button type="submit" disabled={isSubmittingEdit}>
-                    {isSubmittingEdit ? 'Saving...' : 'Save Changes'}
-                  </Button>
+
+                  <div className="flex items-center gap-2 ml-auto">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => setEditingItem(null)}
+                      className="h-9 text-xs"
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      type="submit"
+                      disabled={isSubmittingEdit}
+                      className="h-9 text-xs font-semibold"
+                    >
+                      {isSubmittingEdit ? 'Saving...' : 'Save Changes'}
+                    </Button>
+                  </div>
                 </DialogFooter>
               </form>
             )}
