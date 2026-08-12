@@ -33,7 +33,7 @@ import {
 } from 'lucide-react';
 import { useForm, Controller } from 'react-hook-form';
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -791,160 +791,153 @@ export default function GroceriesView({
   }, [archivedItems]);
 
   return (
-    <div className="flex flex-col gap-6 w-full max-w-7xl mx-auto pb-16">
-      {/* Top Banner & Header */}
-      <Card className="border-border shadow-sm">
-        <CardHeader className="pb-4">
-          <CardTitle className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div className="flex flex-col gap-1.5">
-              <div className="flex items-center gap-3 flex-wrap">
-                <h1
-                  className={`${kumbh_sans.className} text-2xl md:text-3xl font-bold flex items-center gap-2.5`}
-                >
-                  <ShoppingCart className="h-7 w-7 text-primary" />
-                  Groceries & Co-Shopping
-                </h1>
-
-                {householdDetails?.inHousehold &&
-                householdDetails?.userSettings?.shareGroceryList ? (
-                  <Badge className="bg-emerald-600 hover:bg-emerald-700 text-white gap-1.5 flex items-center px-2.5 py-1 text-xs">
-                    <HeartHandshake className="h-3.5 w-3.5" />
-                    👥 Shared with Household
-                  </Badge>
-                ) : (
-                  <Badge
-                    variant="secondary"
-                    className="gap-1 flex items-center text-xs"
-                  >
-                    🔒 Personal List
-                  </Badge>
-                )}
-
-                {householdDetails?.inHousehold &&
-                  householdDetails?.userSettings?.shareGroceryList &&
-                  householdDetails.household?.members && (
+    <Card className="min-h-[75vh]">
+      <CardHeader className="mb-4">
+        <CardTitle className="flex justify-between items-center gap-2 flex-wrap">
+          <div className="flex items-center gap-3 flex-wrap">
+            <p>Groceries</p>
+            {householdDetails?.inHousehold &&
+            householdDetails?.userSettings?.shareGroceryList ? (
+              <Badge className="bg-violet-600 hover:bg-violet-700 text-white gap-1 flex items-center rounded-none">
+                👥 Household
+              </Badge>
+            ) : (
+              <Badge
+                variant="secondary"
+                className="gap-1 flex items-center rounded-none"
+              >
+                🔒 Personal
+              </Badge>
+            )}
+            {householdDetails?.inHousehold &&
+              householdDetails?.userSettings?.shareGroceryList &&
+              householdDetails.household?.members && (
+                <div className="flex -space-x-1.5 overflow-hidden ml-1">
+                  {householdDetails.household.members.map((member: any) => (
                     <div
-                      className="flex -space-x-1.5 overflow-hidden ml-1"
-                      title="Active household co-shoppers"
+                      key={member.id}
+                      className="inline-block h-6 w-6 rounded-full ring-2 ring-background overflow-hidden"
+                      title={member.name || member.uid}
                     >
-                      {householdDetails.household.members.map((member: any) => (
-                        <div
-                          key={member.id}
-                          className="inline-block h-6 w-6 rounded-full ring-2 ring-background overflow-hidden bg-primary/15 text-[10px] font-bold items-center justify-center"
-                          title={member.name || member.uid}
-                        >
-                          {member.avatar ? (
-                            <img
-                              src={member.avatar}
-                              alt={member.name || 'avatar'}
-                              className="h-full w-full object-cover"
-                            />
-                          ) : (
-                            <span>
-                              {(member.name || member.uid)
-                                .charAt(0)
-                                .toUpperCase()}
-                            </span>
-                          )}
+                      {member.avatar ? (
+                        <img
+                          src={member.avatar}
+                          alt={member.name || 'avatar'}
+                          className="h-full w-full object-cover"
+                        />
+                      ) : (
+                        <div className="h-full w-full bg-primary/25 flex items-center justify-center font-bold text-[10px]">
+                          {(member.name || member.uid).charAt(0).toUpperCase()}
                         </div>
-                      ))}
+                      )}
                     </div>
-                  )}
-
-                <div className="block md:hidden ml-auto">
-                  {!openAction ? (
-                    <Help setOpenAction={setOpenAction} />
-                  ) : (
-                    <div />
-                  )}
+                  ))}
                 </div>
+              )}
+          </div>
+          <div className="flex items-center gap-4">
+            {!openAction ? <Help setOpenAction={setOpenAction} /> : <div />}
+          </div>
+        </CardTitle>
+        <CardDescription>
+          Plan together, coordinate item preferences, and shop aisles efficiently in real time.
+        </CardDescription>
+      </CardHeader>
+
+      <CardContent className="flex flex-col gap-6">
+        {/* Explanation Banner */}
+        <AnimatePresence>
+          {openAction && (
+            <motion.div
+              layout
+              initial={{ opacity: 0, y: 50, scale: 0.3 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{
+                opacity: 0,
+                scale: 0.5,
+                transition: { duration: 0.2 }
+              }}
+            >
+              <div className="mb-2">
+                <ExplanationGroceries setOpenAction={setOpenAction} />
               </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
-              <p
-                className={`${barlow.className} text-sm text-muted-foreground font-normal`}
-              >
-                Plan together, coordinate item preferences, and shop aisles
-                efficiently in real time.
-              </p>
-            </div>
+        {/* Mode Selector & Quick Actions Toolbar */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 flex-wrap">
+          <div className="flex bg-muted p-1 border rounded-lg">
+            <button
+              type="button"
+              onClick={() => setViewMode('plan')}
+              className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-md transition-all ${
+                viewMode === 'plan'
+                  ? 'bg-background text-foreground shadow-sm'
+                  : 'text-muted-foreground hover:text-foreground'
+              }`}
+            >
+              <Package className="h-3.5 w-3.5" />
+              📝 Plan & Prepare
+            </button>
+            <button
+              type="button"
+              onClick={() => setViewMode('store')}
+              className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-md transition-all ${
+                viewMode === 'store'
+                  ? 'bg-emerald-600 text-white shadow-sm'
+                  : 'text-muted-foreground hover:text-foreground'
+              }`}
+            >
+              <Store className="h-3.5 w-3.5" />
+              🛒 In-Store Mode
+            </button>
+          </div>
 
-            {/* Mode Selector & Quick Actions */}
-            <div className="flex items-center gap-2 flex-wrap self-start md:self-auto">
-              <div className="flex bg-muted p-1 border rounded-lg">
-                <button
-                  type="button"
-                  onClick={() => setViewMode('plan')}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-md transition-all ${
-                    viewMode === 'plan'
-                      ? 'bg-background text-foreground shadow-sm'
-                      : 'text-muted-foreground hover:text-foreground'
-                  }`}
+          <div className="flex items-center gap-2 flex-wrap">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setShowSmartPasteModal(true)}
+              className="gap-1.5 text-xs font-semibold h-9 border-purple-300 bg-purple-50/50 hover:bg-purple-100 text-purple-800 dark:border-purple-800 dark:bg-purple-950/30 dark:text-purple-300"
+            >
+              <Wand2 className="h-3.5 w-3.5 text-purple-600 dark:text-purple-400" />
+              ✨ AI Smart Paste
+            </Button>
+
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setShowStaplesDrawer(true)}
+              className="gap-1.5 text-xs font-semibold h-9"
+            >
+              <RotateCcw className="h-3.5 w-3.5 text-primary" />
+              Restock & Staples
+              {archivedItems.length > 0 && (
+                <Badge
+                  variant="secondary"
+                  className="ml-1 px-1.5 py-0 text-[10px]"
                 >
-                  <Package className="h-3.5 w-3.5" />
-                  📝 Plan & Prepare
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setViewMode('store')}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-md transition-all ${
-                    viewMode === 'store'
-                      ? 'bg-emerald-600 text-white shadow-sm'
-                      : 'text-muted-foreground hover:text-foreground'
-                  }`}
-                >
-                  <Store className="h-3.5 w-3.5" />
-                  🛒 In-Store Mode
-                </button>
-              </div>
+                  {archivedItems.length}
+                </Badge>
+              )}
+            </Button>
 
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setShowSmartPasteModal(true)}
-                className="gap-1.5 text-xs font-semibold h-9 border-purple-300 bg-purple-50/50 hover:bg-purple-100 text-purple-800 dark:border-purple-800 dark:bg-purple-950/30 dark:text-purple-300"
-              >
-                <Wand2 className="h-3.5 w-3.5 text-purple-600 dark:text-purple-400" />
-                ✨ AI Smart Paste
-              </Button>
-
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setShowStaplesDrawer(true)}
-                className="gap-1.5 text-xs font-semibold h-9"
-              >
-                <RotateCcw className="h-3.5 w-3.5 text-primary" />
-                Restock & Staples
-                {archivedItems.length > 0 && (
-                  <Badge
-                    variant="secondary"
-                    className="ml-1 px-1.5 py-0 text-[10px]"
-                  >
-                    {archivedItems.length}
-                  </Badge>
-                )}
-              </Button>
-
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleDownloadPDF}
-                className="gap-1.5 text-xs font-semibold h-9"
-              >
-                <Printer className="h-3.5 w-3.5" />
-                Print List
-              </Button>
-
-              <div className="hidden md:block">
-                {!openAction ? <Help setOpenAction={setOpenAction} /> : <div />}
-              </div>
-            </div>
-          </CardTitle>
-        </CardHeader>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleDownloadPDF}
+              className="gap-1.5 text-xs font-semibold h-9"
+            >
+              <Printer className="h-3.5 w-3.5" />
+              Print List
+            </Button>
+          </div>
+        </div>
 
         {/* Live Trip Status & Progress Bar */}
         {totalItemsCount > 0 && (
-          <div className="px-6 pb-4">
+          <div className="p-3 bg-muted/40 rounded-lg border border-border/60">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2 text-xs">
               <div className="flex items-center gap-3">
                 <span className="font-semibold text-foreground">
@@ -981,7 +974,7 @@ export default function GroceriesView({
             </div>
 
             {/* Progress bar track */}
-            <div className="w-full bg-muted h-2.5 rounded-full overflow-hidden">
+            <div className="w-full bg-muted h-2 rounded-full overflow-hidden">
               <div
                 className="bg-emerald-500 h-full transition-all duration-500 ease-out"
                 style={{ width: `${cartPercentage}%` }}
@@ -989,21 +982,6 @@ export default function GroceriesView({
             </div>
           </div>
         )}
-      </Card>
-
-      {/* Explanation Banner */}
-      <AnimatePresence>
-        {openAction && (
-          <motion.div
-            layout
-            initial={{ opacity: 0, y: 20, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.2 } }}
-          >
-            <ExplanationGroceries setOpenAction={setOpenAction} />
-          </motion.div>
-        )}
-      </AnimatePresence>
 
       {/* Phase 1: Plan & Prepare - Quick Add Toolbar */}
       {viewMode === 'plan' && (
@@ -1803,6 +1781,7 @@ export default function GroceriesView({
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </div>
+      </CardContent>
+    </Card>
   );
 }
