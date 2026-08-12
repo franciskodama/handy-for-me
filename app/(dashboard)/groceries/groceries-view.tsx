@@ -912,7 +912,7 @@ export default function GroceriesView({
             <button
               type="button"
               onClick={() => setViewMode('plan')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-md transition-all ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 text-xs uppercase font-semibold rounded-md transition-all ${
                 viewMode === 'plan'
                   ? 'bg-background text-foreground shadow-sm'
                   : 'text-muted-foreground hover:text-foreground'
@@ -924,7 +924,7 @@ export default function GroceriesView({
             <button
               type="button"
               onClick={() => setViewMode('store')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-md transition-all ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 text-xs uppercase font-semibold rounded-md transition-all ${
                 viewMode === 'store'
                   ? 'bg-emerald-600 text-white shadow-sm'
                   : 'text-muted-foreground hover:text-foreground'
@@ -1487,17 +1487,16 @@ export default function GroceriesView({
                 <DialogFooter className="mt-4 flex flex-row items-center justify-between sm:justify-between w-full gap-2 pt-2 border-t">
                   <Button
                     type="button"
-                    variant="ghost"
                     onClick={() => {
                       if (editingItem) {
                         handleDeleteItem(editingItem.id, editingItem.name);
                         setEditingItem(null);
                       }
                     }}
-                    className="text-destructive hover:bg-destructive/10 hover:text-destructive text-xs font-semibold gap-1.5 h-9 px-2.5"
+                    className="bg-red-600 hover:bg-red-700 hover:text-white text-white h-9 text-xs font-semibold gap-1.5 px-3"
                   >
-                    <Trash2 className="h-4 w-4" />
-                    Delete Item
+                    <Trash2 className="h-3.5 w-3.5" />
+                    Delete
                   </Button>
 
                   <div className="flex items-center gap-2 ml-auto">
@@ -1641,7 +1640,8 @@ export default function GroceriesView({
                       className={`${kumbh_sans.className} text-sm font-bold text-primary uppercase tracking-wider mb-3 flex items-center gap-2`}
                     >
                       <Sparkles className="h-4 w-4 text-amber-500" />
-                      Popular Household Staples ({availablePopularStaples.length} available)
+                      Popular Household Staples (
+                      {availablePopularStaples.length} available)
                     </h4>
                     <div className="flex flex-wrap gap-2">
                       {availablePopularStaples.map((staple) => (
@@ -1773,7 +1773,9 @@ export default function GroceriesView({
                       <input
                         type="checkbox"
                         checked={saveAllAsStaples}
-                        onChange={(e) => handleToggleAllStaples(e.target.checked)}
+                        onChange={(e) =>
+                          handleToggleAllStaples(e.target.checked)
+                        }
                         className="rounded border-gray-300 text-amber-600 focus:ring-amber-500 h-4 w-4"
                       />
                       <Star className="h-4 w-4 text-amber-500 fill-amber-500/20" />
@@ -1864,7 +1866,11 @@ export default function GroceriesView({
                           <button
                             type="button"
                             onClick={() =>
-                              handleUpdateParsedItem(idx, 'isStaple', !item.isStaple)
+                              handleUpdateParsedItem(
+                                idx,
+                                'isStaple',
+                                !item.isStaple
+                              )
                             }
                             title={
                               item.isStaple
