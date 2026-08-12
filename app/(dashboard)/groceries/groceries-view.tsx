@@ -1510,50 +1510,7 @@ export default function GroceriesView({
             </DialogHeader>
 
             <div className="flex flex-col gap-6 py-3">
-              {/* Section 1: Popular Household Essentials */}
-              <div>
-                <h4
-                  className={`${kumbh_sans.className} text-sm font-bold text-primary uppercase tracking-wider mb-3 flex items-center gap-2`}
-                >
-                  <Sparkles className="h-4 w-4 text-amber-500" />
-                  Popular Household Staples (1-Click Add)
-                </h4>
-                <div className="flex flex-wrap gap-2">
-                  {POPULAR_STAPLES.map((staple) => {
-                    const alreadyOnList = activeItems.some(
-                      (i) => i.name.toLowerCase() === staple.name.toLowerCase()
-                    );
-                    return (
-                      <Button
-                        key={staple.name}
-                        variant={alreadyOnList ? 'secondary' : 'outline'}
-                        size="sm"
-                        disabled={alreadyOnList}
-                        onClick={() => handleQuickAddStaple(staple)}
-                        className={`text-xs font-medium h-8 gap-1.5 transition-all ${
-                          alreadyOnList
-                            ? 'opacity-50'
-                            : 'hover:border-primary hover:bg-primary/5'
-                        }`}
-                      >
-                        {alreadyOnList ? (
-                          <Check className="h-3 w-3 text-emerald-600" />
-                        ) : (
-                          <Plus className="h-3 w-3" />
-                        )}
-                        <span>{staple.name}</span>
-                        {staple.quantity && (
-                          <span className="text-[10px] text-muted-foreground">
-                            ({staple.quantity})
-                          </span>
-                        )}
-                      </Button>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {/* Section 2: Previous Trip History (Archived Items) */}
+              {/* Section 1: Previous Trip History (Archived Items) */}
               <div>
                 <h4
                   className={`${kumbh_sans.className} text-sm font-bold text-primary uppercase tracking-wider mb-3 flex items-center gap-2`}
@@ -1610,6 +1567,48 @@ export default function GroceriesView({
                   </div>
                 )}
               </div>
+
+              {/* Section 2: Popular Household Essentials */}
+              {(() => {
+                const availablePopularStaples = POPULAR_STAPLES.filter(
+                  (staple) =>
+                    !activeItems.some(
+                      (i) => i.name.toLowerCase() === staple.name.toLowerCase()
+                    )
+                );
+
+                if (availablePopularStaples.length === 0) return null;
+
+                return (
+                  <div className="pt-4 border-t border-border">
+                    <h4
+                      className={`${kumbh_sans.className} text-sm font-bold text-primary uppercase tracking-wider mb-3 flex items-center gap-2`}
+                    >
+                      <Sparkles className="h-4 w-4 text-amber-500" />
+                      Popular Household Staples ({availablePopularStaples.length} available)
+                    </h4>
+                    <div className="flex flex-wrap gap-2">
+                      {availablePopularStaples.map((staple) => (
+                        <Button
+                          key={staple.name}
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleQuickAddStaple(staple)}
+                          className="text-xs font-medium h-8 gap-1.5 transition-all hover:border-primary hover:bg-primary/5"
+                        >
+                          <Plus className="h-3 w-3" />
+                          <span>{staple.name}</span>
+                          {staple.quantity && (
+                            <span className="text-[10px] text-muted-foreground">
+                              ({staple.quantity})
+                            </span>
+                          )}
+                        </Button>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })()}
             </div>
 
             <DialogFooter>
