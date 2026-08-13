@@ -1033,7 +1033,7 @@ export default function GroceriesView({
 
         {/* Live Trip Status & Progress Bar */}
         {totalItemsCount > 0 && (
-          <div className="p-3 bg-muted/40 rounded-lg border border-border/60">
+          <div className="p-3 bg-muted/40 border border-border/60">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2 text-xs">
               <div className="flex items-center gap-3">
                 <span className="font-semibold text-foreground">
@@ -1070,7 +1070,7 @@ export default function GroceriesView({
             </div>
 
             {/* Progress bar track */}
-            <div className="w-full bg-muted h-2 rounded-full overflow-hidden">
+            <div className="w-full bg-muted h-2 overflow-hidden">
               <div
                 className="bg-emerald-500 h-full transition-all duration-500 ease-out"
                 style={{ width: `${cartPercentage}%` }}
@@ -1219,7 +1219,7 @@ export default function GroceriesView({
             </button>
             <button
               onClick={() => setFilter('inCart')}
-              className={`px-3 py-1 font-semibold rounded transition-colors whitespace-nowrap ${
+              className={`px-3 py-1 font-semibold transition-colors whitespace-nowrap ${
                 filter === 'inCart'
                   ? 'bg-background text-foreground shadow-sm'
                   : 'text-muted-foreground hover:text-foreground'
@@ -1229,7 +1229,7 @@ export default function GroceriesView({
             </button>
             <button
               onClick={() => setFilter('staples')}
-              className={`px-3 py-1 font-semibold rounded transition-colors whitespace-nowrap ${
+              className={`px-3 py-1 font-semibold transition-colors whitespace-nowrap ${
                 filter === 'staples'
                   ? 'bg-background text-foreground shadow-sm'
                   : 'text-muted-foreground hover:text-foreground'
@@ -1241,7 +1241,7 @@ export default function GroceriesView({
 
           {viewMode === 'store' && (
             <div className="flex items-center gap-2 text-xs text-muted-foreground">
-              <span className="inline-block h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+              <span className="inline-block h-2 w-2 bg-emerald-500 animate-pulse" />
               Live In-Store Mode • Tap items as you pick them
             </div>
           )}
@@ -1252,17 +1252,18 @@ export default function GroceriesView({
           <div className="mt-4 flex flex-col gap-6">
             {/* 1. Quick-Start Banner for returning users with past trips */}
             {archivedItems.length > 0 ? (
-              <div className="p-5 sm:p-6 rounded-xl border-2 border-dashed border-primary/30 bg-gradient-to-r from-primary/5 via-primary/10 to-primary/5 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-sm">
+              <div className="p-5 sm:p-6 border-2 border-dashed border-primary/30 bg-gradient-to-r from-primary/5 via-primary/10 to-primary/5 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-sm">
                 <div className="flex items-center gap-3 text-left">
-                  <div className="h-12 w-12 rounded-xl bg-primary/15 flex items-center justify-center text-primary flex-shrink-0">
+                  <div className="h-12 w-12 bg-primary/15 flex items-center justify-center text-primary flex-shrink-0">
                     <RotateCcw className="h-6 w-6" />
                   </div>
                   <div>
                     <h4 className="font-bold text-base text-foreground flex items-center gap-2">
-                      Ready for this week&apos;s grocery run? 🛒
+                      Ready for this week&apos;s grocery run?
                     </h4>
                     <p className="text-xs text-muted-foreground mt-0.5">
-                      You have {archivedItems.length} items from past shopping trips
+                      You have {archivedItems.length} items from past shopping
+                      trips
                       {archivedItems.filter((i) => i.isStaple).length > 0 &&
                         ` (including ${
                           archivedItems.filter((i) => i.isStaple).length
@@ -1308,7 +1309,7 @@ export default function GroceriesView({
               </div>
             ) : (
               <div className="p-6 rounded-xl border bg-muted/20 text-center flex flex-col items-center justify-center gap-3">
-                <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                <div className="h-12 w-12 bg-primary/10 flex items-center justify-center text-primary">
                   <ShoppingBag className="h-6 w-6" />
                 </div>
                 <div className="max-w-md">
@@ -1316,7 +1317,8 @@ export default function GroceriesView({
                     Your grocery list is empty & ready
                   </h4>
                   <p className="text-xs text-muted-foreground mt-1">
-                    Add items using the quick-add bar above, paste a list from WhatsApp or Notes, or pick from popular essentials below.
+                    Add items using the quick-add bar above, paste a list from
+                    WhatsApp or Notes, or pick from popular essentials below.
                   </p>
                 </div>
                 <div className="flex items-center gap-2 flex-wrap justify-center pt-1">
@@ -1343,7 +1345,7 @@ export default function GroceriesView({
             )}
 
             {/* 2. Quick-Add Essentials Bar (Instant 1-click additions) */}
-            <div className="p-4 sm:p-5 rounded-xl border bg-card/60 flex flex-col gap-3">
+            <div className="p-4 sm:p-5 border bg-card/60 flex flex-col gap-3">
               <div className="flex items-center justify-between gap-2 flex-wrap">
                 <div className="flex items-center gap-2">
                   <Sparkles className="h-4 w-4 text-amber-500" />
