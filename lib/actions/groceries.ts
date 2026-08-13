@@ -291,6 +291,55 @@ export async function restockGroceryItem(id: string) {
   }
 }
 
+export async function batchRestockGroceryItems(
+  uid: string,
+  options?: { onlyStaples?: boolean }
+) {
+  try {
+    const user = await getAuthenticatedUser();
+    if (!user || user.uid !== uid) return false;
+
+    const isShared = user.householdId && user.shareGroceryList;
+
+    await prisma.groceryItem.updateMany({
+      where: {
+        ...(isShared ? { householdId: user.householdId } : { uid, householdId: null }),
+        archived: true,
+        ...(options?.onlyStaples ? { isStaple: true } : {})
+      },
+      data: {
+        archived: false,
+        inCart: false,
+        pickedByUid: null
+      }
+    });
+
+    const active = await prisma.groceryItem.findMany({
+      where: {
+        ...(isShared ? { householdId: user.householdId } : { uid, householdId: null }),
+        archived: false
+      },
+      orderBy: { createdAt: 'desc' }
+    });
+
+    const archived = await prisma.groceryItem.findMany({
+      where: {
+        ...(isShared ? { householdId: user.householdId } : { uid, householdId: null }),
+        archived: true
+      },
+      orderBy: { updatedAt: 'desc' }
+    });
+
+    return {
+      active: active as unknown as GroceryItem[],
+      archived: archived as unknown as GroceryItem[]
+    };
+  } catch (error) {
+    console.error('Error batch restocking grocery items:', error);
+    return false;
+  }
+}
+
 export async function finishShoppingTrip(uid: string) {
   try {
     const user = await getAuthenticatedUser();

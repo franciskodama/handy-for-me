@@ -77,6 +77,7 @@ import {
   updateGroceryItem,
   deleteGroceryItem,
   restockGroceryItem,
+  batchRestockGroceryItems,
   finishShoppingTrip,
   batchAddGroceryItems
 } from '@/lib/actions/groceries';
@@ -676,6 +677,60 @@ export default function GroceriesView({
     }
   };
 
+  const handleBatchRestock = async (onlyStaples?: boolean) => {
+    const itemsToRestock = onlyStaples
+      ? archivedItems.filter((i) => i.isStaple)
+      : archivedItems;
+
+    if (itemsToRestock.length === 0) return;
+
+    // Optimistic UI update
+    setArchivedItems((prev) =>
+      onlyStaples ? prev.filter((i) => !i.isStaple) : []
+    );
+    setActiveItems((prev) => [
+      ...itemsToRestock.map((i) => ({ ...i, archived: false, inCart: false })),
+      ...prev
+    ]);
+
+    try {
+      const res = await batchRestockGroceryItems(uid, { onlyStaples });
+      if (res && typeof res === 'object') {
+        setActiveItems(res.active);
+        setArchivedItems(res.archived);
+      }
+
+      confetti({
+        particleCount: 65,
+        spread: 60,
+        origin: { y: 0.6 }
+      });
+
+      toast({
+        title: onlyStaples
+          ? `Restocked ${itemsToRestock.length} Household Staples! ⭐`
+          : `Restocked all ${itemsToRestock.length} items! 🛒`,
+        description:
+          'Items are now on your active list ready for planning or shopping.',
+        variant: 'success'
+      });
+
+      setShowStaplesDrawer(false);
+    } catch (error) {
+      console.error(error);
+      toast({
+        title: 'Restock failed',
+        description: 'Could not restore items. Please try again.',
+        variant: 'destructive'
+      });
+      const refresh = await getGroceryItems(uid);
+      if (refresh && typeof refresh === 'object') {
+        setActiveItems(refresh.active);
+        setArchivedItems(refresh.archived);
+      }
+    }
+  };
+
   const handleQuickAddStaple = async (staple: {
     name: string;
     category: string;
@@ -1194,19 +1249,65 @@ export default function GroceriesView({
 
         {/* Empty State */}
         {activeItems.length === 0 && (
-          <div className="mt-4">
+          <div className="mt-4 flex flex-col gap-4">
+            {archivedItems.length > 0 && (
+              <div className="p-4 sm:p-5 rounded-xl border-2 border-dashed border-primary/30 bg-primary/5 flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div className="flex items-center gap-3 text-left">
+                  <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-primary flex-shrink-0">
+                    <RotateCcw className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-sm text-foreground">
+                      Ready for this week&apos;s grocery run? 🛒
+                    </h4>
+                    <p className="text-xs text-muted-foreground">
+                      You have {archivedItems.length} items from past trips
+                      {archivedItems.filter((i) => i.isStaple).length > 0 &&
+                        ` (including ${
+                          archivedItems.filter((i) => i.isStaple).length
+                        } frequent staples ⭐)`}
+                      .
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap w-full sm:w-auto">
+                  {archivedItems.filter((i) => i.isStaple).length > 0 && (
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => handleBatchRestock(true)}
+                      className="text-xs font-semibold gap-1.5 border-amber-500/50 text-amber-700 dark:text-amber-300 hover:bg-amber-500/10 flex-1 sm:flex-none"
+                    >
+                      <Star className="h-3.5 w-3.5 fill-amber-500 text-amber-500" />
+                      Restock Staples ({archivedItems.filter((i) => i.isStaple).length})
+                    </Button>
+                  )}
+
+                  <Button
+                    size="sm"
+                    onClick={() => handleBatchRestock(false)}
+                    className="text-xs font-semibold gap-1.5 flex-1 sm:flex-none"
+                  >
+                    <RotateCcw className="h-3.5 w-3.5" />
+                    Restock All ({archivedItems.length})
+                  </Button>
+                </div>
+              </div>
+            )}
+
             <MessageEmpty
               image={'/superman-where.webp'}
               objectPosition={'50% 10%'}
               alt={'Grocery list is empty'}
               icon={<ShoppingBag size={32} strokeWidth={1.6} />}
               titleOne={'Fridge looking empty?'}
-              titleTwo={'No Grocery Items Yet'}
+              titleTwo={'No Active Grocery Items'}
               subtitle={
-                'Add items to your list or tap "Restock & Staples" to quickly add household essentials.'
+                'Add items to your list, paste a raw list, or restock from your shopping history.'
               }
               setOpenAction={setShowStaplesDrawer}
-              buttonCopy={'Quick-Add Staples'}
+              buttonCopy={'Browse Restock Catalog'}
               hasButton={true}
             />
           </div>
@@ -1539,12 +1640,39 @@ export default function GroceriesView({
             <div className="flex flex-col gap-6 py-3">
               {/* Section 1: Previous Trip History (Archived Items) */}
               <div>
-                <h4
-                  className={`${kumbh_sans.className} text-sm font-bold text-primary uppercase tracking-wider mb-3 flex items-center gap-2`}
-                >
-                  <Clock className="h-4 w-4 text-primary" />
-                  Past Shopping Trips History ({archivedItems.length} items)
-                </h4>
+                <div className="flex items-center justify-between gap-2 flex-wrap mb-3">
+                  <h4
+                    className={`${kumbh_sans.className} text-sm font-bold text-primary uppercase tracking-wider flex items-center gap-2`}
+                  >
+                    <Clock className="h-4 w-4 text-primary" />
+                    Past Shopping Trips History ({archivedItems.length})
+                  </h4>
+
+                  {archivedItems.length > 0 && (
+                    <div className="flex items-center gap-2 flex-wrap">
+                      {archivedItems.filter((i) => i.isStaple).length > 0 && (
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => handleBatchRestock(true)}
+                          className="h-8 text-xs font-semibold gap-1.5 border-amber-500/50 text-amber-700 dark:text-amber-300 hover:bg-amber-500/10"
+                        >
+                          <Star className="h-3.5 w-3.5 fill-amber-500 text-amber-500" />
+                          Restock Staples ({archivedItems.filter((i) => i.isStaple).length})
+                        </Button>
+                      )}
+
+                      <Button
+                        size="sm"
+                        onClick={() => handleBatchRestock(false)}
+                        className="h-8 text-xs font-semibold gap-1.5"
+                      >
+                        <RotateCcw className="h-3.5 w-3.5" />
+                        Restock All ({archivedItems.length})
+                      </Button>
+                    </div>
+                  )}
+                </div>
 
                 {archivedItems.length === 0 ? (
                   <div className="p-6 text-center border border-dashed rounded-lg text-xs text-muted-foreground">
