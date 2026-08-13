@@ -1247,39 +1247,40 @@ export default function GroceriesView({
           )}
         </div>
 
-        {/* Empty State */}
+        {/* Empty State / Quick Launchpad */}
         {activeItems.length === 0 && (
-          <div className="mt-4 flex flex-col gap-4">
-            {archivedItems.length > 0 && (
-              <div className="p-4 sm:p-5 rounded-xl border-2 border-dashed border-primary/30 bg-primary/5 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="mt-4 flex flex-col gap-6">
+            {/* 1. Quick-Start Banner for returning users with past trips */}
+            {archivedItems.length > 0 ? (
+              <div className="p-5 sm:p-6 rounded-xl border-2 border-dashed border-primary/30 bg-gradient-to-r from-primary/5 via-primary/10 to-primary/5 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-sm">
                 <div className="flex items-center gap-3 text-left">
-                  <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-primary flex-shrink-0">
-                    <RotateCcw className="h-5 w-5" />
+                  <div className="h-12 w-12 rounded-xl bg-primary/15 flex items-center justify-center text-primary flex-shrink-0">
+                    <RotateCcw className="h-6 w-6" />
                   </div>
                   <div>
-                    <h4 className="font-bold text-sm text-foreground">
+                    <h4 className="font-bold text-base text-foreground flex items-center gap-2">
                       Ready for this week&apos;s grocery run? 🛒
                     </h4>
-                    <p className="text-xs text-muted-foreground">
-                      You have {archivedItems.length} items from past trips
+                    <p className="text-xs text-muted-foreground mt-0.5">
+                      You have {archivedItems.length} items from past shopping trips
                       {archivedItems.filter((i) => i.isStaple).length > 0 &&
                         ` (including ${
                           archivedItems.filter((i) => i.isStaple).length
                         } frequent staples ⭐)`}
-                      .
+                      . Restock in 1 tap, then trim what you don&apos;t need.
                     </p>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap w-full sm:w-auto">
+                <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap w-full md:w-auto">
                   {archivedItems.filter((i) => i.isStaple).length > 0 && (
                     <Button
                       size="sm"
                       variant="outline"
                       onClick={() => handleBatchRestock(true)}
-                      className="text-xs font-semibold gap-1.5 border-amber-500/50 text-amber-700 dark:text-amber-300 hover:bg-amber-500/10 flex-1 sm:flex-none"
+                      className="text-xs font-semibold gap-1.5 border-amber-500/50 text-amber-700 dark:text-amber-300 hover:bg-amber-500/10 flex-1 md:flex-none h-9"
                     >
-                      <Star className="h-3.5 w-3.5 fill-amber-500 text-amber-500" />
+                      <Star className="h-4 w-4 fill-amber-500 text-amber-500" />
                       Restock Staples (
                       {archivedItems.filter((i) => i.isStaple).length})
                     </Button>
@@ -1288,14 +1289,100 @@ export default function GroceriesView({
                   <Button
                     size="sm"
                     onClick={() => handleBatchRestock(false)}
-                    className="text-xs font-semibold gap-1.5 flex-1 sm:flex-none"
+                    className="text-xs font-semibold gap-1.5 flex-1 md:flex-none h-9"
                   >
-                    <RotateCcw className="h-3.5 w-3.5" />
+                    <RotateCcw className="h-4 w-4" />
                     Restock All ({archivedItems.length})
+                  </Button>
+
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => setShowStaplesDrawer(true)}
+                    className="text-xs font-semibold h-9"
+                    title="Browse and select individual history items"
+                  >
+                    Catalog
+                  </Button>
+                </div>
+              </div>
+            ) : (
+              <div className="p-6 rounded-xl border bg-muted/20 text-center flex flex-col items-center justify-center gap-3">
+                <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                  <ShoppingBag className="h-6 w-6" />
+                </div>
+                <div className="max-w-md">
+                  <h4 className="font-bold text-base text-foreground">
+                    Your grocery list is empty & ready
+                  </h4>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Add items using the quick-add bar above, paste a list from WhatsApp or Notes, or pick from popular essentials below.
+                  </p>
+                </div>
+                <div className="flex items-center gap-2 flex-wrap justify-center pt-1">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => setShowSmartPasteModal(true)}
+                    className="text-xs font-semibold gap-1.5 border-purple-300 text-purple-700 dark:border-purple-800 dark:text-purple-300 hover:bg-purple-50"
+                  >
+                    <Wand2 className="h-3.5 w-3.5 text-purple-600 dark:text-purple-400" />
+                    AI Smart Paste
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => setShowStaplesDrawer(true)}
+                    className="text-xs font-semibold gap-1.5"
+                  >
+                    <Sparkles className="h-3.5 w-3.5 text-amber-500" />
+                    Browse Staples Catalog
                   </Button>
                 </div>
               </div>
             )}
+
+            {/* 2. Quick-Add Essentials Bar (Instant 1-click additions) */}
+            <div className="p-4 sm:p-5 rounded-xl border bg-card/60 flex flex-col gap-3">
+              <div className="flex items-center justify-between gap-2 flex-wrap">
+                <div className="flex items-center gap-2">
+                  <Sparkles className="h-4 w-4 text-amber-500" />
+                  <h5
+                    className={`${kumbh_sans.className} text-xs font-bold uppercase tracking-wider text-foreground`}
+                  >
+                    1-Click Add Popular Household Essentials
+                  </h5>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setShowSmartPasteModal(true)}
+                  className="text-xs text-purple-600 dark:text-purple-400 hover:underline font-semibold flex items-center gap-1"
+                >
+                  <Wand2 className="h-3 w-3" />
+                  Paste whole list instead
+                </button>
+              </div>
+
+              <div className="flex flex-wrap gap-2">
+                {POPULAR_STAPLES.map((staple) => (
+                  <Button
+                    key={staple.name}
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleQuickAddStaple(staple)}
+                    className="text-xs font-medium h-8 gap-1.5 transition-all hover:border-primary hover:bg-primary/5"
+                  >
+                    <Plus className="h-3 w-3 text-primary" />
+                    <span>{staple.name}</span>
+                    {staple.quantity && (
+                      <span className="text-[10px] text-muted-foreground">
+                        ({staple.quantity})
+                      </span>
+                    )}
+                  </Button>
+                ))}
+              </div>
+            </div>
           </div>
         )}
 
