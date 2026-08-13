@@ -1280,7 +1280,8 @@ export default function GroceriesView({
                       className="text-xs font-semibold gap-1.5 border-amber-500/50 text-amber-700 dark:text-amber-300 hover:bg-amber-500/10 flex-1 sm:flex-none"
                     >
                       <Star className="h-3.5 w-3.5 fill-amber-500 text-amber-500" />
-                      Restock Staples ({archivedItems.filter((i) => i.isStaple).length})
+                      Restock Staples (
+                      {archivedItems.filter((i) => i.isStaple).length})
                     </Button>
                   )}
 
@@ -1295,21 +1296,6 @@ export default function GroceriesView({
                 </div>
               </div>
             )}
-
-            <MessageEmpty
-              image={'/superman-where.webp'}
-              objectPosition={'50% 10%'}
-              alt={'Grocery list is empty'}
-              icon={<ShoppingBag size={32} strokeWidth={1.6} />}
-              titleOne={'Fridge looking empty?'}
-              titleTwo={'No Active Grocery Items'}
-              subtitle={
-                'Add items to your list, paste a raw list, or restock from your shopping history.'
-              }
-              setOpenAction={setShowStaplesDrawer}
-              buttonCopy={'Browse Restock Catalog'}
-              hasButton={true}
-            />
           </div>
         )}
 
@@ -1658,7 +1644,8 @@ export default function GroceriesView({
                           className="h-8 text-xs font-semibold gap-1.5 border-amber-500/50 text-amber-700 dark:text-amber-300 hover:bg-amber-500/10"
                         >
                           <Star className="h-3.5 w-3.5 fill-amber-500 text-amber-500" />
-                          Restock Staples ({archivedItems.filter((i) => i.isStaple).length})
+                          Restock Staples (
+                          {archivedItems.filter((i) => i.isStaple).length})
                         </Button>
                       )}
 
