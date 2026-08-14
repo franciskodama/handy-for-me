@@ -81,7 +81,8 @@ import {
   batchRestockGroceryItems,
   finishShoppingTrip,
   batchAddGroceryItems,
-  clearActiveGroceryItems
+  clearActiveGroceryItems,
+  removeActiveGroceryItem
 } from '@/lib/actions/groceries';
 import {
   inferCategory,
@@ -735,7 +736,59 @@ export default function GroceriesView({
     }
   };
 
-  const handleDeleteItem = async (id: string, name: string) => {
+  const handleRemoveFromActiveList = async (item: GroceryItem) => {
+    try {
+      if (item.isStaple) {
+        // Optimistic: remove from active, move to archived, KEEP in staples catalog
+        setActiveItems((prev) => prev.filter((i) => i.id !== item.id));
+        const archivedStaple: GroceryItem = {
+          ...item,
+          archived: true,
+          inCart: false,
+          pickedByUid: null
+        };
+        setArchivedItems((prev) => [
+          archivedStaple,
+          ...prev.filter((i) => i.id !== item.id)
+        ]);
+        setStaples((prev) =>
+          prev.map((i) => (i.id === item.id ? archivedStaple : i))
+        );
+
+        await removeActiveGroceryItem(item.id);
+        toast({
+          title: 'Removed from list',
+          description: `"${item.name}" was removed from this week's list and remains saved in your Staples ⭐.`,
+          variant: 'success'
+        });
+      } else {
+        // Optimistic: delete non-staple item
+        setActiveItems((prev) => prev.filter((i) => i.id !== item.id));
+        setArchivedItems((prev) => prev.filter((i) => i.id !== item.id));
+
+        await removeActiveGroceryItem(item.id);
+        toast({
+          title: 'Item removed',
+          description: `"${item.name}" was deleted.`,
+          variant: 'success'
+        });
+      }
+    } catch (error) {
+      console.error(error);
+      toast({
+        title: 'Error removing item',
+        variant: 'destructive'
+      });
+      const refresh = await getGroceryItems(uid);
+      if (refresh && typeof refresh === 'object') {
+        setActiveItems(refresh.active);
+        setArchivedItems(refresh.archived);
+        setStaples(refresh.staples);
+      }
+    }
+  };
+
+  const handlePermanentDelete = async (id: string, name: string) => {
     try {
       setActiveItems((prev) => prev.filter((i) => i.id !== id));
       setArchivedItems((prev) => prev.filter((i) => i.id !== id));
@@ -743,16 +796,22 @@ export default function GroceriesView({
 
       await deleteGroceryItem(id);
       toast({
-        title: 'Item removed',
-        description: `"${name}" was deleted.`,
+        title: 'Item deleted',
+        description: `"${name}" was permanently removed.`,
         variant: 'success'
       });
     } catch (error) {
       console.error(error);
       toast({
-        title: 'Error removing item',
+        title: 'Error deleting item',
         variant: 'destructive'
       });
+      const refresh = await getGroceryItems(uid);
+      if (refresh && typeof refresh === 'object') {
+        setActiveItems(refresh.active);
+        setArchivedItems(refresh.archived);
+        setStaples(refresh.staples);
+      }
     }
   };
 
@@ -1933,7 +1992,11 @@ export default function GroceriesView({
                             variant="ghost"
                             size="sm"
                             className="h-8 w-8 p-0 text-muted-foreground hover:text-destructive"
-                            title="Delete Item"
+                            title={
+                              item.isStaple
+                                ? "Remove from this week's list (keeps staple in catalog)"
+                                : "Delete Item"
+                            }
                           >
                             <Trash2 className="h-4 w-4" />
                           </Button>
@@ -1941,19 +2004,20 @@ export default function GroceriesView({
                         <AlertDialogContent>
                           <AlertDialogHeader>
                             <AlertDialogTitle>
-                              Remove from list?
+                              {item.isStaple
+                                ? "Remove from this week's list?"
+                                : "Remove from list?"}
                             </AlertDialogTitle>
                             <AlertDialogDescription>
-                              Are you sure you want to remove &quot;{item.name}
-                              &quot; from your grocery list?
+                              {item.isStaple
+                                ? `"${item.name}" will be removed from your active grocery list, but will remain saved in your Staples catalog ⭐ for future shopping trips.`
+                                : `Are you sure you want to remove "${item.name}" from your grocery list?`}
                             </AlertDialogDescription>
                           </AlertDialogHeader>
                           <AlertDialogFooter>
                             <AlertDialogCancel>Cancel</AlertDialogCancel>
                             <AlertDialogAction
-                              onClick={() =>
-                                handleDeleteItem(item.id, item.name)
-                              }
+                              onClick={() => handleRemoveFromActiveList(item)}
                               className="bg-destructive hover:bg-destructive/90"
                             >
                               Remove
@@ -2064,7 +2128,11 @@ export default function GroceriesView({
                     type="button"
                     onClick={() => {
                       if (editingItem) {
-                        handleDeleteItem(editingItem.id, editingItem.name);
+                        if (editingItem.archived) {
+                          handlePermanentDelete(editingItem.id, editingItem.name);
+                        } else {
+                          handleRemoveFromActiveList(editingItem);
+                        }
                         setEditingItem(null);
                       }
                     }}

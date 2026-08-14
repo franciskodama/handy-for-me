@@ -295,6 +295,49 @@ export async function deleteGroceryItem(id: string) {
   }
 }
 
+export async function removeActiveGroceryItem(id: string) {
+  try {
+    const user = await getAuthenticatedUser();
+    if (!user) return false;
+
+    const item = await prisma.groceryItem.findUnique({
+      where: { id }
+    });
+
+    if (!item) return false;
+
+    const isAuthorized =
+      item.uid === user.uid ||
+      (item.householdId && user.householdId === item.householdId && user.shareGroceryList);
+
+    if (!isAuthorized) {
+      return false;
+    }
+
+    if (item.isStaple) {
+      // If it's a staple, keep the record as archived so it stays in the staples catalog
+      const updated = await prisma.groceryItem.update({
+        where: { id },
+        data: {
+          archived: true,
+          inCart: false,
+          pickedByUid: null
+        }
+      });
+      return { action: 'archived' as const, item: updated as unknown as GroceryItem };
+    } else {
+      // If it's not a staple, delete it permanently
+      await prisma.groceryItem.delete({
+        where: { id }
+      });
+      return { action: 'deleted' as const, id };
+    }
+  } catch (error) {
+    console.error('Error removing active grocery item:', error);
+    return false;
+  }
+}
+
 export async function restockGroceryItem(id: string) {
   try {
     const user = await getAuthenticatedUser();
