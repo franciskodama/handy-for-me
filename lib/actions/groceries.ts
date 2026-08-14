@@ -620,13 +620,29 @@ export async function clearActiveGroceryItems(
       : { uid };
 
     if (options?.deletePermanently) {
+      // 1. Delete non-staple active items permanently
       await prisma.groceryItem.deleteMany({
         where: {
           ...whereCondition,
-          archived: false
+          archived: false,
+          isStaple: false
+        }
+      });
+      // 2. For staple active items, archive them so they are NEVER removed from the Staples Catalog!
+      await prisma.groceryItem.updateMany({
+        where: {
+          ...whereCondition,
+          archived: false,
+          isStaple: true
+        },
+        data: {
+          archived: true,
+          inCart: false,
+          pickedByUid: null
         }
       });
     } else {
+      // Archive all active items to history
       await prisma.groceryItem.updateMany({
         where: {
           ...whereCondition,

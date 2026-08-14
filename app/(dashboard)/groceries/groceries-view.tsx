@@ -934,20 +934,30 @@ export default function GroceriesView({
     const count = activeItems.length;
     setIsClearingList(true);
 
-    // Optimistic UI updates
-    if (deletePermanently) {
-      setActiveItems([]);
-      setStaples((prev) => prev.filter((s) => s.archived));
-    } else {
-      const movedToArchive = activeItems.map((i) => ({
-        ...i,
+    // Optimistic UI updates: active list becomes empty
+    const movedToArchive = activeItems.map((i) => ({
+      ...i,
+      archived: true,
+      inCart: false,
+      pickedByUid: null
+    }));
+
+    setActiveItems([]);
+    setArchivedItems((prev) => [
+      ...(deletePermanently
+        ? movedToArchive.filter((i) => i.isStaple)
+        : movedToArchive),
+      ...prev
+    ]);
+    // Always preserve all staples in staples state!
+    setStaples((prev) =>
+      prev.map((s) => ({
+        ...s,
         archived: true,
         inCart: false,
         pickedByUid: null
-      }));
-      setActiveItems([]);
-      setArchivedItems((prev) => [...movedToArchive, ...prev]);
-    }
+      }))
+    );
 
     try {
       const res = await clearActiveGroceryItems(uid, { deletePermanently });
@@ -962,8 +972,8 @@ export default function GroceriesView({
           ? 'List cleared'
           : 'List cleared & archived 📦',
         description: deletePermanently
-          ? `Deleted ${count} items from your list.`
-          : `Moved ${count} items to your restock history. Your staples remain saved.`,
+          ? `Cleared ${count} active items. Your staples remain safely saved in your catalog ⭐.`
+          : `Moved ${count} items to your restock history. Your staples remain saved ⭐.`,
         variant: 'success'
       });
       setShowClearModal(false);
@@ -2924,10 +2934,10 @@ export default function GroceriesView({
                   <Trash2 className="h-4 w-4 text-destructive mt-0.5 flex-shrink-0" />
                   <div className="flex flex-col gap-0.5">
                     <span className="font-semibold text-destructive">
-                      Delete Permanently
+                      Delete Active Items
                     </span>
                     <span className="text-[11px]">
-                      Completely removes these active items from the database.
+                      Deletes active one-off items from your account. All saved household staples remain safely in your Staples catalog ⭐.
                     </span>
                   </div>
                 </div>
