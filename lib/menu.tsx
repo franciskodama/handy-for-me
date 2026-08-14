@@ -11,7 +11,8 @@ import {
   Scale,
   ListOrdered,
   Map,
-  Trello
+  Trello,
+  ShoppingCart
 } from 'lucide-react';
 
 export interface NavMenuItem {
@@ -36,6 +37,12 @@ export const menuItems: NavMenuItem[] = [
     href: '/dashboard',
     icon: <Home className="h-5 w-5" />,
     group: 'main'
+  },
+  {
+    label: 'Groceries',
+    href: '/groceries',
+    icon: <ShoppingCart className="h-5 w-5" />,
+    group: 'Productivity'
   },
   {
     label: 'Kanban Board',

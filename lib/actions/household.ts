@@ -52,7 +52,8 @@ export async function createHousehold(userUid: string, mergeExistingData: boolea
       data: {
         householdId: household.id,
         shareDecisionHelper: true,
-        shareBucketList: true
+        shareBucketList: true,
+        shareGroceryList: true
       }
     });
 
@@ -71,6 +72,17 @@ export async function createHousehold(userUid: string, mergeExistingData: boolea
 
       // Merge Bucket List items
       await prisma.bucketListItem.updateMany({
+        where: {
+          uid: userUid,
+          householdId: null
+        },
+        data: {
+          householdId: household.id
+        }
+      });
+
+      // Merge Grocery items
+      await prisma.groceryItem.updateMany({
         where: {
           uid: userUid,
           householdId: null
@@ -113,7 +125,8 @@ export async function joinHousehold(userUid: string, code: string, mergeExisting
       data: {
         householdId: household.id,
         shareDecisionHelper: true,
-        shareBucketList: true
+        shareBucketList: true,
+        shareGroceryList: true
       }
     });
 
@@ -132,6 +145,17 @@ export async function joinHousehold(userUid: string, code: string, mergeExisting
 
       // Merge Bucket List items
       await prisma.bucketListItem.updateMany({
+        where: {
+          uid: userUid,
+          householdId: null
+        },
+        data: {
+          householdId: household.id
+        }
+      });
+
+      // Merge Grocery items
+      await prisma.groceryItem.updateMany({
         where: {
           uid: userUid,
           householdId: null
@@ -166,7 +190,8 @@ export async function leaveHousehold(userUid: string) {
         householdId: null,
         // Reset sharing settings to true so if they join a new household, it defaults to true
         shareDecisionHelper: true,
-        shareBucketList: true
+        shareBucketList: true,
+        shareGroceryList: true
       }
     });
 
@@ -179,11 +204,17 @@ export async function leaveHousehold(userUid: string) {
 
 export async function toggleFeatureSharing(
   userUid: string,
-  feature: 'decisionHelper' | 'bucketList',
+  feature: 'decisionHelper' | 'bucketList' | 'groceryList',
   enabled: boolean
 ) {
   try {
-    const dataField = feature === 'decisionHelper' ? 'shareDecisionHelper' : 'shareBucketList';
+    const dataField =
+      feature === 'decisionHelper'
+        ? 'shareDecisionHelper'
+        : feature === 'bucketList'
+        ? 'shareBucketList'
+        : 'shareGroceryList';
+
     const updatedUser = await prisma.user.update({
       where: { uid: userUid },
       data: {
@@ -227,7 +258,8 @@ export async function getHouseholdDetails(userUid: string) {
         inHousehold: false,
         userSettings: {
           shareDecisionHelper: user.shareDecisionHelper,
-          shareBucketList: user.shareBucketList
+          shareBucketList: user.shareBucketList,
+          shareGroceryList: user.shareGroceryList
         }
       };
     }
@@ -242,7 +274,8 @@ export async function getHouseholdDetails(userUid: string) {
       },
       userSettings: {
         shareDecisionHelper: user.shareDecisionHelper,
-        shareBucketList: user.shareBucketList
+        shareBucketList: user.shareBucketList,
+        shareGroceryList: user.shareGroceryList
       }
     };
   } catch (error) {
@@ -250,3 +283,4 @@ export async function getHouseholdDetails(userUid: string) {
     return null;
   }
 }
+

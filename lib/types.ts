@@ -144,3 +144,29 @@ export type Habit = {
   history?: HabitHistory[];
 };
 
+export type GroceryItem = {
+  id: string;
+  createdAt: Date;
+  updatedAt: Date;
+  uid: string;
+  householdId: string | null;
+  name: string;
+  category: string;
+  quantity?: string | null;
+  notes?: string | null;
+  inCart: boolean;
+  pickedByUid?: string | null;
+  isStaple: boolean;
+  archived: boolean;
+};
+
+export type GroceryCategoryInfo = {
+  name: string;
+  color: string;
+  bgColor: string;
+  textColor: string;
+  icon?: string;
+  order: number;
+};
+
+
