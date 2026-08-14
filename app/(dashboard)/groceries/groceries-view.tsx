@@ -1329,19 +1329,6 @@ export default function GroceriesView({
               <Printer className="h-3.5 w-3.5" />
               Print List
             </Button>
-
-            {activeItems.length > 0 && (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setShowClearModal(true)}
-                className="gap-1.5 text-xs font-semibold h-9 text-muted-foreground hover:text-destructive hover:border-destructive/40 hover:bg-destructive/5"
-                title="Clear all active items and start a fresh list"
-              >
-                <Trash2 className="h-3.5 w-3.5" />
-                Clear List
-              </Button>
-            )}
           </div>
         </div>
 
@@ -1553,12 +1540,27 @@ export default function GroceriesView({
             </button>
           </div>
 
-          {viewMode === 'store' && (
-            <div className="flex items-center gap-2 text-xs text-muted-foreground">
-              <span className="inline-block h-2 w-2 bg-emerald-500 animate-pulse" />
-              Live In-Store Mode • Tap items as you pick them
-            </div>
-          )}
+          <div className="flex items-center gap-2 flex-wrap">
+            {viewMode === 'store' && (
+              <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                <span className="inline-block h-2 w-2 bg-emerald-500 animate-pulse" />
+                Live In-Store Mode • Tap items as you pick them
+              </div>
+            )}
+
+            {activeItems.length > 0 && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setShowClearModal(true)}
+                className="gap-1.5 text-xs font-semibold h-8 text-muted-foreground hover:text-destructive hover:border-destructive/40 hover:bg-destructive/5"
+                title="Clear all active items and start a fresh list"
+              >
+                <Trash2 className="h-3.5 w-3.5" />
+                Clear List
+              </Button>
+            )}
+          </div>
         </div>
 
         {/* Empty State / Quick Launchpad */}
