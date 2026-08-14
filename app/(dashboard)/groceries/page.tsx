@@ -20,6 +20,7 @@ export default async function GroceriesPage() {
 
   const activeItems = (groceryData && groceryData.active) || [];
   const archivedItems = (groceryData && groceryData.archived) || [];
+  const staples = (groceryData && groceryData.staples) || [];
 
   return (
     <GroceriesView
@@ -27,6 +28,7 @@ export default async function GroceriesPage() {
       userName={userName}
       initialActiveItems={activeItems}
       initialArchivedItems={archivedItems}
+      initialStaples={staples}
       householdDetails={householdDetails}
     />
   );

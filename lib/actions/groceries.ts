@@ -25,12 +25,13 @@ export async function getGroceryItems(uid: string): Promise<{
       return false;
     }
 
-    const isShared = user.householdId && user.shareGroceryList;
+    const isShared = Boolean(user.householdId && user.shareGroceryList);
+    const whereCondition = isShared
+      ? { OR: [{ householdId: user.householdId }, { uid }] }
+      : { uid };
 
     const items = await prisma.groceryItem.findMany({
-      where: isShared
-        ? { householdId: user.householdId }
-        : { uid, householdId: null },
+      where: whereCondition,
       orderBy: { createdAt: 'desc' }
     });
 
@@ -65,13 +66,16 @@ export async function addGroceryItem(
     const cleanName = data.name.trim();
     if (!cleanName) return false;
 
-    const isShared = user.householdId && user.shareGroceryList;
+    const isShared = Boolean(user.householdId && user.shareGroceryList);
     const category = data.category || inferCategory(cleanName);
+    const whereCondition = isShared
+      ? { OR: [{ householdId: user.householdId }, { uid }] }
+      : { uid };
 
     // Check if an unarchived item with this exact name already exists in active list
     const existing = await prisma.groceryItem.findFirst({
       where: {
-        ...(isShared ? { householdId: user.householdId } : { uid, householdId: null }),
+        ...whereCondition,
         name: { equals: cleanName, mode: 'insensitive' },
         archived: false
       }
@@ -94,7 +98,7 @@ export async function addGroceryItem(
     // Check if it exists in archived list -> restore it
     const existingArchived = await prisma.groceryItem.findFirst({
       where: {
-        ...(isShared ? { householdId: user.householdId } : { uid, householdId: null }),
+        ...whereCondition,
         name: { equals: cleanName, mode: 'insensitive' },
         archived: true
       }
@@ -176,6 +180,41 @@ export async function toggleGroceryItemInCart(
     return updated as unknown as GroceryItem;
   } catch (error) {
     console.error('Error toggling inCart status:', error);
+    return false;
+  }
+}
+
+export async function toggleGroceryItemStaple(
+  id: string,
+  isStaple: boolean
+) {
+  try {
+    const user = await getAuthenticatedUser();
+    if (!user) return false;
+
+    const item = await prisma.groceryItem.findUnique({
+      where: { id }
+    });
+
+    if (!item) return false;
+
+    const isAuthorized =
+      item.uid === user.uid ||
+      (item.householdId && user.householdId === item.householdId && user.shareGroceryList);
+
+    if (!isAuthorized) {
+      console.warn('Unauthorized grocery item staple toggle');
+      return false;
+    }
+
+    const updated = await prisma.groceryItem.update({
+      where: { id },
+      data: { isStaple }
+    });
+
+    return updated as unknown as GroceryItem;
+  } catch (error) {
+    console.error('Error toggling staple status:', error);
     return false;
   }
 }
@@ -299,11 +338,14 @@ export async function batchRestockGroceryItems(
     const user = await getAuthenticatedUser();
     if (!user || user.uid !== uid) return false;
 
-    const isShared = user.householdId && user.shareGroceryList;
+    const isShared = Boolean(user.householdId && user.shareGroceryList);
+    const whereCondition = isShared
+      ? { OR: [{ householdId: user.householdId }, { uid }] }
+      : { uid };
 
     await prisma.groceryItem.updateMany({
       where: {
-        ...(isShared ? { householdId: user.householdId } : { uid, householdId: null }),
+        ...whereCondition,
         archived: true,
         ...(options?.onlyStaples ? { isStaple: true } : {})
       },
@@ -316,7 +358,7 @@ export async function batchRestockGroceryItems(
 
     const active = await prisma.groceryItem.findMany({
       where: {
-        ...(isShared ? { householdId: user.householdId } : { uid, householdId: null }),
+        ...whereCondition,
         archived: false
       },
       orderBy: { createdAt: 'desc' }
@@ -324,15 +366,24 @@ export async function batchRestockGroceryItems(
 
     const archived = await prisma.groceryItem.findMany({
       where: {
-        ...(isShared ? { householdId: user.householdId } : { uid, householdId: null }),
+        ...whereCondition,
         archived: true
+      },
+      orderBy: { updatedAt: 'desc' }
+    });
+
+    const staples = await prisma.groceryItem.findMany({
+      where: {
+        ...whereCondition,
+        isStaple: true
       },
       orderBy: { updatedAt: 'desc' }
     });
 
     return {
       active: active as unknown as GroceryItem[],
-      archived: archived as unknown as GroceryItem[]
+      archived: archived as unknown as GroceryItem[],
+      staples: staples as unknown as GroceryItem[]
     };
   } catch (error) {
     console.error('Error batch restocking grocery items:', error);
@@ -345,12 +396,15 @@ export async function finishShoppingTrip(uid: string) {
     const user = await getAuthenticatedUser();
     if (!user || user.uid !== uid) return false;
 
-    const isShared = user.householdId && user.shareGroceryList;
+    const isShared = Boolean(user.householdId && user.shareGroceryList);
+    const whereCondition = isShared
+      ? { OR: [{ householdId: user.householdId }, { uid }] }
+      : { uid };
 
     // Archive all items that were placed in cart
     await prisma.groceryItem.updateMany({
       where: {
-        ...(isShared ? { householdId: user.householdId } : { uid, householdId: null }),
+        ...whereCondition,
         inCart: true,
         archived: false
       },
@@ -376,7 +430,10 @@ export async function addMultipleStaples(
     const user = await getAuthenticatedUser();
     if (!user || user.uid !== uid) return false;
 
-    const isShared = user.householdId && user.shareGroceryList;
+    const isShared = Boolean(user.householdId && user.shareGroceryList);
+    const whereCondition = isShared
+      ? { OR: [{ householdId: user.householdId }, { uid }] }
+      : { uid };
 
     for (const item of items) {
       const cleanName = item.name.trim();
@@ -386,7 +443,7 @@ export async function addMultipleStaples(
 
       const existing = await prisma.groceryItem.findFirst({
         where: {
-          ...(isShared ? { householdId: user.householdId } : { uid, householdId: null }),
+          ...whereCondition,
           name: { equals: cleanName, mode: 'insensitive' }
         }
       });
@@ -400,6 +457,7 @@ export async function addMultipleStaples(
             category: item.category || existing.category,
             quantity: item.quantity || existing.quantity,
             notes: item.notes || existing.notes,
+            isStaple: true,
             pickedByUid: null
           }
         });
@@ -444,7 +502,10 @@ export async function batchAddGroceryItems(
     const user = await getAuthenticatedUser();
     if (!user || user.uid !== uid) return false;
 
-    const isShared = user.householdId && user.shareGroceryList;
+    const isShared = Boolean(user.householdId && user.shareGroceryList);
+    const whereCondition = isShared
+      ? { OR: [{ householdId: user.householdId }, { uid }] }
+      : { uid };
     const addedItems = [];
 
     for (const item of items) {
@@ -455,7 +516,7 @@ export async function batchAddGroceryItems(
 
       const existing = await prisma.groceryItem.findFirst({
         where: {
-          ...(isShared ? { householdId: user.householdId } : { uid, householdId: null }),
+          ...whereCondition,
           name: { equals: cleanName, mode: 'insensitive' }
         }
       });

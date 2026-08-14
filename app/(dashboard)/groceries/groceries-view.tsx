@@ -74,6 +74,7 @@ import {
   addGroceryItem,
   getGroceryItems,
   toggleGroceryItemInCart,
+  toggleGroceryItemStaple,
   updateGroceryItem,
   deleteGroceryItem,
   restockGroceryItem,
@@ -256,6 +257,7 @@ interface GroceriesViewProps {
   userName?: string | null;
   initialActiveItems: GroceryItem[];
   initialArchivedItems: GroceryItem[];
+  initialStaples?: GroceryItem[];
   householdDetails: any;
 }
 
@@ -264,18 +266,25 @@ export default function GroceriesView({
   userName,
   initialActiveItems,
   initialArchivedItems,
+  initialStaples = [],
   householdDetails
 }: GroceriesViewProps) {
   const [activeItems, setActiveItems] =
     useState<GroceryItem[]>(initialActiveItems);
   const [archivedItems, setArchivedItems] =
     useState<GroceryItem[]>(initialArchivedItems);
+  const [staples, setStaples] =
+    useState<GroceryItem[]>(initialStaples);
   const [viewMode, setViewMode] = useState<'plan' | 'store'>('plan');
   const [filter, setFilter] = useState<
     'all' | 'remaining' | 'inCart' | 'staples'
   >('all');
   const [openAction, setOpenAction] = useState(false);
   const [showStaplesDrawer, setShowStaplesDrawer] = useState(false);
+  const [staplesModalTab, setStaplesModalTab] = useState<
+    'staples' | 'history' | 'essentials'
+  >('staples');
+  const [staplesSearch, setStaplesSearch] = useState('');
   const [editingItem, setEditingItem] = useState<GroceryItem | null>(null);
   const [isFinishingTrip, setIsFinishingTrip] = useState(false);
   const [lastSyncTime, setLastSyncTime] = useState<Date>(new Date());
@@ -372,11 +381,12 @@ export default function GroceriesView({
     try {
       const added = await batchAddGroceryItems(uid, validItems);
       if (added && Array.isArray(added)) {
-        // Refresh active and archived items
+        // Refresh active, archived, and staples
         const res = await getGroceryItems(uid);
         if (res && typeof res === 'object') {
           setActiveItems(res.active);
           setArchivedItems(res.archived);
+          setStaples(res.staples);
         }
 
         confetti({
@@ -414,7 +424,8 @@ export default function GroceriesView({
   useEffect(() => {
     setActiveItems(initialActiveItems);
     setArchivedItems(initialArchivedItems);
-  }, [initialActiveItems, initialArchivedItems]);
+    setStaples(initialStaples);
+  }, [initialActiveItems, initialArchivedItems, initialStaples]);
 
   // Real-time collaborative polling (every 3.5s when household sharing is enabled)
   useEffect(() => {
@@ -429,6 +440,7 @@ export default function GroceriesView({
       if (result && typeof result === 'object') {
         setActiveItems(result.active);
         setArchivedItems(result.archived);
+        setStaples(result.staples);
         setLastSyncTime(new Date());
       }
     }, 3500);
@@ -520,6 +532,14 @@ export default function GroceriesView({
           (i) => i.name.toLowerCase() !== data.name.trim().toLowerCase()
         )
       );
+      if (data.isStaple) {
+        setStaples((prev) => [
+          optimisticItem,
+          ...prev.filter(
+            (i) => i.name.toLowerCase() !== data.name.trim().toLowerCase()
+          )
+        ]);
+      }
 
       reset({
         name: '',
@@ -541,6 +561,16 @@ export default function GroceriesView({
         setActiveItems((prev) =>
           prev.map((item) => (item.id === optimisticId ? res : item))
         );
+        if (res.isStaple) {
+          setStaples((prev) => [
+            res,
+            ...prev.filter(
+              (i) =>
+                i.id !== optimisticId &&
+                i.name.toLowerCase() !== res.name.toLowerCase()
+            )
+          ]);
+        }
         toast({
           title: 'Item added! 🛒',
           description: `"${res.name}" is now on your list.`,
@@ -579,6 +609,14 @@ export default function GroceriesView({
             prev.map((item) => (item.id === editingItem.id ? updated : item))
           );
         }
+        setStaples((prev) => {
+          if (updated.isStaple) {
+            const filtered = prev.filter((i) => i.id !== updated.id);
+            return [updated, ...filtered];
+          } else {
+            return prev.filter((i) => i.id !== updated.id);
+          }
+        });
         toast({
           title: 'Item updated ✨',
           description: `Updated "${updated.name}".`,
@@ -593,6 +631,70 @@ export default function GroceriesView({
         description: 'Could not save changes.',
         variant: 'destructive'
       });
+    }
+  };
+
+  const handleToggleStaple = async (item: GroceryItem) => {
+    const nextStapleState = !item.isStaple;
+
+    // Optimistic UI update
+    setActiveItems((prev) =>
+      prev.map((i) =>
+        i.id === item.id || i.name.toLowerCase() === item.name.toLowerCase()
+          ? { ...i, isStaple: nextStapleState }
+          : i
+      )
+    );
+    setArchivedItems((prev) =>
+      prev.map((i) =>
+        i.id === item.id || i.name.toLowerCase() === item.name.toLowerCase()
+          ? { ...i, isStaple: nextStapleState }
+          : i
+      )
+    );
+    setStaples((prev) => {
+      if (nextStapleState) {
+        const updated = { ...item, isStaple: true };
+        return [
+          updated,
+          ...prev.filter(
+            (i) =>
+              i.id !== item.id &&
+              i.name.toLowerCase() !== item.name.toLowerCase()
+          )
+        ];
+      } else {
+        return prev.filter(
+          (i) =>
+            i.id !== item.id &&
+            i.name.toLowerCase() !== item.name.toLowerCase()
+        );
+      }
+    });
+
+    try {
+      const res = await toggleGroceryItemStaple(item.id, nextStapleState);
+      if (res) {
+        toast({
+          title: nextStapleState ? 'Saved to Staples ⭐' : 'Removed from Staples',
+          description: nextStapleState
+            ? `"${item.name}" is saved in your household staples.`
+            : `"${item.name}" was removed from frequent staples.`,
+          variant: 'success'
+        });
+      }
+    } catch (error) {
+      console.error(error);
+      toast({
+        title: 'Could not update staple status',
+        variant: 'destructive'
+      });
+      const refresh = await getGroceryItems(uid);
+      if (refresh && typeof refresh === 'object') {
+        setActiveItems(refresh.active);
+        setArchivedItems(refresh.archived);
+        setStaples(refresh.staples);
+      }
     }
   };
 
@@ -634,6 +736,7 @@ export default function GroceriesView({
     try {
       setActiveItems((prev) => prev.filter((i) => i.id !== id));
       setArchivedItems((prev) => prev.filter((i) => i.id !== id));
+      setStaples((prev) => prev.filter((i) => i.id !== id));
 
       await deleteGroceryItem(id);
       toast({
@@ -654,14 +757,32 @@ export default function GroceriesView({
     try {
       // Optimistic
       setArchivedItems((prev) => prev.filter((i) => i.id !== item.id));
-      setActiveItems((prev) => [
-        { ...item, archived: false, inCart: false },
-        ...prev
-      ]);
+      setActiveItems((prev) => {
+        const exists = prev.some(
+          (i) =>
+            i.id === item.id ||
+            i.name.toLowerCase() === item.name.toLowerCase()
+        );
+        if (exists) {
+          return prev.map((i) =>
+            i.id === item.id ||
+            i.name.toLowerCase() === item.name.toLowerCase()
+              ? { ...item, archived: false, inCart: false }
+              : i
+          );
+        }
+        return [{ ...item, archived: false, inCart: false }, ...prev];
+      });
+      setStaples((prev) =>
+        prev.map((i) =>
+          i.id === item.id ? { ...i, archived: false, inCart: false } : i
+        )
+      );
 
       const res = await restockGroceryItem(item.id);
       if (res) {
         setActiveItems((prev) => prev.map((i) => (i.id === item.id ? res : i)));
+        setStaples((prev) => prev.map((i) => (i.id === item.id ? res : i)));
         toast({
           title: 'Restocked! 🔄',
           description: `Added "${item.name}" back to the active list.`,
@@ -698,6 +819,7 @@ export default function GroceriesView({
       if (res && typeof res === 'object') {
         setActiveItems(res.active);
         setArchivedItems(res.archived);
+        setStaples(res.staples);
       }
 
       confetti({
@@ -727,6 +849,7 @@ export default function GroceriesView({
       if (refresh && typeof refresh === 'object') {
         setActiveItems(refresh.active);
         setArchivedItems(refresh.archived);
+        setStaples(refresh.staples);
       }
     }
   };
@@ -760,9 +883,10 @@ export default function GroceriesView({
 
       // Refresh list
       const res = await getGroceryItems(uid);
-      if (res) {
+      if (res && typeof res === 'object') {
         setActiveItems(res.active);
         setArchivedItems(res.archived);
+        setStaples(res.staples);
       }
 
       toast({
@@ -826,6 +950,121 @@ export default function GroceriesView({
     totalItemsCount > 0
       ? Math.round((inCartItems.length / totalItemsCount) * 100)
       : 0;
+
+  // Master list of unique staples across all sources
+  const allUserStaples = useMemo(() => {
+    const map = new Map<string, GroceryItem>();
+    staples.forEach((item) => {
+      if (item.isStaple) {
+        map.set(item.name.toLowerCase(), item);
+      }
+    });
+    activeItems.forEach((item) => {
+      if (item.isStaple) {
+        map.set(item.name.toLowerCase(), item);
+      }
+    });
+    archivedItems.forEach((item) => {
+      if (item.isStaple && !map.has(item.name.toLowerCase())) {
+        map.set(item.name.toLowerCase(), item);
+      }
+    });
+    return Array.from(map.values()).sort((a, b) =>
+      a.name.localeCompare(b.name, undefined, { sensitivity: 'base' })
+    );
+  }, [staples, activeItems, archivedItems]);
+
+  // Staples not currently in the active grocery list
+  const staplesNotInActive = useMemo(() => {
+    return allUserStaples.filter(
+      (staple) =>
+        !activeItems.some(
+          (active) => active.name.toLowerCase() === staple.name.toLowerCase()
+        )
+    );
+  }, [allUserStaples, activeItems]);
+
+  // Filtered staples for the search bar inside the modal
+  const filteredUserStaples = useMemo(() => {
+    if (!staplesSearch.trim()) return allUserStaples;
+    const q = staplesSearch.toLowerCase().trim();
+    return allUserStaples.filter(
+      (i) =>
+        i.name.toLowerCase().includes(q) ||
+        i.category.toLowerCase().includes(q) ||
+        (i.notes && i.notes.toLowerCase().includes(q))
+    );
+  }, [allUserStaples, staplesSearch]);
+
+  const handleAddAllStaplesToActive = async () => {
+    if (staplesNotInActive.length === 0) return;
+
+    // Optimistic UI updates
+    setActiveItems((prev) => [
+      ...staplesNotInActive.map((s) => ({
+        ...s,
+        archived: false,
+        inCart: false,
+        pickedByUid: null
+      })),
+      ...prev
+    ]);
+    setArchivedItems((prev) =>
+      prev.filter(
+        (a) =>
+          !staplesNotInActive.some(
+            (s) => s.name.toLowerCase() === a.name.toLowerCase()
+          )
+      )
+    );
+
+    try {
+      for (const staple of staplesNotInActive) {
+        if (staple.archived) {
+          await restockGroceryItem(staple.id);
+        } else {
+          await addGroceryItem(uid, {
+            name: staple.name,
+            category: staple.category,
+            quantity: staple.quantity || '',
+            notes: staple.notes || '',
+            isStaple: true
+          });
+        }
+      }
+
+      const res = await getGroceryItems(uid);
+      if (res && typeof res === 'object') {
+        setActiveItems(res.active);
+        setArchivedItems(res.archived);
+        setStaples(res.staples);
+      }
+
+      confetti({
+        particleCount: 70,
+        spread: 60,
+        origin: { y: 0.6 }
+      });
+
+      toast({
+        title: `Restocked ${staplesNotInActive.length} Household Staples! ⭐`,
+        description: 'All your essentials are back on the active list.',
+        variant: 'success'
+      });
+    } catch (error) {
+      console.error(error);
+      toast({
+        title: 'Error restocking staples',
+        variant: 'destructive'
+      });
+      const refresh = await getGroceryItems(uid);
+      if (refresh && typeof refresh === 'object') {
+        setActiveItems(refresh.active);
+        setArchivedItems(refresh.archived);
+        setStaples(refresh.staples);
+      }
+    }
+  };
 
   // Filtered active items
   const displayedActiveItems = useMemo(() => {
@@ -1004,17 +1243,22 @@ export default function GroceriesView({
             <Button
               variant="outline"
               size="sm"
-              onClick={() => setShowStaplesDrawer(true)}
+              onClick={() => {
+                setStaplesModalTab('staples');
+                setShowStaplesDrawer(true);
+              }}
               className="gap-1.5 text-xs font-semibold h-9"
             >
               <RotateCcw className="h-3.5 w-3.5 text-primary" />
               Restock & Staples
-              {archivedItems.length > 0 && (
+              {(allUserStaples.length > 0 || archivedItems.length > 0) && (
                 <Badge
                   variant="secondary"
                   className="ml-1 px-1.5 py-0 text-[10px]"
                 >
-                  {archivedItems.length}
+                  {allUserStaples.length > 0
+                    ? allUserStaples.length
+                    : archivedItems.length}
                 </Badge>
               )}
             </Button>
@@ -1250,8 +1494,8 @@ export default function GroceriesView({
         {/* Empty State / Quick Launchpad */}
         {activeItems.length === 0 && (
           <div className="mt-4 flex flex-col gap-6">
-            {/* 1. Quick-Start Banner for returning users with past trips */}
-            {archivedItems.length > 0 ? (
+            {/* 1. Quick-Start Banner for returning users with past trips or saved staples */}
+            {archivedItems.length > 0 || allUserStaples.length > 0 ? (
               <div className="p-5 sm:p-6 border-2 border-dashed border-primary/30 bg-gradient-to-r from-primary/5 via-primary/10 to-primary/5 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-sm">
                 <div className="flex items-center gap-3 text-left">
                   <div className="h-12 w-12 bg-primary/15 flex items-center justify-center text-primary flex-shrink-0">
@@ -1262,46 +1506,56 @@ export default function GroceriesView({
                       Ready for this week&apos;s grocery run?
                     </h4>
                     <p className="text-xs text-muted-foreground mt-0.5">
-                      You have {archivedItems.length} items from past shopping
-                      trips
-                      {archivedItems.filter((i) => i.isStaple).length > 0 &&
-                        ` (including ${
-                          archivedItems.filter((i) => i.isStaple).length
-                        } frequent staples ⭐)`}
+                      You have{' '}
+                      {allUserStaples.length > 0 && (
+                        <span>
+                          <strong>{allUserStaples.length} saved staples ⭐</strong>
+                          {archivedItems.length > 0 && ' and '}
+                        </span>
+                      )}
+                      {archivedItems.length > 0 && (
+                        <span>
+                          <strong>{archivedItems.length} items</strong> from past trips
+                        </span>
+                      )}
                       . Restock in 1 tap, then trim what you don&apos;t need.
                     </p>
                   </div>
                 </div>
 
                 <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap w-full md:w-auto">
-                  {archivedItems.filter((i) => i.isStaple).length > 0 && (
+                  {staplesNotInActive.length > 0 && (
                     <Button
                       size="sm"
                       variant="outline"
-                      onClick={() => handleBatchRestock(true)}
+                      onClick={handleAddAllStaplesToActive}
                       className="text-xs font-semibold gap-1.5 border-amber-500/50 text-amber-700 dark:text-amber-300 hover:bg-amber-500/10 flex-1 md:flex-none h-9"
                     >
                       <Star className="h-4 w-4 fill-amber-500 text-amber-500" />
-                      Restock Staples (
-                      {archivedItems.filter((i) => i.isStaple).length})
+                      Restock Staples ({staplesNotInActive.length})
+                    </Button>
+                  )}
+
+                  {archivedItems.length > 0 && (
+                    <Button
+                      size="sm"
+                      onClick={() => handleBatchRestock(false)}
+                      className="text-xs font-semibold gap-1.5 flex-1 md:flex-none h-9"
+                    >
+                      <RotateCcw className="h-4 w-4" />
+                      Restock Past Items ({archivedItems.length})
                     </Button>
                   )}
 
                   <Button
                     size="sm"
-                    onClick={() => handleBatchRestock(false)}
-                    className="text-xs font-semibold gap-1.5 flex-1 md:flex-none h-9"
-                  >
-                    <RotateCcw className="h-4 w-4" />
-                    Restock All ({archivedItems.length})
-                  </Button>
-
-                  <Button
-                    size="sm"
                     variant="outline"
-                    onClick={() => setShowStaplesDrawer(true)}
+                    onClick={() => {
+                      setStaplesModalTab('staples');
+                      setShowStaplesDrawer(true);
+                    }}
                     className="text-xs font-semibold h-9"
-                    title="Browse and select individual history items"
+                    title="Browse and select individual catalog items"
                   >
                     Catalog
                   </Button>
@@ -1334,7 +1588,10 @@ export default function GroceriesView({
                   <Button
                     size="sm"
                     variant="outline"
-                    onClick={() => setShowStaplesDrawer(true)}
+                    onClick={() => {
+                      setStaplesModalTab('essentials');
+                      setShowStaplesDrawer(true);
+                    }}
                     className="text-xs font-semibold gap-1.5"
                   >
                     <Sparkles className="h-3.5 w-3.5 text-amber-500" />
@@ -1390,6 +1647,56 @@ export default function GroceriesView({
 
         {/* Printable / Board Container */}
         <div ref={printRef} className="flex flex-col gap-6">
+          {/* Empty state when filtering by staples and no active staples */}
+          {filter === 'staples' && displayedActiveItems.length === 0 && (
+            <Card className="p-8 text-center border-dashed border-2 flex flex-col items-center justify-center gap-3 bg-card/60">
+              <div className="h-12 w-12 rounded-full bg-amber-500/10 flex items-center justify-center text-amber-500">
+                <Star className="h-6 w-6 fill-amber-500/20 text-amber-500" />
+              </div>
+              <div className="max-w-md">
+                <h4 className="font-bold text-base text-foreground">
+                  No Staples on your active list
+                </h4>
+                <p className="text-xs text-muted-foreground mt-1">
+                  {allUserStaples.length > 0
+                    ? `You have ${allUserStaples.length} saved household staples in your catalog ready to add.`
+                    : 'Save frequent grocery items as staples using the star icon, or pick from popular essentials.'}
+                </p>
+              </div>
+              <div className="flex items-center gap-2 flex-wrap justify-center pt-2">
+                {staplesNotInActive.length > 0 && (
+                  <Button
+                    size="sm"
+                    onClick={handleAddAllStaplesToActive}
+                    className="text-xs font-semibold gap-1.5 bg-amber-600 hover:bg-amber-700 text-white"
+                  >
+                    <Star className="h-3.5 w-3.5 fill-white text-white" />
+                    Restock All Staples ({staplesNotInActive.length})
+                  </Button>
+                )}
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => {
+                    setStaplesModalTab('staples');
+                    setShowStaplesDrawer(true);
+                  }}
+                  className="text-xs font-semibold gap-1.5 border-amber-500/40 text-amber-800 dark:text-amber-300"
+                >
+                  <Sparkles className="h-3.5 w-3.5 text-amber-500" />
+                  Browse Staples Catalog
+                </Button>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => setFilter('all')}
+                  className="text-xs text-muted-foreground"
+                >
+                  View All Items
+                </Button>
+              </div>
+            </Card>
+          )}
           {/* Department / Aisle Groupings */}
           {groupedDepartments.map(({ category, items }) => (
             <Card
@@ -1484,11 +1791,31 @@ export default function GroceriesView({
                             </Badge>
                           )}
 
-                          {item.isStaple && (
-                            <span title="Household Staple">
-                              <Star className="h-3.5 w-3.5 text-amber-500 fill-amber-500/20" />
-                            </span>
-                          )}
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleToggleStaple(item);
+                            }}
+                            title={
+                              item.isStaple
+                                ? 'Frequent Staple ⭐ (Click to unmark)'
+                                : 'Click to save as frequent household staple'
+                            }
+                            className={`p-0.5 rounded transition-all active:scale-90 ${
+                              item.isStaple
+                                ? 'text-amber-500 hover:text-amber-600'
+                                : 'text-muted-foreground/30 hover:text-amber-500 opacity-0 group-hover:opacity-100'
+                            }`}
+                          >
+                            <Star
+                              className={`h-4 w-4 ${
+                                item.isStaple
+                                  ? 'fill-amber-500 text-amber-500'
+                                  : 'text-muted-foreground hover:text-amber-500'
+                              }`}
+                            />
+                          </button>
                         </div>
 
                         {/* Notes / Brand / Preference coordination */}
@@ -1700,178 +2027,418 @@ export default function GroceriesView({
 
         {/* Restock & Staples Drawer / Modal */}
         <Dialog open={showStaplesDrawer} onOpenChange={setShowStaplesDrawer}>
-          <DialogContent className="sm:max-w-2xl max-h-[85vh] overflow-y-auto">
+          <DialogContent className="sm:max-w-3xl max-h-[85vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle className="flex items-center gap-2 text-xl font-bold">
                 <RotateCcw className="h-5 w-5 text-primary" />
                 Restock & Staples Catalog
               </DialogTitle>
               <p className="text-xs text-muted-foreground">
-                Quickly re-add staples or items from past shopping trips with a
-                single click.
+                Quickly re-add staples, manage frequent essentials, or restock items from past shopping trips.
               </p>
             </DialogHeader>
 
-            <div className="flex flex-col gap-6 py-3">
-              {/* Section 1: Previous Trip History (Archived Items) */}
-              <div>
-                <div className="flex items-center justify-between gap-2 flex-wrap mb-3">
-                  <h4
-                    className={`${kumbh_sans.className} text-sm font-bold text-primary uppercase tracking-wider flex items-center gap-2`}
-                  >
-                    <Clock className="h-4 w-4 text-primary" />
-                    Past Shopping Trips History ({archivedItems.length})
-                  </h4>
+            {/* Header Tabs: My Staples | Past Trip History | Essentials Library */}
+            <div className="flex items-center gap-1 border-b pb-2 pt-1 flex-wrap">
+              <button
+                type="button"
+                onClick={() => setStaplesModalTab('staples')}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-bold transition-all ${
+                  staplesModalTab === 'staples'
+                    ? 'bg-amber-500/15 text-amber-800 dark:text-amber-300 border border-amber-500/30 shadow-sm'
+                    : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+                }`}
+              >
+                <Star className="h-3.5 w-3.5 fill-amber-500 text-amber-500" />
+                <span>My Staples</span>
+                <Badge variant="secondary" className="text-[10px] px-1.5 py-0 font-bold">
+                  {allUserStaples.length}
+                </Badge>
+              </button>
 
-                  {archivedItems.length > 0 && (
-                    <div className="flex items-center gap-2 flex-wrap">
-                      {archivedItems.filter((i) => i.isStaple).length > 0 && (
+              <button
+                type="button"
+                onClick={() => setStaplesModalTab('history')}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-bold transition-all ${
+                  staplesModalTab === 'history'
+                    ? 'bg-primary/15 text-primary border border-primary/30 shadow-sm'
+                    : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+                }`}
+              >
+                <Clock className="h-3.5 w-3.5 text-primary" />
+                <span>Trip History</span>
+                <Badge variant="secondary" className="text-[10px] px-1.5 py-0 font-bold">
+                  {archivedItems.length}
+                </Badge>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setStaplesModalTab('essentials')}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-bold transition-all ${
+                  staplesModalTab === 'essentials'
+                    ? 'bg-purple-500/15 text-purple-800 dark:text-purple-300 border border-purple-500/30 shadow-sm'
+                    : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+                }`}
+              >
+                <Sparkles className="h-3.5 w-3.5 text-purple-600" />
+                <span>Popular Essentials</span>
+                <Badge variant="secondary" className="text-[10px] px-1.5 py-0 font-bold">
+                  {POPULAR_STAPLES.length}
+                </Badge>
+              </button>
+            </div>
+
+            <div className="py-2">
+              {/* TAB 1: MY HOUSEHOLD STAPLES */}
+              {staplesModalTab === 'staples' && (
+                <div className="flex flex-col gap-4">
+                  <div className="flex items-center justify-between gap-2 flex-wrap">
+                    <div className="flex items-center gap-2">
+                      <Input
+                        placeholder="Search your staples..."
+                        value={staplesSearch}
+                        onChange={(e) => setStaplesSearch(e.target.value)}
+                        className="h-8 text-xs w-48 sm:w-64"
+                      />
+                      {staplesSearch && (
                         <Button
                           size="sm"
-                          variant="outline"
-                          onClick={() => handleBatchRestock(true)}
-                          className="h-8 text-xs font-semibold gap-1.5 border-amber-500/50 text-amber-700 dark:text-amber-300 hover:bg-amber-500/10"
+                          variant="ghost"
+                          onClick={() => setStaplesSearch('')}
+                          className="h-8 px-2 text-xs text-muted-foreground"
                         >
-                          <Star className="h-3.5 w-3.5 fill-amber-500 text-amber-500" />
-                          Restock Staples (
-                          {archivedItems.filter((i) => i.isStaple).length})
+                          Clear
                         </Button>
                       )}
+                    </div>
 
+                    {staplesNotInActive.length > 0 && (
                       <Button
                         size="sm"
-                        onClick={() => handleBatchRestock(false)}
-                        className="h-8 text-xs font-semibold gap-1.5"
+                        onClick={handleAddAllStaplesToActive}
+                        className="h-8 text-xs font-semibold gap-1.5 bg-amber-600 hover:bg-amber-700 text-white"
                       >
-                        <RotateCcw className="h-3.5 w-3.5" />
-                        Restock All ({archivedItems.length})
+                        <Star className="h-3.5 w-3.5 fill-white text-white" />
+                        Restock All Staples ({staplesNotInActive.length})
+                      </Button>
+                    )}
+                  </div>
+
+                  {filteredUserStaples.length === 0 ? (
+                    <div className="p-8 text-center border border-dashed rounded-lg flex flex-col items-center justify-center gap-3 bg-muted/10">
+                      <div className="h-10 w-10 rounded-full bg-amber-500/10 flex items-center justify-center text-amber-500">
+                        <Star className="h-5 w-5 fill-amber-500/20 text-amber-500" />
+                      </div>
+                      <div className="max-w-sm">
+                        <h5 className="font-bold text-sm text-foreground">
+                          {staplesSearch ? 'No matching staples found' : 'No household staples saved yet'}
+                        </h5>
+                        <p className="text-xs text-muted-foreground mt-1">
+                          {staplesSearch
+                            ? `No saved staples matched "${staplesSearch}".`
+                            : 'Star frequent items directly on your grocery list, or pick essentials from our curated library below.'}
+                        </p>
+                      </div>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => setStaplesModalTab('essentials')}
+                        className="text-xs font-semibold gap-1.5 border-purple-300 text-purple-700 dark:border-purple-800 dark:text-purple-300"
+                      >
+                        <Sparkles className="h-3.5 w-3.5 text-purple-600" />
+                        Browse Popular Essentials
                       </Button>
                     </div>
-                  )}
-                </div>
+                  ) : (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                      {filteredUserStaples.map((staple) => {
+                        const isOnActiveList = activeItems.some(
+                          (i) => i.name.toLowerCase() === staple.name.toLowerCase()
+                        );
 
-                {archivedItems.length === 0 ? (
-                  <div className="p-6 text-center border border-dashed rounded-lg text-xs text-muted-foreground">
-                    No previous shopping trip history yet. Items you check off
-                    and finish will appear here for fast re-ordering.
-                  </div>
-                ) : (
-                  <div className="flex flex-col gap-4">
-                    {Object.entries(archivedByCat).map(([catName, items]) => (
-                      <div
-                        key={catName}
-                        className="border rounded-lg p-3 bg-muted/20"
-                      >
-                        <h5 className="text-xs font-bold text-muted-foreground uppercase mb-2">
-                          {catName}
-                        </h5>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                          {items.map((item) => (
-                            <div
-                              key={item.id}
-                              className="flex items-center justify-between p-2.5 rounded-lg bg-card border text-xs gap-2 hover:border-primary/40 transition-colors"
-                            >
-                              <div className="flex flex-col gap-0.5 flex-1 min-w-0">
-                                <div className="flex items-center gap-1.5 flex-wrap">
-                                  <span className="font-semibold text-foreground truncate">
-                                    {item.name}
-                                  </span>
-                                  {item.isStaple && (
-                                    <span title="Household Staple">
-                                      <Star className="h-3 w-3 text-amber-500 fill-amber-500 flex-shrink-0" />
-                                    </span>
-                                  )}
-                                </div>
-                                <div className="flex items-center gap-2 flex-wrap text-[10px] text-muted-foreground">
-                                  {item.quantity && (
-                                    <span className="bg-muted px-1.5 py-0.5 rounded font-medium text-foreground">
-                                      {item.quantity}
-                                    </span>
-                                  )}
-                                  {item.notes && (
-                                    <span className="italic text-muted-foreground/90 truncate max-w-[140px]">
-                                      {item.notes}
-                                    </span>
-                                  )}
-                                </div>
-                              </div>
-
-                              <div className="flex items-center gap-1 flex-shrink-0">
-                                <Button
-                                  size="sm"
-                                  variant="ghost"
-                                  onClick={() => openEditModal(item)}
-                                  className="h-7 w-7 p-0 text-muted-foreground hover:text-foreground"
-                                  title="Edit item details (name, quantity, notes)"
+                        return (
+                          <div
+                            key={staple.id}
+                            className="flex items-center justify-between p-3 rounded-lg bg-card border text-xs gap-2 hover:border-amber-500/40 transition-colors shadow-xs"
+                          >
+                            <div className="flex flex-col gap-1 flex-1 min-w-0">
+                              <div className="flex items-center gap-1.5 flex-wrap">
+                                <button
+                                  type="button"
+                                  onClick={() => handleToggleStaple(staple)}
+                                  title="Click to remove from Staples"
+                                  className="text-amber-500 hover:text-amber-600 transition-transform active:scale-90"
                                 >
-                                  <Edit2 className="h-3.5 w-3.5" />
-                                </Button>
+                                  <Star className="h-3.5 w-3.5 fill-amber-500 text-amber-500 flex-shrink-0" />
+                                </button>
+                                <span className="font-semibold text-foreground truncate">
+                                  {staple.name}
+                                </span>
+                              </div>
+                              <div className="flex items-center gap-2 flex-wrap text-[10px] text-muted-foreground">
+                                <span className="bg-muted px-1.5 py-0.5 rounded font-medium text-foreground">
+                                  {staple.category}
+                                </span>
+                                {staple.quantity && (
+                                  <span className="bg-primary/10 text-primary px-1.5 py-0.5 rounded font-semibold">
+                                    {staple.quantity}
+                                  </span>
+                                )}
+                                {staple.notes && (
+                                  <span className="italic text-muted-foreground/90 truncate max-w-[120px]">
+                                    {staple.notes}
+                                  </span>
+                                )}
+                              </div>
+                            </div>
 
+                            <div className="flex items-center gap-1.5 flex-shrink-0">
+                              {isOnActiveList ? (
+                                <Badge
+                                  variant="secondary"
+                                  className="h-7 text-[11px] font-bold bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800 flex items-center gap-1 px-2"
+                                >
+                                  <Check className="h-3 w-3" />
+                                  On List
+                                </Badge>
+                              ) : (
                                 <Button
                                   size="sm"
                                   variant="outline"
-                                  onClick={() => handleRestockItem(item)}
+                                  onClick={() => handleRestockItem(staple)}
                                   className="h-7 text-[11px] font-semibold gap-1 hover:bg-primary hover:text-white"
-                                  title="Add back to current grocery list"
+                                  title="Add to active grocery list"
                                 >
                                   <Plus className="h-3 w-3" />
-                                  Add Back
+                                  Add to List
                                 </Button>
-                              </div>
+                              )}
+
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                onClick={() => openEditModal(staple)}
+                                className="h-7 w-7 p-0 text-muted-foreground hover:text-foreground"
+                                title="Edit staple details"
+                              >
+                                <Edit2 className="h-3.5 w-3.5" />
+                              </Button>
                             </div>
-                          ))}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              )}
 
-              {/* Section 2: Popular Household Essentials */}
-              {(() => {
-                const availablePopularStaples = POPULAR_STAPLES.filter(
-                  (staple) =>
-                    !activeItems.some(
-                      (i) => i.name.toLowerCase() === staple.name.toLowerCase()
-                    )
-                );
-
-                if (availablePopularStaples.length === 0) return null;
-
-                return (
-                  <div className="pt-4 border-t border-border">
+              {/* TAB 2: PAST SHOPPING TRIPS HISTORY */}
+              {staplesModalTab === 'history' && (
+                <div className="flex flex-col gap-4">
+                  <div className="flex items-center justify-between gap-2 flex-wrap mb-1">
                     <h4
-                      className={`${kumbh_sans.className} text-sm font-bold text-primary uppercase tracking-wider mb-3 flex items-center gap-2`}
+                      className={`${kumbh_sans.className} text-xs font-bold text-primary uppercase tracking-wider flex items-center gap-2`}
                     >
-                      <Sparkles className="h-4 w-4 text-amber-500" />
-                      Popular Household Staples (
-                      {availablePopularStaples.length} available)
+                      <Clock className="h-4 w-4 text-primary" />
+                      Past Shopping Trips History ({archivedItems.length})
                     </h4>
-                    <div className="flex flex-wrap gap-2">
-                      {availablePopularStaples.map((staple) => (
+
+                    {archivedItems.length > 0 && (
+                      <div className="flex items-center gap-2 flex-wrap">
+                        {archivedItems.filter((i) => i.isStaple).length > 0 && (
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => handleBatchRestock(true)}
+                            className="h-8 text-xs font-semibold gap-1.5 border-amber-500/50 text-amber-700 dark:text-amber-300 hover:bg-amber-500/10"
+                          >
+                            <Star className="h-3.5 w-3.5 fill-amber-500 text-amber-500" />
+                            Restock Staples ({archivedItems.filter((i) => i.isStaple).length})
+                          </Button>
+                        )}
+
                         <Button
-                          key={staple.name}
-                          variant="outline"
                           size="sm"
-                          onClick={() => handleQuickAddStaple(staple)}
-                          className="text-xs font-medium h-8 gap-1.5 transition-all hover:border-primary hover:bg-primary/5"
+                          onClick={() => handleBatchRestock(false)}
+                          className="h-8 text-xs font-semibold gap-1.5"
                         >
-                          <Plus className="h-3 w-3" />
-                          <span>{staple.name}</span>
-                          {staple.quantity && (
-                            <span className="text-[10px] text-muted-foreground">
-                              ({staple.quantity})
-                            </span>
-                          )}
+                          <RotateCcw className="h-3.5 w-3.5" />
+                          Restock All ({archivedItems.length})
                         </Button>
+                      </div>
+                    )}
+                  </div>
+
+                  {archivedItems.length === 0 ? (
+                    <div className="p-6 text-center border border-dashed rounded-lg text-xs text-muted-foreground">
+                      No previous shopping trip history yet. Items you check off and complete with &quot;Finish Trip & Archive&quot; will appear here for fast re-ordering.
+                    </div>
+                  ) : (
+                    <div className="flex flex-col gap-4">
+                      {Object.entries(archivedByCat).map(([catName, items]) => (
+                        <div
+                          key={catName}
+                          className="border rounded-lg p-3 bg-muted/20"
+                        >
+                          <h5 className="text-xs font-bold text-muted-foreground uppercase mb-2">
+                            {catName}
+                          </h5>
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                            {items.map((item) => (
+                              <div
+                                key={item.id}
+                                className="flex items-center justify-between p-2.5 rounded-lg bg-card border text-xs gap-2 hover:border-primary/40 transition-colors"
+                              >
+                                <div className="flex flex-col gap-0.5 flex-1 min-w-0">
+                                  <div className="flex items-center gap-1.5 flex-wrap">
+                                    <span className="font-semibold text-foreground truncate">
+                                      {item.name}
+                                    </span>
+                                    <button
+                                      type="button"
+                                      onClick={() => handleToggleStaple(item)}
+                                      title={item.isStaple ? 'Staple ⭐ (click to unmark)' : 'Mark as frequent staple'}
+                                      className="transition-transform active:scale-90"
+                                    >
+                                      <Star
+                                        className={`h-3 w-3 ${
+                                          item.isStaple
+                                            ? 'text-amber-500 fill-amber-500'
+                                            : 'text-muted-foreground/40 hover:text-amber-500'
+                                        }`}
+                                      />
+                                    </button>
+                                  </div>
+                                  <div className="flex items-center gap-2 flex-wrap text-[10px] text-muted-foreground">
+                                    {item.quantity && (
+                                      <span className="bg-muted px-1.5 py-0.5 rounded font-medium text-foreground">
+                                        {item.quantity}
+                                      </span>
+                                    )}
+                                    {item.notes && (
+                                      <span className="italic text-muted-foreground/90 truncate max-w-[140px]">
+                                        {item.notes}
+                                      </span>
+                                    )}
+                                  </div>
+                                </div>
+
+                                <div className="flex items-center gap-1 flex-shrink-0">
+                                  <Button
+                                    size="sm"
+                                    variant="ghost"
+                                    onClick={() => openEditModal(item)}
+                                    className="h-7 w-7 p-0 text-muted-foreground hover:text-foreground"
+                                    title="Edit item details"
+                                  >
+                                    <Edit2 className="h-3.5 w-3.5" />
+                                  </Button>
+
+                                  <Button
+                                    size="sm"
+                                    variant="outline"
+                                    onClick={() => handleRestockItem(item)}
+                                    className="h-7 text-[11px] font-semibold gap-1 hover:bg-primary hover:text-white"
+                                    title="Add back to current grocery list"
+                                  >
+                                    <Plus className="h-3 w-3" />
+                                    Add Back
+                                  </Button>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
                       ))}
                     </div>
+                  )}
+                </div>
+              )}
+
+              {/* TAB 3: POPULAR HOUSEHOLD ESSENTIALS */}
+              {staplesModalTab === 'essentials' && (
+                <div className="flex flex-col gap-3">
+                  <div className="flex items-center justify-between gap-2 flex-wrap">
+                    <h4
+                      className={`${kumbh_sans.className} text-xs font-bold text-primary uppercase tracking-wider flex items-center gap-2`}
+                    >
+                      <Sparkles className="h-4 w-4 text-amber-500" />
+                      Popular Household Essentials Library ({POPULAR_STAPLES.length})
+                    </h4>
+                    <p className="text-[11px] text-muted-foreground">
+                      Click any item to add it to your list with 1 tap.
+                    </p>
                   </div>
-                );
-              })()}
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    {POPULAR_STAPLES.map((staple) => {
+                      const isOnActive = activeItems.some(
+                        (i) => i.name.toLowerCase() === staple.name.toLowerCase()
+                      );
+                      const isStapleSaved = allUserStaples.some(
+                        (i) => i.name.toLowerCase() === staple.name.toLowerCase()
+                      );
+
+                      return (
+                        <div
+                          key={staple.name}
+                          className="flex items-center justify-between p-2.5 rounded-lg bg-card border text-xs gap-2 hover:border-primary/40 transition-colors"
+                        >
+                          <div className="flex flex-col gap-0.5 flex-1 min-w-0">
+                            <div className="flex items-center gap-1.5 flex-wrap">
+                              <span className="font-semibold text-foreground truncate">
+                                {staple.name}
+                              </span>
+                              {isStapleSaved && (
+                                <Star className="h-3 w-3 text-amber-500 fill-amber-500 flex-shrink-0" />
+                              )}
+                            </div>
+                            <div className="flex items-center gap-2 flex-wrap text-[10px] text-muted-foreground">
+                              <span className="bg-muted px-1.5 py-0.5 rounded font-medium text-foreground">
+                                {staple.category}
+                              </span>
+                              {staple.quantity && (
+                                <span>{staple.quantity}</span>
+                              )}
+                              {staple.notes && (
+                                <span className="italic text-muted-foreground/80 truncate max-w-[120px]">
+                                  {staple.notes}
+                                </span>
+                              )}
+                            </div>
+                          </div>
+
+                          <div className="flex items-center gap-1 flex-shrink-0">
+                            {isOnActive ? (
+                              <Badge
+                                variant="secondary"
+                                className="h-7 text-[11px] font-bold bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800 flex items-center gap-1 px-2"
+                              >
+                                <Check className="h-3 w-3" />
+                                On List
+                              </Badge>
+                            ) : (
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => handleQuickAddStaple(staple)}
+                                className="h-7 text-[11px] font-semibold gap-1 hover:bg-primary hover:text-white"
+                              >
+                                <Plus className="h-3 w-3" />
+                                Add to List
+                              </Button>
+                            )}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
             </div>
 
-            <DialogFooter>
+            <DialogFooter className="mt-2 pt-2 border-t">
               <Button
                 onClick={() => setShowStaplesDrawer(false)}
                 className="w-full sm:w-auto"
