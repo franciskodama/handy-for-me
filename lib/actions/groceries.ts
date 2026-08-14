@@ -563,3 +563,44 @@ export async function batchAddGroceryItems(
   }
 }
 
+export async function clearActiveGroceryItems(
+  uid: string,
+  options?: { deletePermanently?: boolean }
+) {
+  try {
+    const user = await getAuthenticatedUser();
+    if (!user || user.uid !== uid) return false;
+
+    const isShared = Boolean(user.householdId && user.shareGroceryList);
+    const whereCondition = isShared
+      ? { OR: [{ householdId: user.householdId }, { uid }] }
+      : { uid };
+
+    if (options?.deletePermanently) {
+      await prisma.groceryItem.deleteMany({
+        where: {
+          ...whereCondition,
+          archived: false
+        }
+      });
+    } else {
+      await prisma.groceryItem.updateMany({
+        where: {
+          ...whereCondition,
+          archived: false
+        },
+        data: {
+          archived: true,
+          inCart: false,
+          pickedByUid: null
+        }
+      });
+    }
+
+    return await getGroceryItems(uid);
+  } catch (error) {
+    console.error('Error clearing active grocery items:', error);
+    return false;
+  }
+}
+

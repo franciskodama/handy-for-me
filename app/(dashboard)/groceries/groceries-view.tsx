@@ -80,7 +80,8 @@ import {
   restockGroceryItem,
   batchRestockGroceryItems,
   finishShoppingTrip,
-  batchAddGroceryItems
+  batchAddGroceryItems,
+  clearActiveGroceryItems
 } from '@/lib/actions/groceries';
 import {
   inferCategory,
@@ -296,6 +297,8 @@ export default function GroceriesView({
     ParsedGroceryItem[]
   >([]);
   const [isBatchAdding, setIsBatchAdding] = useState(false);
+  const [showClearModal, setShowClearModal] = useState(false);
+  const [isClearingList, setIsClearingList] = useState(false);
 
   const printRef = useRef<HTMLDivElement>(null);
 
@@ -869,6 +872,60 @@ export default function GroceriesView({
     });
   };
 
+  const handleClearActiveList = async (deletePermanently: boolean) => {
+    if (activeItems.length === 0) return;
+    const count = activeItems.length;
+    setIsClearingList(true);
+
+    // Optimistic UI updates
+    if (deletePermanently) {
+      setActiveItems([]);
+      setStaples((prev) => prev.filter((s) => s.archived));
+    } else {
+      const movedToArchive = activeItems.map((i) => ({
+        ...i,
+        archived: true,
+        inCart: false,
+        pickedByUid: null
+      }));
+      setActiveItems([]);
+      setArchivedItems((prev) => [...movedToArchive, ...prev]);
+    }
+
+    try {
+      const res = await clearActiveGroceryItems(uid, { deletePermanently });
+      if (res && typeof res === 'object') {
+        setActiveItems(res.active);
+        setArchivedItems(res.archived);
+        setStaples(res.staples);
+      }
+
+      toast({
+        title: deletePermanently ? 'List cleared' : 'List cleared & archived 📦',
+        description: deletePermanently
+          ? `Deleted ${count} items from your list.`
+          : `Moved ${count} items to your restock history. Your staples remain saved.`,
+        variant: 'success'
+      });
+      setShowClearModal(false);
+    } catch (error) {
+      console.error(error);
+      toast({
+        title: 'Error clearing list',
+        description: 'Could not clear active items. Please try again.',
+        variant: 'destructive'
+      });
+      const refresh = await getGroceryItems(uid);
+      if (refresh && typeof refresh === 'object') {
+        setActiveItems(refresh.active);
+        setArchivedItems(refresh.archived);
+        setStaples(refresh.staples);
+      }
+    } finally {
+      setIsClearingList(false);
+    }
+  };
+
   const handleFinishTrip = async () => {
     setIsFinishingTrip(true);
     try {
@@ -1272,6 +1329,19 @@ export default function GroceriesView({
               <Printer className="h-3.5 w-3.5" />
               Print List
             </Button>
+
+            {activeItems.length > 0 && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setShowClearModal(true)}
+                className="gap-1.5 text-xs font-semibold h-9 text-muted-foreground hover:text-destructive hover:border-destructive/40 hover:bg-destructive/5"
+                title="Clear all active items and start a fresh list"
+              >
+                <Trash2 className="h-3.5 w-3.5" />
+                Clear List
+              </Button>
+            )}
           </div>
         </div>
 
@@ -2718,6 +2788,86 @@ export default function GroceriesView({
                     : `Add All ${parsedPreviewItems.length} Items to List`}
                 </Button>
               )}
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+        {/* Clear List Confirmation Modal */}
+        <Dialog open={showClearModal} onOpenChange={setShowClearModal}>
+          <DialogContent className="sm:max-w-md">
+            <DialogHeader>
+              <div className="flex items-center gap-3">
+                <div className="h-10 w-10 rounded-full bg-destructive/10 text-destructive flex items-center justify-center flex-shrink-0">
+                  <Trash2 className="h-5 w-5" />
+                </div>
+                <div>
+                  <DialogTitle className="text-lg font-bold text-foreground">
+                    Clear Active Grocery List?
+                  </DialogTitle>
+                  <p className="text-xs text-muted-foreground mt-0.5">
+                    You have {activeItems.length} {activeItems.length === 1 ? 'item' : 'items'} on your current list.
+                  </p>
+                </div>
+              </div>
+            </DialogHeader>
+
+            <div className="py-3 text-xs text-muted-foreground flex flex-col gap-2.5">
+              <p>
+                Choose how you would like to clear your active list:
+              </p>
+              
+              <div className="flex flex-col gap-2">
+                <div className="p-3 rounded-lg border bg-muted/30 flex items-start gap-2.5">
+                  <RotateCcw className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
+                  <div className="flex flex-col gap-0.5">
+                    <span className="font-semibold text-foreground">Archive to History (Recommended)</span>
+                    <span className="text-[11px]">
+                      Clears your active list, but saves items in your <strong>Restock History</strong> so you can restore them anytime. Household staples stay saved in your catalog.
+                    </span>
+                  </div>
+                </div>
+
+                <div className="p-3 rounded-lg border bg-destructive/5 border-destructive/20 flex items-start gap-2.5">
+                  <Trash2 className="h-4 w-4 text-destructive mt-0.5 flex-shrink-0" />
+                  <div className="flex flex-col gap-0.5">
+                    <span className="font-semibold text-destructive">Delete Permanently</span>
+                    <span className="text-[11px]">
+                      Completely removes these active items from the database.
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <DialogFooter className="gap-2 sm:gap-0">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setShowClearModal(false)}
+                className="h-9 text-xs"
+              >
+                Cancel
+              </Button>
+              <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handleClearActiveList(true)}
+                  disabled={isClearingList}
+                  className="h-9 text-xs font-semibold text-destructive border-destructive/30 hover:bg-destructive/10"
+                >
+                  Delete Permanently
+                </Button>
+                <Button
+                  size="sm"
+                  onClick={() => handleClearActiveList(false)}
+                  disabled={isClearingList}
+                  className="h-9 text-xs font-semibold gap-1.5"
+                >
+                  <RotateCcw className="h-3.5 w-3.5" />
+                  Archive to History
+                </Button>
+              </div>
             </DialogFooter>
           </DialogContent>
         </Dialog>
