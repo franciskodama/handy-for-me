@@ -1530,16 +1530,6 @@ export default function GroceriesView({
 
                   <div className="flex items-center gap-2 ml-auto">
                     <Button
-                      type="button"
-                      variant="outline"
-                      onClick={() => setShowSmartPasteModal(true)}
-                      className="h-9 text-xs font-semibold gap-1.5 border-purple-300 text-purple-800 hover:bg-purple-50 dark:border-purple-800 dark:text-purple-300"
-                    >
-                      <Wand2 className="h-3.5 w-3.5 text-purple-600 dark:text-purple-400" />
-                      Paste List
-                    </Button>
-
-                    <Button
                       type="submit"
                       disabled={isSubmitting}
                       className="h-9 font-semibold gap-1.5 px-4"
