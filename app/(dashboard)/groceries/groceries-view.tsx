@@ -275,8 +275,7 @@ export default function GroceriesView({
     useState<GroceryItem[]>(initialActiveItems);
   const [archivedItems, setArchivedItems] =
     useState<GroceryItem[]>(initialArchivedItems);
-  const [staples, setStaples] =
-    useState<GroceryItem[]>(initialStaples);
+  const [staples, setStaples] = useState<GroceryItem[]>(initialStaples);
   const [viewMode, setViewMode] = useState<'plan' | 'store'>('plan');
   const [filter, setFilter] = useState<
     'all' | 'remaining' | 'inCart' | 'staples'
@@ -670,8 +669,7 @@ export default function GroceriesView({
       } else {
         return prev.filter(
           (i) =>
-            i.id !== item.id &&
-            i.name.toLowerCase() !== item.name.toLowerCase()
+            i.id !== item.id && i.name.toLowerCase() !== item.name.toLowerCase()
         );
       }
     });
@@ -680,7 +678,9 @@ export default function GroceriesView({
       const res = await toggleGroceryItemStaple(item.id, nextStapleState);
       if (res) {
         toast({
-          title: nextStapleState ? 'Saved to Staples ⭐' : 'Removed from Staples',
+          title: nextStapleState
+            ? 'Saved to Staples ⭐'
+            : 'Removed from Staples',
           description: nextStapleState
             ? `"${item.name}" is saved in your household staples.`
             : `"${item.name}" was removed from frequent staples.`,
@@ -822,13 +822,11 @@ export default function GroceriesView({
       setActiveItems((prev) => {
         const exists = prev.some(
           (i) =>
-            i.id === item.id ||
-            i.name.toLowerCase() === item.name.toLowerCase()
+            i.id === item.id || i.name.toLowerCase() === item.name.toLowerCase()
         );
         if (exists) {
           return prev.map((i) =>
-            i.id === item.id ||
-            i.name.toLowerCase() === item.name.toLowerCase()
+            i.id === item.id || i.name.toLowerCase() === item.name.toLowerCase()
               ? { ...item, archived: false, inCart: false }
               : i
           );
@@ -960,7 +958,9 @@ export default function GroceriesView({
       }
 
       toast({
-        title: deletePermanently ? 'List cleared' : 'List cleared & archived 📦',
+        title: deletePermanently
+          ? 'List cleared'
+          : 'List cleared & archived 📦',
         description: deletePermanently
           ? `Deleted ${count} items from your list.`
           : `Moved ${count} items to your restock history. Your staples remain saved.`,
@@ -1602,7 +1602,7 @@ export default function GroceriesView({
                 variant="outline"
                 size="sm"
                 onClick={() => setShowClearModal(true)}
-                className="gap-1.5 text-xs font-semibold h-8 text-muted-foreground hover:text-destructive hover:border-destructive/40 hover:bg-destructive/5"
+                className="gap-1.5 text-xs font-semibold h-8 hover:text-destructive hover:border-destructive/40 hover:bg-destructive/5"
                 title="Clear all active items and start a fresh list"
               >
                 <Trash2 className="h-3.5 w-3.5" />
@@ -1630,13 +1630,16 @@ export default function GroceriesView({
                       You have{' '}
                       {allUserStaples.length > 0 && (
                         <span>
-                          <strong>{allUserStaples.length} saved staples ⭐</strong>
+                          <strong>
+                            {allUserStaples.length} saved staples ⭐
+                          </strong>
                           {archivedItems.length > 0 && ' and '}
                         </span>
                       )}
                       {archivedItems.length > 0 && (
                         <span>
-                          <strong>{archivedItems.length} items</strong> from past trips
+                          <strong>{archivedItems.length} items</strong> from
+                          past trips
                         </span>
                       )}
                       . Restock in 1 tap, then trim what you don&apos;t need.
@@ -1985,7 +1988,7 @@ export default function GroceriesView({
                             title={
                               item.isStaple
                                 ? "Remove from this week's list (keeps staple in catalog)"
-                                : "Delete Item"
+                                : 'Delete Item'
                             }
                           >
                             <Trash2 className="h-4 w-4" />
@@ -1996,7 +1999,7 @@ export default function GroceriesView({
                             <AlertDialogTitle>
                               {item.isStaple
                                 ? "Remove from this week's list?"
-                                : "Remove from list?"}
+                                : 'Remove from list?'}
                             </AlertDialogTitle>
                             <AlertDialogDescription>
                               {item.isStaple
@@ -2119,7 +2122,10 @@ export default function GroceriesView({
                     onClick={() => {
                       if (editingItem) {
                         if (editingItem.archived) {
-                          handlePermanentDelete(editingItem.id, editingItem.name);
+                          handlePermanentDelete(
+                            editingItem.id,
+                            editingItem.name
+                          );
                         } else {
                           handleRemoveFromActiveList(editingItem);
                         }
@@ -2164,7 +2170,8 @@ export default function GroceriesView({
                 Restock & Staples Catalog
               </DialogTitle>
               <p className="text-xs text-muted-foreground">
-                Quickly re-add staples, manage frequent essentials, or restock items from past shopping trips.
+                Quickly re-add staples, manage frequent essentials, or restock
+                items from past shopping trips.
               </p>
             </DialogHeader>
 
@@ -2181,7 +2188,10 @@ export default function GroceriesView({
               >
                 <Star className="h-3.5 w-3.5 fill-amber-500 text-amber-500" />
                 <span>My Staples</span>
-                <Badge variant="secondary" className="text-[10px] px-1.5 py-0 font-bold">
+                <Badge
+                  variant="secondary"
+                  className="text-[10px] px-1.5 py-0 font-bold"
+                >
                   {allUserStaples.length}
                 </Badge>
               </button>
@@ -2197,7 +2207,10 @@ export default function GroceriesView({
               >
                 <Clock className="h-3.5 w-3.5 text-primary" />
                 <span>Trip History</span>
-                <Badge variant="secondary" className="text-[10px] px-1.5 py-0 font-bold">
+                <Badge
+                  variant="secondary"
+                  className="text-[10px] px-1.5 py-0 font-bold"
+                >
                   {archivedItems.length}
                 </Badge>
               </button>
@@ -2213,7 +2226,10 @@ export default function GroceriesView({
               >
                 <Sparkles className="h-3.5 w-3.5 text-purple-600" />
                 <span>Popular Essentials</span>
-                <Badge variant="secondary" className="text-[10px] px-1.5 py-0 font-bold">
+                <Badge
+                  variant="secondary"
+                  className="text-[10px] px-1.5 py-0 font-bold"
+                >
                   {POPULAR_STAPLES.length}
                 </Badge>
               </button>
@@ -2262,7 +2278,9 @@ export default function GroceriesView({
                       </div>
                       <div className="max-w-sm">
                         <h5 className="font-bold text-sm text-foreground">
-                          {staplesSearch ? 'No matching staples found' : 'No household staples saved yet'}
+                          {staplesSearch
+                            ? 'No matching staples found'
+                            : 'No household staples saved yet'}
                         </h5>
                         <p className="text-xs text-muted-foreground mt-1">
                           {staplesSearch
@@ -2284,7 +2302,8 @@ export default function GroceriesView({
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                       {filteredUserStaples.map((staple) => {
                         const isOnActiveList = activeItems.some(
-                          (i) => i.name.toLowerCase() === staple.name.toLowerCase()
+                          (i) =>
+                            i.name.toLowerCase() === staple.name.toLowerCase()
                         );
 
                         return (
@@ -2384,7 +2403,8 @@ export default function GroceriesView({
                             className="h-8 text-xs font-semibold gap-1.5 border-amber-500/50 text-amber-700 dark:text-amber-300 hover:bg-amber-500/10"
                           >
                             <Star className="h-3.5 w-3.5 fill-amber-500 text-amber-500" />
-                            Restock Staples ({archivedItems.filter((i) => i.isStaple).length})
+                            Restock Staples (
+                            {archivedItems.filter((i) => i.isStaple).length})
                           </Button>
                         )}
 
@@ -2402,7 +2422,9 @@ export default function GroceriesView({
 
                   {archivedItems.length === 0 ? (
                     <div className="p-6 text-center border border-dashed rounded-lg text-xs text-muted-foreground">
-                      No previous shopping trip history yet. Items you check off and complete with &quot;Finish Trip & Archive&quot; will appear here for fast re-ordering.
+                      No previous shopping trip history yet. Items you check off
+                      and complete with &quot;Finish Trip & Archive&quot; will
+                      appear here for fast re-ordering.
                     </div>
                   ) : (
                     <div className="flex flex-col gap-4">
@@ -2428,7 +2450,11 @@ export default function GroceriesView({
                                     <button
                                       type="button"
                                       onClick={() => handleToggleStaple(item)}
-                                      title={item.isStaple ? 'Staple ⭐ (click to unmark)' : 'Mark as frequent staple'}
+                                      title={
+                                        item.isStaple
+                                          ? 'Staple ⭐ (click to unmark)'
+                                          : 'Mark as frequent staple'
+                                      }
                                       className="transition-transform active:scale-90"
                                     >
                                       <Star
@@ -2494,7 +2520,8 @@ export default function GroceriesView({
                       className={`${kumbh_sans.className} text-xs font-bold text-primary uppercase tracking-wider flex items-center gap-2`}
                     >
                       <Sparkles className="h-4 w-4 text-amber-500" />
-                      Popular Household Essentials Library ({POPULAR_STAPLES.length})
+                      Popular Household Essentials Library (
+                      {POPULAR_STAPLES.length})
                     </h4>
                     <p className="text-[11px] text-muted-foreground">
                       Click any item to add it to your list with 1 tap.
@@ -2504,10 +2531,12 @@ export default function GroceriesView({
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                     {POPULAR_STAPLES.map((staple) => {
                       const isOnActive = activeItems.some(
-                        (i) => i.name.toLowerCase() === staple.name.toLowerCase()
+                        (i) =>
+                          i.name.toLowerCase() === staple.name.toLowerCase()
                       );
                       const isStapleSaved = allUserStaples.some(
-                        (i) => i.name.toLowerCase() === staple.name.toLowerCase()
+                        (i) =>
+                          i.name.toLowerCase() === staple.name.toLowerCase()
                       );
 
                       return (
@@ -2865,24 +2894,28 @@ export default function GroceriesView({
                     Clear Active Grocery List?
                   </DialogTitle>
                   <p className="text-xs text-muted-foreground mt-0.5">
-                    You have {activeItems.length} {activeItems.length === 1 ? 'item' : 'items'} on your current list.
+                    You have {activeItems.length}{' '}
+                    {activeItems.length === 1 ? 'item' : 'items'} on your
+                    current list.
                   </p>
                 </div>
               </div>
             </DialogHeader>
 
             <div className="py-3 text-xs text-muted-foreground flex flex-col gap-2.5">
-              <p>
-                Choose how you would like to clear your active list:
-              </p>
-              
+              <p>Choose how you would like to clear your active list:</p>
+
               <div className="flex flex-col gap-2">
                 <div className="p-3 rounded-lg border bg-muted/30 flex items-start gap-2.5">
                   <RotateCcw className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
                   <div className="flex flex-col gap-0.5">
-                    <span className="font-semibold text-foreground">Archive to History (Recommended)</span>
+                    <span className="font-semibold text-foreground">
+                      Archive to History (Recommended)
+                    </span>
                     <span className="text-[11px]">
-                      Clears your active list, but saves items in your <strong>Restock History</strong> so you can restore them anytime. Household staples stay saved in your catalog.
+                      Clears your active list, but saves items in your{' '}
+                      <strong>Restock History</strong> so you can restore them
+                      anytime. Household staples stay saved in your catalog.
                     </span>
                   </div>
                 </div>
@@ -2890,7 +2923,9 @@ export default function GroceriesView({
                 <div className="p-3 rounded-lg border bg-destructive/5 border-destructive/20 flex items-start gap-2.5">
                   <Trash2 className="h-4 w-4 text-destructive mt-0.5 flex-shrink-0" />
                   <div className="flex flex-col gap-0.5">
-                    <span className="font-semibold text-destructive">Delete Permanently</span>
+                    <span className="font-semibold text-destructive">
+                      Delete Permanently
+                    </span>
                     <span className="text-[11px]">
                       Completely removes these active items from the database.
                     </span>
