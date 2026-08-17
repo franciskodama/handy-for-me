@@ -39,15 +39,70 @@ import {
   AlertDialogTitle,
   AlertDialogDescription,
   AlertDialogFooter,
-  AlertDialogAction,
+  AlertDialogAction
 } from '@/components/ui/alert-dialog';
 import Image from 'next/image';
 import { MobileResultDialog } from '@/app/(dashboard)/interview-practice/mobile-result';
 import Help from '@/components/common/Help';
 import Result from './result';
-import { Search, Briefcase } from 'lucide-react';
+import {
+  Search,
+  Briefcase,
+  Linkedin,
+  Github,
+  Globe,
+  Copy,
+  Check,
+  Bot,
+  ExternalLink
+} from 'lucide-react';
 import ExplanationInterviewPractice from './explanation-interview-practice';
 import Countdown from './countdown';
+import { toast } from '@/hooks/use-toast';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger
+} from '@/components/ui/tooltip';
+
+const QUICK_LINKS = [
+  {
+    id: 'linkedin',
+    label: 'LinkedIn',
+    url: 'https://www.linkedin.com/in/kodama',
+    icon: Linkedin,
+    type: 'copy' as const
+  },
+  {
+    id: 'portfolio',
+    label: 'Portfolio',
+    url: 'https://www.fkodama.com',
+    icon: Globe,
+    type: 'copy' as const
+  },
+  {
+    id: 'github',
+    label: 'GitHub',
+    url: 'https://github.com/franciskodama',
+    icon: Github,
+    type: 'copy' as const
+  },
+  {
+    id: 'job-tracker',
+    label: 'Job-Tracker',
+    url: 'https://app.tealhq.com/job-tracker',
+    icon: Briefcase,
+    type: 'link' as const
+  },
+  {
+    id: 'role-play',
+    label: 'Role Play',
+    url: 'https://www.linkedin.com/learning/role-play/scenarios/AQHCQTGmJCQseQAAAaAQXMZZD33M1ud72czE51DpU35H3unoi335gYYyug?previousSessionUrn=urn%3Ali%3Ala_rolePlaySession%3A8b941161-c4cd-4c68-a02f-d26bfde2b785',
+    icon: Bot,
+    type: 'link' as const
+  }
+];
 
 export default function InterviewPractice({ name }: { name: string }) {
   const [openAction, setOpenAction] = useState(false);
@@ -62,8 +117,31 @@ export default function InterviewPractice({ name }: { name: string }) {
   const [isPaused, setIsPaused] = useState(false);
   const [isLuckyMode, setIsLuckyMode] = useState(false);
   const [selectedFramework, setSelectedFramework] = useState<any>(null);
+  const [copiedId, setCopiedId] = useState<string | null>(null);
 
   const categories = getCategories();
+
+  const handleCopy = async (item: (typeof QUICK_LINKS)[number]) => {
+    try {
+      await navigator.clipboard.writeText(item.url);
+      setCopiedId(item.id);
+      toast({
+        title: 'Copied to clipboard!',
+        description: `${item.label} URL copied: ${item.url}`,
+        variant: 'success'
+      });
+      setTimeout(() => {
+        setCopiedId(null);
+      }, 2000);
+    } catch (err) {
+      console.error('Failed to copy text: ', err);
+      toast({
+        title: 'Error copying link',
+        description: 'Failed to copy URL to clipboard.',
+        variant: 'destructive'
+      });
+    }
+  };
 
   useEffect(() => {
     if (category) {
@@ -124,11 +202,79 @@ export default function InterviewPractice({ name }: { name: string }) {
   return (
     <Card className="min-h-[75vh]">
       <CardHeader className="mb-12">
-        <CardTitle className="flex justify-between items-center gap-2">
-          <div className="flex items-center gap-4">
+        <CardTitle className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="flex items-center justify-between w-full sm:w-auto gap-4">
             <p>Interview Practice</p>
+            <div className="block sm:hidden">
+              {!openAction ? <Help setOpenAction={setOpenAction} /> : <div />}
+            </div>
           </div>
-          {!openAction ? <Help setOpenAction={setOpenAction} /> : <div />}
+
+          <div className="flex items-center gap-2 flex-wrap">
+            {QUICK_LINKS.map((item) => {
+              const Icon = item.icon;
+              const isCopied = copiedId === item.id;
+              return (
+                <TooltipProvider key={item.id}>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      {item.type === 'link' ? (
+                        <Button
+                          asChild
+                          variant="outline"
+                          size="sm"
+                          className="flex items-center gap-1.5 h-8 px-2.5 text-xs font-semibold normal-case shadow-[0_0px_0px_0px_inset,#FFF_-2px_2px_0_-1px,#0F1739_-2px_2px] active:-translate-x-[2px] active:translate-y-[2px] active:shadow-none cursor-pointer"
+                        >
+                          <a
+                            href={item.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <Icon className="h-3.5 w-3.5 text-primary" />
+                            <span>{item.label}</span>
+                            <ExternalLink className="h-3 w-3 text-muted-foreground ml-0.5 opacity-60" />
+                          </a>
+                        </Button>
+                      ) : (
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleCopy(item)}
+                          className="flex items-center gap-1.5 h-8 px-2.5 text-xs font-semibold normal-case shadow-[0_0px_0px_0px_inset,#FFF_-2px_2px_0_-1px,#0F1739_-2px_2px] active:-translate-x-[2px] active:translate-y-[2px] active:shadow-none"
+                        >
+                          {isCopied ? (
+                            <Check className="h-3.5 w-3.5 text-green-600" />
+                          ) : (
+                            <Icon className="h-3.5 w-3.5 text-primary" />
+                          )}
+                          <span>{item.label}</span>
+                          {isCopied ? (
+                            <span className="text-[10px] font-bold text-green-600 ml-0.5">
+                              Copied!
+                            </span>
+                          ) : (
+                            <Copy className="h-3 w-3 text-muted-foreground ml-0.5 opacity-60" />
+                          )}
+                        </Button>
+                      )}
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p className="text-xs">
+                        {item.type === 'link'
+                          ? `Open in new tab: ${item.url}`
+                          : `Click to copy: ${item.url}`}
+                      </p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              );
+            })}
+          </div>
+
+          <div className="hidden sm:block">
+            {!openAction ? <Help setOpenAction={setOpenAction} /> : <div />}
+          </div>
         </CardTitle>
         <CardDescription>
           Master your PM interviews with categorized questions and frameworks.
@@ -321,7 +467,8 @@ export default function InterviewPractice({ name }: { name: string }) {
               {selectedFramework?.name}
             </AlertDialogTitle>
             <AlertDialogDescription className="text-base text-foreground mt-4 whitespace-pre-wrap">
-              {selectedFramework?.longDescription || selectedFramework?.description}
+              {selectedFramework?.longDescription ||
+                selectedFramework?.description}
             </AlertDialogDescription>
           </AlertDialogHeader>
 
