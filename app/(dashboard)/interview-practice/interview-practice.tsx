@@ -39,7 +39,7 @@ import {
   AlertDialogTitle,
   AlertDialogDescription,
   AlertDialogFooter,
-  AlertDialogAction,
+  AlertDialogAction
 } from '@/components/ui/alert-dialog';
 import Image from 'next/image';
 import { MobileResultDialog } from '@/app/(dashboard)/interview-practice/mobile-result';
@@ -53,7 +53,8 @@ import {
   Globe,
   Copy,
   Check,
-  Bot
+  Bot,
+  ExternalLink
 } from 'lucide-react';
 import ExplanationInterviewPractice from './explanation-interview-practice';
 import Countdown from './countdown';
@@ -70,31 +71,36 @@ const QUICK_LINKS = [
     id: 'linkedin',
     label: 'LinkedIn',
     url: 'https://www.linkedin.com/in/kodama',
-    icon: Linkedin
+    icon: Linkedin,
+    type: 'copy' as const
   },
   {
     id: 'portfolio',
     label: 'Portfolio',
     url: 'https://www.fkodama.com',
-    icon: Globe
+    icon: Globe,
+    type: 'copy' as const
   },
   {
     id: 'github',
     label: 'GitHub',
     url: 'https://github.com/franciskodama',
-    icon: Github
+    icon: Github,
+    type: 'copy' as const
   },
   {
     id: 'job-tracker',
     label: 'Job-Tracker',
     url: 'https://app.tealhq.com/job-tracker',
-    icon: Briefcase
+    icon: Briefcase,
+    type: 'link' as const
   },
   {
     id: 'role-play',
     label: 'Role Play',
     url: 'https://www.linkedin.com/learning/role-play/scenarios/AQHCQTGmJCQseQAAAaAQXMZZD33M1ud72czE51DpU35H3unoi335gYYyug?previousSessionUrn=urn%3Ali%3Ala_rolePlaySession%3A8b941161-c4cd-4c68-a02f-d26bfde2b785',
-    icon: Bot
+    icon: Bot,
+    type: 'link' as const
   }
 ];
 
@@ -212,30 +218,53 @@ export default function InterviewPractice({ name }: { name: string }) {
                 <TooltipProvider key={item.id}>
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleCopy(item)}
-                        className="flex items-center gap-1.5 h-8 px-2.5 text-xs font-semibold normal-case shadow-[0_0px_0px_0px_inset,#FFF_-2px_2px_0_-1px,#0F1739_-2px_2px] active:-translate-x-[2px] active:translate-y-[2px] active:shadow-none"
-                      >
-                        {isCopied ? (
-                          <Check className="h-3.5 w-3.5 text-green-600" />
-                        ) : (
-                          <Icon className="h-3.5 w-3.5 text-primary" />
-                        )}
-                        <span>{item.label}</span>
-                        {isCopied ? (
-                          <span className="text-[10px] font-bold text-green-600 ml-0.5">
-                            Copied!
-                          </span>
-                        ) : (
-                          <Copy className="h-3 w-3 text-muted-foreground ml-0.5 opacity-60" />
-                        )}
-                      </Button>
+                      {item.type === 'link' ? (
+                        <Button
+                          asChild
+                          variant="outline"
+                          size="sm"
+                          className="flex items-center gap-1.5 h-8 px-2.5 text-xs font-semibold normal-case shadow-[0_0px_0px_0px_inset,#FFF_-2px_2px_0_-1px,#0F1739_-2px_2px] active:-translate-x-[2px] active:translate-y-[2px] active:shadow-none cursor-pointer"
+                        >
+                          <a
+                            href={item.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <Icon className="h-3.5 w-3.5 text-primary" />
+                            <span>{item.label}</span>
+                            <ExternalLink className="h-3 w-3 text-muted-foreground ml-0.5 opacity-60" />
+                          </a>
+                        </Button>
+                      ) : (
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleCopy(item)}
+                          className="flex items-center gap-1.5 h-8 px-2.5 text-xs font-semibold normal-case shadow-[0_0px_0px_0px_inset,#FFF_-2px_2px_0_-1px,#0F1739_-2px_2px] active:-translate-x-[2px] active:translate-y-[2px] active:shadow-none"
+                        >
+                          {isCopied ? (
+                            <Check className="h-3.5 w-3.5 text-green-600" />
+                          ) : (
+                            <Icon className="h-3.5 w-3.5 text-primary" />
+                          )}
+                          <span>{item.label}</span>
+                          {isCopied ? (
+                            <span className="text-[10px] font-bold text-green-600 ml-0.5">
+                              Copied!
+                            </span>
+                          ) : (
+                            <Copy className="h-3 w-3 text-muted-foreground ml-0.5 opacity-60" />
+                          )}
+                        </Button>
+                      )}
                     </TooltipTrigger>
                     <TooltipContent>
-                      <p className="text-xs">Click to copy: {item.url}</p>
+                      <p className="text-xs">
+                        {item.type === 'link'
+                          ? `Open in new tab: ${item.url}`
+                          : `Click to copy: ${item.url}`}
+                      </p>
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
@@ -438,7 +467,8 @@ export default function InterviewPractice({ name }: { name: string }) {
               {selectedFramework?.name}
             </AlertDialogTitle>
             <AlertDialogDescription className="text-base text-foreground mt-4 whitespace-pre-wrap">
-              {selectedFramework?.longDescription || selectedFramework?.description}
+              {selectedFramework?.longDescription ||
+                selectedFramework?.description}
             </AlertDialogDescription>
           </AlertDialogHeader>
 
