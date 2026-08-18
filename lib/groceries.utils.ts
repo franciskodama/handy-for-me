@@ -84,7 +84,15 @@ export const defaultCategoryRules: Record<string, string> = {
   kiwi: 'Produce',
   kiwis: 'Produce',
 
-  // Dairy & Eggs & Plant Dairy
+  // Dairy & Eggs, Chilled Beverages & Plant Dairy
+  'orange juice': 'Dairy & Eggs',
+  'orange juices': 'Dairy & Eggs',
+  oj: 'Dairy & Eggs',
+  'fresh juice': 'Dairy & Eggs',
+  'apple juice': 'Dairy & Eggs',
+  lemonade: 'Dairy & Eggs',
+  smoothie: 'Dairy & Eggs',
+  smoothies: 'Dairy & Eggs',
   milk: 'Dairy & Eggs',
   'oat milk': 'Dairy & Eggs',
   'almond milk': 'Dairy & Eggs',
@@ -272,13 +280,30 @@ export const defaultCategoryRules: Record<string, string> = {
   lotion: 'Household'
 };
 
+// Pre-sorted by keyword length descending so multi-word and specific phrases match before single/short words
+const sortedCategoryRules = Object.entries(defaultCategoryRules).sort(
+  ([a], [b]) => b.length - a.length
+);
+
 export function inferCategory(name: string): string {
   const lower = name.toLowerCase().trim();
-  for (const [keyword, category] of Object.entries(defaultCategoryRules)) {
+
+  // 1. First pass: Word boundary matching (e.g. "orange juice" before "orange", "ice cream" before "ice")
+  for (const [keyword, category] of sortedCategoryRules) {
+    const escapedKeyword = keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const regex = new RegExp(`\\b${escapedKeyword}\\b`, 'i');
+    if (regex.test(lower)) {
+      return category;
+    }
+  }
+
+  // 2. Fallback pass: Direct inclusion for compound or joined words
+  for (const [keyword, category] of sortedCategoryRules) {
     if (lower.includes(keyword)) {
       return category;
     }
   }
+
   return 'Pantry';
 }
 
