@@ -390,3 +390,44 @@ export function parseRawGroceryText(rawText: string): ParsedGroceryItem[] {
 
   return results;
 }
+
+export const DEFAULT_CATEGORY_ORDER: string[] = [
+  'Produce',
+  'Bakery',
+  'Meat & Seafood',
+  'Dairy & Eggs',
+  'Pantry',
+  'Snacks & Drinks',
+  'Frozen',
+  'Household',
+  'Other'
+];
+
+export function getSavedCategoryOrder(uid?: string): string[] {
+  if (typeof window === 'undefined') return DEFAULT_CATEGORY_ORDER;
+  try {
+    const key = uid ? `grocery_category_order_${uid}` : 'grocery_category_order_default';
+    const stored = localStorage.getItem(key);
+    if (!stored) return DEFAULT_CATEGORY_ORDER;
+    const parsed = JSON.parse(stored);
+    if (Array.isArray(parsed) && parsed.length > 0) {
+      // Ensure all standard categories are present even if new categories are added
+      const missing = DEFAULT_CATEGORY_ORDER.filter((c) => !parsed.includes(c));
+      return [...parsed, ...missing];
+    }
+  } catch (e) {
+    console.error('Failed to read saved category order:', e);
+  }
+  return DEFAULT_CATEGORY_ORDER;
+}
+
+export function saveCategoryOrder(order: string[], uid?: string): void {
+  if (typeof window === 'undefined') return;
+  try {
+    const key = uid ? `grocery_category_order_${uid}` : 'grocery_category_order_default';
+    localStorage.setItem(key, JSON.stringify(order));
+  } catch (e) {
+    console.error('Failed to save category order:', e);
+  }
+}
+

@@ -29,7 +29,8 @@ import {
   Clock,
   HeartHandshake,
   Wand2,
-  FileText
+  FileText,
+  Footprints
 } from 'lucide-react';
 import { useForm, Controller } from 'react-hook-form';
 
@@ -87,13 +88,17 @@ import {
 import {
   inferCategory,
   parseRawGroceryText,
-  ParsedGroceryItem
+  ParsedGroceryItem,
+  DEFAULT_CATEGORY_ORDER,
+  getSavedCategoryOrder
 } from '@/lib/groceries.utils';
 import { barlow, kumbh_sans } from '@/app/ui/fonts';
 import { toast } from '@/hooks/use-toast';
 import Help from '@/components/common/Help';
 import MessageEmpty from '@/components/MessageEmpty';
 import ExplanationGroceries from './explanation-groceries';
+import AisleReorderModal from './aisle-reorder-modal';
+import AisleQuickNav from './aisle-quick-nav';
 
 export const GROCERY_CATEGORIES = [
   {
@@ -299,6 +304,27 @@ export default function GroceriesView({
   const [isBatchAdding, setIsBatchAdding] = useState(false);
   const [showClearModal, setShowClearModal] = useState(false);
   const [isClearingList, setIsClearingList] = useState(false);
+  const [categoryOrder, setCategoryOrder] =
+    useState<string[]>(DEFAULT_CATEGORY_ORDER);
+  const [showReorderModal, setShowReorderModal] = useState(false);
+  const [collapsedAisles, setCollapsedAisles] = useState<
+    Record<string, boolean>
+  >({});
+
+  // Load custom supermarket aisle order from localStorage
+  useEffect(() => {
+    const saved = getSavedCategoryOrder(uid);
+    if (saved && Array.isArray(saved) && saved.length > 0) {
+      setCategoryOrder(saved);
+    }
+  }, [uid]);
+
+  const toggleAisleCollapse = (categoryName: string) => {
+    setCollapsedAisles((prev) => ({
+      ...prev,
+      [categoryName]: !prev[categoryName]
+    }));
+  };
 
   const printRef = useRef<HTMLDivElement>(null);
 
@@ -707,17 +733,31 @@ export default function GroceriesView({
     const currentUserName = userName || uid.split('@')[0];
 
     // Optimistic UI update
-    setActiveItems((prev) =>
-      prev.map((i) =>
-        i.id === item.id
-          ? {
-              ...i,
-              inCart: nextState,
-              pickedByUid: nextState ? currentUserName : null
-            }
-          : i
-      )
+    const updatedActive = activeItems.map((i) =>
+      i.id === item.id
+        ? {
+            ...i,
+            inCart: nextState,
+            pickedByUid: nextState ? currentUserName : null
+          }
+        : i
     );
+    setActiveItems(updatedActive);
+
+    // Auto-collapse completed aisle in In-Store mode when the last remaining item is collected
+    if (nextState && viewMode === 'store') {
+      const aisleItems = updatedActive.filter(
+        (i) => i.category.toLowerCase() === item.category.toLowerCase()
+      );
+      const isAisleFullyCollected =
+        aisleItems.length > 0 && aisleItems.every((i) => i.inCart);
+      if (isAisleFullyCollected) {
+        setCollapsedAisles((prev) => ({
+          ...prev,
+          [item.category]: true
+        }));
+      }
+    }
 
     try {
       const res = await toggleGroceryItemInCart(item.id, nextState);
@@ -1200,7 +1240,7 @@ export default function GroceriesView({
     return activeItems;
   }, [activeItems, filter, remainingItems, inCartItems]);
 
-  // Group items by category / department order and sort: uncrossed A-Z first, crossed A-Z at end
+  // Group items by custom category / department walking order and sort: uncrossed A-Z first, crossed A-Z at end
   const groupedDepartments = useMemo(() => {
     const sortItems = (items: GroceryItem[]) => {
       return [...items].sort((a, b) => {
@@ -1218,27 +1258,54 @@ export default function GroceriesView({
       items: GroceryItem[];
     }[] = [];
 
-    GROCERY_CATEGORIES.forEach((cat) => {
+    // Map through the custom categoryOrder sequence
+    categoryOrder.forEach((catName, index) => {
+      const catObj = GROCERY_CATEGORIES.find(
+        (c) => c.name.toLowerCase() === catName.toLowerCase()
+      ) || {
+        name: catName,
+        label: `🛒 ${catName}`,
+        color: '#6b7280',
+        bgColor: '#f9fafb',
+        borderColor: '#e5e7eb',
+        textColor: '#374151',
+        order: index + 1
+      };
+
       const itemsInCat = displayedActiveItems.filter(
-        (i) => i.category.toLowerCase() === cat.name.toLowerCase()
+        (i) => i.category.toLowerCase() === catName.toLowerCase()
       );
       if (itemsInCat.length > 0) {
-        groups.push({ category: cat, items: sortItems(itemsInCat) });
+        groups.push({
+          category: { ...catObj, order: index + 1 },
+          items: sortItems(itemsInCat)
+        });
       }
     });
 
-    // Catch any uncategorized items
-    const knownNames = GROCERY_CATEGORIES.map((c) => c.name.toLowerCase());
+    // Catch any uncategorized items not in categoryOrder
+    const orderedLower = categoryOrder.map((c) => c.toLowerCase());
     const extraItems = displayedActiveItems.filter(
-      (i) => !knownNames.includes(i.category.toLowerCase())
+      (i) => !orderedLower.includes(i.category.toLowerCase())
     );
     if (extraItems.length > 0) {
-      const otherCat = GROCERY_CATEGORIES.find((c) => c.name === 'Other')!;
-      groups.push({ category: otherCat, items: sortItems(extraItems) });
+      const otherCat = GROCERY_CATEGORIES.find((c) => c.name === 'Other') || {
+        name: 'Other',
+        label: '🛒 Other Essentials',
+        color: '#6b7280',
+        bgColor: '#f9fafb',
+        borderColor: '#e5e7eb',
+        textColor: '#374151',
+        order: groups.length + 1
+      };
+      groups.push({
+        category: { ...otherCat, order: groups.length + 1 },
+        items: sortItems(extraItems)
+      });
     }
 
-    return groups.sort((a, b) => a.category.order - b.category.order);
-  }, [displayedActiveItems]);
+    return groups;
+  }, [displayedActiveItems, categoryOrder]);
 
   // Archived items categorized for the restock catalog
   const archivedByCat = useMemo(() => {
@@ -1387,6 +1454,17 @@ export default function GroceriesView({
                     : archivedItems.length}
                 </Badge>
               )}
+            </Button>
+
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setShowReorderModal(true)}
+              className="gap-1.5 text-xs font-semibold h-9"
+              title="Arrange supermarket walking route"
+            >
+              <Footprints className="h-3.5 w-3.5 text-primary" />
+              Aisle Route
             </Button>
 
             <Button
@@ -1779,6 +1857,14 @@ export default function GroceriesView({
           </div>
         )}
 
+        {/* In-Store Mode Sticky Quick Navigation Bar */}
+        {viewMode === 'store' && (
+          <AisleQuickNav
+            groupedDepartments={groupedDepartments}
+            onOpenReorderModal={() => setShowReorderModal(true)}
+          />
+        )}
+
         {/* Printable / Board Container */}
         <div ref={printRef} className="flex flex-col gap-6">
           {/* Empty state when filtering by staples and no active staples */}
@@ -1832,52 +1918,120 @@ export default function GroceriesView({
             </Card>
           )}
           {/* Department / Aisle Groupings */}
-          {groupedDepartments.map(({ category, items }) => (
-            <Card
-              key={category.name}
-              className={`border transition-all ${
-                viewMode === 'store' ? 'border-2 shadow-md' : 'shadow-sm'
-              }`}
-              style={{ borderColor: category.borderColor }}
-            >
-              {/* Department Header */}
-              <div
-                className="px-4 py-3 border-b flex items-center justify-between rounded-t-lg"
-                style={{
-                  backgroundColor: category.bgColor,
-                  borderColor: category.borderColor
-                }}
+          {groupedDepartments.map(({ category, items }) => {
+            const isAisleCollapsed = !!collapsedAisles[category.name];
+            const remainingInAisle = items.filter((i) => !i.inCart).length;
+            const allInCartInAisle = items.length > 0 && remainingInAisle === 0;
+
+            return (
+              <Card
+                key={category.name}
+                id={`aisle-${category.name.toLowerCase().replace(/[^a-z0-9]/g, '-')}`}
+                className={`border transition-all scroll-mt-24 ${
+                  viewMode === 'store' ? 'border-2 shadow-md' : 'shadow-sm'
+                } ${allInCartInAisle && isAisleCollapsed ? 'opacity-70 bg-muted/20' : ''}`}
+                style={{ borderColor: category.borderColor }}
               >
-                <div className="flex items-center gap-2">
-                  <span
-                    className="text-base font-bold"
-                    style={{ color: category.textColor }}
-                  >
-                    {category.label}
-                  </span>
-                  <Badge
-                    variant="outline"
-                    className="bg-white/80 font-bold text-xs"
-                    style={{
-                      color: category.textColor,
-                      borderColor: category.borderColor
-                    }}
-                  >
-                    {items.length} {items.length === 1 ? 'item' : 'items'}
-                  </Badge>
+                {/* Department Header - Clickable to toggle collapse */}
+                <div
+                  onClick={() => toggleAisleCollapse(category.name)}
+                  className="px-4 py-3 border-b flex items-center justify-between rounded-t-lg cursor-pointer select-none transition-colors hover:brightness-95"
+                  style={{
+                    backgroundColor: category.bgColor,
+                    borderColor: category.borderColor
+                  }}
+                >
+                  <div className="flex items-center gap-2">
+                    <span
+                      className="text-base font-bold"
+                      style={{ color: category.textColor }}
+                    >
+                      {category.label}
+                    </span>
+                    <Badge
+                      variant="outline"
+                      className="bg-white/80 font-bold text-xs"
+                      style={{
+                        color: category.textColor,
+                        borderColor: category.borderColor
+                      }}
+                    >
+                      {items.length} {items.length === 1 ? 'item' : 'items'}
+                    </Badge>
+
+                    {allInCartInAisle && (
+                      <Badge className="bg-emerald-600 text-white text-[10px] font-bold gap-1 py-0 px-1.5 hidden sm:flex">
+                        <Check className="h-2.5 w-2.5" /> All in Cart
+                      </Badge>
+                    )}
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <span
+                      className="text-[11px] font-medium tracking-wide uppercase"
+                      style={{ color: category.textColor }}
+                    >
+                      Aisle {category.order}
+                    </span>
+
+                    <button
+                      type="button"
+                      className="p-0.5 rounded text-current hover:bg-black/5 dark:hover:bg-white/10 transition-transform"
+                      title={
+                        isAisleCollapsed ? 'Expand aisle' : 'Collapse aisle'
+                      }
+                    >
+                      {isAisleCollapsed ? (
+                        <ChevronDown
+                          className="h-4 w-4"
+                          style={{ color: category.textColor }}
+                        />
+                      ) : (
+                        <ChevronUp
+                          className="h-4 w-4"
+                          style={{ color: category.textColor }}
+                        />
+                      )}
+                    </button>
+                  </div>
                 </div>
 
-                <span
-                  className="text-[11px] font-medium tracking-wide uppercase"
-                  style={{ color: category.textColor }}
-                >
-                  Aisle {category.order}
-                </span>
-              </div>
+                {/* If Collapsed, show compact summary banner */}
+                {isAisleCollapsed && (
+                  <div
+                    onClick={() => toggleAisleCollapse(category.name)}
+                    className="p-3 text-xs text-muted-foreground bg-muted/10 cursor-pointer flex items-center justify-between hover:bg-muted/20 transition-colors"
+                  >
+                    <span className="flex items-center gap-1.5 font-medium">
+                      {allInCartInAisle ? (
+                        <span className="text-emerald-700 dark:text-emerald-400 font-semibold flex items-center gap-1">
+                          <CheckCircle2 className="h-3.5 w-3.5" />
+                          All {items.length} items collected in cart
+                        </span>
+                      ) : (
+                        <span>
+                          {remainingInAisle} of {items.length} items remaining to
+                          collect
+                        </span>
+                      )}
+                    </span>
+                    <span className="text-[11px] text-primary hover:underline font-semibold flex items-center gap-0.5">
+                      Tap to view aisle items <ChevronDown className="h-3 w-3" />
+                    </span>
+                  </div>
+                )}
 
-              {/* Department Items List */}
-              <CardContent className="p-2 sm:p-4 divide-y divide-border/60">
-                {items.map((item) => (
+                {/* Department Items List (when not collapsed) */}
+                <AnimatePresence initial={false}>
+                  {!isAisleCollapsed && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: 'auto', opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <CardContent className="p-2 sm:p-4 divide-y divide-border/60">
+                        {items.map((item) => (
                   <motion.div
                     layout
                     transition={{ type: 'spring', damping: 25, stiffness: 300 }}
@@ -2031,9 +2185,13 @@ export default function GroceriesView({
                     </div>
                   </motion.div>
                 ))}
-              </CardContent>
-            </Card>
-          ))}
+                      </CardContent>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </Card>
+            );
+          })}
         </div>
 
         {/* Edit Item Dialog */}
@@ -2976,6 +3134,16 @@ export default function GroceriesView({
             </DialogFooter>
           </DialogContent>
         </Dialog>
+
+        {/* Aisle Reorder Modal */}
+        <AisleReorderModal
+          open={showReorderModal}
+          onOpenChange={setShowReorderModal}
+          uid={uid}
+          categoryOrder={categoryOrder}
+          activeItems={activeItems}
+          onOrderSaved={(newOrder) => setCategoryOrder(newOrder)}
+        />
       </CardContent>
     </Card>
   );
