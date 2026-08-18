@@ -4,12 +4,12 @@ import React from 'react';
 import { Check, Footprints, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { GROCERY_CATEGORIES } from './groceries-view';
+import { GROCERY_CATEGORIES, GroceryCategory } from '@/lib/groceries.utils';
 import { GroceryItem } from '@/lib/types';
 
 interface AisleQuickNavProps {
   groupedDepartments: {
-    category: (typeof GROCERY_CATEGORIES)[0];
+    category: GroceryCategory;
     items: GroceryItem[];
   }[];
   onOpenReorderModal: () => void;

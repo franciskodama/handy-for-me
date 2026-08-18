@@ -90,7 +90,9 @@ import {
   parseRawGroceryText,
   ParsedGroceryItem,
   DEFAULT_CATEGORY_ORDER,
-  getSavedCategoryOrder
+  getSavedCategoryOrder,
+  GROCERY_CATEGORIES,
+  GroceryCategory
 } from '@/lib/groceries.utils';
 import { barlow, kumbh_sans } from '@/app/ui/fonts';
 import { toast } from '@/hooks/use-toast';
@@ -100,89 +102,8 @@ import ExplanationGroceries from './explanation-groceries';
 import AisleReorderModal from './aisle-reorder-modal';
 import AisleQuickNav from './aisle-quick-nav';
 
-export const GROCERY_CATEGORIES = [
-  {
-    name: 'Produce',
-    label: '🥦 Fresh Produce',
-    color: '#10b981',
-    bgColor: '#ecfdf5',
-    borderColor: '#a7f3d0',
-    textColor: '#065f46',
-    order: 1
-  },
-  {
-    name: 'Bakery',
-    label: '🥖 Bakery & Bread',
-    color: '#f59e0b',
-    bgColor: '#fffbeb',
-    borderColor: '#fde68a',
-    textColor: '#92400e',
-    order: 2
-  },
-  {
-    name: 'Meat & Seafood',
-    label: '🥩 Meat & Seafood',
-    color: '#ef4444',
-    bgColor: '#fef2f2',
-    borderColor: '#fecaca',
-    textColor: '#991b1b',
-    order: 3
-  },
-  {
-    name: 'Dairy & Eggs',
-    label: '🧀 Dairy & Eggs',
-    color: '#3b82f6',
-    bgColor: '#eff6ff',
-    borderColor: '#bfdbfe',
-    textColor: '#1e40af',
-    order: 4
-  },
-  {
-    name: 'Pantry',
-    label: '🥫 Pantry & Grains',
-    color: '#8b5cf6',
-    bgColor: '#f5f3ff',
-    borderColor: '#ddd6fe',
-    textColor: '#5b21b6',
-    order: 5
-  },
-  {
-    name: 'Snacks & Drinks',
-    label: '🍿 Snacks & Drinks',
-    color: '#ec4899',
-    bgColor: '#fdf2f8',
-    borderColor: '#fbcfe8',
-    textColor: '#9d174d',
-    order: 6
-  },
-  {
-    name: 'Frozen',
-    label: '🍦 Frozen Foods',
-    color: '#06b6d4',
-    bgColor: '#ecfeff',
-    borderColor: '#a5f3fc',
-    textColor: '#155e75',
-    order: 7
-  },
-  {
-    name: 'Household',
-    label: '🧼 Household & Care',
-    color: '#64748b',
-    bgColor: '#f8fafc',
-    borderColor: '#e2e8f0',
-    textColor: '#334155',
-    order: 8
-  },
-  {
-    name: 'Other',
-    label: '🛒 Other Essentials',
-    color: '#6b7280',
-    bgColor: '#f9fafb',
-    borderColor: '#e5e7eb',
-    textColor: '#374151',
-    order: 9
-  }
-];
+export { GROCERY_CATEGORIES };
+export type { GroceryCategory };
 
 export const POPULAR_STAPLES = [
   // { name: 'Whole Milk', category: 'Dairy & Eggs', quantity: '1 gal' },

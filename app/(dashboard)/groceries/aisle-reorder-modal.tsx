@@ -42,16 +42,17 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
   DEFAULT_CATEGORY_ORDER,
-  saveCategoryOrder
+  saveCategoryOrder,
+  GROCERY_CATEGORIES,
+  GroceryCategory
 } from '@/lib/groceries.utils';
-import { GROCERY_CATEGORIES } from './groceries-view';
 import { GroceryItem } from '@/lib/types';
 import { toast } from '@/hooks/use-toast';
 
 interface SortableAisleItemProps {
   id: string;
   index: number;
-  category: (typeof GROCERY_CATEGORIES)[0];
+  category: GroceryCategory;
   itemCount: number;
   isFirst: boolean;
   isLast: boolean;
