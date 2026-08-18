@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Check, Footprints, ChevronRight } from 'lucide-react';
+import { Check, Footprints } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { GROCERY_CATEGORIES, GroceryCategory } from '@/lib/groceries.utils';

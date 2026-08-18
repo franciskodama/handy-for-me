@@ -6,7 +6,6 @@ import confetti from 'canvas-confetti';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import {
-  ShoppingCart,
   Store,
   Plus,
   Trash2,
@@ -225,8 +224,9 @@ export default function GroceriesView({
   const [isBatchAdding, setIsBatchAdding] = useState(false);
   const [showClearModal, setShowClearModal] = useState(false);
   const [isClearingList, setIsClearingList] = useState(false);
-  const [categoryOrder, setCategoryOrder] =
-    useState<string[]>(DEFAULT_CATEGORY_ORDER);
+  const [categoryOrder, setCategoryOrder] = useState<string[]>(
+    DEFAULT_CATEGORY_ORDER
+  );
   const [showReorderModal, setShowReorderModal] = useState(false);
   const [collapsedAisles, setCollapsedAisles] = useState<
     Record<string, boolean>
@@ -1322,7 +1322,7 @@ export default function GroceriesView({
               onClick={() => setViewMode('plan')}
               className={`flex items-center gap-1.5 px-3 py-1.5 text-xs uppercase font-semibold rounded-md transition-all ${
                 viewMode === 'plan'
-                  ? 'bg-background text-foreground shadow-sm'
+                  ? 'bg-emerald-600 text-white shadow-sm'
                   : 'text-muted-foreground hover:text-foreground'
               }`}
             >
@@ -1931,13 +1931,14 @@ export default function GroceriesView({
                         </span>
                       ) : (
                         <span>
-                          {remainingInAisle} of {items.length} items remaining to
-                          collect
+                          {remainingInAisle} of {items.length} items remaining
+                          to collect
                         </span>
                       )}
                     </span>
                     <span className="text-[11px] text-primary hover:underline font-semibold flex items-center gap-0.5">
-                      Tap to view aisle items <ChevronDown className="h-3 w-3" />
+                      Tap to view aisle items{' '}
+                      <ChevronDown className="h-3 w-3" />
                     </span>
                   </div>
                 )}
@@ -1953,159 +1954,167 @@ export default function GroceriesView({
                     >
                       <CardContent className="p-2 sm:p-4 divide-y divide-border/60">
                         {items.map((item) => (
-                  <motion.div
-                    layout
-                    transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-                    key={item.id}
-                    className={`group flex items-center justify-between p-3 rounded-lg transition-all ${
-                      item.inCart
-                        ? 'bg-muted/40 opacity-75'
-                        : 'hover:bg-accent/40 bg-card'
-                    } ${viewMode === 'store' ? 'py-3.5 my-1 border border-border/40' : ''}`}
-                  >
-                    {/* Left: Cart Checkbox & Item Info */}
-                    <div
-                      onClick={() => handleToggleCart(item)}
-                      className="flex items-center gap-3.5 flex-1 cursor-pointer select-none"
-                    >
-                      <button
-                        type="button"
-                        className="flex-shrink-0 transition-transform active:scale-90"
-                      >
-                        {item.inCart ? (
-                          <CheckCircle2 className="h-6 w-6 text-emerald-600 fill-emerald-100" />
-                        ) : (
-                          <Circle className="h-6 w-6 text-muted-foreground hover:text-primary transition-colors" />
-                        )}
-                      </button>
-
-                      <div className="flex flex-col items-start gap-0.5">
-                        <div className="flex items-center gap-2 flex-wrap">
-                          <span
-                            className={`font-semibold text-sm sm:text-base ${
-                              item.inCart
-                                ? 'line-through text-muted-foreground'
-                                : 'text-foreground'
-                            }`}
-                          >
-                            {item.name}
-                          </span>
-
-                          {item.quantity && (
-                            <Badge
-                              variant="secondary"
-                              className="text-xs px-2 py-0.5 font-bold bg-primary/10 text-primary border-primary/20"
-                            >
-                              {item.quantity}
-                            </Badge>
-                          )}
-
-                          <button
-                            type="button"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleToggleStaple(item);
+                          <motion.div
+                            layout
+                            transition={{
+                              type: 'spring',
+                              damping: 25,
+                              stiffness: 300
                             }}
-                            title={
-                              item.isStaple
-                                ? 'Frequent Staple ⭐ (Click to unmark)'
-                                : 'Click to save as frequent household staple'
-                            }
-                            className={`p-0.5 rounded transition-all active:scale-90 ${
-                              item.isStaple
-                                ? 'text-amber-500 hover:text-amber-600'
-                                : 'text-muted-foreground/30 hover:text-amber-500 opacity-0 group-hover:opacity-100'
-                            }`}
+                            key={item.id}
+                            className={`group flex items-center justify-between p-3 rounded-lg transition-all ${
+                              item.inCart
+                                ? 'bg-muted/40 opacity-75'
+                                : 'hover:bg-accent/40 bg-card'
+                            } ${viewMode === 'store' ? 'py-3.5 my-1 border border-border/40' : ''}`}
                           >
-                            <Star
-                              className={`h-4 w-4 ${
-                                item.isStaple
-                                  ? 'fill-amber-500 text-amber-500'
-                                  : 'text-muted-foreground hover:text-amber-500'
-                              }`}
-                            />
-                          </button>
-                        </div>
-
-                        {/* Notes / Brand / Preference coordination */}
-                        {item.notes && (
-                          <p className="text-xs text-muted-foreground font-medium flex items-center gap-1">
-                            <Tag className="h-3 w-3 text-muted-foreground/70" />
-                            <span>{item.notes}</span>
-                          </p>
-                        )}
-
-                        {/* Co-Shopper Attribution Badges */}
-                        <div className="flex items-center gap-2 mt-0.5">
-                          {item.inCart && item.pickedByUid && (
-                            <span className="text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200 flex items-center gap-1">
-                              <Check className="h-3 w-3" />
-                              Picked by {item.pickedByUid}
-                            </span>
-                          )}
-                          {!item.inCart && item.uid && (
-                            <span className="text-[10px] text-muted-foreground">
-                              Added by {item.uid.split('@')[0]}
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Right Actions: Edit & Delete */}
-                    <div className="flex items-center gap-1 ml-2 flex-shrink-0">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => openEditModal(item)}
-                        className="h-8 w-8 p-0 text-muted-foreground hover:text-foreground"
-                        title="Edit Item"
-                      >
-                        <Edit2 className="h-4 w-4" />
-                      </Button>
-
-                      <AlertDialog>
-                        <AlertDialogTrigger asChild>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="h-8 w-8 p-0 text-muted-foreground hover:text-destructive"
-                            title={
-                              item.isStaple
-                                ? "Remove from this week's list (keeps staple in catalog)"
-                                : 'Delete Item'
-                            }
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
-                        </AlertDialogTrigger>
-                        <AlertDialogContent>
-                          <AlertDialogHeader>
-                            <AlertDialogTitle>
-                              {item.isStaple
-                                ? "Remove from this week's list?"
-                                : 'Remove from list?'}
-                            </AlertDialogTitle>
-                            <AlertDialogDescription>
-                              {item.isStaple
-                                ? `"${item.name}" will be removed from your active grocery list, but will remain saved in your Staples catalog ⭐ for future shopping trips.`
-                                : `Are you sure you want to remove "${item.name}" from your grocery list?`}
-                            </AlertDialogDescription>
-                          </AlertDialogHeader>
-                          <AlertDialogFooter>
-                            <AlertDialogCancel>Cancel</AlertDialogCancel>
-                            <AlertDialogAction
-                              onClick={() => handleRemoveFromActiveList(item)}
-                              className="bg-destructive hover:bg-destructive/90"
+                            {/* Left: Cart Checkbox & Item Info */}
+                            <div
+                              onClick={() => handleToggleCart(item)}
+                              className="flex items-center gap-3.5 flex-1 cursor-pointer select-none"
                             >
-                              Remove
-                            </AlertDialogAction>
-                          </AlertDialogFooter>
-                        </AlertDialogContent>
-                      </AlertDialog>
-                    </div>
-                  </motion.div>
-                ))}
+                              <button
+                                type="button"
+                                className="flex-shrink-0 transition-transform active:scale-90"
+                              >
+                                {item.inCart ? (
+                                  <CheckCircle2 className="h-6 w-6 text-emerald-600 fill-emerald-100" />
+                                ) : (
+                                  <Circle className="h-6 w-6 text-muted-foreground hover:text-primary transition-colors" />
+                                )}
+                              </button>
+
+                              <div className="flex flex-col items-start gap-0.5">
+                                <div className="flex items-center gap-2 flex-wrap">
+                                  <span
+                                    className={`font-semibold text-sm sm:text-base ${
+                                      item.inCart
+                                        ? 'line-through text-muted-foreground'
+                                        : 'text-foreground'
+                                    }`}
+                                  >
+                                    {item.name}
+                                  </span>
+
+                                  {item.quantity && (
+                                    <Badge
+                                      variant="secondary"
+                                      className="text-xs px-2 py-0.5 font-bold bg-primary/10 text-primary border-primary/20"
+                                    >
+                                      {item.quantity}
+                                    </Badge>
+                                  )}
+
+                                  <button
+                                    type="button"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      handleToggleStaple(item);
+                                    }}
+                                    title={
+                                      item.isStaple
+                                        ? 'Frequent Staple ⭐ (Click to unmark)'
+                                        : 'Click to save as frequent household staple'
+                                    }
+                                    className={`p-0.5 rounded transition-all active:scale-90 ${
+                                      item.isStaple
+                                        ? 'text-amber-500 hover:text-amber-600'
+                                        : 'text-muted-foreground/30 hover:text-amber-500 opacity-0 group-hover:opacity-100'
+                                    }`}
+                                  >
+                                    <Star
+                                      className={`h-4 w-4 ${
+                                        item.isStaple
+                                          ? 'fill-amber-500 text-amber-500'
+                                          : 'text-muted-foreground hover:text-amber-500'
+                                      }`}
+                                    />
+                                  </button>
+                                </div>
+
+                                {/* Notes / Brand / Preference coordination */}
+                                {item.notes && (
+                                  <p className="text-xs text-muted-foreground font-medium flex items-center gap-1">
+                                    <Tag className="h-3 w-3 text-muted-foreground/70" />
+                                    <span>{item.notes}</span>
+                                  </p>
+                                )}
+
+                                {/* Co-Shopper Attribution Badges */}
+                                <div className="flex items-center gap-2 mt-0.5">
+                                  {item.inCart && item.pickedByUid && (
+                                    <span className="text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200 flex items-center gap-1">
+                                      <Check className="h-3 w-3" />
+                                      Picked by {item.pickedByUid}
+                                    </span>
+                                  )}
+                                  {!item.inCart && item.uid && (
+                                    <span className="text-[10px] text-muted-foreground">
+                                      Added by {item.uid.split('@')[0]}
+                                    </span>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* Right Actions: Edit & Delete */}
+                            <div className="flex items-center gap-1 ml-2 flex-shrink-0">
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => openEditModal(item)}
+                                className="h-8 w-8 p-0 text-muted-foreground hover:text-foreground"
+                                title="Edit Item"
+                              >
+                                <Edit2 className="h-4 w-4" />
+                              </Button>
+
+                              <AlertDialog>
+                                <AlertDialogTrigger asChild>
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    className="h-8 w-8 p-0 text-muted-foreground hover:text-destructive"
+                                    title={
+                                      item.isStaple
+                                        ? "Remove from this week's list (keeps staple in catalog)"
+                                        : 'Delete Item'
+                                    }
+                                  >
+                                    <Trash2 className="h-4 w-4" />
+                                  </Button>
+                                </AlertDialogTrigger>
+                                <AlertDialogContent>
+                                  <AlertDialogHeader>
+                                    <AlertDialogTitle>
+                                      {item.isStaple
+                                        ? "Remove from this week's list?"
+                                        : 'Remove from list?'}
+                                    </AlertDialogTitle>
+                                    <AlertDialogDescription>
+                                      {item.isStaple
+                                        ? `"${item.name}" will be removed from your active grocery list, but will remain saved in your Staples catalog ⭐ for future shopping trips.`
+                                        : `Are you sure you want to remove "${item.name}" from your grocery list?`}
+                                    </AlertDialogDescription>
+                                  </AlertDialogHeader>
+                                  <AlertDialogFooter>
+                                    <AlertDialogCancel>
+                                      Cancel
+                                    </AlertDialogCancel>
+                                    <AlertDialogAction
+                                      onClick={() =>
+                                        handleRemoveFromActiveList(item)
+                                      }
+                                      className="bg-destructive hover:bg-destructive/90"
+                                    >
+                                      Remove
+                                    </AlertDialogAction>
+                                  </AlertDialogFooter>
+                                </AlertDialogContent>
+                              </AlertDialog>
+                            </div>
+                          </motion.div>
+                        ))}
                       </CardContent>
                     </motion.div>
                   )}
@@ -3016,7 +3025,9 @@ export default function GroceriesView({
                       Delete Active Items
                     </span>
                     <span className="text-[11px]">
-                      Deletes active one-off items from your account. All saved household staples remain safely in your Staples catalog ⭐.
+                      Deletes active one-off items from your account. All saved
+                      household staples remain safely in your Staples catalog
+                      ⭐.
                     </span>
                   </div>
                 </div>
