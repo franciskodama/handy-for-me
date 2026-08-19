@@ -6,7 +6,6 @@ import confetti from 'canvas-confetti';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import {
-  ShoppingCart,
   Store,
   Plus,
   Trash2,
@@ -29,7 +28,8 @@ import {
   Clock,
   HeartHandshake,
   Wand2,
-  FileText
+  FileText,
+  Footprints
 } from 'lucide-react';
 import { useForm, Controller } from 'react-hook-form';
 
@@ -87,97 +87,22 @@ import {
 import {
   inferCategory,
   parseRawGroceryText,
-  ParsedGroceryItem
+  ParsedGroceryItem,
+  DEFAULT_CATEGORY_ORDER,
+  getSavedCategoryOrder,
+  GROCERY_CATEGORIES,
+  GroceryCategory
 } from '@/lib/groceries.utils';
 import { barlow, kumbh_sans } from '@/app/ui/fonts';
 import { toast } from '@/hooks/use-toast';
 import Help from '@/components/common/Help';
 import MessageEmpty from '@/components/MessageEmpty';
 import ExplanationGroceries from './explanation-groceries';
+import AisleReorderModal from './aisle-reorder-modal';
+import AisleQuickNav from './aisle-quick-nav';
 
-export const GROCERY_CATEGORIES = [
-  {
-    name: 'Produce',
-    label: '🥦 Fresh Produce',
-    color: '#10b981',
-    bgColor: '#ecfdf5',
-    borderColor: '#a7f3d0',
-    textColor: '#065f46',
-    order: 1
-  },
-  {
-    name: 'Bakery',
-    label: '🥖 Bakery & Bread',
-    color: '#f59e0b',
-    bgColor: '#fffbeb',
-    borderColor: '#fde68a',
-    textColor: '#92400e',
-    order: 2
-  },
-  {
-    name: 'Meat & Seafood',
-    label: '🥩 Meat & Seafood',
-    color: '#ef4444',
-    bgColor: '#fef2f2',
-    borderColor: '#fecaca',
-    textColor: '#991b1b',
-    order: 3
-  },
-  {
-    name: 'Dairy & Eggs',
-    label: '🧀 Dairy & Eggs',
-    color: '#3b82f6',
-    bgColor: '#eff6ff',
-    borderColor: '#bfdbfe',
-    textColor: '#1e40af',
-    order: 4
-  },
-  {
-    name: 'Pantry',
-    label: '🥫 Pantry & Grains',
-    color: '#8b5cf6',
-    bgColor: '#f5f3ff',
-    borderColor: '#ddd6fe',
-    textColor: '#5b21b6',
-    order: 5
-  },
-  {
-    name: 'Snacks & Drinks',
-    label: '🍿 Snacks & Drinks',
-    color: '#ec4899',
-    bgColor: '#fdf2f8',
-    borderColor: '#fbcfe8',
-    textColor: '#9d174d',
-    order: 6
-  },
-  {
-    name: 'Frozen',
-    label: '🍦 Frozen Foods',
-    color: '#06b6d4',
-    bgColor: '#ecfeff',
-    borderColor: '#a5f3fc',
-    textColor: '#155e75',
-    order: 7
-  },
-  {
-    name: 'Household',
-    label: '🧼 Household & Care',
-    color: '#64748b',
-    bgColor: '#f8fafc',
-    borderColor: '#e2e8f0',
-    textColor: '#334155',
-    order: 8
-  },
-  {
-    name: 'Other',
-    label: '🛒 Other Essentials',
-    color: '#6b7280',
-    bgColor: '#f9fafb',
-    borderColor: '#e5e7eb',
-    textColor: '#374151',
-    order: 9
-  }
-];
+export { GROCERY_CATEGORIES };
+export type { GroceryCategory };
 
 export const POPULAR_STAPLES = [
   // { name: 'Whole Milk', category: 'Dairy & Eggs', quantity: '1 gal' },
@@ -299,6 +224,28 @@ export default function GroceriesView({
   const [isBatchAdding, setIsBatchAdding] = useState(false);
   const [showClearModal, setShowClearModal] = useState(false);
   const [isClearingList, setIsClearingList] = useState(false);
+  const [categoryOrder, setCategoryOrder] = useState<string[]>(
+    DEFAULT_CATEGORY_ORDER
+  );
+  const [showReorderModal, setShowReorderModal] = useState(false);
+  const [collapsedAisles, setCollapsedAisles] = useState<
+    Record<string, boolean>
+  >({});
+
+  // Load custom supermarket aisle order from localStorage
+  useEffect(() => {
+    const saved = getSavedCategoryOrder(uid);
+    if (saved && Array.isArray(saved) && saved.length > 0) {
+      setCategoryOrder(saved);
+    }
+  }, [uid]);
+
+  const toggleAisleCollapse = (categoryName: string) => {
+    setCollapsedAisles((prev) => ({
+      ...prev,
+      [categoryName]: !prev[categoryName]
+    }));
+  };
 
   const printRef = useRef<HTMLDivElement>(null);
 
@@ -423,12 +370,7 @@ export default function GroceriesView({
     }
   };
 
-  // Sync state when props change
-  useEffect(() => {
-    setActiveItems(initialActiveItems);
-    setArchivedItems(initialArchivedItems);
-    setStaples(initialStaples);
-  }, [initialActiveItems, initialArchivedItems, initialStaples]);
+
 
   // Real-time collaborative polling (every 3.5s when household sharing is enabled)
   useEffect(() => {
@@ -706,9 +648,9 @@ export default function GroceriesView({
     const nextState = !item.inCart;
     const currentUserName = userName || uid.split('@')[0];
 
-    // Optimistic UI update
-    setActiveItems((prev) =>
-      prev.map((i) =>
+    // Optimistic UI update using functional updater to avoid stale state closures
+    setActiveItems((prev) => {
+      const updated = prev.map((i) =>
         i.id === item.id
           ? {
               ...i,
@@ -716,8 +658,25 @@ export default function GroceriesView({
               pickedByUid: nextState ? currentUserName : null
             }
           : i
-      )
-    );
+      );
+
+      // Auto-collapse completed aisle in In-Store mode when the last remaining item is collected
+      if (nextState && viewMode === 'store') {
+        const aisleItems = updated.filter(
+          (i) => i.category.toLowerCase() === item.category.toLowerCase()
+        );
+        const isAisleFullyCollected =
+          aisleItems.length > 0 && aisleItems.every((i) => i.inCart);
+        if (isAisleFullyCollected) {
+          setCollapsedAisles((prevCollapse) => ({
+            ...prevCollapse,
+            [item.category]: true
+          }));
+        }
+      }
+
+      return updated;
+    });
 
     try {
       const res = await toggleGroceryItemInCart(item.id, nextState);
@@ -1200,15 +1159,11 @@ export default function GroceriesView({
     return activeItems;
   }, [activeItems, filter, remainingItems, inCartItems]);
 
-  // Group items by category / department order and sort: uncrossed A-Z first, crossed A-Z at end
+  // Group items by custom category / department walking order and sort alphabetically A-Z
   const groupedDepartments = useMemo(() => {
     const sortItems = (items: GroceryItem[]) => {
       return [...items].sort((a, b) => {
-        // 1. Not-in-cart (uncollected) items first, in-cart (collected) items after
-        if (a.inCart !== b.inCart) {
-          return a.inCart ? 1 : -1;
-        }
-        // 2. Alphabetical order A-Z within each group
+        // Alphabetical order A-Z within each department
         return a.name.localeCompare(b.name, undefined, { sensitivity: 'base' });
       });
     };
@@ -1218,27 +1173,54 @@ export default function GroceriesView({
       items: GroceryItem[];
     }[] = [];
 
-    GROCERY_CATEGORIES.forEach((cat) => {
+    // Map through the custom categoryOrder sequence
+    categoryOrder.forEach((catName, index) => {
+      const catObj = GROCERY_CATEGORIES.find(
+        (c) => c.name.toLowerCase() === catName.toLowerCase()
+      ) || {
+        name: catName,
+        label: `🛒 ${catName}`,
+        color: '#6b7280',
+        bgColor: '#f9fafb',
+        borderColor: '#e5e7eb',
+        textColor: '#374151',
+        order: index + 1
+      };
+
       const itemsInCat = displayedActiveItems.filter(
-        (i) => i.category.toLowerCase() === cat.name.toLowerCase()
+        (i) => i.category.toLowerCase() === catName.toLowerCase()
       );
       if (itemsInCat.length > 0) {
-        groups.push({ category: cat, items: sortItems(itemsInCat) });
+        groups.push({
+          category: { ...catObj, order: index + 1 },
+          items: sortItems(itemsInCat)
+        });
       }
     });
 
-    // Catch any uncategorized items
-    const knownNames = GROCERY_CATEGORIES.map((c) => c.name.toLowerCase());
+    // Catch any uncategorized items not in categoryOrder
+    const orderedLower = categoryOrder.map((c) => c.toLowerCase());
     const extraItems = displayedActiveItems.filter(
-      (i) => !knownNames.includes(i.category.toLowerCase())
+      (i) => !orderedLower.includes(i.category.toLowerCase())
     );
     if (extraItems.length > 0) {
-      const otherCat = GROCERY_CATEGORIES.find((c) => c.name === 'Other')!;
-      groups.push({ category: otherCat, items: sortItems(extraItems) });
+      const otherCat = GROCERY_CATEGORIES.find((c) => c.name === 'Other') || {
+        name: 'Other',
+        label: '🛒 Other Essentials',
+        color: '#6b7280',
+        bgColor: '#f9fafb',
+        borderColor: '#e5e7eb',
+        textColor: '#374151',
+        order: groups.length + 1
+      };
+      groups.push({
+        category: { ...otherCat, order: groups.length + 1 },
+        items: sortItems(extraItems)
+      });
     }
 
-    return groups.sort((a, b) => a.category.order - b.category.order);
-  }, [displayedActiveItems]);
+    return groups;
+  }, [displayedActiveItems, categoryOrder]);
 
   // Archived items categorized for the restock catalog
   const archivedByCat = useMemo(() => {
@@ -1334,7 +1316,7 @@ export default function GroceriesView({
               onClick={() => setViewMode('plan')}
               className={`flex items-center gap-1.5 px-3 py-1.5 text-xs uppercase font-semibold rounded-md transition-all ${
                 viewMode === 'plan'
-                  ? 'bg-background text-foreground shadow-sm'
+                  ? 'bg-emerald-600 text-white shadow-sm'
                   : 'text-muted-foreground hover:text-foreground'
               }`}
             >
@@ -1387,6 +1369,17 @@ export default function GroceriesView({
                     : archivedItems.length}
                 </Badge>
               )}
+            </Button>
+
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setShowReorderModal(true)}
+              className="gap-1.5 text-xs font-semibold h-9"
+              title="Arrange supermarket walking route"
+            >
+              <Footprints className="h-3.5 w-3.5 text-primary" />
+              Aisle Route
             </Button>
 
             <Button
@@ -1779,6 +1772,14 @@ export default function GroceriesView({
           </div>
         )}
 
+        {/* In-Store Mode Sticky Quick Navigation Bar */}
+        {viewMode === 'store' && (
+          <AisleQuickNav
+            groupedDepartments={groupedDepartments}
+            onOpenReorderModal={() => setShowReorderModal(true)}
+          />
+        )}
+
         {/* Printable / Board Container */}
         <div ref={printRef} className="flex flex-col gap-6">
           {/* Empty state when filtering by staples and no active staples */}
@@ -1832,208 +1833,283 @@ export default function GroceriesView({
             </Card>
           )}
           {/* Department / Aisle Groupings */}
-          {groupedDepartments.map(({ category, items }) => (
-            <Card
-              key={category.name}
-              className={`border transition-all ${
-                viewMode === 'store' ? 'border-2 shadow-md' : 'shadow-sm'
-              }`}
-              style={{ borderColor: category.borderColor }}
-            >
-              {/* Department Header */}
-              <div
-                className="px-4 py-3 border-b flex items-center justify-between rounded-t-lg"
-                style={{
-                  backgroundColor: category.bgColor,
-                  borderColor: category.borderColor
-                }}
+          {groupedDepartments.map(({ category, items }) => {
+            const isAisleCollapsed = !!collapsedAisles[category.name];
+            const remainingInAisle = items.filter((i) => !i.inCart).length;
+            const allInCartInAisle = items.length > 0 && remainingInAisle === 0;
+
+            return (
+              <Card
+                key={category.name}
+                id={`aisle-${category.name.toLowerCase().replace(/[^a-z0-9]/g, '-')}`}
+                className={`border transition-all scroll-mt-24 ${
+                  viewMode === 'store' ? 'border-2 shadow-md' : 'shadow-sm'
+                } ${allInCartInAisle && isAisleCollapsed ? 'opacity-70 bg-muted/20' : ''}`}
+                style={{ borderColor: category.borderColor }}
               >
-                <div className="flex items-center gap-2">
-                  <span
-                    className="text-base font-bold"
-                    style={{ color: category.textColor }}
-                  >
-                    {category.label}
-                  </span>
-                  <Badge
-                    variant="outline"
-                    className="bg-white/80 font-bold text-xs"
-                    style={{
-                      color: category.textColor,
-                      borderColor: category.borderColor
-                    }}
-                  >
-                    {items.length} {items.length === 1 ? 'item' : 'items'}
-                  </Badge>
+                {/* Department Header - Clickable to toggle collapse */}
+                <div
+                  onClick={() => toggleAisleCollapse(category.name)}
+                  className="px-4 py-3 border-b flex items-center justify-between rounded-t-lg cursor-pointer select-none transition-colors hover:brightness-95"
+                  style={{
+                    backgroundColor: category.bgColor,
+                    borderColor: category.borderColor
+                  }}
+                >
+                  <div className="flex items-center gap-2">
+                    <span
+                      className="text-base font-bold"
+                      style={{ color: category.textColor }}
+                    >
+                      {category.label}
+                    </span>
+                    <Badge
+                      variant="outline"
+                      className="bg-white/80 font-bold text-xs"
+                      style={{
+                        color: category.textColor,
+                        borderColor: category.borderColor
+                      }}
+                    >
+                      {items.length} {items.length === 1 ? 'item' : 'items'}
+                    </Badge>
+
+                    {allInCartInAisle && (
+                      <Badge className="bg-emerald-600 text-white text-[10px] font-bold gap-1 py-0 px-1.5 hidden sm:flex">
+                        <Check className="h-2.5 w-2.5" /> All in Cart
+                      </Badge>
+                    )}
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <span
+                      className="text-[11px] font-medium tracking-wide uppercase"
+                      style={{ color: category.textColor }}
+                    >
+                      Aisle {category.order}
+                    </span>
+
+                    <button
+                      type="button"
+                      className="p-0.5 rounded text-current hover:bg-black/5 dark:hover:bg-white/10 transition-transform"
+                      title={
+                        isAisleCollapsed ? 'Expand aisle' : 'Collapse aisle'
+                      }
+                    >
+                      {isAisleCollapsed ? (
+                        <ChevronDown
+                          className="h-4 w-4"
+                          style={{ color: category.textColor }}
+                        />
+                      ) : (
+                        <ChevronUp
+                          className="h-4 w-4"
+                          style={{ color: category.textColor }}
+                        />
+                      )}
+                    </button>
+                  </div>
                 </div>
 
-                <span
-                  className="text-[11px] font-medium tracking-wide uppercase"
-                  style={{ color: category.textColor }}
-                >
-                  Aisle {category.order}
-                </span>
-              </div>
-
-              {/* Department Items List */}
-              <CardContent className="p-2 sm:p-4 divide-y divide-border/60">
-                {items.map((item) => (
-                  <motion.div
-                    layout
-                    transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-                    key={item.id}
-                    className={`group flex items-center justify-between p-3 rounded-lg transition-all ${
-                      item.inCart
-                        ? 'bg-muted/40 opacity-75'
-                        : 'hover:bg-accent/40 bg-card'
-                    } ${viewMode === 'store' ? 'py-3.5 my-1 border border-border/40' : ''}`}
+                {/* If Collapsed, show compact summary banner */}
+                {isAisleCollapsed && (
+                  <div
+                    onClick={() => toggleAisleCollapse(category.name)}
+                    className="p-3 text-xs text-muted-foreground bg-muted/10 cursor-pointer flex items-center justify-between hover:bg-muted/20 transition-colors"
                   >
-                    {/* Left: Cart Checkbox & Item Info */}
-                    <div
-                      onClick={() => handleToggleCart(item)}
-                      className="flex items-center gap-3.5 flex-1 cursor-pointer select-none"
+                    <span className="flex items-center gap-1.5 font-medium">
+                      {allInCartInAisle ? (
+                        <span className="text-emerald-700 dark:text-emerald-400 font-semibold flex items-center gap-1">
+                          <CheckCircle2 className="h-3.5 w-3.5" />
+                          All {items.length} items collected in cart
+                        </span>
+                      ) : (
+                        <span>
+                          {remainingInAisle} of {items.length} items remaining
+                          to collect
+                        </span>
+                      )}
+                    </span>
+                    <span className="text-[11px] text-primary hover:underline font-semibold flex items-center gap-0.5">
+                      Tap to view aisle items{' '}
+                      <ChevronDown className="h-3 w-3" />
+                    </span>
+                  </div>
+                )}
+
+                {/* Department Items List (when not collapsed) */}
+                <AnimatePresence initial={false}>
+                  {!isAisleCollapsed && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: 'auto', opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.2 }}
                     >
-                      <button
-                        type="button"
-                        className="flex-shrink-0 transition-transform active:scale-90"
-                      >
-                        {item.inCart ? (
-                          <CheckCircle2 className="h-6 w-6 text-emerald-600 fill-emerald-100" />
-                        ) : (
-                          <Circle className="h-6 w-6 text-muted-foreground hover:text-primary transition-colors" />
-                        )}
-                      </button>
-
-                      <div className="flex flex-col items-start gap-0.5">
-                        <div className="flex items-center gap-2 flex-wrap">
-                          <span
-                            className={`font-semibold text-sm sm:text-base ${
+                      <CardContent className="p-2 sm:p-4 divide-y divide-border/60">
+                        {items.map((item) => (
+                          <div
+                            key={item.id}
+                            className={`group flex items-center justify-between p-3 rounded-lg ${
                               item.inCart
-                                ? 'line-through text-muted-foreground'
-                                : 'text-foreground'
-                            }`}
+                                ? 'bg-muted/40 opacity-75'
+                                : 'hover:bg-accent/40 bg-card'
+                            } ${viewMode === 'store' ? 'py-3.5 my-1 border border-border/40' : ''}`}
                           >
-                            {item.name}
-                          </span>
-
-                          {item.quantity && (
-                            <Badge
-                              variant="secondary"
-                              className="text-xs px-2 py-0.5 font-bold bg-primary/10 text-primary border-primary/20"
+                            {/* Left: Cart Checkbox & Item Info */}
+                            <div
+                              onClick={() => handleToggleCart(item)}
+                              className="flex items-center gap-3.5 flex-1 cursor-pointer select-none"
                             >
-                              {item.quantity}
-                            </Badge>
-                          )}
+                              <button
+                                type="button"
+                                className="flex-shrink-0 transition-transform active:scale-90"
+                              >
+                                {item.inCart ? (
+                                  <CheckCircle2 className="h-6 w-6 text-emerald-600 fill-emerald-100" />
+                                ) : (
+                                  <Circle className="h-6 w-6 text-muted-foreground hover:text-primary transition-colors" />
+                                )}
+                              </button>
 
-                          <button
-                            type="button"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleToggleStaple(item);
-                            }}
-                            title={
-                              item.isStaple
-                                ? 'Frequent Staple ⭐ (Click to unmark)'
-                                : 'Click to save as frequent household staple'
-                            }
-                            className={`p-0.5 rounded transition-all active:scale-90 ${
-                              item.isStaple
-                                ? 'text-amber-500 hover:text-amber-600'
-                                : 'text-muted-foreground/30 hover:text-amber-500 opacity-0 group-hover:opacity-100'
-                            }`}
-                          >
-                            <Star
-                              className={`h-4 w-4 ${
-                                item.isStaple
-                                  ? 'fill-amber-500 text-amber-500'
-                                  : 'text-muted-foreground hover:text-amber-500'
-                              }`}
-                            />
-                          </button>
-                        </div>
+                              <div className="flex flex-col items-start gap-0.5">
+                                <div className="flex items-center gap-2 flex-wrap">
+                                  <span
+                                    className={`font-semibold text-sm sm:text-base ${
+                                      item.inCart
+                                        ? 'line-through text-muted-foreground'
+                                        : 'text-foreground'
+                                    }`}
+                                  >
+                                    {item.name}
+                                  </span>
 
-                        {/* Notes / Brand / Preference coordination */}
-                        {item.notes && (
-                          <p className="text-xs text-muted-foreground font-medium flex items-center gap-1">
-                            <Tag className="h-3 w-3 text-muted-foreground/70" />
-                            <span>{item.notes}</span>
-                          </p>
-                        )}
+                                  {item.quantity && (
+                                    <Badge
+                                      variant="secondary"
+                                      className="text-xs px-2 py-0.5 font-bold bg-primary/10 text-primary border-primary/20"
+                                    >
+                                      {item.quantity}
+                                    </Badge>
+                                  )}
 
-                        {/* Co-Shopper Attribution Badges */}
-                        <div className="flex items-center gap-2 mt-0.5">
-                          {item.inCart && item.pickedByUid && (
-                            <span className="text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200 flex items-center gap-1">
-                              <Check className="h-3 w-3" />
-                              Picked by {item.pickedByUid}
-                            </span>
-                          )}
-                          {!item.inCart && item.uid && (
-                            <span className="text-[10px] text-muted-foreground">
-                              Added by {item.uid.split('@')[0]}
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                    </div>
+                                  <button
+                                    type="button"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      handleToggleStaple(item);
+                                    }}
+                                    title={
+                                      item.isStaple
+                                        ? 'Frequent Staple ⭐ (Click to unmark)'
+                                        : 'Click to save as frequent household staple'
+                                    }
+                                    className={`p-0.5 rounded transition-all active:scale-90 ${
+                                      item.isStaple
+                                        ? 'text-amber-500 hover:text-amber-600'
+                                        : 'text-muted-foreground/30 hover:text-amber-500 opacity-0 group-hover:opacity-100'
+                                    }`}
+                                  >
+                                    <Star
+                                      className={`h-4 w-4 ${
+                                        item.isStaple
+                                          ? 'fill-amber-500 text-amber-500'
+                                          : 'text-muted-foreground hover:text-amber-500'
+                                      }`}
+                                    />
+                                  </button>
+                                </div>
 
-                    {/* Right Actions: Edit & Delete */}
-                    <div className="flex items-center gap-1 ml-2 flex-shrink-0">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => openEditModal(item)}
-                        className="h-8 w-8 p-0 text-muted-foreground hover:text-foreground"
-                        title="Edit Item"
-                      >
-                        <Edit2 className="h-4 w-4" />
-                      </Button>
+                                {/* Notes / Brand / Preference coordination */}
+                                {item.notes && (
+                                  <p className="text-xs text-muted-foreground font-medium flex items-center gap-1">
+                                    <Tag className="h-3 w-3 text-muted-foreground/70" />
+                                    <span>{item.notes}</span>
+                                  </p>
+                                )}
 
-                      <AlertDialog>
-                        <AlertDialogTrigger asChild>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="h-8 w-8 p-0 text-muted-foreground hover:text-destructive"
-                            title={
-                              item.isStaple
-                                ? "Remove from this week's list (keeps staple in catalog)"
-                                : 'Delete Item'
-                            }
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
-                        </AlertDialogTrigger>
-                        <AlertDialogContent>
-                          <AlertDialogHeader>
-                            <AlertDialogTitle>
-                              {item.isStaple
-                                ? "Remove from this week's list?"
-                                : 'Remove from list?'}
-                            </AlertDialogTitle>
-                            <AlertDialogDescription>
-                              {item.isStaple
-                                ? `"${item.name}" will be removed from your active grocery list, but will remain saved in your Staples catalog ⭐ for future shopping trips.`
-                                : `Are you sure you want to remove "${item.name}" from your grocery list?`}
-                            </AlertDialogDescription>
-                          </AlertDialogHeader>
-                          <AlertDialogFooter>
-                            <AlertDialogCancel>Cancel</AlertDialogCancel>
-                            <AlertDialogAction
-                              onClick={() => handleRemoveFromActiveList(item)}
-                              className="bg-destructive hover:bg-destructive/90"
-                            >
-                              Remove
-                            </AlertDialogAction>
-                          </AlertDialogFooter>
-                        </AlertDialogContent>
-                      </AlertDialog>
-                    </div>
-                  </motion.div>
-                ))}
-              </CardContent>
-            </Card>
-          ))}
+                                {/* Co-Shopper Attribution Badges */}
+                                <div className="flex items-center gap-2 mt-0.5">
+                                  {item.inCart && item.pickedByUid && (
+                                    <span className="text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200 flex items-center gap-1">
+                                      <Check className="h-3 w-3" />
+                                      Picked by {item.pickedByUid}
+                                    </span>
+                                  )}
+                                  {!item.inCart && item.uid && (
+                                    <span className="text-[10px] text-muted-foreground">
+                                      Added by {item.uid.split('@')[0]}
+                                    </span>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* Right Actions: Edit & Delete */}
+                            <div className="flex items-center gap-1 ml-2 flex-shrink-0">
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => openEditModal(item)}
+                                className="h-8 w-8 p-0 text-muted-foreground hover:text-foreground"
+                                title="Edit Item"
+                              >
+                                <Edit2 className="h-4 w-4" />
+                              </Button>
+
+                              <AlertDialog>
+                                <AlertDialogTrigger asChild>
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    className="h-8 w-8 p-0 text-muted-foreground hover:text-destructive"
+                                    title={
+                                      item.isStaple
+                                        ? "Remove from this week's list (keeps staple in catalog)"
+                                        : 'Delete Item'
+                                    }
+                                  >
+                                    <Trash2 className="h-4 w-4" />
+                                  </Button>
+                                </AlertDialogTrigger>
+                                <AlertDialogContent>
+                                  <AlertDialogHeader>
+                                    <AlertDialogTitle>
+                                      {item.isStaple
+                                        ? "Remove from this week's list?"
+                                        : 'Remove from list?'}
+                                    </AlertDialogTitle>
+                                    <AlertDialogDescription>
+                                      {item.isStaple
+                                        ? `"${item.name}" will be removed from your active grocery list, but will remain saved in your Staples catalog ⭐ for future shopping trips.`
+                                        : `Are you sure you want to remove "${item.name}" from your grocery list?`}
+                                    </AlertDialogDescription>
+                                  </AlertDialogHeader>
+                                  <AlertDialogFooter>
+                                    <AlertDialogCancel>
+                                      Cancel
+                                    </AlertDialogCancel>
+                                    <AlertDialogAction
+                                      onClick={() =>
+                                        handleRemoveFromActiveList(item)
+                                      }
+                                      className="bg-destructive hover:bg-destructive/90"
+                                    >
+                                      Remove
+                                    </AlertDialogAction>
+                                  </AlertDialogFooter>
+                                </AlertDialogContent>
+                              </AlertDialog>
+                            </div>
+                          </div>
+                        ))}
+                      </CardContent>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </Card>
+            );
+          })}
         </div>
 
         {/* Edit Item Dialog */}
@@ -2937,7 +3013,9 @@ export default function GroceriesView({
                       Delete Active Items
                     </span>
                     <span className="text-[11px]">
-                      Deletes active one-off items from your account. All saved household staples remain safely in your Staples catalog ⭐.
+                      Deletes active one-off items from your account. All saved
+                      household staples remain safely in your Staples catalog
+                      ⭐.
                     </span>
                   </div>
                 </div>
@@ -2976,6 +3054,16 @@ export default function GroceriesView({
             </DialogFooter>
           </DialogContent>
         </Dialog>
+
+        {/* Aisle Reorder Modal */}
+        <AisleReorderModal
+          open={showReorderModal}
+          onOpenChange={setShowReorderModal}
+          uid={uid}
+          categoryOrder={categoryOrder}
+          activeItems={activeItems}
+          onOrderSaved={(newOrder) => setCategoryOrder(newOrder)}
+        />
       </CardContent>
     </Card>
   );

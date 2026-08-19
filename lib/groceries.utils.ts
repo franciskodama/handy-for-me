@@ -84,7 +84,15 @@ export const defaultCategoryRules: Record<string, string> = {
   kiwi: 'Produce',
   kiwis: 'Produce',
 
-  // Dairy & Eggs & Plant Dairy
+  // Dairy & Eggs, Chilled Beverages & Plant Dairy
+  'orange juice': 'Dairy & Eggs',
+  'orange juices': 'Dairy & Eggs',
+  oj: 'Dairy & Eggs',
+  'fresh juice': 'Dairy & Eggs',
+  'apple juice': 'Dairy & Eggs',
+  lemonade: 'Dairy & Eggs',
+  smoothie: 'Dairy & Eggs',
+  smoothies: 'Dairy & Eggs',
   milk: 'Dairy & Eggs',
   'oat milk': 'Dairy & Eggs',
   'almond milk': 'Dairy & Eggs',
@@ -272,13 +280,30 @@ export const defaultCategoryRules: Record<string, string> = {
   lotion: 'Household'
 };
 
+// Pre-sorted by keyword length descending so multi-word and specific phrases match before single/short words
+const sortedCategoryRules = Object.entries(defaultCategoryRules).sort(
+  ([a], [b]) => b.length - a.length
+);
+
 export function inferCategory(name: string): string {
   const lower = name.toLowerCase().trim();
-  for (const [keyword, category] of Object.entries(defaultCategoryRules)) {
+
+  // 1. First pass: Word boundary matching (e.g. "orange juice" before "orange", "ice cream" before "ice")
+  for (const [keyword, category] of sortedCategoryRules) {
+    const escapedKeyword = keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const regex = new RegExp(`\\b${escapedKeyword}\\b`, 'i');
+    if (regex.test(lower)) {
+      return category;
+    }
+  }
+
+  // 2. Fallback pass: Direct inclusion for compound or joined words
+  for (const [keyword, category] of sortedCategoryRules) {
     if (lower.includes(keyword)) {
       return category;
     }
   }
+
   return 'Pantry';
 }
 
@@ -390,3 +415,130 @@ export function parseRawGroceryText(rawText: string): ParsedGroceryItem[] {
 
   return results;
 }
+
+export const GROCERY_CATEGORIES = [
+  {
+    name: 'Produce',
+    label: '🥦 Fresh Produce',
+    color: '#10b981',
+    bgColor: '#ecfdf5',
+    borderColor: '#a7f3d0',
+    textColor: '#065f46',
+    order: 1
+  },
+  {
+    name: 'Bakery',
+    label: '🥖 Bakery & Bread',
+    color: '#f59e0b',
+    bgColor: '#fffbeb',
+    borderColor: '#fde68a',
+    textColor: '#92400e',
+    order: 2
+  },
+  {
+    name: 'Meat & Seafood',
+    label: '🥩 Meat & Seafood',
+    color: '#ef4444',
+    bgColor: '#fef2f2',
+    borderColor: '#fecaca',
+    textColor: '#991b1b',
+    order: 3
+  },
+  {
+    name: 'Dairy & Eggs',
+    label: '🧀 Dairy & Eggs',
+    color: '#3b82f6',
+    bgColor: '#eff6ff',
+    borderColor: '#bfdbfe',
+    textColor: '#1e40af',
+    order: 4
+  },
+  {
+    name: 'Pantry',
+    label: '🥫 Pantry & Grains',
+    color: '#8b5cf6',
+    bgColor: '#f5f3ff',
+    borderColor: '#ddd6fe',
+    textColor: '#5b21b6',
+    order: 5
+  },
+  {
+    name: 'Snacks & Drinks',
+    label: '🍿 Snacks & Drinks',
+    color: '#ec4899',
+    bgColor: '#fdf2f8',
+    borderColor: '#fbcfe8',
+    textColor: '#9d174d',
+    order: 6
+  },
+  {
+    name: 'Frozen',
+    label: '🍦 Frozen Foods',
+    color: '#06b6d4',
+    bgColor: '#ecfeff',
+    borderColor: '#a5f3fc',
+    textColor: '#155e75',
+    order: 7
+  },
+  {
+    name: 'Household',
+    label: '🧼 Household & Care',
+    color: '#64748b',
+    bgColor: '#f8fafc',
+    borderColor: '#e2e8f0',
+    textColor: '#334155',
+    order: 8
+  },
+  {
+    name: 'Other',
+    label: '🛒 Other Essentials',
+    color: '#6b7280',
+    bgColor: '#f9fafb',
+    borderColor: '#e5e7eb',
+    textColor: '#374151',
+    order: 9
+  }
+];
+
+export type GroceryCategory = (typeof GROCERY_CATEGORIES)[number];
+
+export const DEFAULT_CATEGORY_ORDER: string[] = [
+  'Produce',
+  'Bakery',
+  'Meat & Seafood',
+  'Dairy & Eggs',
+  'Pantry',
+  'Snacks & Drinks',
+  'Frozen',
+  'Household',
+  'Other'
+];
+
+export function getSavedCategoryOrder(uid?: string): string[] {
+  if (typeof window === 'undefined') return DEFAULT_CATEGORY_ORDER;
+  try {
+    const key = uid ? `grocery_category_order_${uid}` : 'grocery_category_order_default';
+    const stored = localStorage.getItem(key);
+    if (!stored) return DEFAULT_CATEGORY_ORDER;
+    const parsed = JSON.parse(stored);
+    if (Array.isArray(parsed) && parsed.length > 0) {
+      // Ensure all standard categories are present even if new categories are added
+      const missing = DEFAULT_CATEGORY_ORDER.filter((c) => !parsed.includes(c));
+      return [...parsed, ...missing];
+    }
+  } catch (e) {
+    console.error('Failed to read saved category order:', e);
+  }
+  return DEFAULT_CATEGORY_ORDER;
+}
+
+export function saveCategoryOrder(order: string[], uid?: string): void {
+  if (typeof window === 'undefined') return;
+  try {
+    const key = uid ? `grocery_category_order_${uid}` : 'grocery_category_order_default';
+    localStorage.setItem(key, JSON.stringify(order));
+  } catch (e) {
+    console.error('Failed to save category order:', e);
+  }
+}
+

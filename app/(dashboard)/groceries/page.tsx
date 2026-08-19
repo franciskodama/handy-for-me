@@ -24,6 +24,7 @@ export default async function GroceriesPage() {
 
   return (
     <GroceriesView
+      key={uid}
       uid={uid}
       userName={userName}
       initialActiveItems={activeItems}
