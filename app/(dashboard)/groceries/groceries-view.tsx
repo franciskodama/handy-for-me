@@ -370,12 +370,7 @@ export default function GroceriesView({
     }
   };
 
-  // Sync state when props change
-  useEffect(() => {
-    setActiveItems(initialActiveItems);
-    setArchivedItems(initialArchivedItems);
-    setStaples(initialStaples);
-  }, [initialActiveItems, initialArchivedItems, initialStaples]);
+
 
   // Real-time collaborative polling (every 3.5s when household sharing is enabled)
   useEffect(() => {
@@ -653,32 +648,35 @@ export default function GroceriesView({
     const nextState = !item.inCart;
     const currentUserName = userName || uid.split('@')[0];
 
-    // Optimistic UI update
-    const updatedActive = activeItems.map((i) =>
-      i.id === item.id
-        ? {
-            ...i,
-            inCart: nextState,
-            pickedByUid: nextState ? currentUserName : null
-          }
-        : i
-    );
-    setActiveItems(updatedActive);
-
-    // Auto-collapse completed aisle in In-Store mode when the last remaining item is collected
-    if (nextState && viewMode === 'store') {
-      const aisleItems = updatedActive.filter(
-        (i) => i.category.toLowerCase() === item.category.toLowerCase()
+    // Optimistic UI update using functional updater to avoid stale state closures
+    setActiveItems((prev) => {
+      const updated = prev.map((i) =>
+        i.id === item.id
+          ? {
+              ...i,
+              inCart: nextState,
+              pickedByUid: nextState ? currentUserName : null
+            }
+          : i
       );
-      const isAisleFullyCollected =
-        aisleItems.length > 0 && aisleItems.every((i) => i.inCart);
-      if (isAisleFullyCollected) {
-        setCollapsedAisles((prev) => ({
-          ...prev,
-          [item.category]: true
-        }));
+
+      // Auto-collapse completed aisle in In-Store mode when the last remaining item is collected
+      if (nextState && viewMode === 'store') {
+        const aisleItems = updated.filter(
+          (i) => i.category.toLowerCase() === item.category.toLowerCase()
+        );
+        const isAisleFullyCollected =
+          aisleItems.length > 0 && aisleItems.every((i) => i.inCart);
+        if (isAisleFullyCollected) {
+          setCollapsedAisles((prevCollapse) => ({
+            ...prevCollapse,
+            [item.category]: true
+          }));
+        }
       }
-    }
+
+      return updated;
+    });
 
     try {
       const res = await toggleGroceryItemInCart(item.id, nextState);
@@ -1161,15 +1159,11 @@ export default function GroceriesView({
     return activeItems;
   }, [activeItems, filter, remainingItems, inCartItems]);
 
-  // Group items by custom category / department walking order and sort: uncrossed A-Z first, crossed A-Z at end
+  // Group items by custom category / department walking order and sort alphabetically A-Z
   const groupedDepartments = useMemo(() => {
     const sortItems = (items: GroceryItem[]) => {
       return [...items].sort((a, b) => {
-        // 1. Not-in-cart (uncollected) items first, in-cart (collected) items after
-        if (a.inCart !== b.inCart) {
-          return a.inCart ? 1 : -1;
-        }
-        // 2. Alphabetical order A-Z within each group
+        // Alphabetical order A-Z within each department
         return a.name.localeCompare(b.name, undefined, { sensitivity: 'base' });
       });
     };
@@ -1954,15 +1948,9 @@ export default function GroceriesView({
                     >
                       <CardContent className="p-2 sm:p-4 divide-y divide-border/60">
                         {items.map((item) => (
-                          <motion.div
-                            layout
-                            transition={{
-                              type: 'spring',
-                              damping: 25,
-                              stiffness: 300
-                            }}
+                          <div
                             key={item.id}
-                            className={`group flex items-center justify-between p-3 rounded-lg transition-all ${
+                            className={`group flex items-center justify-between p-3 rounded-lg ${
                               item.inCart
                                 ? 'bg-muted/40 opacity-75'
                                 : 'hover:bg-accent/40 bg-card'
@@ -2113,7 +2101,7 @@ export default function GroceriesView({
                                 </AlertDialogContent>
                               </AlertDialog>
                             </div>
-                          </motion.div>
+                          </div>
                         ))}
                       </CardContent>
                     </motion.div>
