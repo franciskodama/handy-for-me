@@ -100,6 +100,8 @@ import MessageEmpty from '@/components/MessageEmpty';
 import ExplanationGroceries from './explanation-groceries';
 import AisleReorderModal from './aisle-reorder-modal';
 import AisleQuickNav from './aisle-quick-nav';
+import PartnerLocationRadar from '@/components/groceries/partner-location-radar';
+import { getPartnerLocationsFromItems } from '@/lib/location-tracker.utils';
 
 export { GROCERY_CATEGORIES };
 export type { GroceryCategory };
@@ -231,6 +233,14 @@ export default function GroceriesView({
   const [collapsedAisles, setCollapsedAisles] = useState<
     Record<string, boolean>
   >({});
+  const [parkedCartCategory, setParkedCartCategory] = useState<string | null>(null);
+
+  const currentUserName = useMemo(() => userName || uid.split('@')[0], [userName, uid]);
+
+  const partnerLocations = useMemo(
+    () => getPartnerLocationsFromItems(activeItems, currentUserName),
+    [activeItems, currentUserName]
+  );
 
   // Load custom supermarket aisle order from localStorage
   useEffect(() => {
@@ -1772,12 +1782,23 @@ export default function GroceriesView({
           </div>
         )}
 
-        {/* In-Store Mode Sticky Quick Navigation Bar */}
+        {/* In-Store Mode Live Location Radar & Sticky Quick Navigation Bar */}
         {viewMode === 'store' && (
-          <AisleQuickNav
-            groupedDepartments={groupedDepartments}
-            onOpenReorderModal={() => setShowReorderModal(true)}
-          />
+          <div className="space-y-3">
+            <PartnerLocationRadar
+              activeItems={activeItems}
+              currentUserName={currentUserName}
+              parkedCartCategory={parkedCartCategory}
+              onSetParkedCartCategory={setParkedCartCategory}
+              categories={GROCERY_CATEGORIES}
+            />
+            <AisleQuickNav
+              groupedDepartments={groupedDepartments}
+              onOpenReorderModal={() => setShowReorderModal(true)}
+              partnerLocations={partnerLocations}
+              parkedCartCategory={parkedCartCategory}
+            />
+          </div>
         )}
 
         {/* Printable / Board Container */}
@@ -1838,6 +1859,13 @@ export default function GroceriesView({
             const remainingInAisle = items.filter((i) => !i.inCart).length;
             const allInCartInAisle = items.length > 0 && remainingInAisle === 0;
 
+            const partnersInThisAisle = partnerLocations.filter(
+              (p) => p.categoryName.toLowerCase() === category.name.toLowerCase()
+            );
+            const isCartParkedInThisAisle =
+              parkedCartCategory &&
+              parkedCartCategory.toLowerCase() === category.name.toLowerCase();
+
             return (
               <Card
                 key={category.name}
@@ -1850,13 +1878,13 @@ export default function GroceriesView({
                 {/* Department Header - Clickable to toggle collapse */}
                 <div
                   onClick={() => toggleAisleCollapse(category.name)}
-                  className="px-4 py-3 border-b flex items-center justify-between rounded-t-lg cursor-pointer select-none transition-colors hover:brightness-95"
+                  className="px-4 py-3 border-b flex items-center justify-between rounded-t-lg cursor-pointer select-none transition-colors hover:brightness-95 flex-wrap gap-2"
                   style={{
                     backgroundColor: category.bgColor,
                     borderColor: category.borderColor
                   }}
                 >
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 flex-wrap">
                     <span
                       className="text-base font-bold"
                       style={{ color: category.textColor }}
@@ -1879,6 +1907,21 @@ export default function GroceriesView({
                         <Check className="h-2.5 w-2.5" /> All in Cart
                       </Badge>
                     )}
+
+                    {isCartParkedInThisAisle && (
+                      <Badge className="bg-emerald-600 text-white text-[10px] font-bold gap-1 py-0 px-2 shadow-xs">
+                        <ShoppingBag className="h-3 w-3" /> Cart Parked Here
+                      </Badge>
+                    )}
+
+                    {partnersInThisAisle.map((p) => (
+                      <Badge
+                        key={p.userName}
+                        className="bg-emerald-500/20 text-emerald-900 dark:text-emerald-300 border-emerald-500/40 text-[10px] font-bold gap-1 py-0 px-2 animate-pulse"
+                      >
+                        <span>👤 {p.userName} was here ({p.timeAgoFormatted})</span>
+                      </Badge>
+                    ))}
                   </div>
 
                   <div className="flex items-center gap-2">

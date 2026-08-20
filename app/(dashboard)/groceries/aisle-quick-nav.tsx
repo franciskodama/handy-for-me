@@ -7,17 +7,24 @@ import { Badge } from '@/components/ui/badge';
 import { GROCERY_CATEGORIES, GroceryCategory } from '@/lib/groceries.utils';
 import { GroceryItem } from '@/lib/types';
 
+import { PartnerLocationInfo } from '@/lib/location-tracker.utils';
+import { ShoppingCart } from 'lucide-react';
+
 interface AisleQuickNavProps {
   groupedDepartments: {
     category: GroceryCategory;
     items: GroceryItem[];
   }[];
   onOpenReorderModal: () => void;
+  partnerLocations?: PartnerLocationInfo[];
+  parkedCartCategory?: string | null;
 }
 
 export default function AisleQuickNav({
   groupedDepartments,
-  onOpenReorderModal
+  onOpenReorderModal,
+  partnerLocations = [],
+  parkedCartCategory = null
 }: AisleQuickNavProps) {
   if (groupedDepartments.length <= 1) return null;
 
@@ -38,18 +45,45 @@ export default function AisleQuickNav({
             const remainingCount = items.filter((i) => !i.inCart).length;
             const isCompleted = remainingCount === 0;
 
+            const partnersInAisle = partnerLocations.filter(
+              (p) => p.categoryName.toLowerCase() === category.name.toLowerCase()
+            );
+
+            const isCartParkedHere =
+              parkedCartCategory &&
+              parkedCartCategory.toLowerCase() === category.name.toLowerCase();
+
             return (
               <button
                 key={category.name}
                 type="button"
                 onClick={() => scrollToAisle(category.name)}
-                className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold whitespace-nowrap transition-all border shrink-0 ${
+                className={`relative flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold whitespace-nowrap transition-all border shrink-0 ${
                   isCompleted
                     ? 'bg-emerald-50 text-emerald-700 border-emerald-300 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800/80 opacity-75'
+                    : isCartParkedHere || partnersInAisle.length > 0
+                    ? 'bg-emerald-500/10 text-emerald-800 dark:text-emerald-300 border-emerald-500/50 shadow-sm ring-1 ring-emerald-500/30'
                     : 'bg-card hover:bg-accent/60 text-foreground border-border shadow-xs hover:scale-105 active:scale-95'
                 }`}
                 title={`Jump to Aisle ${index + 1}: ${category.name}`}
               >
+                {/* Indicator dots for partner / cart presence */}
+                {isCartParkedHere && (
+                  <span className="h-4 w-4 rounded-full bg-emerald-600 text-white flex items-center justify-center shrink-0" title="Cart parked in this aisle">
+                    <ShoppingCart className="h-2.5 w-2.5" />
+                  </span>
+                )}
+
+                {partnersInAisle.map((p) => (
+                  <span
+                    key={p.userName}
+                    className="h-4 w-4 rounded-full bg-emerald-600 text-white flex items-center justify-center text-[9px] font-bold shrink-0 animate-pulse"
+                    title={`${p.userName} is here (${p.timeAgoFormatted})`}
+                  >
+                    {p.userName.charAt(0).toUpperCase()}
+                  </span>
+                ))}
+
                 <span className="text-xs">{category.label.split(' ')[0]}</span>
                 <span className="truncate max-w-[90px]">{category.name}</span>
 
