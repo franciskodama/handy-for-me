@@ -1789,7 +1789,7 @@ export default function GroceriesView({
               activeItems={activeItems}
               currentUserName={currentUserName}
               parkedCartCategory={parkedCartCategory}
-              onSetParkedCartCategory={setParkedCartCategory}
+              onSetParkedCartCategoryAction={setParkedCartCategory}
               categories={GROCERY_CATEGORIES}
             />
             <AisleQuickNav

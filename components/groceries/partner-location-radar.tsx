@@ -30,7 +30,7 @@ interface PartnerLocationRadarProps {
   activeItems: GroceryItem[];
   currentUserName: string;
   parkedCartCategory: string | null;
-  onSetParkedCartCategory: (categoryName: string | null) => void;
+  onSetParkedCartCategoryAction: (categoryName: string | null) => void;
   categories: GroceryCategory[];
 }
 
@@ -38,7 +38,7 @@ export default function PartnerLocationRadar({
   activeItems,
   currentUserName,
   parkedCartCategory,
-  onSetParkedCartCategory,
+  onSetParkedCartCategoryAction,
   categories
 }: PartnerLocationRadarProps) {
   const partnerLocations = getPartnerLocationsFromItems(
@@ -101,7 +101,7 @@ export default function PartnerLocationRadar({
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-48 max-h-64 overflow-y-auto">
                 <DropdownMenuItem
-                  onClick={() => onSetParkedCartCategory(null)}
+                  onClick={() => onSetParkedCartCategoryAction(null)}
                   className="text-xs text-muted-foreground"
                 >
                   Clear Cart Anchor Pin
@@ -109,7 +109,7 @@ export default function PartnerLocationRadar({
                 {categories.map((cat) => (
                   <DropdownMenuItem
                     key={cat.name}
-                    onClick={() => onSetParkedCartCategory(cat.name)}
+                    onClick={() => onSetParkedCartCategoryAction(cat.name)}
                     className="text-xs flex items-center gap-2 cursor-pointer"
                   >
                     <span>{cat.label.split(' ')[0]}</span>
