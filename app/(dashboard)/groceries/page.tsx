@@ -8,6 +8,7 @@ export default async function GroceriesPage() {
   const session = await auth();
   const uid = session?.user?.email;
   const userName = session?.user?.name;
+  const userImage = session?.user?.image;
 
   if (!uid) {
     return <SignInPrompt />;
@@ -27,6 +28,7 @@ export default async function GroceriesPage() {
       key={uid}
       uid={uid}
       userName={userName}
+      currentUserImage={userImage}
       initialActiveItems={activeItems}
       initialArchivedItems={archivedItems}
       initialStaples={staples}

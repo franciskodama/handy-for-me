@@ -29,14 +29,74 @@ import {
 interface PartnerLocationRadarProps {
   activeItems: GroceryItem[];
   currentUserName: string;
+  currentUserImage?: string | null;
+  householdMembers?: Array<{ id?: string; uid?: string; name?: string | null; avatar?: string | null }>;
   parkedCartCategory: string | null;
   onSetParkedCartCategoryAction: (categoryName: string | null) => void;
   categories: GroceryCategory[];
 }
 
+function PartnerAvatar({
+  userName,
+  isSelf,
+  categoryColor,
+  currentUserImage,
+  householdMembers
+}: {
+  userName: string;
+  isSelf: boolean;
+  categoryColor: string;
+  currentUserImage?: string | null;
+  householdMembers?: Array<{ id?: string; uid?: string; name?: string | null; avatar?: string | null }>;
+}) {
+  const [hasError, setHasError] = React.useState(false);
+
+  let avatarUrl: string | null | undefined = null;
+
+  if (isSelf && currentUserImage) {
+    avatarUrl = currentUserImage;
+  }
+
+  if (!avatarUrl && householdMembers && householdMembers.length > 0) {
+    const member = householdMembers.find(
+      (m) =>
+        (m.name && m.name.toLowerCase() === userName.toLowerCase()) ||
+        (m.uid && m.uid.toLowerCase() === userName.toLowerCase()) ||
+        (isSelf && m.name && m.name.toLowerCase().includes(userName.toLowerCase()))
+    );
+    if (member?.avatar) {
+      avatarUrl = member.avatar;
+    }
+  }
+
+  if (avatarUrl && !hasError) {
+    return (
+      <div className="relative h-8 w-8 rounded-full overflow-hidden shrink-0 shadow-xs ring-2 ring-emerald-500/40">
+        <img
+          src={avatarUrl}
+          alt={userName}
+          onError={() => setHasError(true)}
+          className="h-full w-full object-cover"
+        />
+      </div>
+    );
+  }
+
+  return (
+    <div
+      className="h-8 w-8 rounded-full flex items-center justify-center font-bold text-xs text-white shrink-0 shadow-xs ring-1 ring-white/20"
+      style={{ backgroundColor: categoryColor }}
+    >
+      {userName.charAt(0).toUpperCase()}
+    </div>
+  );
+}
+
 export default function PartnerLocationRadar({
   activeItems,
   currentUserName,
+  currentUserImage,
+  householdMembers,
   parkedCartCategory,
   onSetParkedCartCategoryAction,
   categories
@@ -135,12 +195,13 @@ export default function PartnerLocationRadar({
                   className="group flex items-center justify-between p-2.5 rounded-lg border border-border/60 bg-card/80 hover:bg-emerald-500/5 transition-all cursor-pointer shadow-2xs"
                 >
                   <div className="flex items-center gap-2.5 min-w-0">
-                    <div
-                      className="h-8 w-8 rounded-full flex items-center justify-center font-bold text-xs text-white shrink-0 shadow-xs"
-                      style={{ backgroundColor: loc.categoryColor }}
-                    >
-                      {loc.userName.charAt(0).toUpperCase()}
-                    </div>
+                    <PartnerAvatar
+                      userName={loc.userName}
+                      isSelf={isSelf}
+                      categoryColor={loc.categoryColor}
+                      currentUserImage={currentUserImage}
+                      householdMembers={householdMembers}
+                    />
 
                     <div className="min-w-0">
                       <div className="flex items-center gap-1.5">

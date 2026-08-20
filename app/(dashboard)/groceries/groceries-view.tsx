@@ -184,6 +184,7 @@ type EditFormInputs = {
 interface GroceriesViewProps {
   uid: string;
   userName?: string | null;
+  currentUserImage?: string | null;
   initialActiveItems: GroceryItem[];
   initialArchivedItems: GroceryItem[];
   initialStaples?: GroceryItem[];
@@ -193,6 +194,7 @@ interface GroceriesViewProps {
 export default function GroceriesView({
   uid,
   userName,
+  currentUserImage,
   initialActiveItems,
   initialArchivedItems,
   initialStaples = [],
@@ -1788,6 +1790,8 @@ export default function GroceriesView({
             <PartnerLocationRadar
               activeItems={activeItems}
               currentUserName={currentUserName}
+              currentUserImage={currentUserImage}
+              householdMembers={householdDetails?.household?.members}
               parkedCartCategory={parkedCartCategory}
               onSetParkedCartCategoryAction={setParkedCartCategory}
               categories={GROCERY_CATEGORIES}
