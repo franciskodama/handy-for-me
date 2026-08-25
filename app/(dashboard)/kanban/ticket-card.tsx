@@ -5,6 +5,7 @@ import { KanbanTicket } from '@prisma/client';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
+import { LinkifiedText } from '@/components/common/linkified-text';
 import {
   Tooltip,
   TooltipContent,
