@@ -25,6 +25,7 @@ import {
 import { KanbanColumn, KanbanTicket } from '@prisma/client';
 import { ColumnContainer } from './column-container';
 import { TicketCard } from './ticket-card';
+import { LinkifiedText } from '@/components/common/linkified-text';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -814,6 +815,16 @@ export default function KanbanView({
                 onChange={(e) => setTicketDescription(e.target.value)}
                 className="flex min-h-[90px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
               />
+              {ticketDescription && (
+                <div className="rounded-md border border-border bg-muted/30 p-2.5 text-xs text-foreground space-y-1">
+                  <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider block">
+                    Link & Text Preview:
+                  </span>
+                  <div className="whitespace-pre-wrap leading-relaxed">
+                    <LinkifiedText text={ticketDescription} />
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 

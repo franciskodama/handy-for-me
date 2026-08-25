@@ -5,6 +5,7 @@ import { KanbanTicket } from '@prisma/client';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
+import { LinkifiedText } from '@/components/common/linkified-text';
 import {
   Tooltip,
   TooltipContent,
@@ -166,7 +167,7 @@ export function TicketCard({
       {/* Description Preview (if any) */}
       {ticket.description && (
         <p className="text-xs text-muted-foreground line-clamp-2 mb-3 break-words">
-          {ticket.description}
+          <LinkifiedText text={ticket.description} stopPropagation />
         </p>
       )}
 
