@@ -167,7 +167,7 @@ export function TicketCard({
       {/* Description Preview (if any) */}
       {ticket.description && (
         <p className="text-xs text-muted-foreground line-clamp-2 mb-3 break-words">
-          {ticket.description}
+          <LinkifiedText text={ticket.description} stopPropagation />
         </p>
       )}
 
