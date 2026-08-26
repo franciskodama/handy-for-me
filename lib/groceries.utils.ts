@@ -542,3 +542,66 @@ export function saveCategoryOrder(order: string[], uid?: string): void {
   }
 }
 
+export function groupItemsByCategoryOrder<T extends { category: string; name: string }>(
+  items: T[],
+  categoryOrderSequence: string[]
+): { category: GroceryCategory; items: T[] }[] {
+  const sortItems = (list: T[]) => {
+    return [...list].sort((a, b) =>
+      a.name.localeCompare(b.name, undefined, { sensitivity: 'base' })
+    );
+  };
+
+  const groups: {
+    category: GroceryCategory;
+    items: T[];
+  }[] = [];
+
+  categoryOrderSequence.forEach((catName, index) => {
+    const catObj = GROCERY_CATEGORIES.find(
+      (c) => c.name.toLowerCase() === catName.toLowerCase()
+    ) || {
+      name: catName,
+      label: `🛒 ${catName}`,
+      color: '#6b7280',
+      bgColor: '#f9fafb',
+      borderColor: '#e5e7eb',
+      textColor: '#374151',
+      order: index + 1
+    };
+
+    const itemsInCat = items.filter(
+      (i) => i.category.toLowerCase() === catName.toLowerCase()
+    );
+    if (itemsInCat.length > 0) {
+      groups.push({
+        category: { ...catObj, order: index + 1 },
+        items: sortItems(itemsInCat)
+      });
+    }
+  });
+
+  const orderedLower = categoryOrderSequence.map((c) => c.toLowerCase());
+  const extraItems = items.filter(
+    (i) => !orderedLower.includes(i.category.toLowerCase())
+  );
+  if (extraItems.length > 0) {
+    const otherCat = GROCERY_CATEGORIES.find((c) => c.name === 'Other') || {
+      name: 'Other',
+      label: '🛒 Other Essentials',
+      color: '#6b7280',
+      bgColor: '#f9fafb',
+      borderColor: '#e5e7eb',
+      textColor: '#374151',
+      order: groups.length + 1
+    };
+    groups.push({
+      category: { ...otherCat, order: groups.length + 1 },
+      items: sortItems(extraItems)
+    });
+  }
+
+  return groups;
+}
+
+
