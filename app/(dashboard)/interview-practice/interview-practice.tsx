@@ -44,6 +44,7 @@ import {
 import Image from 'next/image';
 import { MobileResultDialog } from '@/app/(dashboard)/interview-practice/mobile-result';
 import Help from '@/components/common/Help';
+import Result from './result';
 import ExplanationInterviewPractice from './explanation-interview-practice';
 import Countdown from './countdown';
 import { toast } from '@/hooks/use-toast';
