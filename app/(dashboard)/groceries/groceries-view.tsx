@@ -91,7 +91,8 @@ import {
   DEFAULT_CATEGORY_ORDER,
   getSavedCategoryOrder,
   GROCERY_CATEGORIES,
-  GroceryCategory
+  GroceryCategory,
+  groupItemsByCategoryOrder
 } from '@/lib/groceries.utils';
 import { barlow, kumbh_sans } from '@/app/ui/fonts';
 import { toast } from '@/hooks/use-toast';
@@ -1171,78 +1172,25 @@ export default function GroceriesView({
     return activeItems;
   }, [activeItems, filter, remainingItems, inCartItems]);
 
-  // Group items by custom category / department walking order and sort alphabetically A-Z
+  // Group active items by custom category / department walking order and sort alphabetically A-Z
   const groupedDepartments = useMemo(() => {
-    const sortItems = (items: GroceryItem[]) => {
-      return [...items].sort((a, b) => {
-        // Alphabetical order A-Z within each department
-        return a.name.localeCompare(b.name, undefined, { sensitivity: 'base' });
-      });
-    };
-
-    const groups: {
-      category: (typeof GROCERY_CATEGORIES)[0];
-      items: GroceryItem[];
-    }[] = [];
-
-    // Map through the custom categoryOrder sequence
-    categoryOrder.forEach((catName, index) => {
-      const catObj = GROCERY_CATEGORIES.find(
-        (c) => c.name.toLowerCase() === catName.toLowerCase()
-      ) || {
-        name: catName,
-        label: `🛒 ${catName}`,
-        color: '#6b7280',
-        bgColor: '#f9fafb',
-        borderColor: '#e5e7eb',
-        textColor: '#374151',
-        order: index + 1
-      };
-
-      const itemsInCat = displayedActiveItems.filter(
-        (i) => i.category.toLowerCase() === catName.toLowerCase()
-      );
-      if (itemsInCat.length > 0) {
-        groups.push({
-          category: { ...catObj, order: index + 1 },
-          items: sortItems(itemsInCat)
-        });
-      }
-    });
-
-    // Catch any uncategorized items not in categoryOrder
-    const orderedLower = categoryOrder.map((c) => c.toLowerCase());
-    const extraItems = displayedActiveItems.filter(
-      (i) => !orderedLower.includes(i.category.toLowerCase())
-    );
-    if (extraItems.length > 0) {
-      const otherCat = GROCERY_CATEGORIES.find((c) => c.name === 'Other') || {
-        name: 'Other',
-        label: '🛒 Other Essentials',
-        color: '#6b7280',
-        bgColor: '#f9fafb',
-        borderColor: '#e5e7eb',
-        textColor: '#374151',
-        order: groups.length + 1
-      };
-      groups.push({
-        category: { ...otherCat, order: groups.length + 1 },
-        items: sortItems(extraItems)
-      });
-    }
-
-    return groups;
+    return groupItemsByCategoryOrder(displayedActiveItems, categoryOrder);
   }, [displayedActiveItems, categoryOrder]);
 
-  // Archived items categorized for the restock catalog
-  const archivedByCat = useMemo(() => {
-    const map: Record<string, GroceryItem[]> = {};
-    archivedItems.forEach((item) => {
-      if (!map[item.category]) map[item.category] = [];
-      map[item.category].push(item);
-    });
-    return map;
-  }, [archivedItems]);
+  // Group user staples by custom category / department walking order
+  const groupedUserStaples = useMemo(() => {
+    return groupItemsByCategoryOrder(filteredUserStaples, categoryOrder);
+  }, [filteredUserStaples, categoryOrder]);
+
+  // Archived items categorized in aisle order for the restock catalog
+  const groupedArchivedItems = useMemo(() => {
+    return groupItemsByCategoryOrder(archivedItems, categoryOrder);
+  }, [archivedItems, categoryOrder]);
+
+  // Popular essentials library grouped in aisle order
+  const groupedPopularStaples = useMemo(() => {
+    return groupItemsByCategoryOrder(POPULAR_STAPLES, categoryOrder);
+  }, [categoryOrder]);
 
   return (
     <Card className="min-h-[75vh]">
@@ -2432,84 +2380,127 @@ export default function GroceriesView({
                       </Button>
                     </div>
                   ) : (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                      {filteredUserStaples.map((staple) => {
-                        const isOnActiveList = activeItems.some(
-                          (i) =>
-                            i.name.toLowerCase() === staple.name.toLowerCase()
-                        );
-
-                        return (
+                    <div className="flex flex-col gap-4">
+                      {groupedUserStaples.map(({ category, items }) => (
+                        <div
+                          key={category.name}
+                          className="border rounded-lg p-3 bg-muted/15 flex flex-col gap-2.5"
+                          style={{ borderColor: category.borderColor }}
+                        >
                           <div
-                            key={staple.id}
-                            className="flex items-center justify-between p-3 rounded-lg bg-card border text-xs gap-2 hover:border-amber-500/40 transition-colors shadow-xs"
+                            className="flex items-center justify-between gap-2 px-2.5 py-1.5 rounded-md border flex-wrap"
+                            style={{
+                              backgroundColor: category.bgColor,
+                              borderColor: category.borderColor
+                            }}
                           >
-                            <div className="flex flex-col gap-1 flex-1 min-w-0">
-                              <div className="flex items-center gap-1.5 flex-wrap">
-                                <button
-                                  type="button"
-                                  onClick={() => handleToggleStaple(staple)}
-                                  title="Click to remove from Staples"
-                                  className="text-amber-500 hover:text-amber-600 transition-transform active:scale-90"
-                                >
-                                  <Star className="h-3.5 w-3.5 fill-amber-500 text-amber-500 flex-shrink-0" />
-                                </button>
-                                <span className="font-semibold text-foreground truncate">
-                                  {staple.name}
-                                </span>
-                              </div>
-                              <div className="flex items-center gap-2 flex-wrap text-[10px] text-muted-foreground">
-                                <span className="bg-muted px-1.5 py-0.5 rounded font-medium text-foreground">
-                                  {staple.category}
-                                </span>
-                                {staple.quantity && (
-                                  <span className="bg-primary/10 text-primary px-1.5 py-0.5 rounded font-semibold">
-                                    {staple.quantity}
-                                  </span>
-                                )}
-                                {staple.notes && (
-                                  <span className="italic text-muted-foreground/90 truncate max-w-[120px]">
-                                    {staple.notes}
-                                  </span>
-                                )}
-                              </div>
-                            </div>
-
-                            <div className="flex items-center gap-1.5 flex-shrink-0">
-                              {isOnActiveList ? (
-                                <Badge
-                                  variant="secondary"
-                                  className="h-7 text-[11px] font-bold bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800 flex items-center gap-1 px-2"
-                                >
-                                  <Check className="h-3 w-3" />
-                                  On List
-                                </Badge>
-                              ) : (
-                                <Button
-                                  size="sm"
-                                  variant="outline"
-                                  onClick={() => handleRestockItem(staple)}
-                                  className="h-7 text-[11px] font-semibold gap-1 hover:bg-primary hover:text-white"
-                                  title="Add to active grocery list"
-                                >
-                                  <Plus className="h-3 w-3" />
-                                  Add to List
-                                </Button>
-                              )}
-
-                              <Button
-                                size="sm"
-                                variant="ghost"
-                                onClick={() => openEditModal(staple)}
-                                className="h-7 w-7 p-0 text-muted-foreground hover:text-foreground"
-                                title="Edit staple details"
+                            <div className="flex items-center gap-2">
+                              <span
+                                className="text-xs font-bold"
+                                style={{ color: category.textColor }}
                               >
-                                <Edit2 className="h-3.5 w-3.5" />
-                              </Button>
+                                {category.label}
+                              </span>
+                              <Badge
+                                variant="outline"
+                                className="text-[10px] px-1.5 py-0 font-bold bg-white/80 dark:bg-black/40"
+                                style={{
+                                  color: category.textColor,
+                                  borderColor: category.borderColor
+                                }}
+                              >
+                                {items.length} {items.length === 1 ? 'item' : 'items'}
+                              </Badge>
                             </div>
+                            <span
+                              className="text-[10px] font-semibold tracking-wide uppercase"
+                              style={{ color: category.textColor }}
+                            >
+                              Aisle {category.order}
+                            </span>
                           </div>
-                        );
-                      })}
+
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                            {items.map((staple) => {
+                              const isOnActiveList = activeItems.some(
+                                (i) =>
+                                  i.name.toLowerCase() === staple.name.toLowerCase()
+                              );
+
+                              return (
+                                <div
+                                  key={staple.id}
+                                  className="flex items-center justify-between p-3 rounded-lg bg-card border text-xs gap-2 hover:border-amber-500/40 transition-colors shadow-xs"
+                                >
+                                  <div className="flex flex-col gap-1 flex-1 min-w-0">
+                                    <div className="flex items-center gap-1.5 flex-wrap">
+                                      <button
+                                        type="button"
+                                        onClick={() => handleToggleStaple(staple)}
+                                        title="Click to remove from Staples"
+                                        className="text-amber-500 hover:text-amber-600 transition-transform active:scale-90"
+                                      >
+                                        <Star className="h-3.5 w-3.5 fill-amber-500 text-amber-500 flex-shrink-0" />
+                                      </button>
+                                      <span className="font-semibold text-foreground truncate">
+                                        {staple.name}
+                                      </span>
+                                    </div>
+                                    <div className="flex items-center gap-2 flex-wrap text-[10px] text-muted-foreground">
+                                      <span className="bg-muted px-1.5 py-0.5 rounded font-medium text-foreground">
+                                        {staple.category}
+                                      </span>
+                                      {staple.quantity && (
+                                        <span className="bg-primary/10 text-primary px-1.5 py-0.5 rounded font-semibold">
+                                          {staple.quantity}
+                                        </span>
+                                      )}
+                                      {staple.notes && (
+                                        <span className="italic text-muted-foreground/90 truncate max-w-[120px]">
+                                          {staple.notes}
+                                        </span>
+                                      )}
+                                    </div>
+                                  </div>
+
+                                  <div className="flex items-center gap-1.5 flex-shrink-0">
+                                    {isOnActiveList ? (
+                                      <Badge
+                                        variant="secondary"
+                                        className="h-7 text-[11px] font-bold bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800 flex items-center gap-1 px-2"
+                                      >
+                                        <Check className="h-3 w-3" />
+                                        On List
+                                      </Badge>
+                                    ) : (
+                                      <Button
+                                        size="sm"
+                                        variant="outline"
+                                        onClick={() => handleRestockItem(staple)}
+                                        className="h-7 text-[11px] font-semibold gap-1 hover:bg-primary hover:text-white"
+                                        title="Add to active grocery list"
+                                      >
+                                        <Plus className="h-3 w-3" />
+                                        Add to List
+                                      </Button>
+                                    )}
+
+                                    <Button
+                                      size="sm"
+                                      variant="ghost"
+                                      onClick={() => openEditModal(staple)}
+                                      className="h-7 w-7 p-0 text-muted-foreground hover:text-foreground"
+                                      title="Edit staple details"
+                                    >
+                                      <Edit2 className="h-3.5 w-3.5" />
+                                    </Button>
+                                  </div>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      ))}
                     </div>
                   )}
                 </div>
@@ -2561,14 +2552,45 @@ export default function GroceriesView({
                     </div>
                   ) : (
                     <div className="flex flex-col gap-4">
-                      {Object.entries(archivedByCat).map(([catName, items]) => (
+                      {groupedArchivedItems.map(({ category, items }) => (
                         <div
-                          key={catName}
-                          className="border rounded-lg p-3 bg-muted/20"
+                          key={category.name}
+                          className="border rounded-lg p-3 bg-muted/15 flex flex-col gap-2.5"
+                          style={{ borderColor: category.borderColor }}
                         >
-                          <h5 className="text-xs font-bold text-muted-foreground uppercase mb-2">
-                            {catName}
-                          </h5>
+                          <div
+                            className="flex items-center justify-between gap-2 px-2.5 py-1.5 rounded-md border flex-wrap"
+                            style={{
+                              backgroundColor: category.bgColor,
+                              borderColor: category.borderColor
+                            }}
+                          >
+                            <div className="flex items-center gap-2">
+                              <span
+                                className="text-xs font-bold"
+                                style={{ color: category.textColor }}
+                              >
+                                {category.label}
+                              </span>
+                              <Badge
+                                variant="outline"
+                                className="text-[10px] px-1.5 py-0 font-bold bg-white/80 dark:bg-black/40"
+                                style={{
+                                  color: category.textColor,
+                                  borderColor: category.borderColor
+                                }}
+                              >
+                                {items.length} {items.length === 1 ? 'item' : 'items'}
+                              </Badge>
+                            </div>
+                            <span
+                              className="text-[10px] font-semibold tracking-wide uppercase"
+                              style={{ color: category.textColor }}
+                            >
+                              Aisle {category.order}
+                            </span>
+                          </div>
+
                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                             {items.map((item) => (
                               <div
@@ -2647,7 +2669,7 @@ export default function GroceriesView({
 
               {/* TAB 3: POPULAR HOUSEHOLD ESSENTIALS */}
               {staplesModalTab === 'essentials' && (
-                <div className="flex flex-col gap-3">
+                <div className="flex flex-col gap-4">
                   <div className="flex items-center justify-between gap-2 flex-wrap">
                     <h4
                       className={`${kumbh_sans.className} text-xs font-bold text-primary uppercase tracking-wider flex items-center gap-2`}
@@ -2661,70 +2683,110 @@ export default function GroceriesView({
                     </p>
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                    {POPULAR_STAPLES.map((staple) => {
-                      const isOnActive = activeItems.some(
-                        (i) =>
-                          i.name.toLowerCase() === staple.name.toLowerCase()
-                      );
-                      const isStapleSaved = allUserStaples.some(
-                        (i) =>
-                          i.name.toLowerCase() === staple.name.toLowerCase()
-                      );
-
-                      return (
+                  <div className="flex flex-col gap-4">
+                    {groupedPopularStaples.map(({ category, items }) => (
+                      <div
+                        key={category.name}
+                        className="border rounded-lg p-3 bg-muted/15 flex flex-col gap-2.5"
+                        style={{ borderColor: category.borderColor }}
+                      >
                         <div
-                          key={staple.name}
-                          className="flex items-center justify-between p-2.5 rounded-lg bg-card border text-xs gap-2 hover:border-primary/40 transition-colors"
+                          className="flex items-center justify-between gap-2 px-2.5 py-1.5 rounded-md border flex-wrap"
+                          style={{
+                            backgroundColor: category.bgColor,
+                            borderColor: category.borderColor
+                          }}
                         >
-                          <div className="flex flex-col gap-0.5 flex-1 min-w-0">
-                            <div className="flex items-center gap-1.5 flex-wrap">
-                              <span className="font-semibold text-foreground truncate">
-                                {staple.name}
-                              </span>
-                              {isStapleSaved && (
-                                <Star className="h-3 w-3 text-amber-500 fill-amber-500 flex-shrink-0" />
-                              )}
-                            </div>
-                            <div className="flex items-center gap-2 flex-wrap text-[10px] text-muted-foreground">
-                              <span className="bg-muted px-1.5 py-0.5 rounded font-medium text-foreground">
-                                {staple.category}
-                              </span>
-                              {staple.quantity && (
-                                <span>{staple.quantity}</span>
-                              )}
-                              {staple.notes && (
-                                <span className="italic text-muted-foreground/80 truncate max-w-[120px]">
-                                  {staple.notes}
-                                </span>
-                              )}
-                            </div>
+                          <div className="flex items-center gap-2">
+                            <span
+                              className="text-xs font-bold"
+                              style={{ color: category.textColor }}
+                            >
+                              {category.label}
+                            </span>
+                            <Badge
+                              variant="outline"
+                              className="text-[10px] px-1.5 py-0 font-bold bg-white/80 dark:bg-black/40"
+                              style={{
+                                color: category.textColor,
+                                borderColor: category.borderColor
+                              }}
+                            >
+                              {items.length} {items.length === 1 ? 'item' : 'items'}
+                            </Badge>
                           </div>
-
-                          <div className="flex items-center gap-1 flex-shrink-0">
-                            {isOnActive ? (
-                              <Badge
-                                variant="secondary"
-                                className="h-7 text-[11px] font-bold bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800 flex items-center gap-1 px-2"
-                              >
-                                <Check className="h-3 w-3" />
-                                On List
-                              </Badge>
-                            ) : (
-                              <Button
-                                size="sm"
-                                variant="outline"
-                                onClick={() => handleQuickAddStaple(staple)}
-                                className="h-7 text-[11px] font-semibold gap-1 hover:bg-primary hover:text-white"
-                              >
-                                <Plus className="h-3 w-3" />
-                                Add to List
-                              </Button>
-                            )}
-                          </div>
+                          <span
+                            className="text-[10px] font-semibold tracking-wide uppercase"
+                            style={{ color: category.textColor }}
+                          >
+                            Aisle {category.order}
+                          </span>
                         </div>
-                      );
-                    })}
+
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                          {items.map((staple) => {
+                            const isOnActive = activeItems.some(
+                              (i) =>
+                                i.name.toLowerCase() === staple.name.toLowerCase()
+                            );
+                            const isStapleSaved = allUserStaples.some(
+                              (i) =>
+                                i.name.toLowerCase() === staple.name.toLowerCase()
+                            );
+
+                            return (
+                              <div
+                                key={staple.name}
+                                className="flex items-center justify-between p-2.5 rounded-lg bg-card border text-xs gap-2 hover:border-primary/40 transition-colors"
+                              >
+                                <div className="flex flex-col gap-0.5 flex-1 min-w-0">
+                                  <div className="flex items-center gap-1.5 flex-wrap">
+                                    <span className="font-semibold text-foreground truncate">
+                                      {staple.name}
+                                    </span>
+                                    {isStapleSaved && (
+                                      <Star className="h-3 w-3 text-amber-500 fill-amber-500 flex-shrink-0" />
+                                    )}
+                                  </div>
+                                  <div className="flex items-center gap-2 flex-wrap text-[10px] text-muted-foreground">
+                                    {staple.quantity && (
+                                      <span>{staple.quantity}</span>
+                                    )}
+                                    {staple.notes && (
+                                      <span className="italic text-muted-foreground/80 truncate max-w-[120px]">
+                                        {staple.notes}
+                                      </span>
+                                    )}
+                                  </div>
+                                </div>
+
+                                <div className="flex items-center gap-1 flex-shrink-0">
+                                  {isOnActive ? (
+                                    <Badge
+                                      variant="secondary"
+                                      className="h-7 text-[11px] font-bold bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800 flex items-center gap-1 px-2"
+                                    >
+                                      <Check className="h-3 w-3" />
+                                      On List
+                                    </Badge>
+                                  ) : (
+                                    <Button
+                                      size="sm"
+                                      variant="outline"
+                                      onClick={() => handleQuickAddStaple(staple)}
+                                      className="h-7 text-[11px] font-semibold gap-1 hover:bg-primary hover:text-white"
+                                    >
+                                      <Plus className="h-3 w-3" />
+                                      Add to List
+                                    </Button>
+                                  )}
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 </div>
               )}

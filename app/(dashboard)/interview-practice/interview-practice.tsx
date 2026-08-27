@@ -45,6 +45,10 @@ import Image from 'next/image';
 import { MobileResultDialog } from '@/app/(dashboard)/interview-practice/mobile-result';
 import Help from '@/components/common/Help';
 import Result from './result';
+import ExplanationInterviewPractice from './explanation-interview-practice';
+import Countdown from './countdown';
+import { toast } from '@/hooks/use-toast';
+import { AboutYouDialog } from './about-you-dialog';
 import {
   Search,
   Briefcase,
@@ -54,11 +58,9 @@ import {
   Copy,
   Check,
   Bot,
-  ExternalLink
+  ExternalLink,
+  UserCheck
 } from 'lucide-react';
-import ExplanationInterviewPractice from './explanation-interview-practice';
-import Countdown from './countdown';
-import { toast } from '@/hooks/use-toast';
 import {
   Tooltip,
   TooltipContent,
@@ -118,6 +120,7 @@ export default function InterviewPractice({ name }: { name: string }) {
   const [isLuckyMode, setIsLuckyMode] = useState(false);
   const [selectedFramework, setSelectedFramework] = useState<any>(null);
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [openYouModal, setOpenYouModal] = useState(false);
 
   const categories = getCategories();
 
@@ -270,6 +273,26 @@ export default function InterviewPractice({ name }: { name: string }) {
                 </TooltipProvider>
               );
             })}
+
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setOpenYouModal(true)}
+                    className="flex items-center gap-1.5 h-8 px-2.5 text-xs font-semibold normal-case shadow-[0_0px_0px_0px_inset,#FFF_-2px_2px_0_-1px,#0F1739_-2px_2px] active:-translate-x-[2px] active:translate-y-[2px] active:shadow-none cursor-pointer"
+                  >
+                    <UserCheck className="h-3.5 w-3.5 text-primary" />
+                    <span>You</span>
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p className="text-xs">Practice &quot;Talk about yourself&quot; pitch</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           </div>
 
           <div className="hidden sm:block">
@@ -490,6 +513,8 @@ export default function InterviewPractice({ name }: { name: string }) {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      <AboutYouDialog open={openYouModal} onOpenChangeAction={setOpenYouModal} />
     </Card>
   );
 }
