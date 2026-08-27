@@ -514,7 +514,7 @@ export default function InterviewPractice({ name }: { name: string }) {
         </AlertDialogContent>
       </AlertDialog>
 
-      <AboutYouDialog open={openYouModal} onOpenChange={setOpenYouModal} />
+      <AboutYouDialog open={openYouModal} onOpenChangeAction={setOpenYouModal} />
     </Card>
   );
 }

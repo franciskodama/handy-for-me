@@ -73,10 +73,10 @@ export const ABOUT_YOU_TOPICS: PitchTopic[] = [
 
 interface AboutYouDialogProps {
   open: boolean;
-  onOpenChange: (open: boolean) => void;
+  onOpenChangeAction: (open: boolean) => void;
 }
 
-export function AboutYouDialog({ open, onOpenChange }: AboutYouDialogProps) {
+export function AboutYouDialog({ open, onOpenChangeAction }: AboutYouDialogProps) {
   const [revealedCount, setRevealedCount] = useState<number>(0);
   const [showAll, setShowAll] = useState<boolean>(false);
   const [copied, setCopied] = useState<boolean>(false);
@@ -126,7 +126,7 @@ export function AboutYouDialog({ open, onOpenChange }: AboutYouDialogProps) {
   const isCompleted = revealedCount === totalTopics || showAll;
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={onOpenChangeAction}>
       <DialogContent className="max-w-2xl max-h-[90vh] flex flex-col p-6 sm:p-7 gap-5 overflow-hidden">
         {/* Header */}
         <DialogHeader className="space-y-2">
