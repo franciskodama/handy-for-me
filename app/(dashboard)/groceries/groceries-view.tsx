@@ -1145,8 +1145,8 @@ export default function GroceriesView({
       });
 
       toast({
-        title: `Restocked ${staplesNotInActive.length} Household Staples! ⭐`,
-        description: 'All your essentials are back on the active list.',
+        title: `Restocked ${staplesNotInActive.length} Favorites! ⭐`,
+        description: 'All your favorite items are back on the active list.',
         variant: 'success'
       });
     } catch (error) {
@@ -1318,7 +1318,7 @@ export default function GroceriesView({
               className="gap-1.5 text-xs font-semibold h-9"
             >
               <RotateCcw className="h-3.5 w-3.5 text-primary" />
-              Restock & Staples
+              Catalog
               {(allUserStaples.length > 0 || archivedItems.length > 0) && (
                 <Badge
                   variant="secondary"
@@ -1548,7 +1548,7 @@ export default function GroceriesView({
                   : 'text-muted-foreground hover:text-foreground'
               }`}
             >
-              ⭐ Staples ({activeItems.filter((i) => i.isStaple).length})
+              ⭐ Favorites ({activeItems.filter((i) => i.isStaple).length})
             </button>
           </div>
 
@@ -1594,15 +1594,14 @@ export default function GroceriesView({
                       {allUserStaples.length > 0 && (
                         <span>
                           <strong>
-                            {allUserStaples.length} saved staples ⭐
+                            {allUserStaples.length} Favorites ⭐
                           </strong>
-                          {archivedItems.length > 0 && ' and '}
+                          {archivedItems.length > 0 && ' out of '}
                         </span>
                       )}
                       {archivedItems.length > 0 && (
                         <span>
-                          <strong>{archivedItems.length} items</strong> from
-                          past trips
+                          <strong>{archivedItems.length} total items</strong> in your catalog
                         </span>
                       )}
                       . Restock in 1 tap, then trim what you don&apos;t need.
@@ -1614,23 +1613,23 @@ export default function GroceriesView({
                   {staplesNotInActive.length > 0 && (
                     <Button
                       size="sm"
-                      variant="outline"
                       onClick={handleAddAllStaplesToActive}
-                      className="text-xs font-semibold gap-1.5 border-amber-500/50 text-amber-700 dark:text-amber-300 hover:bg-amber-500/10 flex-1 md:flex-none h-9"
+                      className="text-xs font-semibold gap-1.5 bg-amber-500 hover:bg-amber-600 text-white flex-1 md:flex-none h-9"
                     >
-                      <Star className="h-4 w-4 fill-amber-500 text-amber-500" />
-                      Restock Staples ({staplesNotInActive.length})
+                      <Star className="h-4 w-4 fill-white text-white" />
+                      Restock Favorites ({staplesNotInActive.length})
                     </Button>
                   )}
 
                   {archivedItems.length > 0 && (
                     <Button
                       size="sm"
+                      variant="outline"
                       onClick={() => handleBatchRestock(false)}
                       className="text-xs font-semibold gap-1.5 flex-1 md:flex-none h-9"
                     >
                       <RotateCcw className="h-4 w-4" />
-                      Restock Past Items ({archivedItems.length})
+                      Restock All ({archivedItems.length})
                     </Button>
                   )}
 
@@ -1682,7 +1681,7 @@ export default function GroceriesView({
                     className="text-xs font-semibold gap-1.5"
                   >
                     <Sparkles className="h-3.5 w-3.5 text-amber-500" />
-                    Browse Staples Catalog
+                    Browse Catalog
                   </Button>
                 </div>
               </div>
@@ -2248,15 +2247,14 @@ export default function GroceriesView({
             <DialogHeader>
               <DialogTitle className="flex items-center gap-2 text-xl font-bold">
                 <RotateCcw className="h-5 w-5 text-primary" />
-                Restock & Staples Catalog
+                Catalog & Favorites
               </DialogTitle>
               <p className="text-xs text-muted-foreground">
-                Quickly re-add staples, manage frequent essentials, or restock
-                items from past shopping trips.
+                Browse all your items, toggle favorites (⭐), or restock with 1 click.
               </p>
             </DialogHeader>
 
-            {/* Header Tabs: My Staples | Past Trip History | Essentials Library */}
+            {/* Header Tabs: Favorites | Full Catalog | Essentials Library */}
             <div className="flex items-center gap-1 border-b pb-2 pt-1 flex-wrap">
               <button
                 type="button"
@@ -2268,7 +2266,7 @@ export default function GroceriesView({
                 }`}
               >
                 <Star className="h-3.5 w-3.5 fill-amber-500 text-amber-500" />
-                <span>My Staples</span>
+                <span>Favorites</span>
                 <Badge
                   variant="secondary"
                   className="text-[10px] px-1.5 py-0 font-bold"
@@ -2287,7 +2285,7 @@ export default function GroceriesView({
                 }`}
               >
                 <Clock className="h-3.5 w-3.5 text-primary" />
-                <span>Trip History</span>
+                <span>Full Catalog</span>
                 <Badge
                   variant="secondary"
                   className="text-[10px] px-1.5 py-0 font-bold"
@@ -2347,7 +2345,7 @@ export default function GroceriesView({
                         className="h-8 text-xs font-semibold gap-1.5 bg-amber-600 hover:bg-amber-700 text-white"
                       >
                         <Star className="h-3.5 w-3.5 fill-white text-white" />
-                        Restock All Staples ({staplesNotInActive.length})
+                        Restock Favorites ({staplesNotInActive.length})
                       </Button>
                     )}
                   </div>
@@ -2527,7 +2525,7 @@ export default function GroceriesView({
                             className="h-8 text-xs font-semibold gap-1.5 border-amber-500/50 text-amber-700 dark:text-amber-300 hover:bg-amber-500/10"
                           >
                             <Star className="h-3.5 w-3.5 fill-amber-500 text-amber-500" />
-                            Restock Staples (
+                            Restock Favorites (
                             {archivedItems.filter((i) => i.isStaple).length})
                           </Button>
                         )}
