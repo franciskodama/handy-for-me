@@ -29,7 +29,8 @@ import {
   HeartHandshake,
   Wand2,
   FileText,
-  Footprints
+  Footprints,
+  SlidersHorizontal
 } from 'lucide-react';
 import { useForm, Controller } from 'react-hook-form';
 
@@ -239,6 +240,7 @@ export default function GroceriesView({
   const [parkedCartCategory, setParkedCartCategory] = useState<string | null>(
     null
   );
+  const [showAddOptions, setShowAddOptions] = useState(false);
 
   const currentUserName = useMemo(
     () => userName || uid.split('@')[0],
@@ -1405,109 +1407,130 @@ export default function GroceriesView({
           </div>
         )}
 
-        {/* Phase 1: Plan & Prepare - Quick Add Toolbar */}
+        {/* Phase 1: Plan & Prepare - Compact 1-Line Quick-Add Bar */}
         {viewMode === 'plan' && (
-          <Card className="border-border shadow-sm bg-card/60 backdrop-blur">
-            <CardContent className="p-4 sm:p-6">
-              <h3
-                className={`${kumbh_sans.className} text-base font-semibold mb-3 flex items-center gap-2`}
-              >
-                <Plus className="h-4 w-4 text-primary" />
-                Quick-Add Grocery Item
-              </h3>
-
-              <form
-                onSubmit={handleSubmit(onAddSubmit)}
-                className="flex flex-col gap-3"
-              >
-                <div className="grid grid-cols-1 sm:grid-cols-12 gap-3">
-                  {/* Item Name (col-span 5) */}
-                  <div className="sm:col-span-4 flex flex-col gap-1">
-                    <Input
-                      placeholder="e.g. Oat Milk, Avocados, Sourdough"
-                      {...register('name', {
-                        required: 'Item name is required'
-                      })}
-                      className="h-10"
-                    />
-                    {errors.name && (
-                      <span className="text-destructive text-xs">
-                        {errors.name.message}
-                      </span>
-                    )}
-                  </div>
-
-                  {/* Category Selector (col-span 3) */}
-                  <div className="sm:col-span-3 flex flex-col gap-1">
-                    <Controller
-                      name="category"
-                      control={control}
-                      render={({ field }) => (
-                        <Select
-                          onValueChange={field.onChange}
-                          value={field.value || ''}
-                        >
-                          <SelectTrigger className="h-10">
-                            <SelectValue placeholder="Department / Aisle" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {GROCERY_CATEGORIES.map((cat) => (
-                              <SelectItem key={cat.name} value={cat.name}>
-                                {cat.label}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      )}
-                    />
-                  </div>
-
-                  {/* Quantity (col-span 2) */}
-                  <div className="sm:col-span-2">
-                    <Input
-                      placeholder="Qty (e.g. 2 bags, 1kg)"
-                      {...register('quantity')}
-                      className="h-10"
-                    />
-                  </div>
-
-                  {/* Brand / Preference Note (col-span 3) */}
-                  <div className="sm:col-span-3">
-                    <Input
-                      placeholder="Brand / Note (e.g. Oatly, Ripe)"
-                      {...register('notes')}
-                      className="h-10"
-                    />
-                  </div>
+          <div className="bg-card/80 backdrop-blur border rounded-xl p-2.5 sm:p-3 shadow-sm flex flex-col gap-2">
+            <form
+              onSubmit={handleSubmit(onAddSubmit)}
+              className="flex flex-col gap-2"
+            >
+              <div className="flex items-center gap-2">
+                <div className="relative flex-1">
+                  <Input
+                    placeholder="Type an item... (e.g. 2 Oat Milk, Avocados)"
+                    {...register('name', {
+                      required: 'Item name is required'
+                    })}
+                    className="h-10 text-xs sm:text-sm pl-9 pr-3 font-medium bg-background"
+                  />
+                  <Plus className="h-4 w-4 text-primary absolute left-3 top-3 pointer-events-none" />
                 </div>
 
-                <div className="flex items-center justify-between mt-1 pt-2 border-t border-border flex-wrap gap-2">
-                  <div className="flex items-center gap-2">
-                    <label className="flex items-center gap-2 text-xs text-muted-foreground cursor-pointer select-none">
-                      <input
-                        type="checkbox"
-                        {...register('isStaple')}
-                        className="rounded border-gray-300 text-primary focus:ring-primary h-4 w-4"
-                      />
-                      <Star className="h-3.5 w-3.5 text-amber-500 fill-amber-500/20" />
-                      Save as a favorite
-                    </label>
-                  </div>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowAddOptions((prev) => !prev)}
+                  className={`h-10 text-xs gap-1 font-medium border border-transparent hover:border-border transition-colors ${
+                    showAddOptions
+                      ? 'bg-muted text-foreground'
+                      : 'text-muted-foreground'
+                  }`}
+                  title="More item options (Department, Qty, Note, Favorite)"
+                >
+                  <SlidersHorizontal className="h-3.5 w-3.5" />
+                  <span className="hidden sm:inline">Options</span>
+                  {showAddOptions ? (
+                    <ChevronUp className="h-3.5 w-3.5" />
+                  ) : (
+                    <ChevronDown className="h-3.5 w-3.5" />
+                  )}
+                </Button>
 
-                  <div className="flex items-center gap-2 ml-auto">
-                    <Button
-                      type="submit"
-                      disabled={isSubmitting}
-                      className="h-9 font-semibold gap-1.5 px-4"
-                    >
-                      <Plus className="h-4 w-4" />
-                      {isSubmitting ? 'Adding...' : 'Add to List'}
-                    </Button>
-                  </div>
-                </div>
-              </form>
-            </CardContent>
-          </Card>
+                <Button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="h-10 font-bold gap-1.5 px-4 text-xs shrink-0"
+                >
+                  <Plus className="h-4 w-4" />
+                  <span>{isSubmitting ? 'Adding...' : 'Add'}</span>
+                </Button>
+              </div>
+
+              {errors.name && (
+                <span className="text-destructive text-xs ml-1 font-medium">
+                  {errors.name.message}
+                </span>
+              )}
+
+              {/* Expandable Optional Details Row */}
+              <AnimatePresence>
+                {showAddOptions && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: 'auto', opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.15 }}
+                    className="overflow-hidden"
+                  >
+                    <div className="grid grid-cols-1 sm:grid-cols-12 gap-2 pt-2 border-t border-border/60 mt-1">
+                      {/* Department Selector */}
+                      <div className="sm:col-span-4">
+                        <Controller
+                          name="category"
+                          control={control}
+                          render={({ field }) => (
+                            <Select
+                              onValueChange={field.onChange}
+                              value={field.value || ''}
+                            >
+                              <SelectTrigger className="h-9 text-xs">
+                                <SelectValue placeholder="Auto-Categorize Aisle" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {GROCERY_CATEGORIES.map((cat) => (
+                                  <SelectItem key={cat.name} value={cat.name}>
+                                    {cat.label}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          )}
+                        />
+                      </div>
+
+                      {/* Quantity */}
+                      <div className="sm:col-span-3">
+                        <Input
+                          placeholder="Qty (e.g. 2 bags, 1kg)"
+                          {...register('quantity')}
+                          className="h-9 text-xs"
+                        />
+                      </div>
+
+                      {/* Brand / Note */}
+                      <div className="sm:col-span-5 flex items-center gap-3">
+                        <Input
+                          placeholder="Brand / Note (e.g. Oatly)"
+                          {...register('notes')}
+                          className="h-9 text-xs flex-1"
+                        />
+                        <label className="flex items-center gap-1.5 text-xs text-muted-foreground cursor-pointer select-none shrink-0">
+                          <input
+                            type="checkbox"
+                            {...register('isStaple')}
+                            className="rounded border-gray-300 text-primary focus:ring-primary h-3.5 w-3.5"
+                          />
+                          <Star className="h-3.5 w-3.5 text-amber-500 fill-amber-500/20" />
+                          <span className="hidden sm:inline">Favorite</span>
+                        </label>
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </form>
+          </div>
         )}
 
         {/* Filter Tabs & View Controls */}
