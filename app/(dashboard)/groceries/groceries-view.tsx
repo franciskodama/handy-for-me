@@ -236,9 +236,14 @@ export default function GroceriesView({
   const [collapsedAisles, setCollapsedAisles] = useState<
     Record<string, boolean>
   >({});
-  const [parkedCartCategory, setParkedCartCategory] = useState<string | null>(null);
+  const [parkedCartCategory, setParkedCartCategory] = useState<string | null>(
+    null
+  );
 
-  const currentUserName = useMemo(() => userName || uid.split('@')[0], [userName, uid]);
+  const currentUserName = useMemo(
+    () => userName || uid.split('@')[0],
+    [userName, uid]
+  );
 
   const partnerLocations = useMemo(
     () => getPartnerLocationsFromItems(activeItems, currentUserName),
@@ -382,8 +387,6 @@ export default function GroceriesView({
       setIsBatchAdding(false);
     }
   };
-
-
 
   // Real-time collaborative polling (every 3.5s when household sharing is enabled)
   useEffect(() => {
@@ -1487,7 +1490,7 @@ export default function GroceriesView({
                         className="rounded border-gray-300 text-primary focus:ring-primary h-4 w-4"
                       />
                       <Star className="h-3.5 w-3.5 text-amber-500 fill-amber-500/20" />
-                      Save as frequent household staple
+                      Save as a favorite
                     </label>
                   </div>
 
@@ -1593,15 +1596,14 @@ export default function GroceriesView({
                       You have{' '}
                       {allUserStaples.length > 0 && (
                         <span>
-                          <strong>
-                            {allUserStaples.length} Favorites ⭐
-                          </strong>
+                          <strong>{allUserStaples.length} Favorites ⭐</strong>
                           {archivedItems.length > 0 && ' out of '}
                         </span>
                       )}
                       {archivedItems.length > 0 && (
                         <span>
-                          <strong>{archivedItems.length} total items</strong> in your catalog
+                          <strong>{archivedItems.length} total items</strong> in
+                          your catalog
                         </span>
                       )}
                       . Restock in 1 tap, then trim what you don&apos;t need.
@@ -1811,7 +1813,8 @@ export default function GroceriesView({
             const allInCartInAisle = items.length > 0 && remainingInAisle === 0;
 
             const partnersInThisAisle = partnerLocations.filter(
-              (p) => p.categoryName.toLowerCase() === category.name.toLowerCase()
+              (p) =>
+                p.categoryName.toLowerCase() === category.name.toLowerCase()
             );
             const isCartParkedInThisAisle =
               parkedCartCategory &&
@@ -1870,7 +1873,9 @@ export default function GroceriesView({
                         key={p.userName}
                         className="bg-emerald-500/20 text-emerald-900 dark:text-emerald-300 border-emerald-500/40 text-[10px] font-bold gap-1 py-0 px-2 animate-pulse"
                       >
-                        <span>👤 {p.userName} was here ({p.timeAgoFormatted})</span>
+                        <span>
+                          👤 {p.userName} was here ({p.timeAgoFormatted})
+                        </span>
                       </Badge>
                     ))}
                   </div>
@@ -2250,7 +2255,8 @@ export default function GroceriesView({
                 Catalog & Favorites
               </DialogTitle>
               <p className="text-xs text-muted-foreground">
-                Browse all your items, toggle favorites (⭐), or restock with 1 click.
+                Browse all your items, toggle favorites (⭐), or restock with 1
+                click.
               </p>
             </DialogHeader>
 
@@ -2407,7 +2413,8 @@ export default function GroceriesView({
                                   borderColor: category.borderColor
                                 }}
                               >
-                                {items.length} {items.length === 1 ? 'item' : 'items'}
+                                {items.length}{' '}
+                                {items.length === 1 ? 'item' : 'items'}
                               </Badge>
                             </div>
                             <span
@@ -2422,7 +2429,8 @@ export default function GroceriesView({
                             {items.map((staple) => {
                               const isOnActiveList = activeItems.some(
                                 (i) =>
-                                  i.name.toLowerCase() === staple.name.toLowerCase()
+                                  i.name.toLowerCase() ===
+                                  staple.name.toLowerCase()
                               );
 
                               return (
@@ -2434,7 +2442,9 @@ export default function GroceriesView({
                                     <div className="flex items-center gap-1.5 flex-wrap">
                                       <button
                                         type="button"
-                                        onClick={() => handleToggleStaple(staple)}
+                                        onClick={() =>
+                                          handleToggleStaple(staple)
+                                        }
                                         title="Click to remove from Staples"
                                         className="text-amber-500 hover:text-amber-600 transition-transform active:scale-90"
                                       >
@@ -2474,7 +2484,9 @@ export default function GroceriesView({
                                       <Button
                                         size="sm"
                                         variant="outline"
-                                        onClick={() => handleRestockItem(staple)}
+                                        onClick={() =>
+                                          handleRestockItem(staple)
+                                        }
                                         className="h-7 text-[11px] font-semibold gap-1 hover:bg-primary hover:text-white"
                                         title="Add to active grocery list"
                                       >
@@ -2578,7 +2590,8 @@ export default function GroceriesView({
                                   borderColor: category.borderColor
                                 }}
                               >
-                                {items.length} {items.length === 1 ? 'item' : 'items'}
+                                {items.length}{' '}
+                                {items.length === 1 ? 'item' : 'items'}
                               </Badge>
                             </div>
                             <span
@@ -2710,7 +2723,8 @@ export default function GroceriesView({
                                 borderColor: category.borderColor
                               }}
                             >
-                              {items.length} {items.length === 1 ? 'item' : 'items'}
+                              {items.length}{' '}
+                              {items.length === 1 ? 'item' : 'items'}
                             </Badge>
                           </div>
                           <span
@@ -2725,11 +2739,13 @@ export default function GroceriesView({
                           {items.map((staple) => {
                             const isOnActive = activeItems.some(
                               (i) =>
-                                i.name.toLowerCase() === staple.name.toLowerCase()
+                                i.name.toLowerCase() ===
+                                staple.name.toLowerCase()
                             );
                             const isStapleSaved = allUserStaples.some(
                               (i) =>
-                                i.name.toLowerCase() === staple.name.toLowerCase()
+                                i.name.toLowerCase() ===
+                                staple.name.toLowerCase()
                             );
 
                             return (
@@ -2771,7 +2787,9 @@ export default function GroceriesView({
                                     <Button
                                       size="sm"
                                       variant="outline"
-                                      onClick={() => handleQuickAddStaple(staple)}
+                                      onClick={() =>
+                                        handleQuickAddStaple(staple)
+                                      }
                                       className="h-7 text-[11px] font-semibold gap-1 hover:bg-primary hover:text-white"
                                     >
                                       <Plus className="h-3 w-3" />
