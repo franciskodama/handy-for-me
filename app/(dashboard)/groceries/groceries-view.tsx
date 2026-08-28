@@ -208,9 +208,7 @@ export default function GroceriesView({
     useState<GroceryItem[]>(initialArchivedItems);
   const [staples, setStaples] = useState<GroceryItem[]>(initialStaples);
   const [viewMode, setViewMode] = useState<'plan' | 'store'>('plan');
-  const [filter, setFilter] = useState<
-    'all' | 'remaining' | 'inCart' | 'staples'
-  >('all');
+  const [filter, setFilter] = useState<'all' | 'remaining' | 'inCart'>('all');
   const [openAction, setOpenAction] = useState(false);
   const [showStaplesDrawer, setShowStaplesDrawer] = useState(false);
   const [staplesModalTab, setStaplesModalTab] = useState<
@@ -1173,7 +1171,6 @@ export default function GroceriesView({
   const displayedActiveItems = useMemo(() => {
     if (filter === 'remaining') return remainingItems;
     if (filter === 'inCart') return inCartItems;
-    if (filter === 'staples') return activeItems.filter((i) => i.isStaple);
     return activeItems;
   }, [activeItems, filter, remainingItems, inCartItems]);
 
@@ -1558,23 +1555,13 @@ export default function GroceriesView({
             </button>
             <button
               onClick={() => setFilter('inCart')}
-              className={`px-3 py-1 font-semibold transition-colors whitespace-nowrap ${
+              className={`px-3 py-1 font-semibold transition-colors whitespace-nowrap rounded ${
                 filter === 'inCart'
                   ? 'bg-background text-foreground shadow-sm'
                   : 'text-muted-foreground hover:text-foreground'
               }`}
             >
               In Cart ({inCartItems.length})
-            </button>
-            <button
-              onClick={() => setFilter('staples')}
-              className={`px-3 py-1 font-semibold transition-colors whitespace-nowrap ${
-                filter === 'staples'
-                  ? 'bg-background text-foreground shadow-sm'
-                  : 'text-muted-foreground hover:text-foreground'
-              }`}
-            >
-              ⭐ Favorites ({activeItems.filter((i) => i.isStaple).length})
             </button>
           </div>
 
@@ -1779,56 +1766,7 @@ export default function GroceriesView({
 
         {/* Printable / Board Container */}
         <div ref={printRef} className="flex flex-col gap-6">
-          {/* Empty state when filtering by staples and no active staples */}
-          {filter === 'staples' && displayedActiveItems.length === 0 && (
-            <Card className="p-8 text-center border-dashed border-2 flex flex-col items-center justify-center gap-3 bg-card/60">
-              <div className="h-12 w-12 rounded-full bg-amber-500/10 flex items-center justify-center text-amber-500">
-                <Star className="h-6 w-6 fill-amber-500/20 text-amber-500" />
-              </div>
-              <div className="max-w-md">
-                <h4 className="font-bold text-base text-foreground">
-                  No Staples on your active list
-                </h4>
-                <p className="text-xs text-muted-foreground mt-1">
-                  {allUserStaples.length > 0
-                    ? `You have ${allUserStaples.length} saved household staples in your catalog ready to add.`
-                    : 'Save frequent grocery items as staples using the star icon, or pick from popular essentials.'}
-                </p>
-              </div>
-              <div className="flex items-center gap-2 flex-wrap justify-center pt-2">
-                {staplesNotInActive.length > 0 && (
-                  <Button
-                    size="sm"
-                    onClick={handleAddAllStaplesToActive}
-                    className="text-xs font-semibold gap-1.5 bg-amber-600 hover:bg-amber-700 text-white"
-                  >
-                    <Star className="h-3.5 w-3.5 fill-white text-white" />
-                    Restock All Staples ({staplesNotInActive.length})
-                  </Button>
-                )}
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={() => {
-                    setStaplesModalTab('staples');
-                    setShowStaplesDrawer(true);
-                  }}
-                  className="text-xs font-semibold gap-1.5 border-amber-500/40 text-amber-800 dark:text-amber-300"
-                >
-                  <Sparkles className="h-3.5 w-3.5 text-amber-500" />
-                  Browse Staples Catalog
-                </Button>
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  onClick={() => setFilter('all')}
-                  className="text-xs text-muted-foreground"
-                >
-                  View All Items
-                </Button>
-              </div>
-            </Card>
-          )}
+
           {/* Department / Aisle Groupings */}
           {groupedDepartments.map(({ category, items }) => {
             const isAisleCollapsed = !!collapsedAisles[category.name];
