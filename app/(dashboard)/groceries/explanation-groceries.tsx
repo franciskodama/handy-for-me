@@ -23,7 +23,7 @@ export default function ExplanationGroceries({
   const contentTwo = (
     <>
       <p>
-        - <strong>Phase 1 (Plan):</strong> Quick-add items with smart auto-categorization, quantities, and brand notes. Use the <em>Restock & Staples</em> drawer to add frequent essentials with 1 click.
+        - <strong>Phase 1 (Plan):</strong> Quick-add items with smart auto-categorization, quantities, and brand notes. Use the <em>Catalog & Favorites</em> drawer to add frequent essentials with 1 click.
       </p>
       <p>
         - <strong>Phase 2 (In-Store):</strong> Switch to <em>In-Store Shopping Mode</em> for a high-contrast checklist organized by aisle department.
