@@ -74,6 +74,7 @@ model BucketListItem {
   uid         String   
   item        String   
   category    String
+  url         String?
   done        Boolean
   householdId String?  @db.VarChar(255)
 }

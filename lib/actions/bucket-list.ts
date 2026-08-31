@@ -15,7 +15,8 @@ async function getAuthenticatedUser() {
 export async function addBucketListItem(
   uid: string,
   item: string,
-  category: string
+  category: string,
+  url?: string
 ) {
   try {
     const user = await getAuthenticatedUser();
@@ -25,6 +26,7 @@ export async function addBucketListItem(
     }
 
     const isShared = user.householdId && user.shareBucketList;
+    const formattedUrl = url && url.trim().length > 0 ? url.trim() : null;
 
     const newItem = await prisma.bucketListItem.create({
       data: {
@@ -33,6 +35,7 @@ export async function addBucketListItem(
         uid,
         item,
         category,
+        url: formattedUrl,
         done: false,
         householdId: isShared ? user.householdId : null
       }

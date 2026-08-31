@@ -66,6 +66,7 @@ export type BucketListItem = {
   uid: string;
   item: string;
   category: string;
+  url?: string | null;
   done: boolean;
 };
 
