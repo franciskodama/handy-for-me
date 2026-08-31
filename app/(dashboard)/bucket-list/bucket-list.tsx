@@ -7,7 +7,8 @@ import {
   Square,
   SquareCheckBig,
   Trash2,
-  Printer
+  Printer,
+  ExternalLink
 } from 'lucide-react';
 import { useEffect, useState, useRef } from 'react';
 import { useForm, SubmitHandler, Controller } from 'react-hook-form';
@@ -66,6 +67,7 @@ type BucketListCategory = {
 type Inputs = {
   item: string;
   category: string;
+  url?: string;
   uid: string;
 };
 
@@ -161,10 +163,10 @@ export default function BucketList({
   } = useForm<Inputs>();
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
-    const { item, category } = data;
+    const { item, category, url } = data;
 
     try {
-      const result = await addBucketListItem(uid, item, category);
+      const result = await addBucketListItem(uid, item, category, url);
 
       if (result) {
         const newBucketLists = await getBucketListItems(uid);
@@ -179,7 +181,8 @@ export default function BucketList({
 
         reset({
           item: '',
-          category: ''
+          category: '',
+          url: ''
         });
       } else {
         throw new Error('Failed to add item');
@@ -294,6 +297,22 @@ export default function BucketList({
     return { color: textColorCode, backgroundColor: bgColorCode };
   };
 
+  const formatSafeUrl = (rawUrl?: string | null): string | null => {
+    if (!rawUrl || typeof rawUrl !== 'string') return null;
+    const trimmed = rawUrl.trim();
+    if (!trimmed) return null;
+
+    if (/^(javascript|data|vbscript):/i.test(trimmed)) {
+      return null;
+    }
+
+    if (!/^https?:\/\//i.test(trimmed)) {
+      return `https://${trimmed}`;
+    }
+
+    return trimmed;
+  };
+
   return (
     <Card className="min-h-[75vh]">
       <CardHeader>
@@ -349,10 +368,10 @@ export default function BucketList({
             className={`${barlow.className} flex gap-4 capitalize mt-8 sm:mt-0`}
           >
             <form
-              className="flex flex-col sm:flex-row items-start gap-4 sm:gap-2 font-normal"
+              className="flex flex-col sm:flex-row items-start gap-4 sm:gap-2 font-normal w-full"
               onSubmit={handleSubmit(onSubmit)}
             >
-              <div className="flex flex-col gap-1 w-full sm:w-2/5">
+              <div className="flex flex-col gap-1 w-full sm:w-1/3">
                 <Input
                   placeholder="Adventure"
                   {...register('item', {
@@ -374,7 +393,7 @@ export default function BucketList({
                   word.
                 </p>
               </div>
-              <div className="flex flex-col gap-1 w-full sm:w-2/5">
+              <div className="flex flex-col gap-1 w-full sm:w-1/3">
                 <Controller
                   name="category"
                   control={control}
@@ -402,6 +421,16 @@ export default function BucketList({
                 <p className="text-xs ml-4 lowercase">
                   <span className="uppercase">C</span>
                   hoose a category that best describes your adventure.
+                </p>
+              </div>
+              <div className="flex flex-col gap-1 w-full sm:w-1/3">
+                <Input
+                  placeholder="Website URL (optional)"
+                  type="url"
+                  {...register('url')}
+                />
+                <p className="text-xs ml-4 lowercase">
+                  <span className="uppercase">A</span>dd a website link for reference.
                 </p>
               </div>
               <Input value={uid} className="hidden" {...register('uid')} />
@@ -540,6 +569,20 @@ export default function BucketList({
                         >
                           {el.item}
                         </p>
+                        {el.url && formatSafeUrl(el.url) && (
+                          <a
+                            href={formatSafeUrl(el.url)!}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-xs text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1 mt-1 break-all"
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            <ExternalLink size={12} className="shrink-0" />
+                            <span className="truncate max-w-[220px]">
+                              {el.url.replace(/^https?:\/\//i, '')}
+                            </span>
+                          </a>
+                        )}
                         {householdDetails?.inHousehold && householdDetails?.userSettings?.shareBucketList && (
                           <span className="text-[9px] text-muted-foreground mt-0.5" title={`Added by ${el.uid}`}>
                             Added by {el.uid.split('@')[0]}
